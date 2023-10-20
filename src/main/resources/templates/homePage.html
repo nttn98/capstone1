@@ -1,0 +1,524 @@
+<!Doctype html>
+
+<html lang="en" style="background-color: black;">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="logo.png" type="image/png">
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel='stylesheet' href='/css/font-awesome.min.css'>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&display=swap" rel="stylesheet">
+
+		<script src='/js/jquery.min.js'></script>
+		<script src='/js/bootstrap.min.js'></script>
+
+		<link rel="styleSheet" href="/css/homePage.css">
+		<title>Capstone1</title>
+	</head>
+
+	<body>
+		<header>
+			<div class="container d-flex align-items-center justify-content-between" id="header">
+				<div id="logo">
+					<h1><a href="/">NAD</a></h1>
+				</div>
+				<div id="menu" class="w-35">
+					<nav class="d-block">
+						<ul class="m-0 h-100 list-unstyled d-flex align-items-center justify-content-center">
+							<li><a href="/">Home</a></li>
+							<li><a href="/products">Products</a></li>
+							<li><a href="/about">About</a></li>
+							<li><a href="/contact">Contact</a></li>
+						</ul>
+					</nav>
+				</div>
+				<div id="header-action">
+					<ul class=" m-0 list-unstyled d-flex align-items-center">
+						<li><input id="search" class="form-control mr-sm-2" placeholder="Search"></li>
+						<li class="position-relative">
+
+							<a onclick="showcart()">
+								<span class="position-absolute cart-count">3</span>
+								<i class="fa fa-shopping-cart" aria-hidden="true" style="padding-left: 8px;"></i>
+							</a>
+
+							<div class="cart position-fixed">
+								<h2>Shopping Cart</h2>
+								<button onclick="closecart()" type="button" class="close" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+
+								<!-- product -->
+								<div class="product">
+									<div class="container">
+										<div class="row">
+											<div class="col-2">
+												<img src="img\WPC3DA-01.jpg" style="width: 100%;">
+											</div>
+											<div class="col-4">5SPC WPC 3DMATION 01</div>
+
+											<div class="col-2">
+												1
+											</div>
+											<div class="col-2">22.200.000 VND</div>
+											<div class="col-2">x</div>
+										</div>
+									</div>
+								</div>
+								<hr>
+
+								<div class="purchase-space">
+									<div class="total-purchase">
+										<h4>Total: <span>22.000.000 VND</span></h4>
+									</div><br>
+									<button class="btn-purchase">Purchase</button>
+
+								</div>
+							</div>
+							<div class="closeMask"></div>
+						</li>
+						<li class="position-relative">
+							<a onclick="showLogin()"><i class="fa fa-user-o" aria-hidden="true"></i></a>
+						</li>
+
+						<div class="login position-fixed">
+							<h2>Login</h2>
+							<div class="container">
+								<div class="row justify-content-center">
+									<div class="col">
+										<div class="card">
+											<div class="card-body">
+												<form>
+													<div class="form-group">
+														<label for="username">Username</label>
+														<input type="text" class="form-control" id="username"
+															placeholder="Enter username" required>
+													</div>
+													<div class="form-group">
+														<label for="password">Password</label>
+														<input type="password" class="form-control" id="password"
+															placeholder="Enter password" required>
+													</div>
+													<button type="submit" class="btn-login">Enter</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<button onclick="closeLogin()" type="button" class="close" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+
+							<!-- login spcae -->
+							<div class="loginSpace">
+								<div class="container">
+									<div class="row">
+									</div>
+								</div>
+							</div>
+						</div>
+					</ul>
+				</div>
+			</div>
+		</header>
+
+		<div class="banner">
+			<div class="container-fluid">
+				<img src="img/Untitled.png" style="width: 100%;">
+			</div>
+		</div>
+
+		<div class="services" style="padding-top: 40px; background-color: rgb(23, 23, 23);">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-12 col-md-12 col-lg-3 ">
+						<div class="card mb-3">
+							<div class="row no-gutters">
+								<div class="col-md-3">
+									<img width="44" height="44" alt="risk" title="risk"
+										nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/risk.webp"
+										class="info-icon image-1 ls-is-cached lazyloaded" decoding="async"
+										nitro-lazy-empty="" id="NDg0OjE1OA==-1"
+										src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/risk.webp">
+								</div>
+								<div class="col-md-8">
+									<div class="card-body" style="padding: 0;">
+										<p class="card-text">Linh kiện chính hãng, được lựa chọn chất lượng kỹ lưỡng
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-12 col-lg-3 ">
+						<div class="card mb-3" style="max-width: 540px; background-color: rgb(23, 23, 23);">
+							<div class="row no-gutters">
+								<div class="col-md-3">
+									<img width="44" height="44" alt="price" title="price"
+										nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/price.webp"
+										class="info-icon image-1 ls-is-cached lazyloaded" decoding="async"
+										nitro-lazy-empty="" id="NTA0OjE2MQ==-1"
+										src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/price.webp">
+								</div>
+								<div class="col-md-8">
+									<div class="card-body" style="padding: 0;">
+										<p class="card-text">Tư vấn tận tình dựa trên kinh nghiệm test thực tế
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-12 col-lg-3 ">
+						<div class="card mb-3" style="max-width: 540px; background-color: rgb(23, 23, 23);">
+							<div class="row no-gutters">
+								<div class="col-md-3">
+									<img width="44" height="44" alt="risk" title="risk"
+										nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/risk.webp"
+										class="info-icon image-1 ls-is-cached lazyloaded" decoding="async"
+										nitro-lazy-empty="" id="NDg0OjE1OA==-1"
+										src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/risk.webp">
+								</div>
+								<div class="col-md-8">
+									<div class="card-body" style="padding: 0;">
+										<p class="card-text">30 ngày bảo hành 1-đổi-1 miễn phí cùng các gói Bảo hành
+											nâng cao.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-12 col-md-12 col-lg-3 ">
+						<div class="card mb-3" style="max-width: 540px; background-color: rgb(23, 23, 23);">
+							<div class="row no-gutters">
+								<div class="col-md-3">
+									<img width="44" height="44" alt="Free" title="Free"
+										nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/Free.webp"
+										class="info-icon image-1 ls-is-cached lazyloaded" decoding="async"
+										nitro-lazy-empty="" id="NTQ0OjE1OA==-1"
+										src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/Free.webp">
+								</div>
+								<div class="col-md-8">
+									<div class="card-body" style="padding: 0;">
+										<p class="card-text">Miễn phí lắp đặt & vận chuyển HCM. Cùng nhiều chính sách ưu
+											đãi.
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="topBody">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<h2 style="text-align: center; padding: 50px 0px 50px 0;">Đâu Là PC Bạn Quan Tâm?!</h2>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-4 col-lg-3 col-sm-12 col-md-12">
+						<div class="card text-white">
+							<div class="card-img-overlay">
+								<p class="woodmart-title">WORKSTATION PC</p>
+								<div class="title-after_title" style="padding-bottom: 35px;">Dành cho nhà sáng tạo nội
+									dung và kỹ thuật đặc thù với
+									hiệu năng ổn định, nâng cao hiệu suất công việc.</div>
+								<div class="woodmart-button-wrapper text-center"><a
+										href="https://5spc.com/pc-workstation/" title="" class="seeMore">XEM
+										NGAY</a></div>
+							</div>
+							<img alt="workstation pc 5spc"
+								nitro-lazy-srcset="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-300x300.png 300w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-150x150.png 150w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-768x768.png 768w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-600x600.png 600w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-100x100.png 100w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc.png 1000w"
+								nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-300x300.png"
+								class="vc_single_image-img attachment-medium ls-is-cached lazyloaded" decoding="async"
+								nitro-lazy-empty="" id="NTg2OjgxMg==-1"
+								src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-300x300.png"
+								srcset="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-300x300.png 300w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-150x150.png 150w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-768x768.png 768w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-600x600.png 600w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-100x100.png 100w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc.png 1000w">
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class="botBody">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<h2>Best Seller In Store! </h2>
+					</div>
+				</div>
+				<ul class="products-tabs-title">
+					<li class="products-tabs-title-item"><a>PC Edit Video</a></li>
+					<li class="products-tabs-title-item"><a>PC Graphic Design</a></li>
+				</ul>
+
+				<div class="row">
+					<div class="col-lg-4 col-sm-12 col-md-12">
+						<div class="card-botBody text-white">
+							<img src="img/WPC3DA-01.jpg">
+							<a>5SPC WPC 3DMATION 01</a>
+							<p>22.200.000 VND</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="botBody2">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<h2>HiEnd PC - PC Custom </h2>
+						</div>
+					</div>
+					<ul class="products-tabs-title">
+						<li class="products-tabs-title-item"><a>PC Edit Video</a></li>
+						<li class="products-tabs-title-item"><a>PC Graphic Design</a></li>
+					</ul>
+
+					<div class="row">
+						<div class="col-lg-4 col-sm-12 col-md-12">
+							<div class="card-botBody text-white">
+								<img src="img/WPC3DA-01.jpg">
+								<a>5SPC WPC 3DMATION 01</a>
+								<p>22.200.000 VND</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="topFooter">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<h2>Tin tức cập nhật</h2>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-lg-3 col-sm-12 col-md-12">
+							<div class="owl-item active" style="width: 404px;">
+								<div class="slide-post owl-carousel-item">
+									<article id="post-11469"
+										class="blog-post-loop post-slide blog-style-shadow blog-design-masonry post-11469 post type-post status-publish format-standard has-post-thumbnail hentry category-kien-thuc-do-hoa tag-ue tag-unreal-engine">
+										<div class="article-inner">
+											<header class="entry-header">
+												<figure class="entry-thumbnail">
+													<div class="post-img-wrapp">
+														<a
+															href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/">
+															<img width="300" height="169" src="img/news1.jpg">
+													</div>
+													<div class="post-image-mask">
+														<span></span>
+													</div>
+												</figure>
+
+												<div class="post-date woodmart-post-date" onclick="">
+													<span class="post-date-day">
+														25 </span>
+													<span class="post-date-month">
+														Th3 </span>
+												</div>
+											</header>
+
+											<div class="article-body-container">
+												<div class="meta-categories-wrapp">
+													<div class="meta-post-categories"><a
+															href="https://5spc.com/category/kien-thuc-do-hoa/"
+															rel="category tag">Kiến Thức Đồ Hoạ</a></div>
+												</div>
+
+												<h3 class="entry-title title">
+													<a href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/"
+														rel="bookmark">Ra mắt Unreal Engine 5.2 – Game Engine với
+														khả
+														năng đồ
+														họa
+														realistic đỉnh cao</a>
+												</h3>
+												<div class="entry-content woodmart-entry-content">
+													<p>ĐẮM CHÌM VÀO THẾ GIỚI SIÊU THỰC VỚI UNREAL ENGINE 5.2 MỚI RA
+														MẮT
+														Vừa qua,
+														tại
+														workshop State of Unreal 2023, các chuyên gia ...</p>
+													<a href="#"> Continue...</a>
+												</div>
+											</div>
+										</div>
+									</article>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<br>
+
+			<footer class="footer-container color-scheme-light">
+				<div class="container main-footer">
+					<aside class="footer-sidebar widget-area row" role="complementary">
+						<div class="footer-column footer-column-1 col-12 col-md-6">
+							<div id="text-21" class="woodmart-widget widget footer-widget  widget_text">
+								<h5 class="widget-title">CÔNG TY CÔNG NGHỆ NAD</h5>
+								<div class="textwidget">
+									<p><strong>Showroom</strong>: 527/1E/4 Phan Văn Trị, Phường 5, Q. Gò Vấp, TP. HCM
+									</p>
+									<p><strong>Hotline</strong>: 0000 000 000 – <strong>Email hỗ trợ Khách
+											hàng</strong>:
+										support@nad.com</p>
+								</div>
+							</div>
+						</div>
+						<div class="footer-column footer-column-2 col-12 col-md-6">
+						</div>
+						<div class="footer-column footer-column-3 col-12 col-sm-6 col-lg-3">
+							<div id="text-16" class="woodmart-widget widget footer-widget  widget_text">
+								<div class="textwidget">
+									<h1><a href="/">NAD</a></h1>
+									<p><strong>RIGHT PC FOR RIGHT PEOPLE</strong></p>
+									<p><a href="https://www.facebook.com/5spc.official/"><img decoding="async" class=""
+												style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
+												src="https://5spc.com/wp-content/uploads/2022/06/icon-facebook-2.png"
+												height="45"></a>
+										&nbsp;&nbsp;<a
+											href="https://www.youtube.com/channel/UCBv9olvUdB-wjRsUp8tXGfw"><img
+												decoding="async"
+												style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
+												src="https://5spc.com/wp-content/uploads/2022/06/icon-youtube-2.png"></a>
+										&nbsp; <a href="https://www.instagram.com/5spc.official/"><img decoding="async"
+												style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
+												src="https://5spc.com/wp-content/uploads/2022/06/icon-instagram-2.png"></a>
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="footer-column footer-column-4 col-12 col-sm-6 col-lg-3">
+							<div id="text-17" class="woodmart-widget widget footer-widget  widget_text">
+								<h5 class="widget-title">HỖ TRỢ KHÁCH HÀNG</h5>
+								<div class="textwidget">
+									<ul>
+										<li class="fa fa-chevron-right"><a
+												href="https://5spc.com/chinh-sach-thanh-toan-huong-dan-mua-hang/">Hướng
+												dẫn
+												mua hàng</a></li>
+										<li class="fa fa-chevron-right"><a
+												href="https://5spc.com/chinh-sach-bao-hanh/">Chính sách bảo
+												hành</a>
+										</li>
+										<li class="fa fa-chevron-right"><a href="#">Góp ý – khiếu nại</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<div class="footer-column footer-column-5 col-12 col-sm-6 col-lg-3">
+							<div id="text-18" class="woodmart-widget widget footer-widget  widget_text">
+								<h5 class="widget-title">ĐỐI TÁC – DOANH NGHIỆP</h5>
+								<div class="textwidget">
+									<ul>
+										<li class="fa fa-chevron-right"><a href="#">Đơn vị vận chuyển</a></li>
+										<li class="fa fa-chevron-right"><a href="#">Cộng đồng</a></li>
+										<li class="fa fa-chevron-right"><a href="#">Dự án</a></li>
+									</ul>
+
+								</div>
+							</div>
+						</div>
+
+						<div class="footer-column footer-column-6 col-12 col-sm-6 col-lg-3">
+							<div id="text-19" class="woodmart-widget widget footer-widget  widget_text">
+								<h5 class="widget-title">CHÍNH SÁCH CHUNG</h5>
+								<div class="textwidget">
+									<ul>
+										<li class="fa fa-chevron-right"><a href="https://5spc.com/tin-tuc/">Tin tức – Sự
+												kiện</a></li>
+										<li class="fa fa-chevron-right"><a href="https://5spc.com/lien-he/">Liên hệ</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</aside>
+				</div>
+
+				<div class="copyrights-wrapper copyrights-two-columns">
+					<div class="container">
+						<div class="min-footer">
+							<div class="col-left reset-mb-10">
+								Copyright 2021 © 5SPC. All Right Reserved. Công ty Cổ phần Thương mại Dịch vụ Công nghệ
+								5SPC. MST: 0316981084. </div>
+						</div>
+					</div>
+				</div>
+			</footer>
+
+			<button id="topButton"><i class="fa fa-arrow-up"></i></button>
+
+			<script>
+				$( document ).ready( function ()
+				{
+					$( window ).scroll( function ()
+					{
+						if ( $( this ).scrollTop() > 100 )
+						{
+							$( '#topButton' ).fadeIn();
+						} else
+						{
+							$( '#topButton' ).fadeOut();
+						}
+					} );
+
+					$( '#topButton' ).click( function ()
+					{
+						$( 'html, body' ).animate( { scrollTop: 0 }, 400 );
+						return false;
+					} );
+				} );
+				var check = false;
+				function showLogin ()
+				{
+					$( '.login' ).addClass( "w-25" )
+					$( '.closeLogin' ).fadeIn();
+					closecart();
+					check = true;
+				}
+				function closeLogin ()
+				{
+					$( '.login' ).removeClass( "w-25" )
+					$( '.closeLogin' ).fadeOut();
+				}
+				function showcart ()
+				{
+					$( '.cart' ).addClass( "w-35" )
+					$( '.closeMask' ).fadeIn();
+					closeLogin();
+				}
+				function closecart ()
+				{
+					$( '.cart' ).removeClass( "w-35" )
+					$( '.closeMask' ).fadeOut();
+				}
+
+
+			</script>
+
+	</body>
+
+</html>

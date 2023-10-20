@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head th:replace="/homePage.html::head">
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="shortcut icon" href="logo.png" type="image/png">
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel='stylesheet' href='/css/font-awesome.min.css'>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&display=swap" rel="stylesheet">
+
+		<script src='/js/jquery.min.js'></script>
+		<script src='/js/bootstrap.min.js'></script>
+	</head>
+
+	<body>
+		<nav class="navbar navbar-expand-md bg-dark navbar-dark">
+			<!-- Brand -->
+			<a class="navbar-brand" href="#">Products Management System</a>
+
+			<!-- Toggler/collapsibe Button -->
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- Navbar links -->
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<a class="nav-link" th:href="@{/products}">Products Management</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+		<br>
+		<br>
+		<div class="container">
+			<div class="row">
+				<h1>List products</h1>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-3">
+					<a th:href="@{/products/new}" class="btn btn-primary btn-sm mb-3">Add product</a>
+				</div>
+
+			</div>
+
+			<table class="table table-stripped table-bordered">
+				<thead class="table-dark">
+					<th>Image</th>
+					<th>Name Of Products</th>
+					<th>Price</th>
+					<th>Quantity</th>
+					<th>Action</th>
+				</thead>
+				<tbody>
+					<tr th:each="product: ${products} ">
+						<td>
+							<img th:src="${product.image}" alt="" style="width: 150px;" />
+						</td>
+						<td th:text="${product.nameOfProduct}"></td>
+						<td th:text="${product.price}"></td>
+						<td th:text="${product.quantity}"></td>
+						<td>
+							<a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-primary">Update</a>
+							<a th:href="@{/products/{id}(id=${product.id})}" class="btn btn-danger">Delete</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<footer th:replace="~{/homePage.html :: footer}"></footer>
+	</body>
+
+</html>
