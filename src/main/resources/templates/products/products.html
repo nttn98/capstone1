@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+
+		<link rel="shortcut icon" href="logo.png" type="image/png">
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&display=swap" rel="stylesheet">
+		<link
+			href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i"
+			rel="stylesheet">
+
+		<script src='/js/jquery.min.js'></script>
+		<script src='/js/bootstrap.min.js'></script>
+
+		<link rel='stylesheet' href='/css/font-awesome.min.css'>
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/bootstrap-extended.min.css">
+		<link rel="stylesheet" href="/css/components.min.css">
+		<!-- <link rel="stylesheet" href="/css/pages/vertical-timeline.min.css"> -->
+		<link rel="stylesheet" href="/css/pages/vertical-menu-modern.css">
+		<link rel="stylesheet" href="/css/drop.css">
+		<link rel="stylesheet" href="/css/summernote.css" />
+		<link rel="stylesheet" href="/css/products.css" />
+
+		<title>Admin page</title>
+
+	</head>
+
+	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
+
+		<!-- BEGIN: Header-->
+		<nav class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
+			<div class="navbar-wrapper">
+				<div class="navbar-header">
+					<ul class="nav navbar-nav flex-row">
+						<li class="nav-item mr-auto"><a class="navbar-brand" href=" "><img class="brand-logo"
+									alt="stack admin logo" src=" ">
+							</a></li>
+					</ul>
+				</div>
+				<div class="navbar-container content">
+					<div class="collapse navbar-collapse" id="navbar-mobile">
+						<ul class="nav navbar-nav mr-auto float-left">
+
+							<a th:href="@{products/createProduct}">
+								<button class="custom-btn btn-13">
+									<h7>+ product</h7>
+								</button>
+							</a>
+
+						</ul>
+						<ul class="nav navbar-nav float-right">
+							<li class="dropdown dropdown-user nav-item"><a
+									class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+									<div class="avatar avatar-online">
+										<!-- <img src="../../../app-assets/images/portrait/small/avatar-s-1.png"
+											alt="avatar"><i></i> -->
+									</div>
+									<span class="user-name" style="width: 65px;">Nhan</span>
+								</a>
+								<div class="dropdown-menu dropdown-menu-right">
+									<a class="dropdown-item" href="user-profile.html">
+										<!-- href="user-profile.html" -->
+										<i class="feather icon-user"></i> Edit Profile</a>
+									<div class="dropdown-divider"></div>
+									<a class="dropdown-item" href="login-with-bg-image.html">
+										<i class="feather icon-power"></i> Logout</a>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</nav>
+		<!-- END: Header-->
+
+
+		<!-- BEGIN: Main Menu-->
+		<div th:fragment="main-menu" id="main-menu" class="main-menu menu-fixed menu-dark menu-shadow"
+			data-scroll-to-active="true">
+			<div class="main-menu-content">
+				<ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+					<li class=" navigation-header"><span>General</span><i class=" feather icon-minus"
+							data-toggle="tooltip" data-placement="right" data-original-title="General"></i>
+					</li>
+					<li class="nav-item has-sub open">
+						<ul class="menu-content">
+							<li>
+								<a class="menu-item" th:href="@{/products}">Products</a>
+							</li>
+							<li><a class="menu-item" href="#">Users</a>
+							</li>
+							<li><a class="menu-item" href="#">Staffs</a>
+							</li>
+							<li><a class="menu-item" th:href="@{/categories}">Categories</a>
+							</li>
+							<li><a class="menu-item" href="#">Manufactures</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- END: Main Menu-->
+
+		<!-- BEGIN: Content-->
+		<div class="app-content content">
+			<div class="content-wrapper">
+				<div class=" content-header row">
+					<h4>List Products</h4>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-lg-1">
+						<h5>Image</h5>
+					</div>
+					<div class="col-lg-2">
+						<h5>Name of product</h5>
+					</div>
+					<div class="col-lg-1">
+						<h5>Price ($)</h5>
+					</div>
+					<div class="col-lg-1">
+						<h5>Quantity</h5>
+					</div>
+					<div class="col-lg-1">
+						<h5>Categories</h5>
+					</div>
+					<div class="col-lg-1">
+						<h5>Manufactures</h5>
+					</div>
+					<div class="col-lg-3">
+						<h5>Description</h5>
+					</div>
+					<div class="col-lg-2">
+						<h5>Action</h5>
+					</div>
+				</div>
+				<br>
+
+				<div class="content-body" th:each=" product: ${products}">
+					<div class="row grouped-multiple-statistics-card">
+						<div class="col-lg-1">
+							<img th:src="${product.productImages}" style="width: 120px;">
+						</div>
+						<div class="col-lg-2">
+							<p th:text="${product.productName}"></p>
+						</div>
+						<div class="col-lg-1">
+							<p th:text="'$'+${product.productPrice}"></p>
+						</div>
+						<div class="col-lg-1">
+							<p th:text="${product.productQuantity}"></p>
+						</div>
+						<div class="col-lg-1">
+							<p th:text="${product.categoriesId}"></p>
+						</div>
+						<div class="col-lg-1">
+							<p th:text="${product.manufacturesId}"></p>
+						</div>
+						<div class="col-lg-3">
+							<p th:text="${product.productDescription}"></p>
+						</div>
+						<p></p>
+						<div class="col-lg-2">
+							<a th:href="@{/products/edit/{id}(id=${product.productId})}"
+								th:if="${product.productStatus == 0}" style="text-decoration: none;">
+								<button class="custom-btn btn-14" style="width: 100px;">
+									<h7>Edit</h7>
+								</button>
+							</a>
+							<a th:href="@{/products/changeStatus/{id}(id=${product.productId})}">
+								<button class="custom-btn btn-5" style="width: 100px;"
+									th:if="${product.productStatus == 0}">
+									<h7>Off</h7>
+								</button>
+								<button class="custom-btn btn-6" style="width: 100px;"
+									th:if="${product.productStatus == 1}">
+									<h7>On</h7>
+								</button>
+							</a>
+						</div>
+					</div>
+					<br>
+				</div>
+			</div>
+		</div>
+		<!-- <div th:if="${totalPages >1 }" class="pagi">
+			<div class="row col-sm-10">
+				<div class="col-sm-2">
+					Total rows: [[${totalItems}]]
+				</div>
+				<div class="col-sm-1">
+					<span th:each="i : ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}}">[[${i}]]</a> 
+						<span th:unless="${currentPage != i}">[[${i}]]</span>
+					</span>
+				</div>
+				<div class = "col-sm-1">
+					<a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+					<span th:unless="${currentPage < totalPages}">Next</span>
+				</div>
+				
+				 <div class="col-sm-1">
+    				<a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+					<span th:unless="${currentPage < totalPages}">Last</span>
+   				 </div>
+			</div>
+		</div> -->
+		<footer class="footer navbar-border">
+			<p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span
+					class="float-md-left d-block d-md-inline-block">Copyright © 2023</span><span
+					class="float-md-right d-none d-lg-block"> Made by NaN <i class="feather icon-heart pink"></i></span>
+			</p>
+		</footer>
+	</body>
+
+</html>

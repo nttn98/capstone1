@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="~{products/products::head}"></head>
+
+    <body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
+        <!-- BEGIN: Header-->
+        <nav class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
+            <div class="navbar-wrapper">
+                <div class="navbar-header">
+                    <ul class="nav navbar-nav flex-row">
+                        <li class="nav-item mr-auto"><a class="navbar-brand" href=" "><img class="brand-logo"
+                                    alt="stack admin logo" src=" ">
+                            </a></li>
+                    </ul>
+                </div>
+                <div class="navbar-container content">
+                    <div class="collapse navbar-collapse" id="navbar-mobile">
+                        <ul class="nav navbar-nav mr-auto float-left">
+
+                        </ul>
+                        <ul class="nav navbar-nav float-right">
+                            <li class="dropdown dropdown-user nav-item"><a
+                                    class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+                                    <div class="avatar avatar-online">
+                                        <!-- <img src="../../../app-assets/images/portrait/small/avatar-s-1.png"
+                            alt="avatar"><i></i> -->
+                                    </div>
+                                    <span class="user-name" style="width: 65px;">Nhan</span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a class="dropdown-item" href="user-profile.html">
+                                        <i class="feather icon-user"></i> Edit Profile</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="login-with-bg-image.html">
+                                        <i class="feather icon-power"></i> Logout</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div th:replace="products/products.html :: main-menu"></div>
+
+        <div class="container mt-4">
+            <h2 class="page-title">Add Categogy</h2>
+            <form th:action="@{/categories/saveCategory(id=${category.categoryId})}" th:object="${category}"
+                method="POST" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-sm-6 ol-md-6 col-xs-12">
+                        <div class="white-box">
+                            <label for="input-file-now">Upload your product image here</label>
+                            <div class="dropify-wrapper">
+                                <div class="dropify-message">
+                                    <i class="fas fa-upload fa-lg"></i>
+                                    <p>Drag and drop a file here or click</p>
+                                </div>
+                                <input type="file" id="input-file-now" class="dropify" name="categoryImg">
+                                <div class="dropify-preview">
+                                    <span class="dropify-render">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 ol-md-6 col-xs-12">
+                        <div class="white-box">
+                            <div class="form-group">
+                                <label for="name" class="col-md-12">
+                                    <h5>Category Name</h5>
+                                </label>
+                                <div class="col-md-12">
+                                    <input id="name" th:field="*{categoryName}" type="text" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="white-box">
+                            <div class="form-group">
+                                <label for="description" class="col-sm-12 p-0">
+                                    <h5>Description</h5>
+                                </label>
+                                <textarea th:field="*{categoryDescription}" id="description"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
+                                    Create</button>
+                                <button type="button" onclick="location.href='/products'"
+                                    class="btn btn-default">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <footer th:replace="~{products/products :: footer}"></footer>
+    </body>
+
+    <script>
+        $( '.dropify-wrapper' ).height( $( 'form > div > div:nth-child(2)' ).height() - 60 + 'px' )
+
+        $( "#input-file-now" ).change( function ( event )
+        {
+            $( ".dropify-render" ).html( `<img src="` + window.URL.createObjectURL( this.files[ 0 ] ) + `">` )
+            $( ".dropify-preview" ).css( "display", "block" );
+        } )
+    </script>
+
+</html>
