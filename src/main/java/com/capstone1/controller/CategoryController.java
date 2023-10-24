@@ -4,10 +4,12 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.List;
 
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import com.capstone1.model.Category;
 import com.capstone1.services.CategoryService;
@@ -21,31 +23,31 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-	@GetMapping({"/homePage","/"})
+    @GetMapping({ "/homePage", "/" })
     public String getHome() {
         return "homePage";
     }
-    
+
     @GetMapping("/categories")
     public String listCategories(Model model) {
         List<Category> listCategories = categoryService.getAllCategories();
-        
-        if (listCategories.size() == 0) {
+
+        if (listCategories.size() != 0) {
             Category category = new Category();
             model.addAttribute("category", category);
-            return "create_category";
+            return "categories/create_category";
         } else {
             model.addAttribute("categories", categoryService.getAllCategories());
-            return "categories";
+            return "categories/categories";
         }
-      
+
     }
-    
+
     @GetMapping("/categories/createCategory")
     public String createCategory(Model model) {
         Category category = new Category();
         model.addAttribute("category", category);
-        return "create_category";
+        return "categories/create_category";
     }
 
     @PostMapping("/categories/saveCategory")
@@ -69,13 +71,13 @@ public class CategoryController {
         }
         return "redirect:/categories";
     }
-    
+
     @GetMapping("/categories/edit/{id}")
     public String editCategory(@PathVariable Long id, Model model) {
         model.addAttribute("category", categoryService.getCategoryById(id));
-        return "edit_category";
+        return "categories/edit_category";
     }
-    
+
     @GetMapping("/categories/{id}")
     public String deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
@@ -84,25 +86,25 @@ public class CategoryController {
 
     /* SAVE METHOD */
 
-	private void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
+    private void saveFile(String uploadDir, String fileName, MultipartFile multipartFile) throws IOException {
 
-		String orgName = multipartFile.getOriginalFilename();
+        String orgName = multipartFile.getOriginalFilename();
 
-		if (orgName != "") {
-			Path uploadPath = Paths.get(uploadDir);
+        if (orgName != "") {
+            Path uploadPath = Paths.get(uploadDir);
 
-			if (!Files.exists(uploadPath)) {
-				Files.createDirectories(uploadPath);
-			}
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
 
-			try (InputStream inputStream = multipartFile.getInputStream()) {
-				Path filePath = uploadPath.resolve(fileName);
-				Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-				System.out.println("---------------Categories----------------------------"
-						+ filePath.toAbsolutePath().toString());
-			} catch (IOException ioe) {
-				throw new IOException("Could not save image file: " + fileName, ioe);
-			}
-		}
-	}
+            try (InputStream inputStream = multipartFile.getInputStream()) {
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+                System.out.println(
+                        "---------------Categories----------------------------" + filePath.toAbsolutePath().toString());
+            } catch (IOException ioe) {
+                throw new IOException("Could not save image file: " + fileName, ioe);
+            }
+        }
+    }
 }

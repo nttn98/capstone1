@@ -33,10 +33,10 @@ public class ProductController {
 		if (listProducts.size() == 0) {
 			Product product = new Product();
 			model.addAttribute("product", product);
-			return "create_product";
+			return "products/create_product";
 		} else {
 			findPaginated(1, model);
-			return "products";
+			return "products/products";
 		}
 	}
 
@@ -45,14 +45,14 @@ public class ProductController {
 		Product product = new Product();
 		model.addAttribute("product", product);
 
-		return "create_product";
+		return "products/create_product";
 
 	}
 
 	@GetMapping("/products/edit/{id}")
 	public String editProductForm(@PathVariable Long id, Model model) {
 		model.addAttribute("product", productService.getProductById(id));
-		return "edit_product";
+		return "products/edit_product";
 	}
 
 	@PostMapping("/products/updateProduct/{id}")
@@ -116,8 +116,6 @@ public class ProductController {
 	@PostMapping("/products/saveProduct")
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
 			@ModelAttribute("product") Product product) {
-		System.out.println(
-				"heeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeeeee");
 		try {
 			product = productService.saveProduct(product);
 
