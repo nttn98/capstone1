@@ -4,12 +4,10 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.List;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 
 import com.capstone1.model.Category;
 import com.capstone1.services.CategoryService;
@@ -32,7 +30,7 @@ public class CategoryController {
     public String listCategories(Model model) {
         List<Category> listCategories = categoryService.getAllCategories();
 
-        if (listCategories.size() != 0) {
+        if (listCategories.size() == 0) {
             Category category = new Category();
             model.addAttribute("category", category);
             return "categories/create_category";
@@ -78,7 +76,7 @@ public class CategoryController {
         return "categories/edit_category";
     }
 
-    @GetMapping("/categories/{id}")
+    @GetMapping("/categories/deleteCategory/{id}")
     public String deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
         return "redirect:/categories";
