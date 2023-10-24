@@ -44,6 +44,7 @@ public class ProductController {
 	public String createProductForm(Model model) {
 		Product product = new Product();
 		model.addAttribute("product", product);
+
 		return "create_product";
 
 	}
@@ -57,7 +58,6 @@ public class ProductController {
 	@PostMapping("/products/updateProduct/{id}")
 	public String updateProduct(@PathVariable Long id, Model model, @RequestParam("productImg") MultipartFile file,
 			@ModelAttribute("product") Product product) {
-
 		// get product exist
 		Product existProduct = productService.getProductById(id);
 
@@ -116,6 +116,8 @@ public class ProductController {
 	@PostMapping("/products/saveProduct")
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
 			@ModelAttribute("product") Product product) {
+		System.out.println(
+				"heeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeheeeeeeeeeeeeeeee");
 		try {
 			product = productService.saveProduct(product);
 
