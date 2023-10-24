@@ -2,15 +2,15 @@ package com.capstone1.controller;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.*;
 
+
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import com.capstone1.model.Product;
 import com.capstone1.services.ProductService;
@@ -25,39 +25,37 @@ public class ProductController {
 		this.productService = productService;
 	}
 
-	@GetMapping({"/homePage","/"})
-	public String getHome() {
-		return "homePage";
-	}
-        
 	@GetMapping("/products")
 	public String listProducts(Model model) {
-		model.addAttribute("products", productService.getAllProducts());
-		return "products";
+
+		List<Product> listProducts = productService.getAllProducts();
+
+		if (listProducts.size() == 0) {
+			Product product = new Product();
+			model.addAttribute("product", product);
+			return "create_product";
+		} else {
+			findPaginated(1, model);
+			return "products";
+		}
 	}
 
-	@GetMapping("/products/new")
+	@GetMapping("/products/createProduct")
 	public String createProductForm(Model model) {
 		Product product = new Product();
 		model.addAttribute("product", product);
 		return "create_product";
-	}
 
-	@PostMapping("/products")
-	public String saveProduct(@ModelAttribute("product") Product product) {
-		productService.saveProduct(product);
-		return "redirect:/products";
 	}
-	
 
 	@GetMapping("/products/edit/{id}")
 	public String editProductForm(@PathVariable Long id, Model model) {
 		model.addAttribute("product", productService.getProductById(id));
 		return "edit_product";
 	}
-	
-	@PostMapping("/products/{id}")
-	public String updateProduct(@PathVariable Long id,Model model, @RequestParam("productImg") MultipartFile file,
+
+	@PostMapping("/products/updateProduct/{id}")
+	public String updateProduct(@PathVariable Long id, Model model, @RequestParam("productImg") MultipartFile file,
 			@ModelAttribute("product") Product product) {
 
 		// get product exist
@@ -83,22 +81,39 @@ public class ProductController {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		
+
 		// save updated
 		productService.updateProduct(existProduct);
 
 		return "redirect:/products";
 	}
-	
 
-	@GetMapping("/products/{id}")
+	@GetMapping("/products/changeStatus/{id}")
+	public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("product") Product product) {
+
+		// get product exist
+		Product existProduct = productService.getProductById(id);
+
+		if (existProduct.getProductStatus() == 0) {
+			existProduct.setProductStatus(1);
+		} else {
+			existProduct.setProductStatus(0);
+		}
+
+		// save updated
+		productService.updateProduct(existProduct);
+
+		return "redirect:/products";
+	}
+
+	@GetMapping("/products/deleteProduct/{id}")
 	public String deleteProduct(@PathVariable Long id) {
 		productService.deletePproductById(id);
 		return "redirect:/products";
 	}
 
 	// create Product
-	@PostMapping("/saveProduct")
+	@PostMapping("/products/saveProduct")
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
 			@ModelAttribute("product") Product product) {
 		try {
@@ -136,12 +151,26 @@ public class ProductController {
 			try (InputStream inputStream = multipartFile.getInputStream()) {
 				Path filePath = uploadPath.resolve(fileName);
 				Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-				System.out.println("----------------------------------------------------------------------------"
-						+ filePath.toAbsolutePath().toString());
+				System.out.println("-------------Products-----------------" + filePath.toAbsolutePath().toString());
 			} catch (IOException ioe) {
 				throw new IOException("Could not save image file: " + fileName, ioe);
 			}
 		}
 	}
 
+	/* Pagination */
+	@GetMapping("/page/{pageNo}")
+	public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
+		int pageSize = 5;
+
+		Page<Product> page = productService.findPaginated(pageNo, pageSize);
+		List<Product> listProducts = page.getContent();
+
+		model.addAttribute("currentpage", pageNo);
+		model.addAttribute("totalPages", page.getTotalPages());
+		model.addAttribute("totalItems", page.getTotalElements());
+		model.addAttribute("products", listProducts);
+
+		return "products";
+	}
 }

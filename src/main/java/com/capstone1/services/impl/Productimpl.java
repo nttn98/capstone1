@@ -2,6 +2,8 @@ package com.capstone1.services.impl;
 
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
 import com.capstone1.model.Product;
@@ -45,6 +47,17 @@ public class Productimpl implements ProductService {
 	public void deletePproductById(Long id) {
 		productRepository.deleteById(id);
 
+	}
+
+	@Override
+	public Product changeStatusProduct(Product product) {
+		return productRepository.save(product);
+	}
+
+	@Override
+	public Page<Product> findPaginated(int pageNo, int pageSize) {
+		PageRequest pageable = PageRequest.of(pageNo - 1, pageSize);
+		return this.productRepository.findAll(pageable);
 	}
 
 }
