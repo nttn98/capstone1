@@ -2,7 +2,6 @@ package com.capstone1.services.impl;
 
 import java.util.List;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
@@ -14,14 +13,13 @@ import com.capstone1.repository.*;
 public class Productimpl implements ProductService {
 
 	private ProductRepository productRepository;
- 
 
-	public Productimpl(ProductRepository productRepository ) {
+	public Productimpl(ProductRepository productRepository) {
 		super();
 		this.productRepository = productRepository;
-		 
+
 	}
- 
+
 	@Override
 	public List<Product> getAllProducts() {
 		return productRepository.findAll();

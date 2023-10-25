@@ -2,7 +2,7 @@ package com.capstone1.controller;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,7 +35,7 @@ public class CategoryController {
             model.addAttribute("category", category);
             return "categories/create_category";
         } else {
-            model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("categories", listCategories);
             return "categories/categories";
         }
 
@@ -55,9 +55,9 @@ public class CategoryController {
             category = categoryService.saveCategory(category);
 
             String fileName = category.getCategoryId() + ".png";
-            String uploadDir = "categories-upload/";
+            String uploadDir = "category-upload/";
 
-            category.setCategoryImages("/categories-upload/" + fileName);
+            category.setCategoryImages("/category-upload/" + fileName);
             categoryService.saveCategory(category);
 
             saveFile(uploadDir, fileName, file);

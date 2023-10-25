@@ -1,5 +1,7 @@
 package com.capstone1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,11 +12,16 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long productId;
 	private String productName;
- 	private long productQuantity;
- 	private double productPrice;
+	private long productQuantity;
+	private double productPrice;
 	private String productImages;
 	private String productDescription;
 	private int productStatus;
+
+	// @ManyToOne
+	// @JoinColumn(name = "category_id")
+	// @JsonIgnore
+	// private Category category;
 
 	private int categoriesId;
 	private int manufacturesId;
@@ -23,17 +30,8 @@ public class Product {
 		super();
 	}
 
-	public Product(String productName, long productQuantity, double productPrice, String productImages, String productDescription,
-			int productStatus, int categoriesId, int manufacturesId) {
-		super();
-		this.productName = productName;
-		this.productQuantity = productQuantity;
-		this.productPrice = productPrice;
-		this.productImages = productImages;
-		this.productStatus = productStatus;
+	public void setCategoriesId(int categoriesId) {
 		this.categoriesId = categoriesId;
-		this.manufacturesId = manufacturesId;
-		this.productDescription = productDescription;
 	}
 
 	public long getProductId() {
@@ -60,14 +58,13 @@ public class Product {
 		return productStatus;
 	}
 
-	public int getCategoriesId() {
-		return categoriesId;
-	}
+	// public void setCategory(Category category) {
+	// this.category = category;
+	// }
 
 	public int getManufacturesId() {
 		return manufacturesId;
 	}
-	
 
 	public void setProductName(String productName) {
 		this.productName = productName;
@@ -89,10 +86,6 @@ public class Product {
 		this.productStatus = productStatus;
 	}
 
-	public void setCategoriesId(int categoriesId) {
-		this.categoriesId = categoriesId;
-	}
-
 	public void setManufacturesId(int manufacturesId) {
 		this.manufacturesId = manufacturesId;
 	}
@@ -104,5 +97,13 @@ public class Product {
 	public void setProductDescription(String productDescription) {
 		this.productDescription = productDescription;
 	}
-	
+
+	public int getCategoriesId() {
+		return categoriesId;
+	}
+
+	// public Category getCategory() {
+	// return category;
+	// }
+
 }

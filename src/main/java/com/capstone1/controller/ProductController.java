@@ -4,25 +4,27 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
-
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import com.capstone1.model.Category;
 import com.capstone1.model.Product;
+import com.capstone1.services.CategoryService;
 import com.capstone1.services.ProductService;
 
 @Controller
 public class ProductController {
 
 	private ProductService productService;
+	private CategoryService categoryService;
 
-	public ProductController(ProductService productService) {
+	public ProductController(ProductService productService, CategoryService categoryService) {
 		super();
 		this.productService = productService;
+		this.categoryService = categoryService;
 	}
 
 	@GetMapping("/products")
@@ -32,7 +34,10 @@ public class ProductController {
 
 		if (listProducts.size() == 0) {
 			Product product = new Product();
+			// Category category = new Category();
+
 			model.addAttribute("product", product);
+			// model.addAttribute("category", category);
 			return "products/create_product";
 		} else {
 			findPaginated(1, model);
