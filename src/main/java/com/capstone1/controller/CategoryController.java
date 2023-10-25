@@ -21,11 +21,6 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping({ "/homePage", "/" })
-    public String getHome() {
-        return "homePage";
-    }
-
     @GetMapping("/categories")
     public String listCategories(Model model) {
         List<Category> listCategories = categoryService.getAllCategories();
@@ -74,6 +69,34 @@ public class CategoryController {
     public String editCategory(@PathVariable Long id, Model model) {
         model.addAttribute("category", categoryService.getCategoryById(id));
         return "categories/edit_category";
+    }
+
+    @PostMapping("/categories/updateCategory/{id}")
+    public String updateCategory(@PathVariable Long id, Model model, @RequestParam("categoryImg") MultipartFile file,
+            @ModelAttribute("category") Category category) {
+        // get Category exist
+        System.out.println("heeeeeeeeeeeeeeeeeeeee");
+        Category existCategory = categoryService.getCategoryById(id);
+
+        existCategory.setCategoryName(category.getCategoryName());
+        existCategory.setCategoryDescription(category.getCategoryDescription());
+
+        try {
+            String fileName = existCategory.getCategoryId() + ".png";
+            String uploadDir = "category-upload/";
+
+            existCategory.setCategoryImages("/category-upload/" + fileName);
+
+            saveFile(uploadDir, fileName, file);
+
+            System.out.println("Category added successfully.");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        // save updated
+        categoryService.updateCategory(existCategory);
+        return "redirect:/categories";
     }
 
     @GetMapping("/categories/deleteCategory/{id}")

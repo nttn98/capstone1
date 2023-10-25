@@ -6,11 +6,7 @@ import java.util.*;
 
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capstone1.model.Manufacturer;
@@ -28,9 +24,18 @@ public class ManufacturerController {
 
     @GetMapping("/manufacturers")
     public String listManufacturers(Model model) {
+
         List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
-        model.addAttribute("manufacturers", listManufacturers);
-        return "manufacturers/manufacturers";
+
+        if (listManufacturers.size() == 0) {
+            Manufacturer manufacturer = new Manufacturer();
+
+            model.addAttribute("manufacturer", manufacturer);
+            return "manufacturers/create_manufacturer";
+        } else {
+            model.addAttribute("manufacturers", listManufacturers);
+            return "manufacturers/manufacturers";
+        }
     }
 
     @GetMapping("/manufacturers/createManufacturer")
@@ -38,6 +43,35 @@ public class ManufacturerController {
         Manufacturer manufacturer = new Manufacturer();
         model.addAttribute("manufacturer", manufacturer);
         return "manufacturers/create_manufacturer";
+    }
+
+    @PostMapping("/manufacturers/updateManufacturer/{id}")
+    public String updateManufacturer(@PathVariable Long id, Model model,
+            @RequestParam("manufacturerImg") MultipartFile file,
+            @ModelAttribute("manufacturer") Manufacturer manufacturer) {
+        // get Manufacturer exist
+        System.out.println("heeeeeeeeeeeeeeeeeeeee");
+        Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
+
+        existManufacturer.setManufacturerName(manufacturer.getManufacturerName());
+        existManufacturer.setManufacturerDescription(manufacturer.getManufacturerDescription());
+
+        try {
+            String fileName = existManufacturer.getManufacturerId() + ".png";
+            String uploadDir = "manufacturer-upload/";
+
+            existManufacturer.setManufacturerImages("/manufacturer-upload/" + fileName);
+
+            saveFile(uploadDir, fileName, file);
+
+            System.out.println("Manufacturer added successfully.");
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        // save updated
+        manufacturerService.updateManufacturer(existManufacturer);
+        return "redirect:/manufacturers";
     }
 
     @PostMapping("/manufacturers/saveManufacturer")

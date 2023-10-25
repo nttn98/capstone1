@@ -10,7 +10,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.capstone1.model.Category;
 import com.capstone1.model.Product;
 import com.capstone1.services.CategoryService;
 import com.capstone1.services.ProductService;
@@ -27,6 +26,11 @@ public class ProductController {
 		this.categoryService = categoryService;
 	}
 
+	@GetMapping({ "/homePage", "/" })
+	public String getHome() {
+		return "homePage";
+	}
+
 	@GetMapping("/products")
 	public String listProducts(Model model) {
 
@@ -40,7 +44,8 @@ public class ProductController {
 			// model.addAttribute("category", category);
 			return "products/create_product";
 		} else {
-			findPaginated(1, model);
+			// findPaginated(1, model);
+			model.addAttribute("products", listProducts);
 			return "products/products";
 		}
 	}

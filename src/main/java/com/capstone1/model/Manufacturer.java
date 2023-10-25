@@ -45,4 +45,11 @@ public class Manufacturer {
         this.manufacturerDescription = manufactureDescription;
     }
 
+    public Object getCategoryName() {
+        return null;
+    }
+
+    public void setCategoryName(Object categoryName) {
+    }
+
 }
