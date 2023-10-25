@@ -17,7 +17,7 @@ public class User {
     private String userAddress;
     private String userFullname;
     private String userEmail;
-    private Date useDob;
+    private Date userDob;
     private int userStatus;
 
     public User() {
@@ -48,8 +48,8 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public void setUseDob(Date useDob) {
-        this.useDob = useDob;
+    public void setUserDob(Date userDob) {
+        this.userDob = userDob;
     }
 
     public void setUserStatus(int userStatus) {
@@ -84,8 +84,8 @@ public class User {
         return userEmail;
     }
 
-    public Date getUseDob() {
-        return useDob;
+    public Date getUserDob() {
+        return userDob;
     }
 
     public int getUserStatus() {

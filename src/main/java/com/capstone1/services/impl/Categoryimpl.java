@@ -13,8 +13,6 @@ public class Categoryimpl implements CategoryService {
 
     private CategoryRepository categoryRepository;
 
-    
-
     public Categoryimpl(CategoryRepository categoryRepository) {
         super();
         this.categoryRepository = categoryRepository;
@@ -23,7 +21,7 @@ public class Categoryimpl implements CategoryService {
     @Override
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
-     }
+    }
 
     @Override
     public Category saveCategory(Category category) {
@@ -34,15 +32,20 @@ public class Categoryimpl implements CategoryService {
     @Override
     public Category getCategoryById(Long id) {
         return categoryRepository.findById(id).get();
-      }
+    }
 
     @Override
     public Category updateCategory(Category category) {
         return categoryRepository.save(category);
-     }
+    }
 
     @Override
     public void deleteCategoryById(Long id) {
         categoryRepository.deleteById(id);
-     }
+    }
+
+    @Override
+    public Category changeStatusCategory(Category category) {
+        return categoryRepository.save(category);
+    }
 }

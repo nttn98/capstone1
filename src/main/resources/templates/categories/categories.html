@@ -86,14 +86,19 @@
                         <p></p>
                         <div class="col-lg-3">
                             <a th:href="@{/categories/edit/{id}(id=${category.categoryId})}"
-                                style="text-decoration: none;">
+                                th:if="${category.categoryStatus == 0}" style="text-decoration: none;">
                                 <button class="custom-btn btn-14" style="width: 100px;">
                                     <h7>Edit</h7>
                                 </button>
                             </a>
-                            <a th:href="@{/categories/deleteCategory/{id}(id=${category.categoryId})}">
-                                <button class="custom-btn btn-5" style="width: 100px;">
-                                    <h7>Delete</h7>
+                            <a th:href="@{/categories/changeStatus/{id}(id=${category.categoryId})}">
+                                <button class="custom-btn btn-5" style="width: 100px;"
+                                    th:if="${category.categoryStatus == 0}">
+                                    <h7>Off</h7>
+                                </button>
+                                <button class="custom-btn btn-6" style="width: 100px;"
+                                    th:if="${category.categoryStatus == 1}">
+                                    <h7>On</h7>
                                 </button>
                             </a>
                         </div>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capstone1.model.Category;
+import com.capstone1.model.Product;
 import com.capstone1.services.CategoryService;
 
 @Controller
@@ -62,6 +63,24 @@ public class CategoryController {
         } catch (Exception e) {
             System.out.println(e);
         }
+        return "redirect:/categories";
+    }
+
+    @GetMapping("/categories/changeStatus/{id}")
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("category") Category category) {
+
+        // get product exist
+        Category existCategory = categoryService.getCategoryById(id);
+
+        if (existCategory.getCategoryStatus() == 0) {
+            existCategory.setCategoryStatus(1);
+        } else {
+            existCategory.setCategoryStatus(0);
+        }
+
+        // save updated
+        categoryService.updateCategory(existCategory);
+
         return "redirect:/categories";
     }
 

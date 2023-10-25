@@ -13,12 +13,21 @@ public class Category {
     private String categoryName;
     private String categoryImages;
     private String categoryDescription;
+    private int categoryStatus;
 
     // @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     // private List<Product> products;
 
     public Category() {
         super();
+    }
+
+    public int getCategoryStatus() {
+        return categoryStatus;
+    }
+
+    public void setCategoryStatus(int categoryStatus) {
+        this.categoryStatus = categoryStatus;
     }
 
     public long getCategoryId() {

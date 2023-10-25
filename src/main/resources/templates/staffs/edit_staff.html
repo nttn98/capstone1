@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head th:replace="~{products/create_product.html :: head}"></head>
+
+	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
+		<nav th:replace="products/create_product.html :: header-navbar"></nav>
+		<div th:replace="products/products.html :: main-menu"></div>
+
+		<div class="container mt-3">
+			<h4>Edit staff id = <span th:text="${staff.staffId}"></span>
+			</h4>
+			<br>
+			<form th:action="@{/staffs/updateStaff/{id}(id=${staff.staffId})}" th:object="${staff}" method="POST">
+				<div class="row">
+					<div class="col-sm-6 ol-md-6 col-xs-12">
+						<div class="white-box">
+							<div class="form-group">
+								<label for="full-name" class="col-md-12">
+									<h5>Staff full-name</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="full-name" th:field="*{staffFullname}" type="text" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="staffName" class="col-md-12">
+									<h5>User-name</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="staffName" th:field="*{staffUsername}" type="text" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="password" class="col-md-12">
+									<h5>Password</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="password" th:value="${staff.getStaffPassword()}" type="password"
+										class="form-control mb-2" readonly>
+									<input type="checkbox" onclick="showPass()"> Show password
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="numberPhone" class="col-md-12">
+									<h5>Phone-number</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="numberPhone" th:field="*{staffNumberphone}" type="text"
+										onkeydown="return onlyNumbers(event)" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="idCard" class="col-md-12">
+									<h5>Id-card</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="idCard" th:field="*{staffIdcard}" type="text" class="form-control"
+										onkeydown="return onlyNumbers(event)">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="email" class="col-md-12">
+									<h5>Email</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="email" th:field="*{staffEmail}" type="email" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="dob" class="col-md-12">
+									<h5>Date of birth</h5>
+								</label>
+								<div class="col-md-12" style="margin-bottom: 40px;">
+									<input id="dob" th:field="*{staffDob}" type="date" class="form-control">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12">
+						<div class="white-box">
+							<div class="form-actions">
+								<button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
+									Create</button>
+								<button type="button" onclick="location.href='/staffs'"
+									class="btn btn-default">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<footer th:replace="~{products/products.html :: footer}"></footer>
+	</body>
+	<script>
+		function showPass ()
+		{
+			var p = document.getElementById( 'password' );
+			if ( p.type === "password" )
+			{
+				p.type = "text";
+			} else
+			{
+				p.type = "password";
+
+			}
+		}
+		function onlyNumbers ( event )
+		{
+			if ( event.ctrlKey || event.altKey || event.metaKey || event.key === "Backspace" || event.key === "Delete" || event.key === "ArrowLeft" || event.key === "ArrowRight" )
+			{
+				return true;
+			}
+			if ( /^\d|-$/i.test( event.key ) )
+			{
+				return true;
+			}
+			event.preventDefault();
+			return false;
+		}</script>
+
+</html>

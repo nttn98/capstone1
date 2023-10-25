@@ -12,9 +12,18 @@ public class Manufacturer {
     private String manufacturerName;
     private String manufacturerImages;
     private String manufacturerDescription;
+    private int manufacturerStatus;
 
     public Manufacturer() {
         super();
+    }
+
+    public int getManufacturerStatus() {
+        return manufacturerStatus;
+    }
+
+    public void setManufacturerStatus(int manufacturerStatus) {
+        this.manufacturerStatus = manufacturerStatus;
     }
 
     public long getManufacturerId() {

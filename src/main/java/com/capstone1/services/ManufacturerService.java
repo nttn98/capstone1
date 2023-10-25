@@ -14,6 +14,8 @@ public interface ManufacturerService {
 
     Manufacturer updateManufacturer(Manufacturer manufacturer);
 
+    Manufacturer changeStatusManufacturer(Manufacturer manufacturer);
+
     void deleteManufacturerById(Long Id);
 
 }

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+	<head th:replace="~{products/products::head}"></head>
+	<link rel="stylesheet" href="/css/create_user.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+		integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
+
+		<nav th:replace="categories/create_category.html :: header-navbar"></nav>
+		<div th:replace="products/products.html :: main-menu"></div>
+
+		<div class="container mt-4">
+			<h2 class="page-title">Add User</h2>
+			<br>
+			<form th:action="@{/users/saveUser(id=${user.userId})}" th:object="${user}" method="POST">
+				<div class="row">
+					<div class="col-sm-6 ol-md-6 col-xs-12">
+						<div class="white-box">
+							<div class="form-group">
+								<label for="full-name" class="col-md-12">
+									<h5>User full-name</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="full-name" th:field="*{userFullname}" type="text" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="userName" class="col-md-12">
+									<h5>User-name</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="userName" th:field="*{userUsername}" type="text" class="form-control"
+										required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="password" class="col-md-12">
+									<h5>Password</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="password" th:field="*{userPassword}" type="password"
+										class="form-control mb-1" required>
+
+									<input type="checkbox" onclick="showPass()"> Show password
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="phoneNumber" class="col-md-12">
+									<h5>Phone-number</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="phoneNumber" th:field="*{userPhonenumber}" type="text"
+										class="form-control" required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="address" class="col-md-12">
+									<h5>Address</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="address" th:field="*{userAddress}" type="text" class="form-control"
+										required>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="email" class="col-md-12">
+									<h5>Email</h5>
+								</label>
+								<div class="col-md-12">
+									<input id="email" th:field="*{userEmail}" type="email" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="dob" class="col-md-12">
+									<h5>Date of birth</h5>
+								</label>
+								<div class="col-md-12" style="margin-bottom: 35px;">
+									<input id="dob" th:field="*{userDob}" type="date" class="form-control">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12">
+						<div class="white-box">
+							<div class="form-actions">
+								<button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
+									Create</button>
+								<button type="button" onclick="location.href='/users'"
+									class="btn btn-default">Cancel</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<footer th:replace="~{products/products :: footer}"></footer>
+	</body>
+	<script>
+		function showPass ()
+		{
+			var p = document.getElementById( "password" );
+			if ( p.type === "password" )
+			{
+				p.type = "text";
+			} else
+			{
+				p.type = "password";
+			}
+		}
+	</script>
+
+</html>

@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.capstone1.model.Category;
 import com.capstone1.model.Manufacturer;
 import com.capstone1.services.ManufacturerService;
 
@@ -50,7 +51,6 @@ public class ManufacturerController {
             @RequestParam("manufacturerImg") MultipartFile file,
             @ModelAttribute("manufacturer") Manufacturer manufacturer) {
         // get Manufacturer exist
-        System.out.println("heeeeeeeeeeeeeeeeeeeee");
         Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
 
         existManufacturer.setManufacturerName(manufacturer.getManufacturerName());
@@ -93,6 +93,25 @@ public class ManufacturerController {
         } catch (Exception e) {
             System.out.println(e);
         }
+        return "redirect:/manufacturers";
+    }
+
+    @GetMapping("/manufacturers/changeStatus/{id}")
+    public String changeStatus(@PathVariable Long id, Model model,
+            @ModelAttribute("manufacturer") Manufacturer manufacturer) {
+
+        // get product exist
+        Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
+
+        if (existManufacturer.getManufacturerStatus() == 0) {
+            existManufacturer.setManufacturerStatus(1);
+        } else {
+            existManufacturer.setManufacturerStatus(0);
+        }
+
+        // save updated
+        manufacturerService.updateManufacturer(existManufacturer);
+
         return "redirect:/manufacturers";
     }
 

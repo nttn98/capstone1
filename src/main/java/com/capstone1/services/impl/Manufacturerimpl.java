@@ -44,4 +44,9 @@ public class Manufacturerimpl implements ManufacturerService {
         manufacturerRepository.deleteById(Id);
     }
 
+    @Override
+    public Manufacturer changeStatusManufacturer(Manufacturer manufacturer) {
+       return manufacturerRepository.save(manufacturer);
+    }
+
 }

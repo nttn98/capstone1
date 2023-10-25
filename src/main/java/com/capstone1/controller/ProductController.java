@@ -86,7 +86,7 @@ public class ProductController {
 
 			saveFile(uploadDir, fileName, file);
 
-			System.out.println("Product added successfully.");
+			System.out.println("Product edited successfully.");
 
 		} catch (Exception e) {
 			System.out.println(e);
