@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+    <head th:replace="~{products/products.html :: head}"></head>
+
+    <body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
+        <nav th:replace="categories/create_category.html :: header-navbar"></nav>
+        <div th:replace="products/products.html :: main-menu"></div>
+
+        <div class="container mt-4">
+            <h2 class="page-title">Change password of staff : <span th:text="${staff.staffFullname}"></span></h2>
+            <br>
+            <form th:action="@{/staffs/doChangePass/{id}(id=${staff.staffId})}" th:object="${staff}" method="POST">
+                <div class="row">
+                    <div class="col-sm-6 ol-md-6 col-xs-12">
+                        <div class="white-box">
+                            <div class="form-group">
+                                <label for="password" class="col-md-12">
+                                    <h5> Old Password</h5>
+                                </label>
+                                <div class="col-md-12">
+                                    <input id="password" th:field="*{staffPassword}" type="password"
+                                        class="form-control mb-1" required>
+
+                                    <input type="checkbox" onclick="showPass()"> Show password
+                                </div>
+                                <br>
+                                <label for="password" class="col-md-12">
+                                    <h5> New Password</h5>
+                                </label>
+                                <div class="col-md-12">
+                                    <input id="password" th:field="*{staffPassword}" type="password"
+                                        class="form-control mb-1" required>
+
+                                    <input type="checkbox" onclick="showPass()"> Show password
+                                </div>
+                                <br>
+                                <label for="password" class="col-md-12">
+                                    <h5> Old Password</h5>
+                                </label>
+                                <div class="col-md-12">
+                                    <input id="password" th:field="*{staffPassword}" type="password"
+                                        class="form-control mb-1" required>
+
+                                    <input type="checkbox" onclick="showPass()" style="margin-bottom: 320px;"> Show
+                                    password
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="white-box">
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
+                                    Create</button>
+                                <button type="button" onclick="location.href='/staffs'"
+                                    class="btn btn-default">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <footer th:replace="~{products/products :: footer}"></footer>
+    </body>
+    <script>
+        function showPass ()
+        {
+            var p = document.getElementById( "password" );
+            if ( p.type === "password" )
+            {
+                p.type = "text";
+            } else
+            {
+                p.type = "password";
+            }
+        }
+    </script>
+
+</html>

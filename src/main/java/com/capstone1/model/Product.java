@@ -1,5 +1,7 @@
 package com.capstone1.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,20 +18,34 @@ public class Product {
 	private String productDescription;
 	private int productStatus;
 
-	// @ManyToOne
-	// @JoinColumn(name = "category_id")
-	// @JsonIgnore
-	// private Category category;
+	@ManyToOne
+	@JoinColumn(name = "category_id")
+	@JsonIgnore
+	private Category category;
 
-	private int categoriesId;
-	private int manufacturesId;
+	@ManyToOne
+	@JoinColumn(name = "manufacturer_id")
+	@JsonIgnore
+	private Manufacturer manufacturer;
 
 	public Product() {
 		super();
 	}
 
-	public void setCategoriesId(int categoriesId) {
-		this.categoriesId = categoriesId;
+	public Manufacturer getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(Manufacturer manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 
 	public long getProductId() {
@@ -60,10 +76,6 @@ public class Product {
 	// this.category = category;
 	// }
 
-	public int getManufacturesId() {
-		return manufacturesId;
-	}
-
 	public void setProductName(String productName) {
 		this.productName = productName;
 	}
@@ -84,10 +96,6 @@ public class Product {
 		this.productStatus = productStatus;
 	}
 
-	public void setManufacturesId(int manufacturesId) {
-		this.manufacturesId = manufacturesId;
-	}
-
 	public String getProductDescription() {
 		return productDescription;
 	}
@@ -95,13 +103,5 @@ public class Product {
 	public void setProductDescription(String productDescription) {
 		this.productDescription = productDescription;
 	}
-
-	public int getCategoriesId() {
-		return categoriesId;
-	}
-
-	// public Category getCategory() {
-	// return category;
-	// }
 
 }

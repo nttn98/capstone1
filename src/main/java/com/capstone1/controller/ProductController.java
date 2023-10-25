@@ -10,8 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.capstone1.model.Category;
+import com.capstone1.model.Manufacturer;
 import com.capstone1.model.Product;
 import com.capstone1.services.CategoryService;
+import com.capstone1.services.ManufacturerService;
 import com.capstone1.services.ProductService;
 
 @Controller
@@ -19,11 +22,14 @@ public class ProductController {
 
 	private ProductService productService;
 	private CategoryService categoryService;
+	private ManufacturerService manufacturerService;
 
-	public ProductController(ProductService productService, CategoryService categoryService) {
+	public ProductController(ProductService productService, CategoryService categoryService,
+			ManufacturerService manufacturerService) {
 		super();
 		this.productService = productService;
 		this.categoryService = categoryService;
+		this.manufacturerService = manufacturerService;
 	}
 
 	@GetMapping({ "/homePage", "/" })
@@ -35,16 +41,21 @@ public class ProductController {
 	public String listProducts(Model model) {
 
 		List<Product> listProducts = productService.getAllProducts();
+		List<Category> listCategories = categoryService.getAllCategories();
+		List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+
+		model.addAttribute("categories", listCategories);
+		model.addAttribute("manufacturers", listManufacturers);
 
 		if (listProducts.size() == 0) {
 			Product product = new Product();
-			// Category category = new Category();
 
 			model.addAttribute("product", product);
-			// model.addAttribute("category", category);
+
 			return "products/create_product";
 		} else {
 			// findPaginated(1, model);
+
 			model.addAttribute("products", listProducts);
 			return "products/products";
 		}
@@ -53,6 +64,11 @@ public class ProductController {
 	@GetMapping("/products/createProduct")
 	public String createProductForm(Model model) {
 		Product product = new Product();
+		List<Category> listCategories = categoryService.getAllCategories();
+		List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+
+		model.addAttribute("manufacturers", listManufacturers);
+		model.addAttribute("categories", listCategories);
 		model.addAttribute("product", product);
 
 		return "products/create_product";
@@ -61,6 +77,8 @@ public class ProductController {
 
 	@GetMapping("/products/edit/{id}")
 	public String editProductForm(@PathVariable Long id, Model model) {
+		model.addAttribute("manufacturers", manufacturerService.getAllManufacturers());
+		model.addAttribute("categories", categoryService.getAllCategories());
 		model.addAttribute("product", productService.getProductById(id));
 		return "products/edit_product";
 	}
@@ -74,9 +92,9 @@ public class ProductController {
 		existProduct.setProductName(product.getProductName());
 		existProduct.setProductPrice(product.getProductPrice());
 		existProduct.setProductQuantity(product.getProductQuantity());
+		existProduct.setCategory(product.getCategory());
 		existProduct.setProductDescription(product.getProductDescription());
-		existProduct.setCategoriesId(product.getCategoriesId());
-		existProduct.setManufacturesId(product.getManufacturesId());
+		existProduct.setManufacturer(product.getManufacturer());
 
 		try {
 			String fileName = existProduct.getProductId() + ".png";

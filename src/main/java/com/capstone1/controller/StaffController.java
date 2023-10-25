@@ -78,6 +78,17 @@ public class StaffController {
         return "redirect:/staffs";
     }
 
+    @GetMapping("/staffs/toChangePass/{id}")
+    public String changePass(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
+        model.addAttribute("staff", staffService.getStaffById(id));
+        return "staffs/changePass_staff";
+    }
+
+    @GetMapping("/staffs/doChangePass/{id}")
+    public String changePassword(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
+        return "redirect:/staffs";
+    }
+
     @GetMapping("/staffs/deleteStaff/{id}")
     public String deleteStaff(@PathVariable Long id) {
         staffService.deleteStaffById(id);

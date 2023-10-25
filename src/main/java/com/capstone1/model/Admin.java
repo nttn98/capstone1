@@ -8,7 +8,7 @@ public class Admin {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long adminId;
+    private long adminId;
     private String adminUser;
     private String adminPassword;
 

@@ -38,10 +38,10 @@
 			class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
 			<div class="navbar-wrapper">
 				<div class="navbar-header">
-					<ul class="nav navbar-nav flex-row">
-						<li class="nav-item mr-auto"><a class="navbar-brand" href=" "><img class="brand-logo"
-									alt="stack admin logo" src=" ">
-							</a></li>
+					<ul class="nav navbar-nav flex-row" style="padding: 10px;">
+						<div id="logo">
+							<h1><a href="/">NAD</a></h1>
+						</div>
 					</ul>
 				</div>
 				<div class="navbar-container content">
@@ -115,9 +115,24 @@
 									<h5>Category</h5>
 								</label>
 								<div class="col-md-12">
-									<select class="form-control">
-										<option th:each="category : ${categories}" th:value="category.categoryId"
-											th:text="${category.categoryName}">test1
+									<select class="form-control" th:field="*{category}">
+										<option th:each="category : ${categories}" th:value="${category.categoryId}"
+											th:text="${category.categoryName}">
+										</option>
+
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="name" class="col-md-12">
+									<h5>Manufacturers</h5>
+								</label>
+								<div class="col-md-12">
+									<select class="form-control" th:field="*{manufacturer}">
+										<option th:each="manufacturer : ${manufacturers}"
+											th:value="${manufacturer.manufacturerId}"
+											th:text="${manufacturer.manufacturerName}">
 										</option>
 
 									</select>

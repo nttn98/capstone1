@@ -1,5 +1,7 @@
 package com.capstone1.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,8 +16,19 @@ public class Manufacturer {
     private String manufacturerDescription;
     private int manufacturerStatus;
 
+    @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL)
+    private List<Product> products;
+
     public Manufacturer() {
         super();
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public int getManufacturerStatus() {
@@ -52,13 +65,6 @@ public class Manufacturer {
 
     public void setManufacturerDescription(String manufactureDescription) {
         this.manufacturerDescription = manufactureDescription;
-    }
-
-    public Object getCategoryName() {
-        return null;
-    }
-
-    public void setCategoryName(Object categoryName) {
     }
 
 }

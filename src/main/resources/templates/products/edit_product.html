@@ -44,9 +44,26 @@
 									<h5>Category</h5>
 								</label>
 								<div class="col-md-12">
-									<select class="form-control">
-										<option value="1">test1</option>
-										<option value="2">test2</option>
+									<select class="form-control" th:field="*{category}">
+										<option th:each="category : ${categories}" th:value="${category.categoryId}"
+											th:text="${category.categoryName}">
+										</option>
+
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="name" class="col-md-12">
+									<h5>Manufactures</h5>
+								</label>
+								<div class="col-md-12">
+									<select class="form-control" th:field="*{manufacturer}">
+										<option th:each="manufacturer : ${manufacturers}"
+											th:value="${manufacturer.manufacturerId}"
+											th:text="${manufacturer.manufacturerName}">
+										</option>
+
 									</select>
 								</div>
 							</div>
