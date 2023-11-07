@@ -11,8 +11,17 @@ public class Admin {
     private long adminId;
     private String adminUser;
     private String adminPassword;
+    private int role = 1;
 
     public Admin() {
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 
     public String getAdminUser() {

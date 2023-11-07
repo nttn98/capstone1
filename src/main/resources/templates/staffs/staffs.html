@@ -62,9 +62,6 @@
 					<div class="col-lg-1">
 						<h5>Username</h5>
 					</div>
-					<div class="col-lg-1">
-						<h5>Password</h5>
-					</div>
 					<div class="col-lg-2">
 						<h5>Email</h5>
 					</div>
@@ -90,12 +87,6 @@
 						</div>
 						<div class="col-lg-1">
 							<p th:text="${staff.staffUsername}"></p>
-						</div>
-						<div class="col-lg-1">
-							<button class="custom-btn btn-12"><span style="width: 100px;"><a
-										th:href="@{staffs/toChangePass/{id}(id=${staff.staffId})}"
-										style="text-decoration: none;">Change</a></span><span
-									th:text="${staff.staffPassword}" style="width: 100px;"></span></button>
 						</div>
 						<div class="col-lg-2">
 							<p th:text="${staff.staffEmail}"></p>

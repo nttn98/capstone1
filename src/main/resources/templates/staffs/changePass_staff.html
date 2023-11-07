@@ -19,7 +19,7 @@
                                     <h5> Old Password</h5>
                                 </label>
                                 <div class="col-md-12">
-                                    <input id="password" th:field="*{staffPassword}" type="password"
+                                    <input id="oldPassword" th:field="*{staffPassword}" type="password"
                                         class="form-control mb-1" required>
 
                                     <input type="checkbox" onclick="showPass()"> Show password
@@ -29,18 +29,18 @@
                                     <h5> New Password</h5>
                                 </label>
                                 <div class="col-md-12">
-                                    <input id="password" th:field="*{staffPassword}" type="password"
-                                        class="form-control mb-1" required>
+                                    <input id="newPassword" th:field="*{staffPassword}" type="password"
+                                        class="form-control mb-1" required onchange="onChange()">
 
                                     <input type="checkbox" onclick="showPass()"> Show password
                                 </div>
                                 <br>
                                 <label for="password" class="col-md-12">
-                                    <h5> Old Password</h5>
+                                    <h5> Comfirm Password</h5>
                                 </label>
                                 <div class="col-md-12">
-                                    <input id="password" th:field="*{staffPassword}" type="password"
-                                        class="form-control mb-1" required>
+                                    <input id="confirmPassword" th:field="*{staffPassword}" type="password"
+                                        class="form-control mb-1" required onchange="onChange()">
 
                                     <input type="checkbox" onclick="showPass()" style="margin-bottom: 320px;"> Show
                                     password
@@ -74,6 +74,19 @@
             } else
             {
                 p.type = "password";
+            }
+        }
+
+        function onChange ()
+        {
+            var password = document.querySelector( 'input[id=newPassword]' );
+            var confirm = document.querySelector( 'input[id=confirmPassword]' );
+            if ( confirm.value === password.value )
+            {
+                confirm.setCustomValidity( '' );
+            } else
+            {
+                confirm.setCustomValidity( 'Passwords do not match' );
             }
         }
     </script>

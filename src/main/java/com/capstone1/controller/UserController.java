@@ -11,11 +11,14 @@ import com.capstone1.services.UserService;
 
 @Controller
 public class UserController {
-    private UserService userService;
 
-    public UserController(UserService userService) {
+    private UserService userService;
+    private Encoding encoding;
+
+    public UserController(UserService userService, Encoding encoding) {
         super();
         this.userService = userService;
+        this.encoding = encoding;
     }
 
     @GetMapping("/users")
@@ -46,8 +49,9 @@ public class UserController {
         return "users/edit_user";
     }
 
-    @PostMapping("users/updateUser/{id}")
-    public String updateUser(@PathVariable Long id, Model model, @ModelAttribute("user") User user) {
+    @PostMapping("/users/updateUser/{id}")
+    public String updateUser(@PathVariable Long id, Model model,
+            @ModelAttribute("user") User user) {
         User existUser = userService.getUserById(id);
 
         existUser.setUserFullname(user.getUserFullname());
@@ -85,6 +89,7 @@ public class UserController {
 
     @PostMapping("/users/saveUser")
     public String saveUser(Model model, @ModelAttribute("user") User user) {
+        user.setUserPassword(encoding.toSHA1(user.getUserPassword()));
         userService.saveUser(user);
         System.out.println("User added successfully");
         return "redirect:/users";

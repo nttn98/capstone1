@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class StaffController {
-    private StaffService staffService;
 
-    public StaffController(StaffService staffService) {
+    private StaffService staffService;
+    private Encoding encoding;
+
+    public StaffController(StaffService staffService, Encoding encoding) {
         super();
         this.staffService = staffService;
+        this.encoding = encoding;
     }
 
     @GetMapping(value = "/staffs")
@@ -84,8 +87,9 @@ public class StaffController {
         return "staffs/changePass_staff";
     }
 
-    @GetMapping("/staffs/doChangePass/{id}")
+    @PostMapping("/staffs/doChangePass/{id}")
     public String changePassword(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
+
         return "redirect:/staffs";
     }
 
@@ -97,6 +101,7 @@ public class StaffController {
 
     @PostMapping("/staffs/saveStaff")
     public String saveStaff(Model model, @ModelAttribute("staff") Staff staff) {
+        staff.setStaffPassword(encoding.toSHA1(staff.getStaffPassword()));
         staffService.saveStaff(staff);
         System.out.println("Staff added successfully");
         return "redirect:/staffs";
