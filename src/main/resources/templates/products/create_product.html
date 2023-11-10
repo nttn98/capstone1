@@ -19,16 +19,18 @@
 
 		<script src='/js/jquery.min.js'></script>
 		<script src='/js/bootstrap.min.js'></script>
+		<script src="/js/pages/toastr.js"></script>
+		<script src="/js/pages/jquery.toast.js"></script>
 
 		<link rel='stylesheet' href='/css/font-awesome.min.css'>
 		<link rel="stylesheet" href="/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/css/bootstrap-extended.min.css">
 		<link rel="stylesheet" href="/css/components.min.css">
-		<!-- <link rel="stylesheet" href="/css/pages/vertical-timeline.min.css"> -->
 		<link rel="stylesheet" href="/css/pages/vertical-menu-modern.css">
 		<link rel="stylesheet" href="/css/drop.css">
 		<link rel="stylesheet" href="/css/summernote.css" />
 		<link rel="stylesheet" href="/css/create_product.css" />
+		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
 	</head>
 
 	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
@@ -171,7 +173,8 @@
 								<textarea th:field="*{productDescription}" id="description"></textarea>
 							</div>
 							<div class="form-actions">
-								<button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
+								<button type="submit" class="tst3 btn btn-success text-white"> <i
+										class="fa fa-check"></i>
 									Create</button>
 								<button type="button" onclick="location.href='/products'"
 									class="btn btn-default">Cancel</button>
@@ -181,6 +184,7 @@
 				</div>
 			</form>
 		</div>
+
 
 		<footer th:replace="~{products/products :: footer}"></footer>
 	</body>

@@ -88,8 +88,16 @@ public class StaffController {
     }
 
     @PostMapping("/staffs/doChangePass/{id}")
-    public String changePassword(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
+    public String changePassword(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff,
+            @RequestParam("oldPassword") String pass) {
+        String newPass = encoding.toSHA1(pass);
 
+        if (staff.getStaffPassword().equals(newPass)) {
+            staff.setStaffPassword(newPass);
+            updateStaff(id, model, staff);
+        } else {
+            System.out.println("------------------false");
+        }
         return "redirect:/staffs";
     }
 
