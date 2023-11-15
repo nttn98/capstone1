@@ -1,65 +1,26 @@
-/*
-Template Name: Elite  admin
-Author: Wrappixel
-Email: niravjoshi87@gmail.com
-File: js
-*/
-$( function ()
+function alert_action ( alert_action )
 {
-     "use strict";
-     $( ".tst1" ).click( function ()
+     if ( alert_action == 'true' )
      {
           $.toast( {
-               heading: 'Welcome to Elite  admin',
-               text: 'Use the predefined ones, or specify a custom position object.',
-               position: 'top-right',
-               loaderBg: '#ff6849',
-               icon: 'info',
-               hideAfter: 3000,
-               stack: 6
-          } );
-
-     } );
-
-     $( ".tst2" ).click( function ()
-     {
-          $.toast( {
-               heading: 'Welcome to Admin',
-               text: 'Error',
-               position: 'top-right',
-               loaderBg: '#ff6849',
-               icon: 'warning',
-               hideAfter: 3500,
-               stack: 6
-          } );
-
-     } );
-     $( ".tst3" ).click( function ()
-     {
-          $.toast( {
-               heading: 'Welcome to Admin',
-               text: 'Change successfully.',
+               heading: 'Successfully!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',
                hideAfter: 3500,
                stack: 6
           } );
-
-     } );
-
-     $( ".tst4" ).click( function ()
+     } else if ( alert_action == 'false' )
      {
           $.toast( {
-               heading: 'Welcome to Elite  admin',
-               text: 'Use the predefined ones, or specify a custom position object.',
+               heading: 'Error',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'error',
                hideAfter: 3500
-
           } );
+     }
+     localStorage.removeItem( 'alert-action' )
+}
 
-     } );
-} );
 

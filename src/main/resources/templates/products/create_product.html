@@ -81,7 +81,7 @@
 
 		<div class="container mt-4">
 			<h2 class="page-title">Add Product</h2>
-			<form th:action="@{/products/saveProduct(id=${product.productId})}" th:object="${product}" method="POST"
+			<form th:action="@{/products/saveProduct}" th:object="${product}" method="POST"
 				enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-sm-6 ol-md-6 col-xs-12">

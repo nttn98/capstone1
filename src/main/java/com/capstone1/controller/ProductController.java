@@ -54,11 +54,9 @@ public class ProductController {
 
 			return "products/create_product";
 		} else {
-			// findPaginated(1, model);
-
 			model.addAttribute("products", listProducts);
-			return "products/products";
 		}
+		return "products/products";
 	}
 
 	@GetMapping("/products/createProduct")
@@ -145,30 +143,31 @@ public class ProductController {
 	@PostMapping("/products/saveProduct")
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
 			@ModelAttribute("product") Product product) {
+
 		List<Product> productLists = productService.getAllProducts();
 
 		for (Product product2 : productLists) {
 			if (product2.getProductName().equalsIgnoreCase(product.getProductName())) {
 				System.out.println("===================== duplicate");
-				// return "";
-			} else {
-				try {
-					product = productService.saveProduct(product);
-
-					String fileName = product.getProductId() + ".png";
-					String uploadDir = "product-upload/";
-
-					product.setProductImages("/product-upload/" + fileName);
-					productService.saveProduct(product);
-
-					saveFile(uploadDir, fileName, file);
-
-					System.out.println("Product added successfully.");
-					model.addAttribute("alert", "success");
-				} catch (Exception e) {
-					model.addAttribute("alert", "error");
-				}
+				model.addAttribute("alert", "error");
+				return listProducts(model);
 			}
+		}
+		try {
+
+			String fileName = product.getProductId() + ".png";
+			String uploadDir = "product-upload/";
+
+			product.setProductImages("/product-upload/" + fileName);
+			productService.saveProduct(product);
+
+			saveFile(uploadDir, fileName, file);
+
+			System.out.println("Product added successfully.");
+			model.addAttribute("alert", "success");
+		} catch (Exception e) {
+			model.addAttribute("alert", "error");
+
 		}
 		return listProducts(model);
 	}
