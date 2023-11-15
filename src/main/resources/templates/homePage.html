@@ -22,7 +22,7 @@
 
 	<body>
 		<header>
-			<div class="closeMask"></div>
+
 			<div class="container d-flex align-items-center justify-content-between" id="header">
 				<div id="logo">
 					<h1><a href="/">NAD</a></h1>
@@ -84,47 +84,49 @@
 						<li class="position-relative">
 							<a onclick="showLogin()"><i class="fa fa-user-o" aria-hidden="true"></i></a>
 						</li>
-
-						<div class="login position-fixed">
-							<h2>Login</h2>
-							<div class="container">
-								<div class="row justify-content-center">
-									<div class="col">
-										<div class="card">
-											<div class="card-body">
-												<form>
-													<div class="form-group">
-														<label for="username">Username</label>
-														<input type="text" class="form-control" id="username"
-															placeholder="Enter username" required>
-													</div>
-													<div class="form-group">
-														<label for="password">Password</label>
-														<input type="password" class="form-control" id="password"
-															placeholder="Enter password" required>
-													</div>
-													<button type="submit" class="btn-login">Enter</button>
-												</form>
+				</div>
+				<div class="login position-fixed">
+					<h2>Login</h2>
+					<div class="container">
+						<div class="row justify-content-center">
+							<div class="col">
+								<div class="card">
+									<div class="card-body">
+										<form action="/loginUser" method="GET">
+											<div class="form-group">
+												<label for="username">Username</label>
+												<input type="text" class="form-control" id="username"
+													placeholder="Enter username" required>
 											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<button onclick="closeLogin()" type="button" class="close" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
-
-							<!-- login spcae -->
-							<div class="loginSpace">
-								<div class="container">
-									<div class="row">
+											<div class="form-group">
+												<label for="password">Password</label>
+												<input type="password" class="form-control" id="password"
+													placeholder="Enter password" required>
+											</div>
+											<button type="submit" class="btn-login">Enter</button>
+											<a href="/">Forgot password!</a>
+										</form>
 									</div>
 								</div>
 							</div>
 						</div>
-					</ul>
+					</div>
+
+					<button onclick="closeLogin()" type="button" class="close" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+
+					<!-- login spcae -->
+					<div class="loginSpace">
+						<div class="container">
+							<div class="row">
+							</div>
+						</div>
+					</div>
 				</div>
+				<div class="forgotPassword"></div>
+				</ul>
+				<div class="closeMask"></div>
 			</div>
 		</header>
 
@@ -497,14 +499,13 @@
 						return false;
 					} );
 				} );
-				var check = false;
+
 				function showLogin ()
 				{
 					$( '.login' ).addClass( "w-25" )
 					$( '.closeLogin' ).fadeIn();
 					$( '.closeMask' ).fadeIn();
 					closecart();
-					check = true;
 				}
 				function closeLogin ()
 				{
@@ -515,13 +516,13 @@
 				function showcart ()
 				{
 					$( '.cart' ).addClass( "w-35" )
+					$( '.closeLogin' ).fadeIn();
 					$( '.closeMask' ).fadeIn();
-					closeLogin();
 				}
 				function closecart ()
 				{
 					$( '.cart' ).removeClass( "w-35" )
-					$( '.closeMask' ).fadeOut();
+
 				}
 
 

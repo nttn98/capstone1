@@ -8,9 +8,9 @@
         <div th:replace="products/products.html :: main-menu"></div>
 
         <div class="container mt-4">
-            <h2 class="page-title">Change password of staff : <span th:text="${staff.staffFullname}"></span></h2>
+            <h2 class="page-title">Change password of user : <span th:text="${user.userFullname}"></span></h2>
             <br>
-            <form th:action="@{/staffs/doChangePass/{id}(id=${staff.staffId})}" th:object="${staff}" method="POST">
+            <form th:action="@{/users/doChangePass/{id}(id=${user.userId})}" th:object="${user}" method="POST">
                 <div class="row">
                     <div class="col-sm-6 ol-md-6 col-xs-12">
                         <div class="white-box">
@@ -53,8 +53,8 @@
                         <div class="white-box">
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
-                                    Create</button>
-                                <button type="button" onclick="location.href='/staffs'"
+                                    Done</button>
+                                <button type="button" onclick="location.href='/users'"
                                     class="btn btn-default">Cancel</button>
                             </div>
                         </div>

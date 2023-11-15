@@ -92,7 +92,7 @@
 									<i class="fas fa-upload fa-lg"></i>
 									<p>Drag and drop a file here or click</p>
 								</div>
-								<input type="file" id="input-file-now" class="dropify" name="productImg">
+								<input type="file" id="input-file-now" class="dropify" name="productImg" required>
 								<div class="dropify-preview">
 									<span class="dropify-render">
 									</span>
@@ -108,7 +108,8 @@
 									<h5>Product Name</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="name" th:field="*{productName}" type="text" class="form-control">
+									<input id="name" th:field="*{productName}" type="text" class="form-control"
+										required>
 								</div>
 							</div>
 
@@ -147,7 +148,7 @@
 								</label>
 								<div class="col-md-12">
 									<input th:field="*{productPrice}" class="form-control" type="text" id="price"
-										onkeydown="return onlyNumbers(event)">
+										onkeydown="return onlyNumbers(event)" required>
 								</div>
 							</div>
 
@@ -170,11 +171,10 @@
 								<label for="description" class="col-sm-12 p-0">
 									<h5>Description</h5>
 								</label>
-								<textarea th:field="*{productDescription}" id="description"></textarea>
+								<textarea th:field="*{productDescription}" id="description" required></textarea>
 							</div>
 							<div class="form-actions">
-								<button type="submit" class="tst3 btn btn-success text-white"> <i
-										class="fa fa-check"></i>
+								<button type="submit" class="btn btn-success text-white"> <i class="fa fa-check"></i>
 									Create</button>
 								<button type="button" onclick="location.href='/products'"
 									class="btn btn-default">Cancel</button>

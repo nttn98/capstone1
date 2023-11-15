@@ -32,10 +32,10 @@ public class ProductController {
 		this.manufacturerService = manufacturerService;
 	}
 
-	@GetMapping({ "/homePage", "/" })
-	public String getHome() {
-		return "homePage";
-	}
+	// @GetMapping({ "/homePage", "/" })
+	// public String getHome() {
+	// return "homePage";
+	// }
 
 	@GetMapping("/products")
 	public String listProducts(Model model) {
@@ -106,14 +106,15 @@ public class ProductController {
 
 			System.out.println("Product edited successfully.");
 
+			model.addAttribute("alert", "success");
 		} catch (Exception e) {
-			System.out.println(e);
+			model.addAttribute("alert", "error");
 		}
 
 		// save updated
 		productService.updateProduct(existProduct);
 
-		return "redirect:/products";
+		return listProducts(model);
 	}
 
 	@GetMapping("/products/changeStatus/{id}")
@@ -144,23 +145,32 @@ public class ProductController {
 	@PostMapping("/products/saveProduct")
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
 			@ModelAttribute("product") Product product) {
-		try {
-			product = productService.saveProduct(product);
+		List<Product> productLists = productService.getAllProducts();
 
-			String fileName = product.getProductId() + ".png";
-			String uploadDir = "product-upload/";
+		for (Product product2 : productLists) {
+			if (product2.getProductName().equalsIgnoreCase(product.getProductName())) {
+				System.out.println("===================== duplicate");
+				// return "";
+			} else {
+				try {
+					product = productService.saveProduct(product);
 
-			product.setProductImages("/product-upload/" + fileName);
-			productService.saveProduct(product);
+					String fileName = product.getProductId() + ".png";
+					String uploadDir = "product-upload/";
 
-			saveFile(uploadDir, fileName, file);
+					product.setProductImages("/product-upload/" + fileName);
+					productService.saveProduct(product);
 
-			System.out.println("Product added successfully.");
+					saveFile(uploadDir, fileName, file);
 
-		} catch (Exception e) {
-			System.out.println(e);
+					System.out.println("Product added successfully.");
+					model.addAttribute("alert", "success");
+				} catch (Exception e) {
+					model.addAttribute("alert", "error");
+				}
+			}
 		}
-		return "redirect:/products";
+		return listProducts(model);
 	}
 
 	/* SAVE METHOD */

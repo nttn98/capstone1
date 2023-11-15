@@ -83,20 +83,27 @@ public class StaffController {
 
     @GetMapping("/staffs/toChangePass/{id}")
     public String changePass(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
-        model.addAttribute("staff", staffService.getStaffById(id));
+        Staff existStaff = staffService.getStaffById(id);
+        System.out.println("--------------------" + existStaff.getStaffPassword());
+        model.addAttribute("staff", existStaff);
         return "staffs/changePass_staff";
     }
 
     @PostMapping("/staffs/doChangePass/{id}")
     public String changePassword(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff,
-            @RequestParam("oldPassword") String pass) {
-        String newPass = encoding.toSHA1(pass);
+            @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass) {
 
-        if (staff.getStaffPassword().equals(newPass)) {
-            staff.setStaffPassword(newPass);
-            updateStaff(id, model, staff);
+        Staff existStaff = staffService.getStaffById(id);
+        String oldStaffPass = existStaff.getStaffPassword();
+
+        String oldPassword = encoding.toSHA1(oldPass);
+
+        if (oldStaffPass.equals(oldPassword)) {
+            existStaff.setStaffPassword(newPass);
+            saveStaff(model, existStaff);
+            System.out.println("---------------------Success " + existStaff.getStaffPassword());
         } else {
-            System.out.println("------------------false");
+            System.out.println("---------------------Fail");
         }
         return "redirect:/staffs";
     }
@@ -114,4 +121,5 @@ public class StaffController {
         System.out.println("Staff added successfully");
         return "redirect:/staffs";
     }
+
 }

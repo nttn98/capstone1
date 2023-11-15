@@ -94,4 +94,33 @@ public class UserController {
         System.out.println("User added successfully");
         return "redirect:/users";
     }
+
+    /* Change password */
+    @GetMapping("/users/toChangePass/{id}")
+    public String changePass(@PathVariable Long id, Model model, @ModelAttribute("user") User user) {
+        User existUser = userService.getUserById(id);
+        System.out.println("--------------------" + existUser.getUserPassword());
+        model.addAttribute("user", existUser);
+        return "users/changePass_user";
+    }
+
+    @PostMapping("users/doChangePass/{id}")
+    public String changePasswod(@PathVariable Long id, Model model, @ModelAttribute("user") User user,
+            @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass) {
+        User existUser = userService.getUserById(id);
+        String oldUserPass = existUser.getUserPassword();
+
+        String oldPassword = encoding.toSHA1(oldPass);
+
+        if (oldUserPass.equals(oldPassword)) {
+            existUser.setUserPassword(newPass);
+            saveUser(model, existUser);
+            System.out.println("---------------------Success " + existUser.getUserPassword());
+        } else {
+            System.out.println("---------------------Fail");
+        }
+
+        return "redirect:/users";
+
+    }
 }

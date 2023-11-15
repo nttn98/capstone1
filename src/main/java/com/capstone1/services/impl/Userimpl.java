@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.*;
 
+import com.capstone1.model.Staff;
 import com.capstone1.model.User;
 import com.capstone1.repository.UserRepository;
 import com.capstone1.services.UserService;
@@ -47,6 +48,20 @@ public class Userimpl implements UserService {
     @Override
     public User changeStatusUser(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        List<User> users = getAllUsers();
+        User getUser = null;
+        for (User user : users) {
+            if (user.getUserEmail().equals(email)) {
+                getUser = getUserById(user.getUserId());
+            } else {
+
+            }
+        }
+        return getUser;
     }
 
 }

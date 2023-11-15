@@ -24,8 +24,8 @@ $( function ()
      $( ".tst2" ).click( function ()
      {
           $.toast( {
-               heading: 'Welcome to Elite  admin',
-               text: 'Use the predefined ones, or specify a custom position object.',
+               heading: 'Welcome to Admin',
+               text: 'Error',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'warning',
@@ -37,8 +37,8 @@ $( function ()
      $( ".tst3" ).click( function ()
      {
           $.toast( {
-               heading: 'Welcome to Elite  admin',
-               text: 'Use the predefined ones, or specify a custom position object.',
+               heading: 'Welcome to Admin',
+               text: 'Change successfully.',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',

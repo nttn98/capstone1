@@ -1,6 +1,7 @@
 package com.capstone1.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -47,6 +48,21 @@ public class Staffimpl implements StaffService {
     @Override
     public void deleteStaffById(Long id) {
         staffRepository.deleteById(id);
+    }
+
+    @Override
+    public Staff getStaffByEmail(String email) {
+        List<Staff> staffs = getAllStaffs();
+        Staff getStaff = null;
+        for (Staff staff : staffs) {
+            if (staff.getStaffEmail().equals(email)) {
+                getStaff = getStaffById(staff.getStaffId());
+            } else {
+
+            }
+        }
+        return getStaff;
+
     }
 
 }

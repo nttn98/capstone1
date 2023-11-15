@@ -17,6 +17,8 @@
 
 		<script src='/js/jquery.min.js'></script>
 		<script src='/js/bootstrap.min.js'></script>
+		<script src="/js/pages/toastr.js"></script>
+		<script src="/js/pages/jquery.toast.js"></script>
 
 		<link rel='stylesheet' href='/css/font-awesome.min.css'>
 		<link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -25,6 +27,7 @@
 		<link rel="stylesheet" href="/css/pages/vertical-menu-modern.css">
 		<link rel="stylesheet" href="/css/drop.css">
 		<link rel="stylesheet" href="/css/products.css" />
+		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
 
 		<title>Admin page</title>
 
@@ -217,5 +220,9 @@
 			</p>
 		</footer>
 	</body>
+
+	<script th:inline="javascript">
+		alert_action(/*[[${alert}]]*/ )
+	</script>
 
 </html>
