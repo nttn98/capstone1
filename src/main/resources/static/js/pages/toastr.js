@@ -1,6 +1,6 @@
 function alert_action ( alert_action )
 {
-     if ( alert_action == 'true' )
+     if ( alert_action == 'success' )
      {
           $.toast( {
                heading: 'Successfully!',
@@ -8,9 +8,10 @@ function alert_action ( alert_action )
                loaderBg: '#ff6849',
                icon: 'success',
                hideAfter: 3500,
-               stack: 6
+               stack: 6,
+               
           } );
-     } else if ( alert_action == 'false' )
+     } else if ( alert_action == 'error' )
      {
           $.toast( {
                heading: 'Error',

@@ -154,6 +154,7 @@ public class ProductController {
 			}
 		}
 		try {
+			product = productService.saveProduct(product);
 
 			String fileName = product.getProductId() + ".png";
 			String uploadDir = "product-upload/";
