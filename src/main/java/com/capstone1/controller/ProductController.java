@@ -32,11 +32,6 @@ public class ProductController {
 		this.manufacturerService = manufacturerService;
 	}
 
-	// @GetMapping({ "/homePage", "/" })
-	// public String getHome() {
-	// return "homePage";
-	// }
-
 	@GetMapping("/products")
 	public String listProducts(Model model) {
 

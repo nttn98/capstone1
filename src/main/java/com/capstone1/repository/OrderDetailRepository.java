@@ -11,6 +11,6 @@ import jakarta.transaction.Transactional;
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
     @Modifying
     @Transactional
-    @Query(value = "ALTER TABLE order_details AUTO_INCREMENT = 1001 ", nativeQuery = true)
+    @Query(value = "ALTER TABLE order_detail AUTO_INCREMENT = 1001 ", nativeQuery = true)
     void alterAutoIncrementValue();
 }

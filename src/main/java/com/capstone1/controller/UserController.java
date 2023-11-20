@@ -21,6 +21,12 @@ public class UserController {
         this.encoding = encoding;
     }
 
+    @GetMapping("/orders")
+
+    public String listOrders(Model model) {
+        return "users/orders";
+    }
+
     @GetMapping("/users")
     public String listUsers(Model model) {
         List<User> listUsers = userService.getAllUsers();

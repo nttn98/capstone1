@@ -2,6 +2,7 @@ package com.capstone1.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.capstone1.model.Category;
+import com.capstone1.model.Manufacturer;
+import com.capstone1.model.Product;
 import com.capstone1.model.Staff;
-import com.capstone1.model.Token;
+import com.capstone1.model.TokenAdmin;
+import com.capstone1.model.TokenUser;
 import com.capstone1.model.User;
+import com.capstone1.services.CategoryService;
+import com.capstone1.services.ManufacturerService;
+import com.capstone1.services.ProductService;
 import com.capstone1.services.StaffService;
-import com.capstone1.services.TokenService;
+import com.capstone1.services.TokenAdminService;
+import com.capstone1.services.TokenUserService;
 import com.capstone1.services.UserService;
 
 import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.*;
 
@@ -29,25 +39,44 @@ import jakarta.servlet.http.*;
 public class HomeController {
 
     @Resource
-    TokenService tokenService;
+    TokenUserService tokenUserService;
+    @Resource
+    TokenAdminService tokenAdminService;
     @Autowired
     JavaMailSender mailSender;
 
     private StaffService staffService;
     private UserService userService;
     private Encoding encoding;
+    private ProductService productService;
+    private CategoryService categoryService;
+    private ManufacturerService manufacturerService;
 
-    public HomeController(TokenService tokenService, JavaMailSender mailSender, StaffService staffService,
-            UserService userService, Encoding encoding) {
-        this.tokenService = tokenService;
+    public HomeController(TokenUserService tokenUserService, TokenAdminService tokenAdminService,
+            JavaMailSender mailSender, StaffService staffService, UserService userService, Encoding encoding,
+            ProductService productService, CategoryService categoryService, ManufacturerService manufacturerService) {
+        this.tokenUserService = tokenUserService;
+        this.tokenAdminService = tokenAdminService;
         this.mailSender = mailSender;
         this.staffService = staffService;
         this.userService = userService;
         this.encoding = encoding;
+        this.productService = productService;
+        this.categoryService = categoryService;
+        this.manufacturerService = manufacturerService;
     }
 
     @GetMapping({ "/homePage", "/" })
     public String getHome(Model model) {
+
+        List<Product> listProducts = productService.getAllProducts();
+        List<Category> listCategories = categoryService.getAllCategories();
+        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+
+        model.addAttribute("products", listProducts);
+        model.addAttribute("categories", listCategories);
+        model.addAttribute("manufacturers", listManufacturers);
+
         return "homePage";
     }
 
@@ -57,15 +86,27 @@ public class HomeController {
     }
 
     @GetMapping("/loginUser")
-    public String getLoginUser(Model model) {
-        return "users/login_user";
+    public String getLoginUser(Model model, @RequestParam("username") String username,
+            @RequestParam("password") String password, HttpSession session) {
+        List<User> listUsers = userService.getAllUsers();
+        String passEncoding = encoding.toSHA1(password);
+
+        for (User user : listUsers) {
+            if (user.getUserUsername().equals(username) && user.getUserPassword().equals(passEncoding)) {
+                model.addAttribute("alert", "success");
+                session.setAttribute("username", username);
+            } else {
+                model.addAttribute("alert", "error");
+            }
+        }
+        return getHome(model);
     }
 
     /* Forgot password admin and staff */
 
     @GetMapping("/reset-password")
     public String toResetPasswordPage(@RequestParam("token") String tokenString, Model model) {
-        Token token = tokenService.findByToken(tokenString);
+        TokenAdmin token = tokenAdminService.findByToken(tokenString);
         if (token == null)
             model.addAttribute("tokenExprired", true);
 
@@ -78,20 +119,20 @@ public class HomeController {
             @RequestParam("password") String password, HttpSession httpSession) {
 
         System.out.println("----------------------" + password);
-        Token token = tokenService.findByToken(tokenString);
+        TokenAdmin token = tokenAdminService.findByToken(tokenString);
         if (token == null) {
             model.addAttribute("flag", false);
             model.addAttribute("message", "Your token link is invalid!");
             return getLogin(model);
         }
-        Staff staff = staffService.getStaffById(token.getUserId());
+        Staff staff = staffService.getStaffById(token.getStaffId());
 
         model.addAttribute("flag", true);
         model.addAttribute("message", "You have successfully changed your password.");
 
         staff.setStaffPassword(encoding.toSHA1(password));
 
-        tokenService.deleteByUserId(staff.getStaffId());
+        tokenAdminService.deleteByStaffId(staff.getStaffId());
         staffService.saveStaff(staff);
 
         httpSession.removeAttribute("staff");
@@ -107,7 +148,7 @@ public class HomeController {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(30);
 
-        tokenService.save(new Token(tokenString, staff.getStaffId(), expirationTime));
+        tokenAdminService.save(new TokenAdmin(tokenString, staff.getStaffId(), expirationTime));
 
         String siteURL = request.getRequestURL().toString();
         siteURL = siteURL.replace(request.getServletPath(), "");
@@ -123,7 +164,7 @@ public class HomeController {
 
     @GetMapping("/users/reset-password")
     public String toResetPasswordPageForUser(@RequestParam("token") String tokenString, Model model) {
-        Token token = tokenService.findByToken(tokenString);
+        TokenUser token = tokenUserService.findByToken(tokenString);
         if (token == null)
             model.addAttribute("tokenExprired", true);
 
@@ -138,11 +179,11 @@ public class HomeController {
         System.out.println("---------user-------------" + password);
         System.out.println("---------user-------------" + encoding.toSHA1(password));
 
-        Token token = tokenService.findByToken(tokenString);
+        TokenUser token = tokenUserService.findByToken(tokenString);
         if (token == null) {
             model.addAttribute("flag", false);
             model.addAttribute("message", "Your token link is invalid!");
-            return getLogin(model);
+            return getHome(model);
         }
         User user = userService.getUserById(token.getUserId());
 
@@ -151,31 +192,42 @@ public class HomeController {
 
         user.setUserPassword(encoding.toSHA1(password));
 
-        tokenService.deleteByUserId(user.getUserId());
+        tokenUserService.deleteByUserId(user.getUserId());
         userService.saveUser(user);
 
         httpSession.removeAttribute("user");
-        return getLogin(model);
+
+        return getHome(model);
     }
 
     @PostMapping("/users/forgot-password")
-    public String forgotPasswordForUser(@RequestParam("email") String email, HttpServletRequest request) {
+    public String forgotPasswordForUser(@RequestParam("email") String email, HttpServletRequest request, Model model) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
+        List<User> listUsers = userService.getAllUsers();
+        User existuser = userService.getUserByEmail(email);
 
-        User user = userService.getUserByEmail(email);
+        for (User user : listUsers) {
+            if (!user.getUserEmail().equals(email)) {
+                model.addAttribute("alert", "sendMailfail");
+                return getHome(model);
+            }
+        }
+
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(30);
 
-        tokenService.save(new Token(tokenString, user.getUserId(), expirationTime));
+        tokenUserService.save(new TokenUser(tokenString, existuser.getUserId(), expirationTime));
 
         String siteURL = request.getRequestURL().toString();
         siteURL = siteURL.replace(request.getServletPath(), "");
 
         String resetPasswordLink = siteURL + "/users/reset-password?token=" + tokenString;
         sendEmail(email, resetPasswordLink);
+        model.addAttribute("user", existuser);
+        model.addAttribute("alert", "sendMailsuccess");
 
-        return "redirect:/login_user"; // user
+        return getHome(model); // user
 
     }
 

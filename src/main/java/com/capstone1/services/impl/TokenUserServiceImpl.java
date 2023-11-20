@@ -6,17 +6,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.capstone1.model.Token;
-import com.capstone1.repository.TokenRepository;
-import com.capstone1.services.TokenService;
+import com.capstone1.model.TokenUser;
+import com.capstone1.repository.TokenUserRepository;
+import com.capstone1.services.TokenUserService;
 
 import jakarta.transaction.Transactional;
 
 @Service
-public class TokenServiceImpl implements TokenService {
+public class TokenUserServiceImpl implements TokenUserService {
 
     @Autowired
-    TokenRepository tokenRepository;
+    TokenUserRepository tokenRepository;
 
     @Override
     @Scheduled(fixedRate = 60000)
@@ -27,22 +27,21 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public void save(Token token) {
+    public void save(TokenUser token) {
         tokenRepository.save(token);
     }
 
     @Override
-    public Token findByToken(String token) {
+    public TokenUser findByToken(String token) {
         return tokenRepository.findByToken(token);
     }
 
     @Override
-    public void delete(Token token) {
+    public void delete(TokenUser token) {
         tokenRepository.delete(token);
     }
 
     @Override
-    @Transactional
     public void deleteByUserId(long user_id) {
         tokenRepository.deleteByUserId(user_id);
     }

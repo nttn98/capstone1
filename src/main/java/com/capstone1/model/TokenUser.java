@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class Token {
+public class TokenUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,10 +16,10 @@ public class Token {
     private Long userId;
     private LocalDateTime expirationTime;
 
-    public Token() {
+    public TokenUser() {
     }
 
-    public Token(String token, Long userId, LocalDateTime expirationTime) {
+    public TokenUser(String token, Long userId, LocalDateTime expirationTime) {
         this.token = token;
         this.userId = userId;
         this.expirationTime = expirationTime;

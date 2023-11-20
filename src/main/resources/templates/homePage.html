@@ -1,13 +1,12 @@
 <!Doctype html>
 
-<html lang="en" style="background-color: black;">
+<html xmlns:th="http://www.thymeleaf.org" lang="en" style="background-color: black;">
 
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="shortcut icon" href="logo.png" type="image/png">
-		<link rel="stylesheet" href="/css/bootstrap.min.css">
-		<link rel='stylesheet' href='/css/font-awesome.min.css'>
+
 
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,14 +14,23 @@
 
 		<script src='/js/jquery.min.js'></script>
 		<script src='/js/bootstrap.min.js'></script>
+		<script src="/js/pages/toastrUser.js"></script>
+		<script src="/js/pages/jquery.toast.js"></script>
 
+
+
+		<link rel="stylesheet" href="/css/bootstrap.min.css">
+		<link rel="stylesheet" href="/css/bootstrap-extended.min.css">
+		<link rel="stylesheet" href="/css/drop.css">
+		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
+
+		<link rel='stylesheet' href='/css/font-awesome.min.css'>
 		<link rel="styleSheet" href="/css/homePage.css">
 		<title>Capstone1</title>
 	</head>
 
 	<body>
 		<header>
-
 			<div class="container d-flex align-items-center justify-content-between" id="header">
 				<div id="logo">
 					<h1><a href="/">NAD</a></h1>
@@ -76,35 +84,58 @@
 										<h4>Total: <span>22.000.000 VND</span></h4>
 									</div><br>
 									<button class="btn-purchase">Purchase</button>
-
 								</div>
 							</div>
 
 						</li>
 						<li class="position-relative">
-							<a onclick="showLogin()"><i class="fa fa-user-o" aria-hidden="true"></i></a>
+							<a onclick="showLogin()" th:unless="${session.username!=null}"><i class="fa fa-user-o"
+									aria-hidden="true"></i></a>
 						</li>
 				</div>
 				<div class="login position-fixed">
-					<h2>Login</h2>
 					<div class="container">
 						<div class="row justify-content-center">
 							<div class="col">
-								<div class="card">
+								<div class="card" id="CustomerLoginForm">
+									<h2>Login</h2>
 									<div class="card-body">
 										<form action="/loginUser" method="GET">
 											<div class="form-group">
-												<label for="username">Username</label>
-												<input type="text" class="form-control" id="username"
+												<label for="username">
+													<h6>Username</h6>
+												</label>
+												<input type="text" class="form-control" id="username" name="username"
 													placeholder="Enter username" required>
 											</div>
 											<div class="form-group">
-												<label for="password">Password</label>
+												<label for="password">
+													<h6>Password</h6>
+												</label>
 												<input type="password" class="form-control" id="password"
-													placeholder="Enter password" required>
+													name="password" placeholder="Enter password" required>
 											</div>
-											<button type="submit" class="btn-login">Enter</button>
-											<a href="/">Forgot password!</a>
+											<button type="submit" class="btn-login">Submit</button>
+											<br>
+											<a href="#" id="RecoverPassword">Forgot your password?</a>
+										</form>
+									</div>
+								</div>
+								<div class="card d-none" id="RecoverPasswordForm">
+									<h2>Reset your password</h2>
+									<div class="card-body ">
+										<form method="post" action="/users/forgot-password" accept-charset="UTF-8">
+											<div class="form-group">
+												<label for="RecoverEmail">
+													<h6>Email</h6>
+												</label>
+												<input type="email" name="email" id="RecoverEmail" class="form-control"
+													autocorrect="off" autocapitalize="off">
+											</div>
+											<button type="submit" class="btn-login">Submit</button>
+											<br>
+											<a href="#" id="HideRecoverPasswordLink">Cancel</a>
+
 										</form>
 									</div>
 								</div>
@@ -115,18 +146,9 @@
 					<button onclick="closeLogin()" type="button" class="close" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
-
-					<!-- login spcae -->
-					<div class="loginSpace">
-						<div class="container">
-							<div class="row">
-							</div>
-						</div>
-					</div>
 				</div>
-				<div class="forgotPassword"></div>
-				</ul>
-				<div class="closeMask"></div>
+			</div>
+			<div class="closeMask"></div>
 			</div>
 		</header>
 
@@ -220,7 +242,6 @@
 
 				</div>
 			</div>
-
 		</div>
 
 		<div class="topBody">
@@ -252,9 +273,7 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
-
 		</div>
 
 		<div class="botBody">
@@ -270,12 +289,20 @@
 				</ul>
 
 				<div class="row">
-					<div class="col-lg-4 col-sm-12 col-md-12">
+					<div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" product: ${products}">
 						<div class="card-botBody text-white">
-							<img src="img/WPC3DA-01.jpg">
-							<a>5SPC WPC 3DMATION 01</a>
-							<p>22.200.000 VND</p>
+							<img th:src="${product.productImages}">
+							<figcaption>
+								<div class="box-1">
+									<div class="btn btn-one">
+										<span th:value="${product.productId}">Add to cart</span>
+									</div>
+								</div>
+							</figcaption>
 						</div>
+						<h5><a th:text="${product.productName}"></a></h5>
+						<p th:text="${product.productPrice}+'00.000 VND'"> </p>
+
 					</div>
 				</div>
 			</div>
@@ -303,230 +330,244 @@
 					</div>
 				</div>
 			</div>
-
-			<div class="topFooter">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<h2>Tin tức cập nhật</h2>
-						</div>
+		</div>
+		<div class="topFooter">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<h2>Tin tức cập nhật</h2>
 					</div>
+				</div>
 
-					<div class="row">
-						<div class="col-lg-3 col-sm-12 col-md-12">
-							<div class="owl-item active" style="width: 404px;">
-								<div class="slide-post owl-carousel-item">
-									<article id="post-11469"
-										class="blog-post-loop post-slide blog-style-shadow blog-design-masonry post-11469 post type-post status-publish format-standard has-post-thumbnail hentry category-kien-thuc-do-hoa tag-ue tag-unreal-engine">
-										<div class="article-inner">
-											<header class="entry-header">
-												<figure class="entry-thumbnail">
-													<div class="post-img-wrapp">
-														<a
-															href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/">
-															<img width="300" height="169" src="img/news1.jpg">
-													</div>
-													<div class="post-image-mask">
-														<span></span>
-													</div>
-												</figure>
-
-												<div class="post-date woodmart-post-date" onclick="">
-													<span class="post-date-day">
-														25 </span>
-													<span class="post-date-month">
-														Th3 </span>
+				<div class="row">
+					<div class="col-lg-3 col-sm-12 col-md-12">
+						<div class="owl-item active" style="width: 404px;">
+							<div class="slide-post owl-carousel-item">
+								<article id="post-11469"
+									class="blog-post-loop post-slide blog-style-shadow blog-design-masonry post-11469 post type-post status-publish format-standard has-post-thumbnail hentry category-kien-thuc-do-hoa tag-ue tag-unreal-engine">
+									<div class="article-inner">
+										<header class="entry-header">
+											<figure class="entry-thumbnail">
+												<div class="post-img-wrapp">
+													<a
+														href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/">
+														<img width="300" height="169" src="img/news1.jpg">
 												</div>
-											</header>
-
-											<div class="article-body-container">
-												<div class="meta-categories-wrapp">
-													<div class="meta-post-categories"><a
-															href="https://5spc.com/category/kien-thuc-do-hoa/"
-															rel="category tag">Kiến Thức Đồ Hoạ</a></div>
+												<div class="post-image-mask">
+													<span></span>
 												</div>
+											</figure>
 
-												<h3 class="entry-title title">
-													<a href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/"
-														rel="bookmark">Ra mắt Unreal Engine 5.2 – Game Engine với
-														khả
-														năng đồ
-														họa
-														realistic đỉnh cao</a>
-												</h3>
-												<div class="entry-content woodmart-entry-content">
-													<p>ĐẮM CHÌM VÀO THẾ GIỚI SIÊU THỰC VỚI UNREAL ENGINE 5.2 MỚI RA
-														MẮT
-														Vừa qua,
-														tại
-														workshop State of Unreal 2023, các chuyên gia ...</p>
-													<a href="#"> Continue...</a>
-												</div>
+											<div class="post-date woodmart-post-date" onclick="">
+												<span class="post-date-day">
+													25 </span>
+												<span class="post-date-month">
+													Th3 </span>
+											</div>
+										</header>
+
+										<div class="article-body-container">
+											<div class="meta-categories-wrapp">
+												<div class="meta-post-categories"><a
+														href="https://5spc.com/category/kien-thuc-do-hoa/"
+														rel="category tag">Kiến Thức Đồ Hoạ</a></div>
+											</div>
+
+											<h3 class="entry-title title">
+												<a href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/"
+													rel="bookmark">Ra mắt Unreal Engine 5.2 – Game Engine với
+													khả
+													năng đồ
+													họa
+													realistic đỉnh cao</a>
+											</h3>
+											<div class="entry-content woodmart-entry-content">
+												<p>ĐẮM CHÌM VÀO THẾ GIỚI SIÊU THỰC VỚI UNREAL ENGINE 5.2 MỚI RA
+													MẮT
+													Vừa qua,
+													tại
+													workshop State of Unreal 2023, các chuyên gia ...</p>
+												<a href="#"> Continue...</a>
 											</div>
 										</div>
-									</article>
-								</div>
+									</div>
+								</article>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 
-			<br>
 
-			<footer class="footer-container color-scheme-light">
-				<div class="container main-footer">
-					<aside class="footer-sidebar widget-area row" role="complementary">
-						<div class="footer-column footer-column-1 col-12 col-md-6">
-							<div id="text-21" class="woodmart-widget widget footer-widget  widget_text">
-								<h5 class="widget-title">CÔNG TY CÔNG NGHỆ NAD</h5>
-								<div class="textwidget">
-									<p><strong>Showroom</strong>: 527/1E/4 Phan Văn Trị, Phường 5, Q. Gò Vấp, TP. HCM
-									</p>
-									<p><strong>Hotline</strong>: 0000 000 000 – <strong>Email hỗ trợ Khách
-											hàng</strong>:
-										support@nad.com</p>
-								</div>
+		<br>
+
+		<footer class="footer-container color-scheme-light">
+			<div class="container main-footer">
+				<aside class="footer-sidebar widget-area row" role="complementary">
+					<div class="footer-column footer-column-1 col-12 col-md-6">
+						<div id="text-21" class="woodmart-widget widget footer-widget  widget_text">
+							<h5 class="widget-title">CÔNG TY CÔNG NGHỆ NAD</h5>
+							<div class="textwidget">
+								<p><strong>Showroom</strong>: 527/1E/4 Phan Văn Trị, Phường 5, Q. Gò Vấp, TP. HCM
+								</p>
+								<p><strong>Hotline</strong>: 0000 000 000 – <strong>Email hỗ trợ Khách
+										hàng</strong>:
+									support@nad.com</p>
 							</div>
-						</div>
-						<div class="footer-column footer-column-2 col-12 col-md-6">
-						</div>
-						<div class="footer-column footer-column-3 col-12 col-sm-6 col-lg-3">
-							<div id="text-16" class="woodmart-widget widget footer-widget  widget_text">
-								<div class="textwidget">
-									<h1><a href="/">NAD</a></h1>
-									<p><strong>RIGHT PC FOR RIGHT PEOPLE</strong></p>
-									<p><a href="https://www.facebook.com/5spc.official/"><img decoding="async" class=""
-												style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
-												src="https://5spc.com/wp-content/uploads/2022/06/icon-facebook-2.png"
-												height="45"></a>
-										&nbsp;&nbsp;<a
-											href="https://www.youtube.com/channel/UCBv9olvUdB-wjRsUp8tXGfw"><img
-												decoding="async"
-												style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
-												src="https://5spc.com/wp-content/uploads/2022/06/icon-youtube-2.png"></a>
-										&nbsp; <a href="https://www.instagram.com/5spc.official/"><img decoding="async"
-												style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
-												src="https://5spc.com/wp-content/uploads/2022/06/icon-instagram-2.png"></a>
-									</p>
-								</div>
-							</div>
-						</div>
-						<div class="footer-column footer-column-4 col-12 col-sm-6 col-lg-3">
-							<div id="text-17" class="woodmart-widget widget footer-widget  widget_text">
-								<h5 class="widget-title">HỖ TRỢ KHÁCH HÀNG</h5>
-								<div class="textwidget">
-									<ul>
-										<li class="fa fa-chevron-right"><a
-												href="https://5spc.com/chinh-sach-thanh-toan-huong-dan-mua-hang/">Hướng
-												dẫn
-												mua hàng</a></li>
-										<li class="fa fa-chevron-right"><a
-												href="https://5spc.com/chinh-sach-bao-hanh/">Chính sách bảo
-												hành</a>
-										</li>
-										<li class="fa fa-chevron-right"><a href="#">Góp ý – khiếu nại</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-
-						<div class="footer-column footer-column-5 col-12 col-sm-6 col-lg-3">
-							<div id="text-18" class="woodmart-widget widget footer-widget  widget_text">
-								<h5 class="widget-title">ĐỐI TÁC – DOANH NGHIỆP</h5>
-								<div class="textwidget">
-									<ul>
-										<li class="fa fa-chevron-right"><a href="#">Đơn vị vận chuyển</a></li>
-										<li class="fa fa-chevron-right"><a href="#">Cộng đồng</a></li>
-										<li class="fa fa-chevron-right"><a href="#">Dự án</a></li>
-									</ul>
-
-								</div>
-							</div>
-						</div>
-
-						<div class="footer-column footer-column-6 col-12 col-sm-6 col-lg-3">
-							<div id="text-19" class="woodmart-widget widget footer-widget  widget_text">
-								<h5 class="widget-title">CHÍNH SÁCH CHUNG</h5>
-								<div class="textwidget">
-									<ul>
-										<li class="fa fa-chevron-right"><a href="https://5spc.com/tin-tuc/">Tin tức – Sự
-												kiện</a></li>
-										<li class="fa fa-chevron-right"><a href="https://5spc.com/lien-he/">Liên hệ</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</aside>
-				</div>
-
-				<div class="copyrights-wrapper copyrights-two-columns">
-					<div class="container">
-						<div class="min-footer">
-							<div class="col-left reset-mb-10">
-								Copyright 2021 © 5SPC. All Right Reserved. Công ty Cổ phần Thương mại Dịch vụ Công nghệ
-								5SPC. MST: 0316981084. </div>
 						</div>
 					</div>
+					<div class="footer-column footer-column-2 col-12 col-md-6">
+					</div>
+					<div class="footer-column footer-column-3 col-12 col-sm-6 col-lg-3">
+						<div id="text-16" class="woodmart-widget widget footer-widget  widget_text">
+							<div class="textwidget">
+								<h1><a href="/">NAD</a></h1>
+								<p><strong>RIGHT PC FOR RIGHT PEOPLE</strong></p>
+								<p><a href="https://www.facebook.com/5spc.official/"><img decoding="async" class=""
+											style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
+											src="https://5spc.com/wp-content/uploads/2022/06/icon-facebook-2.png"
+											height="45"></a>
+									&nbsp;&nbsp;<a href="https://www.youtube.com/channel/UCBv9olvUdB-wjRsUp8tXGfw"><img
+											decoding="async" style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
+											src="https://5spc.com/wp-content/uploads/2022/06/icon-youtube-2.png"></a>
+									&nbsp; <a href="https://www.instagram.com/5spc.official/"><img decoding="async"
+											style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
+											src="https://5spc.com/wp-content/uploads/2022/06/icon-instagram-2.png"></a>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="footer-column footer-column-4 col-12 col-sm-6 col-lg-3">
+						<div id="text-17" class="woodmart-widget widget footer-widget  widget_text">
+							<h5 class="widget-title">HỖ TRỢ KHÁCH HÀNG</h5>
+							<div class="textwidget">
+								<ul>
+									<li class="fa fa-chevron-right"><a
+											href="https://5spc.com/chinh-sach-thanh-toan-huong-dan-mua-hang/">Hướng
+											dẫn
+											mua hàng</a></li>
+									<li class="fa fa-chevron-right"><a
+											href="https://5spc.com/chinh-sach-bao-hanh/">Chính sách bảo
+											hành</a>
+									</li>
+									<li class="fa fa-chevron-right"><a href="#">Góp ý – khiếu nại</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+
+					<div class="footer-column footer-column-5 col-12 col-sm-6 col-lg-3">
+						<div id="text-18" class="woodmart-widget widget footer-widget  widget_text">
+							<h5 class="widget-title">ĐỐI TÁC – DOANH NGHIỆP</h5>
+							<div class="textwidget">
+								<ul>
+									<li class="fa fa-chevron-right"><a href="#">Đơn vị vận chuyển</a></li>
+									<li class="fa fa-chevron-right"><a href="#">Cộng đồng</a></li>
+									<li class="fa fa-chevron-right"><a href="#">Dự án</a></li>
+								</ul>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="footer-column footer-column-6 col-12 col-sm-6 col-lg-3">
+						<div id="text-19" class="woodmart-widget widget footer-widget  widget_text">
+							<h5 class="widget-title">CHÍNH SÁCH CHUNG</h5>
+							<div class="textwidget">
+								<ul>
+									<li class="fa fa-chevron-right"><a href="https://5spc.com/tin-tuc/">Tin tức – Sự
+											kiện</a></li>
+									<li class="fa fa-chevron-right"><a href="https://5spc.com/lien-he/">Liên hệ</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</div>
+
+			<div class="copyrights-wrapper copyrights-two-columns">
+				<div class="container">
+					<div class="min-footer">
+						<div class="col-left reset-mb-10">
+							Copyright 2021 © 5SPC. All Right Reserved. Công ty Cổ phần Thương mại Dịch vụ Công nghệ
+							5SPC. MST: 0316981084. </div>
+					</div>
 				</div>
-			</footer>
+			</div>
+		</footer>
 
-			<button id="topButton"><i class="fa fa-arrow-up"></i></button>
+		<button id="topButton"><i class="fa fa-arrow-up"></i></button>
 
-			<script>
-				$( '.closeMask' ).click( ( e ) =>
+		<script th:inline="javascript">
+
+
+			$( "#RecoverPassword" ).click( function ()
+			{
+				$( "#RecoverPasswordForm" ).toggleClass( "d-none" );
+				$( "#CustomerLoginForm" ).toggleClass( "d-none" );
+			} )
+			$( "#HideRecoverPasswordLink" ).click( function ()
+			{
+				$( "#RecoverPasswordForm" ).toggleClass( "d-none" );
+				$( "#CustomerLoginForm" ).toggleClass( "d-none" );
+			} );
+
+
+			$( '.closeMask' ).click( ( e ) =>
+			{
+				if ( e.target.classList.contains( 'closeMask' ) )
+					$( 'button.close' ).click()
+			} );
+
+			$( document ).ready( function ()
+			{
+				$( window ).scroll( function ()
 				{
-					if ( e.target.classList.contains( 'closeMask' ) )
-						$( 'button.close' ).click()
-				} )
-				$( document ).ready( function ()
-				{
-					$( window ).scroll( function ()
+					if ( $( this ).scrollTop() > 100 )
 					{
-						if ( $( this ).scrollTop() > 100 )
-						{
-							$( '#topButton' ).fadeIn();
-						} else
-						{
-							$( '#topButton' ).fadeOut();
-						}
-					} );
-
-					$( '#topButton' ).click( function ()
+						$( '#topButton' ).fadeIn();
+					} else
 					{
-						$( 'html, body' ).animate( { scrollTop: 0 }, 400 );
-						return false;
-					} );
+						$( '#topButton' ).fadeOut();
+					}
 				} );
 
-				function showLogin ()
+				$( '#topButton' ).click( function ()
 				{
-					$( '.login' ).addClass( "w-25" )
-					$( '.closeLogin' ).fadeIn();
-					$( '.closeMask' ).fadeIn();
-					closecart();
-				}
-				function closeLogin ()
-				{
-					$( '.login' ).removeClass( "w-25" )
-					$( '.closeLogin' ).fadeOut();
-					$( '.closeMask' ).fadeOut();
-				}
-				function showcart ()
-				{
-					$( '.cart' ).addClass( "w-35" )
-					$( '.closeLogin' ).fadeIn();
-					$( '.closeMask' ).fadeIn();
-				}
-				function closecart ()
-				{
-					$( '.cart' ).removeClass( "w-35" )
+					$( 'html, body' ).animate( { scrollTop: 0 }, 400 );
+					return false;
+				} );
+			} );
 
-				}
+			function showLogin ()
+			{
+				$( '.login' ).addClass( "w-25" );
+				$( '.closeLogin' ).fadeIn();
+				$( '.closeMask' ).fadeIn();
+				closecart();
+			}
+			function closeLogin ()
+			{
+				$( '.login' ).removeClass( "w-25" )
+				$( '.closeLogin' ).fadeOut();
+				$( '.closeMask' ).fadeOut();
+			}
+			function showcart ()
+			{
+				$( '.cart' ).addClass( "w-35" )
+				$( '.closeLogin' ).fadeIn();
+				$( '.closeMask' ).fadeIn();
+			}
+			function closecart ()
+			{
+				$( '.cart' ).removeClass( "w-35" )
 
+			}
 
-			</script>
+			alert_action(/*[[${alert}]]*/ )
+		</script>
 
 	</body>
 
