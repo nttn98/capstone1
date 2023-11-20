@@ -18,4 +18,9 @@ public interface TokenUserRepository extends JpaRepository<TokenUser, Long> {
 
     void deleteByExpirationTimeBefore(LocalDateTime expirationTime);
 
+    @Modifying
+    @Transactional
+    @Query(value = "ALTER TABLE token_users AUTO_INCREMENT = 1001 ", nativeQuery = true)
+    void alterAutoIncrementValue();
+
 }
