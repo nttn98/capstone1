@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.stereotype.*;
 
-import com.capstone1.model.Staff;
 import com.capstone1.model.User;
 import com.capstone1.repository.UserRepository;
 import com.capstone1.services.UserService;

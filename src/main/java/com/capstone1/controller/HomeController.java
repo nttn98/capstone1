@@ -6,42 +6,28 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import com.capstone1.model.Category;
-import com.capstone1.model.Manufacturer;
-import com.capstone1.model.Product;
-import com.capstone1.model.Staff;
-import com.capstone1.model.TokenAdmin;
-import com.capstone1.model.TokenUser;
-import com.capstone1.model.User;
-import com.capstone1.services.CategoryService;
-import com.capstone1.services.ManufacturerService;
-import com.capstone1.services.ProductService;
-import com.capstone1.services.StaffService;
-import com.capstone1.services.TokenAdminService;
-import com.capstone1.services.TokenUserService;
-import com.capstone1.services.UserService;
+import com.capstone1.model.*;
+import com.capstone1.services.*;
 
 import jakarta.annotation.Resource;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
+import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.*;
 
 @Controller
+@SessionAttributes("cart")
 public class HomeController {
 
     @Resource
     TokenUserService tokenUserService;
     @Resource
     TokenAdminService tokenAdminService;
+
     @Autowired
     JavaMailSender mailSender;
 
@@ -52,9 +38,16 @@ public class HomeController {
     private CategoryService categoryService;
     private ManufacturerService manufacturerService;
 
+    private OrderService orderService;
+    private OrderDetailService orderDetailService;
+    private CartService cartService;
+    private CartItemService cartItemService;
+
     public HomeController(TokenUserService tokenUserService, TokenAdminService tokenAdminService,
             JavaMailSender mailSender, StaffService staffService, UserService userService, Encoding encoding,
-            ProductService productService, CategoryService categoryService, ManufacturerService manufacturerService) {
+            ProductService productService, CategoryService categoryService, ManufacturerService manufacturerService,
+            OrderService orderService, OrderDetailService orderDetailService, CartService cartService,
+            CartItemService cartItemService) {
         this.tokenUserService = tokenUserService;
         this.tokenAdminService = tokenAdminService;
         this.mailSender = mailSender;
@@ -64,6 +57,11 @@ public class HomeController {
         this.productService = productService;
         this.categoryService = categoryService;
         this.manufacturerService = manufacturerService;
+
+        this.orderService = orderService;
+        this.orderDetailService = orderDetailService;
+        this.cartService = cartService;
+        this.cartItemService = cartItemService;
     }
 
     @GetMapping({ "/homePage", "/" })
@@ -78,6 +76,85 @@ public class HomeController {
         model.addAttribute("manufacturers", listManufacturers);
 
         return "homePage";
+
+    }
+
+    /* Order user */
+    @GetMapping("/users/addToCart/{productId}")
+    public String addToCart(Model model, @PathVariable long productId, HttpSession session,
+            @RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+        Long userId = (Long) session.getAttribute("userId");
+        Cart cart = (Cart) session.getAttribute("cart");
+        Product temp = productService.getProductById(productId);
+
+        if (userId == null) {
+            addToCartWithoutUser(session, cart, temp);
+        } else {
+            User user = userService.getUserById(userId);
+
+            addToCartWithUser(session, quantity, cart, temp, user);
+        }
+
+        return "redirect:/homePage";
+
+    }
+
+    private void addToCartWithUser(HttpSession session, int quantity, Cart cart, Product product, User user) {
+        if (cart == null) {
+            cart = cartService.saveCart(new Cart(user));
+        }
+
+        System.out.println("+++++++++++++++++++++" + user.getUserId());
+
+        CartItem cartItem = cartItemService.findByProductId(product.getProductId());
+
+        if (cartItem == null) {
+            cartItem = cartItemService.save(new CartItem(cart, product, quantity));
+        } else {
+            cartItem.setQuantity(cartItem.getQuantity() + 1);
+            cartItemService.save(cartItem);
+        }
+
+        cart.addProduct(product, cart);
+        session.setAttribute("cart", cart);
+    }
+
+    private void addToCartWithoutUser(HttpSession session, Cart cart, Product product) {
+        if (cart == null) {
+            cart = new Cart();
+            cart.addProduct(product, null);
+        } else {
+            CartItem cartItem = cart.checkProductExist(product.getProductId());
+            if (cartItem == null) {
+                cartItem = new CartItem(cart, product, 1);
+            }
+            cart.addProduct(product, cart);
+        }
+        session.setAttribute("cart", cart);
+    }
+
+    @GetMapping("/users/addOrder")
+    public String addOrder(Model model, HttpSession session,
+            @RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+        Long userId = (Long) session.getAttribute("userId");
+        User userLogin = userService.getUserById(userId);
+        Cart cart = (Cart) session.getAttribute("cart");
+        Order order = null;
+        double total = 0;
+
+        if (cart != null && userLogin != null) {
+            order = orderService.addOrder(new Order(0, userLogin));
+            for (int i = 0; i < cart.getListItem().size(); i++) {
+                Product product = cart.getListItem().get(i).getProduct();
+                double subtotal = product.getProductPrice() * quantity;
+                orderDetailService.save(new OrderDetail(order, product, quantity, subtotal));
+                total += subtotal;
+            }
+            order.setTotal(total);
+        }
+        orderService.addOrder(order);
+        return "redirect:/homePage";
+
     }
 
     @GetMapping("/loginAdmin")
@@ -94,7 +171,12 @@ public class HomeController {
         for (User user : listUsers) {
             if (user.getUserUsername().equals(username) && user.getUserPassword().equals(passEncoding)) {
                 model.addAttribute("alert", "success");
+                model.addAttribute("userLogin", user);
+                session.setAttribute("userId", user.getUserId());
                 session.setAttribute("username", username);
+
+                Cart cart = cartService.findByUserId(user.getUserId());
+                session.setAttribute("cart", cart);
             } else {
                 model.addAttribute("alert", "error");
             }

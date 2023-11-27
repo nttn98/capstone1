@@ -1,14 +1,15 @@
 package com.capstone1.model;
 
+import java.text.DecimalFormat;
+
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "order_details")
+@Table(name = "orderDetails")
 public class OrderDetail {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long orderDetailid;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
@@ -18,23 +19,27 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    private double subtotal;
+    private int quantity;
+    private double price;
+    private double finalPrice;
 
     public OrderDetail() {
     }
 
-    public OrderDetail(Order order, Product product, double subtotal) {
+    public OrderDetail(Order order, Product product, int quantity, double price) {
         this.order = order;
         this.product = product;
-        this.subtotal = subtotal;
+        this.quantity = quantity;
+        this.price = price;
+        setFinalPrice();
     }
 
-    public long getOrderDetailid() {
-        return orderDetailid;
+    public long getId() {
+        return id;
     }
 
-    public void setOrderDetailid(long id) {
-        this.orderDetailid = id;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Order getOrder() {
@@ -53,12 +58,29 @@ public class OrderDetail {
         this.product = product;
     }
 
-    public double getSubtotal() {
-        return subtotal;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setSubtotal(double subtotal) {
-        this.subtotal = subtotal;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public double getFinalPrice() {
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        String formattedValueString = decimalFormat.format(finalPrice);
+        return Double.parseDouble(formattedValueString);
+    }
+
+    public void setFinalPrice() {
+        this.finalPrice = this.price * this.quantity;
+    }
 }

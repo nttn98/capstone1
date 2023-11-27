@@ -12,7 +12,6 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long productId;
 
-	
 	private String productName;
 	private long productQuantity;
 	private double productPrice;
@@ -62,8 +61,8 @@ public class Product {
 		return productQuantity;
 	}
 
-	public double getProductPrice() {
-		return productPrice;
+	public int getProductPrice() {
+		return (int) productPrice;
 	}
 
 	public String getProductImages() {

@@ -51,7 +51,12 @@
 						<li class="position-relative">
 
 							<a onclick="showcart()">
-								<span class="position-absolute cart-count">3</span>
+								<span class="position-absolute cart-count" th:if="${cart  == null}">
+									<p>0</p>
+								</span>
+								<span class="position-absolute cart-count" th:if="${cart != null}">
+									<p th:text="${session.cart.getListItem().size()}"></p>
+								</span>
 								<i class="fa fa-shopping-cart" aria-hidden="true" style="padding-left: 8px;"></i>
 							</a>
 
@@ -60,37 +65,44 @@
 								<button onclick="closecart()" type="button" class="close" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
-
+								<h3 th:if="${session.cart==null}">There are no items</h3>
 								<!-- product -->
-								<div class="product">
+								<div class="product" th:if="${session.cart!=null}">
 									<div class="container">
-										<div class="row">
+										<div class="row" th:each=" item : ${session.cart.getListItem()}"
+											style="margin-bottom: 10px;">
 											<div class="col-2">
-												<img src="img\WPC3DA-01.jpg" style="width: 100%;">
+												<img th:src="${item.getProduct().getProductImages()}"
+													style="width: 100%;">
 											</div>
-											<div class="col-4">5SPC WPC 3DMATION 01</div>
+											<div class="col-4" th:text="${item.getProduct().getProductName()}">
+											</div>
 
-											<div class="col-2">
-												1
+											<input type="number" name="quantity" th:value="${item.getQuantity()}">
+											<div class="col-2"
+												th:text="${item.getProduct().getProductPrice()} +'.000 VND'">
 											</div>
-											<div class="col-2">22.200.000 VND</div>
+
 											<div class="col-2">x</div>
 										</div>
+										<br>
 									</div>
 								</div>
-								<hr>
-								<div class="purchase-space">
+								<hr th:if="${cart!=null}">
+								<div class="purchase-space" th:if="${cart!=null}">
 									<div class="total-purchase">
-										<h4>Total: <span>22.000.000 VND</span></h4>
+										<h4>Total: <span th:text="${cart.getTotal()} +'.000 VND'"></span>
+										</h4>
 									</div><br>
-									<button class="btn-purchase">Purchase</button>
+									<a th:href="@{/users/addOrder}"><button class="btn-purchase">Order</button></a>
 								</div>
 							</div>
 
 						</li>
 						<li class="position-relative">
-							<a onclick="showLogin()" th:unless="${session.username!=null}"><i class="fa fa-user-o"
+							<a onclick="showLogin()" th:if="${session.username==null}"><i class="fa fa-user-o"
 									aria-hidden="true"></i></a>
+							<p th:if="${session.username!=null}" th:text="${session.username}"></p>
 						</li>
 				</div>
 				<div class="login position-fixed">
@@ -292,15 +304,19 @@
 					<div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" product: ${products}">
 						<div class="card-botBody text-white">
 							<img th:src="${product.productImages}">
-							<figcaption>
-								<div class="box-1">
-									<div class="btn btn-one">
-										<span th:value="${product.productId}">Add to cart</span>
+							<a th:href="@{/users/addToCart/{producId}(producId=${product.productId})}">
+								<figcaption>
+									<div class="box-1">
+										<div class="btn btn-one">
+											<span>
+												Add to Cart
+											</span>
+										</div>
 									</div>
-								</div>
-							</figcaption>
+								</figcaption>
+							</a>
 						</div>
-						<h5><a th:text="${product.productName}"></a></h5>
+						<h5><a th:text=" ${product.productName}"></a></h5>
 						<p th:text="${product.productPrice}+'00.000 VND'"> </p>
 
 					</div>
@@ -375,14 +391,16 @@
 
 											<h3 class="entry-title title">
 												<a href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/"
-													rel="bookmark">Ra mắt Unreal Engine 5.2 – Game Engine với
+													rel="bookmark">Ra mắt Unreal Engine 5.2 – Game Engine
+													với
 													khả
 													năng đồ
 													họa
 													realistic đỉnh cao</a>
 											</h3>
 											<div class="entry-content woodmart-entry-content">
-												<p>ĐẮM CHÌM VÀO THẾ GIỚI SIÊU THỰC VỚI UNREAL ENGINE 5.2 MỚI RA
+												<p>ĐẮM CHÌM VÀO THẾ GIỚI SIÊU THỰC VỚI UNREAL ENGINE 5.2 MỚI
+													RA
 													MẮT
 													Vừa qua,
 													tại
@@ -409,7 +427,8 @@
 						<div id="text-21" class="woodmart-widget widget footer-widget  widget_text">
 							<h5 class="widget-title">CÔNG TY CÔNG NGHỆ NAD</h5>
 							<div class="textwidget">
-								<p><strong>Showroom</strong>: 527/1E/4 Phan Văn Trị, Phường 5, Q. Gò Vấp, TP. HCM
+								<p><strong>Showroom</strong>: 527/1E/4 Phan Văn Trị, Phường 5, Q. Gò Vấp,
+									TP. HCM
 								</p>
 								<p><strong>Hotline</strong>: 0000 000 000 – <strong>Email hỗ trợ Khách
 										hàng</strong>:
@@ -476,9 +495,11 @@
 							<h5 class="widget-title">CHÍNH SÁCH CHUNG</h5>
 							<div class="textwidget">
 								<ul>
-									<li class="fa fa-chevron-right"><a href="https://5spc.com/tin-tuc/">Tin tức – Sự
+									<li class="fa fa-chevron-right"><a href="https://5spc.com/tin-tuc/">Tin
+											tức – Sự
 											kiện</a></li>
-									<li class="fa fa-chevron-right"><a href="https://5spc.com/lien-he/">Liên hệ</a>
+									<li class="fa fa-chevron-right"><a href="https://5spc.com/lien-he/">Liên
+											hệ</a>
 									</li>
 								</ul>
 							</div>
@@ -491,7 +512,8 @@
 				<div class="container">
 					<div class="min-footer">
 						<div class="col-left reset-mb-10">
-							Copyright 2021 © 5SPC. All Right Reserved. Công ty Cổ phần Thương mại Dịch vụ Công nghệ
+							Copyright 2021 © 5SPC. All Right Reserved. Công ty Cổ phần Thương mại Dịch vụ
+							Công nghệ
 							5SPC. MST: 0316981084. </div>
 					</div>
 				</div>
@@ -501,7 +523,6 @@
 		<button id="topButton"><i class="fa fa-arrow-up"></i></button>
 
 		<script th:inline="javascript">
-
 
 			$( "#RecoverPassword" ).click( function ()
 			{
@@ -546,7 +567,6 @@
 				$( '.login' ).addClass( "w-25" );
 				$( '.closeLogin' ).fadeIn();
 				$( '.closeMask' ).fadeIn();
-				closecart();
 			}
 			function closeLogin ()
 			{
@@ -563,9 +583,15 @@
 			function closecart ()
 			{
 				$( '.cart' ).removeClass( "w-35" )
-
+				$( '.closeMask' ).fadeOut();
 			}
-
+			// let org=111;
+			// $('.cart').on('change','input[name="quantity"]',(e)=>{
+			// 	let ele=$(e.target);
+			// 	let quantity=ele.val();
+			// 	let parent=ele.parent(".row");
+			// 	let subTotal=parseInt(parent.find('.sub-total').text(org*quantity))
+			// })
 			alert_action(/*[[${alert}]]*/ )
 		</script>
 

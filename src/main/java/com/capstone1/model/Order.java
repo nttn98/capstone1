@@ -1,9 +1,6 @@
 package com.capstone1.model;
 
-import java.time.LocalDateTime;
 import java.util.List;
-
-import org.hibernate.annotations.CurrentTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -15,68 +12,38 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long orderid;
-    private int orderStatus = 0;
+    private long orderId;
+    private int status = 0;
     private double total;
-
-    @CurrentTimestamp
-    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
-
-    @ManyToOne
-    @JoinColumn(name = "staff_id")
-    @JsonIgnore
-    private Staff staff;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @JsonIgnore
     List<OrderDetail> orderDetails;
 
-    public Order(List<OrderDetail> orderDetails) {
-        this.orderDetails = orderDetails;
-    }
-
-    public Order(int status, User user, Staff staff, List<OrderDetail> orderDetails) {
-        this.orderStatus = status;
+    public Order(int status, User user) {
+        this.status = status;
         this.user = user;
-        this.staff = staff;
-        this.orderDetails = orderDetails;
+
     }
 
-    public long getOrderid() {
-        return orderid;
+    public long getOrderId() {
+        return orderId;
     }
 
-    public void setOrderid(long id) {
-        this.orderid = id;
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
     }
 
-    public int getOrderStatus() {
-        return orderStatus;
+    public int getStatus() {
+        return status;
     }
 
-    public void setOrderStatus(int status) {
-        this.orderStatus = status;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    public LocalDateTime getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public User getUser() {
@@ -87,12 +54,12 @@ public class Order {
         this.user = user;
     }
 
-    public Staff getStaff() {
-        return staff;
+    public double getTotal() {
+        return total    ;
     }
 
-    public void setStaff(Staff staff) {
-        this.staff = staff;
+    public void setTotal(double total) {
+        this.total = total;
     }
 
     public List<OrderDetail> getOrderDetails() {

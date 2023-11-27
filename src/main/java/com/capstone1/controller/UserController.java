@@ -2,11 +2,15 @@ package com.capstone1.controller;
 
 import java.util.*;
 
+import org.hibernate.annotations.Parameter;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 
+import com.capstone1.model.CartItem;
+import com.capstone1.model.Product;
 import com.capstone1.model.User;
+import com.capstone1.services.ProductService;
 import com.capstone1.services.UserService;
 
 @Controller
