@@ -1,10 +1,9 @@
 package com.capstone1.repository;
 
 import org.springframework.data.jpa.repository.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.capstone1.model.Manufacturer;
-
-import jakarta.transaction.Transactional;
 
 public interface ManufacturerRepository extends JpaRepository<Manufacturer, Long> {
     @Modifying

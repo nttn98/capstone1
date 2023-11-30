@@ -23,4 +23,9 @@ public class Cartimpl implements CartService {
         return cartRepository.findByUserUserId(userId);
     }
 
+    @Override
+    public void deleteByUserId(long userId) {
+        cartRepository.deleteByUserUserId(userId);
+    }
+
 }

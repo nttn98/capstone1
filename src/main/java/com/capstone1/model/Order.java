@@ -24,6 +24,9 @@ public class Order {
     @JsonIgnore
     List<OrderDetail> orderDetails;
 
+    public Order() {
+    }
+
     public Order(int status, User user) {
         this.status = status;
         this.user = user;
@@ -55,7 +58,7 @@ public class Order {
     }
 
     public double getTotal() {
-        return total    ;
+        return total;
     }
 
     public void setTotal(double total) {

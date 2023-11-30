@@ -29,6 +29,7 @@ public class CartItem {
         this.product = product;
         this.quantity = quantity;
         this.cart = cart;
+        this.price = product.getProductPrice();
     }
 
     public Product getProduct() {

@@ -14,7 +14,7 @@ public interface StaffService {
 
     Staff getStaffById(Long id);
 
-    Staff getStaffByEmail(String email);
+    Staff findByEmail(String email);
 
     Staff changeStatusStaff(Staff staff);
 

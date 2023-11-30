@@ -77,21 +77,22 @@
 											</div>
 											<div class="col-4" th:text="${item.getProduct().getProductName()}">
 											</div>
-
-											<input type="number" name="quantity" th:value="${item.getQuantity()}">
-											<div class="col-2"
-												th:text="${item.getProduct().getProductPrice()} +'.000 VND'">
+											<input type="number" name="quantity" th:value="${item.getQuantity()}"
+												style="width: 50px; height: 50px;">
+											<div class="col-2" th:text="${item.getSubtotal()} +'.000 VND'">
 											</div>
 
-											<div class="col-2">x</div>
+											<div class="col-2">
+												<button>x</button>
+											</div>
 										</div>
 										<br>
 									</div>
 								</div>
-								<hr th:if="${cart!=null}">
-								<div class="purchase-space" th:if="${cart!=null}">
-									<div class="total-purchase">
-										<h4>Total: <span th:text="${cart.getTotal()} +'.000 VND'"></span>
+								<hr th:if="${session.cart != null}">
+								<div class="purchase-space" th:if="${session.cart != null}">
+									<div class=" total-purchase">
+										<h4>Total: <span th:text="${session.cart.getTotal()} +'.000 VND'"></span>
 										</h4>
 									</div><br>
 									<a th:href="@{/users/addOrder}"><button class="btn-purchase">Order</button></a>
@@ -112,7 +113,7 @@
 								<div class="card" id="CustomerLoginForm">
 									<h2>Login</h2>
 									<div class="card-body">
-										<form action="/loginUser" method="GET">
+										<form action="/loginUser" method="POST">
 											<div class="form-group">
 												<label for="username">
 													<h6>Username</h6>

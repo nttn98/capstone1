@@ -50,17 +50,8 @@ public class Userimpl implements UserService {
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        List<User> users = getAllUsers();
-        User getUser = null;
-        for (User user : users) {
-            if (user.getUserEmail().equals(email)) {
-                getUser = getUserById(user.getUserId());
-            } else {
-
-            }
-        }
-        return getUser;
+    public User findByEmail(String email) {
+        return userRepository.findByUserEmail(email);
     }
 
 }

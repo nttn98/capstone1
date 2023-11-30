@@ -49,18 +49,8 @@ public class Staffimpl implements StaffService {
     }
 
     @Override
-    public Staff getStaffByEmail(String email) {
-        List<Staff> staffs = getAllStaffs();
-        Staff getStaff = null;
-        for (Staff staff : staffs) {
-            if (staff.getStaffEmail().equals(email)) {
-                getStaff = getStaffById(staff.getStaffId());
-            } else {
-
-            }
-        }
-        return getStaff;
-
+    public Staff findByEmail(String email) {
+        return staffRepository.findByStaffEmail(email);
     }
 
 }

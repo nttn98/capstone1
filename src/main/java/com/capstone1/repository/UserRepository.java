@@ -1,12 +1,14 @@
 package com.capstone1.repository;
 
 import org.springframework.data.jpa.repository.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.capstone1.model.User;
 
-import jakarta.transaction.Transactional;
-
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    User findByUserEmail(String email);
+
     @Modifying
     @Transactional
     @Query(value = "ALTER TABLE users AUTO_INCREMENT = 1001 ", nativeQuery = true)

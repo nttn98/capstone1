@@ -1,11 +1,9 @@
 <!DOCTYPE html>
-
 <html xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="~{products/products :: head}"></head>
+    <head th:replace="~{products/products ::head}"></head>
 
     <body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
-
         <nav th:fragment="header-navbar"
             class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
             <div class="navbar-wrapper">
@@ -19,10 +17,8 @@
                 <div class="navbar-container content">
                     <div class="collapse navbar-collapse" id="navbar-mobile">
                         <ul class="nav navbar-nav mr-auto float-left">
-                            <a th:href="@{categories/createCategory}">
-                                <button class="custom-btn btn-13">
-                                    <h7>+ category</h7>
-                                </button>
+                            <a>
+
                             </a>
                         </ul>
                         <ul class="nav navbar-nav float-right">
@@ -30,7 +26,7 @@
                                     class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
                                     <div class="avatar avatar-online">
                                         <!-- <img src="../../../app-assets/images/portrait/small/avatar-s-1.png"
-                            alt="avatar"><i></i> -->
+						alt="avatar"><i></i> -->
                                     </div>
                                     <span class="user-name" style="width: 65px;">Nhan</span>
                                 </a>
@@ -53,52 +49,43 @@
         <div class="app-content content">
             <div class="content-wrapper">
                 <div class=" content-header row">
-                    <h4>List Categories</h4>
+                    <h4>List Orders</h4>
                 </div>
                 <br>
                 <div class="row">
                     <div class="col-lg-2">
-                        <h5>Image</h5>
+                        <h5>Order Id</h5>
                     </div>
-                    <div class="col-lg-3">
-                        <h5>Name of category</h5>
+                    <div class="col-lg-1">
+                        <h5>User Id</h5>
                     </div>
-                    <div class="col-lg-4">
-                        <h5>Description</h5>
+                    <div class="col-lg-2">
+                        <h5>Total</h5>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <h5>Action</h5>
                     </div>
                 </div>
                 <br>
 
-                <div class="content-body" th:each=" category: ${categories}">
+                <div class="content-body" th:each=" order: ${orders}">
                     <div class="row grouped-multiple-statistics-card">
                         <div class="col-lg-2">
-                            <img th:src="${category.categoryImages}" style="width: 120px;">
+                            <p th:text="${order.orderId}"></p>
                         </div>
-                        <div class="col-lg-3">
-                            <p th:text="${category.categoryName}"></p>
+                        <div class="col-lg-1">
+                            <p th:text="${order.user.userId}"></p>
                         </div>
-                        <div class="col-lg-4">
-                            <p th:text="${category.categoryDescription}"></p>
+                        <div class="col-lg-2">
+                            <p th:text="${order.total}"></p>
                         </div>
-                        <p></p>
-                        <div class="col-lg-3">
-                            <a th:href="@{/categories/edit/{id}(id=${category.categoryId})}"
-                                th:if="${category.categoryStatus == 0}" style="text-decoration: none;">
-                                <button class="custom-btn btn-14" style="width: 100px;">
-                                    <h7>Edit</h7>
+                        <div class="col-lg-2">
+                            <a th:href="@{/orders/changeStatus/{id}(id=${order.orderId})}">
+                                <button class="custom-btn btn-5" style="width: 100px;" th:if="${order.status == 0}">
+                                    <h7>Pending</h7>
                                 </button>
-                            </a>
-                            <a th:href="@{/categories/changeStatus/{id}(id=${category.categoryId})}">
-                                <button class="custom-btn btn-5" style="width: 100px;"
-                                    th:if="${category.categoryStatus == 0}">
-                                    <h7>Disable</h7>
-                                </button>
-                                <button class="custom-btn btn-6" style="width: 100px;"
-                                    th:if="${category.categoryStatus == 1}">
-                                    <h7>Enable</h7>
+                                <button class="custom-btn btn-6" style="width: 100px;" th:if="${order.status == 1}">
+                                    <h7>Delivered</h7>
                                 </button>
                             </a>
                         </div>
@@ -107,6 +94,7 @@
                 </div>
             </div>
         </div>
+
 
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>

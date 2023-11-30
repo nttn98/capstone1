@@ -76,7 +76,26 @@ public class HomeController {
         model.addAttribute("manufacturers", listManufacturers);
 
         return "homePage";
+    }
 
+    @GetMapping("/orders")
+    public String listOrders(Model model) {
+        List<Order> listOrders = orderService.getAllOrders();
+        model.addAttribute("orders", listOrders);
+        return "admin/orders";
+    }
+
+    @GetMapping("/orders/changeStatus/{id}")
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("order") Order order) {
+        Order existOrder = orderService.getOrderById(id);
+        if (existOrder.getStatus() == 0) {
+            existOrder.setStatus(1);
+        } else {
+            existOrder.setStatus(0);
+        }
+        model.addAttribute("alert", "success");
+        orderService.changeStatusOrder(existOrder);
+        return listOrders(model);
     }
 
     /* Order user */
@@ -103,8 +122,6 @@ public class HomeController {
         if (cart == null) {
             cart = cartService.saveCart(new Cart(user));
         }
-
-        System.out.println("+++++++++++++++++++++" + user.getUserId());
 
         CartItem cartItem = cartItemService.findByProductId(product.getProductId());
 
@@ -148,9 +165,14 @@ public class HomeController {
                 Product product = cart.getListItem().get(i).getProduct();
                 double subtotal = product.getProductPrice() * quantity;
                 orderDetailService.save(new OrderDetail(order, product, quantity, subtotal));
+                cartItemService.deleteByProductId(product.getProductId());
                 total += subtotal;
             }
+            cartService.deleteByUserId(userLogin.getUserId());
             order.setTotal(total);
+
+            cart.getListItem().clear();
+            session.removeAttribute("cart");
         }
         orderService.addOrder(order);
         return "redirect:/homePage";
@@ -162,7 +184,7 @@ public class HomeController {
         return "loginAdmin_Staff";
     }
 
-    @GetMapping("/loginUser")
+    @PostMapping("/loginUser")
     public String getLoginUser(Model model, @RequestParam("username") String username,
             @RequestParam("password") String password, HttpSession session) {
         List<User> listUsers = userService.getAllUsers();
@@ -226,7 +248,7 @@ public class HomeController {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
 
-        Staff staff = staffService.getStaffByEmail(email);
+        Staff staff = staffService.findByEmail(email);
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(30);
 
@@ -251,7 +273,7 @@ public class HomeController {
             model.addAttribute("tokenExprired", true);
 
         model.addAttribute("token", tokenString);
-        return "recover_password_user"; // user
+        return "/users/recover_password_user"; // user
     }
 
     @PostMapping("/users/reset-password")
@@ -287,8 +309,8 @@ public class HomeController {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
         List<User> listUsers = userService.getAllUsers();
-        User existuser = userService.getUserByEmail(email);
-
+        // User existuser = userService.getUserByEmail(email);
+        User existuser = userService.findByEmail(email);
         for (User user : listUsers) {
             if (!user.getUserEmail().equals(email)) {
                 model.addAttribute("alert", "sendMailfail");

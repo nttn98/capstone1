@@ -1,10 +1,9 @@
 package com.capstone1.repository;
 
 import org.springframework.data.jpa.repository.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.capstone1.model.*;
-
-import jakarta.transaction.Transactional;
 
 public interface AdminRepository extends JpaRepository<Admin, Long> {
     @Modifying

@@ -94,11 +94,11 @@
                             <a th:href="@{/manufacturers/changeStatus/{id}(id=${manufacturer.manufacturerId})}">
                                 <button class="custom-btn btn-5" style="width: 100px;"
                                     th:if="${manufacturer.manufacturerStatus == 0}">
-                                    <h7>Off</h7>
+                                    <h7>Disable</h7>
                                 </button>
                                 <button class="custom-btn btn-6" style="width: 100px;"
                                     th:if="${manufacturer.manufacturerStatus == 1}">
-                                    <h7>On</h7>
+                                    <h7>Enable</h7>
                                 </button>
                             </a>
                         </div>

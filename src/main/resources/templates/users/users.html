@@ -109,10 +109,10 @@
 							</a>
 							<a th:href="@{/users/changeStatus/{id}(id=${user.userId})}">
 								<button class="custom-btn btn-5" style="width: 100px;" th:if="${user.userStatus == 0}">
-									<h7>Off</h7>
+									<h7>Disable</h7>
 								</button>
 								<button class="custom-btn btn-6" style="width: 100px;" th:if="${user.userStatus == 1}">
-									<h7>On</h7>
+									<h7>Enable</h7>
 								</button>
 							</a>
 						</div>

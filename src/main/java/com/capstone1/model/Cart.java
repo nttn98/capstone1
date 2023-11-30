@@ -21,7 +21,7 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     @JsonIgnore
-    List<CartItem> listItem; 
+    List<CartItem> listItem;
 
     public Cart() {
         this.listItem = new ArrayList<>();
@@ -60,7 +60,7 @@ public class Cart {
 
     }
 
-    public void removeItem(int productID) {
+    public void removeItem(long productID) {
         for (int i = 0; i < listItem.size(); i++) {
             if (listItem.get(i).getProduct().getProductId() == productID) {
                 this.listItem.remove(i);
