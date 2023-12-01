@@ -13,6 +13,7 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
     @Transactional
     @Query(value = "ALTER TABLE carts AUTO_INCREMENT = 1001", nativeQuery = true)
     void alterAutoIncrementValue();
+    
 
     Cart findByUserUserId(long userId);
 

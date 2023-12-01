@@ -51,10 +51,10 @@
 						<li class="position-relative">
 
 							<a onclick="showcart()">
-								<span class="position-absolute cart-count" th:if="${cart  == null}">
+								<span class="position-absolute cart-count" th:if="${session.cart  == null}">
 									<p>0</p>
 								</span>
-								<span class="position-absolute cart-count" th:if="${cart != null}">
+								<span class="position-absolute cart-count" th:if="${session.cart!= null}">
 									<p th:text="${session.cart.getListItem().size()}"></p>
 								</span>
 								<i class="fa fa-shopping-cart" aria-hidden="true" style="padding-left: 8px;"></i>

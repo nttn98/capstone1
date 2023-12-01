@@ -15,6 +15,7 @@ public class CartItemimpl implements CartItemService {
 
     @Override
     public CartItem save(CartItem cartItem) {
+        cartItemRepository.alterAutoIncrementValue();
         return cartItemRepository.save(cartItem);
     }
 

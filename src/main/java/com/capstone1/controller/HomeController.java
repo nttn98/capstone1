@@ -20,7 +20,6 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.*;
 
 @Controller
-@SessionAttributes("cart")
 public class HomeController {
 
     @Resource
@@ -171,9 +170,11 @@ public class HomeController {
             cartService.deleteByUserId(userLogin.getUserId());
             order.setTotal(total);
 
+            cartService.deleteByUserId(userLogin.getUserId());
             cart.getListItem().clear();
-            session.removeAttribute("cart");
+
         }
+        session.removeAttribute("cart");
         orderService.addOrder(order);
         return "redirect:/homePage";
 

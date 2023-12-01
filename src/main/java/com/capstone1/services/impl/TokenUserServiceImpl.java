@@ -16,34 +16,35 @@ import jakarta.transaction.Transactional;
 public class TokenUserServiceImpl implements TokenUserService {
 
     @Autowired
-    TokenUserRepository tokenRepository;
+    TokenUserRepository tokenUserRepository;
 
     @Override
     @Scheduled(fixedRate = 60000)
     @Transactional
     public void cleanExpiredTokens() {
         LocalDateTime now = LocalDateTime.now();
-        tokenRepository.deleteByExpirationTimeBefore(now);
+        tokenUserRepository.deleteByExpirationTimeBefore(now);
     }
 
     @Override
     public void save(TokenUser token) {
-        tokenRepository.save(token);
+        tokenUserRepository.alterAutoIncrementValue();
+        tokenUserRepository.save(token);
     }
 
     @Override
     public TokenUser findByToken(String token) {
-        return tokenRepository.findByToken(token);
+        return tokenUserRepository.findByToken(token);
     }
 
     @Override
     public void delete(TokenUser token) {
-        tokenRepository.delete(token);
+        tokenUserRepository.delete(token);
     }
 
     @Override
     public void deleteByUserId(long user_id) {
-        tokenRepository.deleteByUserId(user_id);
+        tokenUserRepository.deleteByUserId(user_id);
     }
 
 }
