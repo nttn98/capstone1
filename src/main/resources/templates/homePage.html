@@ -19,12 +19,12 @@
 
 
 
+		<link rel='stylesheet' href='/css/font-awesome.min.css'>
 		<link rel="stylesheet" href="/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/css/bootstrap-extended.min.css">
 		<link rel="stylesheet" href="/css/drop.css">
 		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
 
-		<link rel='stylesheet' href='/css/font-awesome.min.css'>
 		<link rel="styleSheet" href="/css/homePage.css">
 		<title>Capstone1</title>
 	</head>
@@ -83,7 +83,10 @@
 											</div>
 
 											<div class="col-2">
-												<button>x</button>
+												<a
+													th:href="@{/users/deleteProductInCart/{productId}(productId=${item.getProduct().getProductId()})}">
+													<button class="close">x</button>
+												</a>
 											</div>
 										</div>
 										<br>
@@ -95,25 +98,79 @@
 										<h4>Total: <span th:text="${session.cart.getTotal()} +'.000 VND'"></span>
 										</h4>
 									</div><br>
-									<a th:href="@{/users/addOrder}"><button class="btn-purchase">Order</button></a>
+									<a th:href="@{/users/add-order}"><button class="btn-purchase">Order</button></a>
 								</div>
 							</div>
 
 						</li>
 						<li class="position-relative">
-							<a onclick="showLogin()" th:if="${session.username==null}"><i class="fa fa-user-o"
+							<a onclick="showLogin()" th:if="${session.user == null}"><i class="fa fa-user-o"
 									aria-hidden="true"></i></a>
-							<p th:if="${session.username!=null}" th:text="${session.username}"></p>
+							<div th:if="${session.user != null}" class="dropdown">
+								<button class="dropbtn"
+									th:text="'Welcome, '+ ${session.user.getUserUsername()}"></button>
+								<div class="dropdown-content">
+									<a onclick="showUserProfile()">Profile</a>
+									<a href="#">View history Order</a>
+									<a th:href="@{/users/logout}">Logout</a>
+								</div>
+							</div>
+							<div class="userProfile position-fixed">
+								<h2>User profile</h2>
+								<button onclick="closeUserProfile()" type="button" class="close" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+								<div class="user">
+									<div class="container">
+										<div class="row" style="margin-bottom: 10px;" th:if="${session.user!=null}">
+											<form action="/users/update-user" method="POST" th:object="${user}">
+												<input type="hidden" name="userId"
+													th:value="${session.user.getUserId()}">
+												<input type="hidden" name="mode" value="user">
+												<div>
+													<p>Full-name:</p>
+													<input type="text" th:value="${session.user.getUserFullname()}"
+														name="userFullname">
+												</div>
+												<div>
+													<p>Numberphone:</p>
+													<input type="text" th:value="${session.user.getUserNumberphone()}"
+														name="userNumberphone">
+												</div>
+												<div>
+													<p>Address:</p>
+													<input type="text" th:value="${session.user.getUserAddress()}"
+														name="userAddress">
+												</div>
+												<div>
+													<p>Email:</p>
+													<input type="email" th:value="${session.user.getUserEmail()}"
+														name="userEmail">
+												</div>
+												<div>
+													<p>Date of birth</p>
+													<input type="date" th:value="${session.user.getUserDob()}"
+														name="userDob">
+												</div>
+												<button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
+													Save</button>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
 						</li>
+					</ul>
 				</div>
-				<div class="login position-fixed">
+				<!-- forgot password -->
+				<div class=" login position-fixed">
 					<div class="container">
 						<div class="row justify-content-center">
 							<div class="col">
 								<div class="card" id="CustomerLoginForm">
 									<h2>Login</h2>
 									<div class="card-body">
-										<form action="/loginUser" method="POST">
+										<form action="/login-user" method="POST">
 											<div class="form-group">
 												<label for="username">
 													<h6>Username</h6>
@@ -130,7 +187,8 @@
 											</div>
 											<button type="submit" class="btn-login">Submit</button>
 											<br>
-											<a href="#" id="RecoverPassword">Forgot your password?</a>
+											<a href="#" id="RecoverPassword">Forgot your
+												password?</a>
 										</form>
 									</div>
 								</div>
@@ -417,10 +475,7 @@
 				</div>
 			</div>
 		</div>
-
-
 		<br>
-
 		<footer class="footer-container color-scheme-light">
 			<div class="container main-footer">
 				<aside class="footer-sidebar widget-area row" role="complementary">
@@ -563,6 +618,18 @@
 				} );
 			} );
 
+			function showUserProfile ()
+			{
+				$( '.userProfile' ).addClass( "w-25" );
+				$( '.closeLogin' ).fadeIn();
+				$( '.closeMask' ).fadeIn();
+			}
+			function closeUserProfile ()
+			{
+				$( '.userProfile' ).removeClass( "w-25" );
+				$( '.closeMask' ).fadeOut();
+			}
+
 			function showLogin ()
 			{
 				$( '.login' ).addClass( "w-25" );
@@ -575,6 +642,7 @@
 				$( '.closeLogin' ).fadeOut();
 				$( '.closeMask' ).fadeOut();
 			}
+
 			function showcart ()
 			{
 				$( '.cart' ).addClass( "w-35" )
@@ -586,6 +654,7 @@
 				$( '.cart' ).removeClass( "w-35" )
 				$( '.closeMask' ).fadeOut();
 			}
+
 			// let org=111;
 			// $('.cart').on('change','input[name="quantity"]',(e)=>{
 			// 	let ele=$(e.target);

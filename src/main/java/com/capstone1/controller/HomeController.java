@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.*;
 
 import com.capstone1.model.*;
 import com.capstone1.services.*;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import jakarta.annotation.Resource;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.*;
+import jakarta.websocket.server.PathParam;
 
 @Controller
 public class HomeController {
@@ -80,7 +82,9 @@ public class HomeController {
     @GetMapping("/orders")
     public String listOrders(Model model) {
         List<Order> listOrders = orderService.getAllOrders();
+        List<OrderDetail> listOrderDetails = orderDetailService.getAllOrderDeitals();
         model.addAttribute("orders", listOrders);
+        model.addAttribute("orderDetails", listOrderDetails);
         return "admin/orders";
     }
 
@@ -149,25 +153,45 @@ public class HomeController {
         session.setAttribute("cart", cart);
     }
 
-    @GetMapping("/users/addOrder")
+    @GetMapping("/users/deleteProductInCart/{producId}")
+    public String deleteToCart(Model model, @PathVariable long producId, HttpSession session) {
+        Cart cart = (Cart) session.getAttribute("cart");
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId == null) { // withLogin
+            cart.deleteByProductId(producId);
+        } else { // without login
+            cartItemService.deleteByProductId(producId);
+            cart.removeItem(producId);
+            if (cart.getListItem().size() == 0) {
+                cartService.deleteByUserId(userId);
+            }
+        }
+        session.setAttribute("cart", cart);
+        return "redirect:/homePage";
+
+    }
+
+    @GetMapping("/users/add-order")
     public String addOrder(Model model, HttpSession session,
             @RequestParam(name = "quantity", defaultValue = "1") int quantity) {
         Long userId = (Long) session.getAttribute("userId");
         User userLogin = userService.getUserById(userId);
         Cart cart = (Cart) session.getAttribute("cart");
+        LocalDateTime now = LocalDateTime.now();
         Order order = null;
         double total = 0;
 
         if (cart != null && userLogin != null) {
-            order = orderService.addOrder(new Order(0, userLogin));
+            order = orderService.saveOrder(new Order(0, userLogin, now));
             for (int i = 0; i < cart.getListItem().size(); i++) {
                 Product product = cart.getListItem().get(i).getProduct();
                 double subtotal = product.getProductPrice() * quantity;
-                orderDetailService.save(new OrderDetail(order, product, quantity, subtotal));
+                orderDetailService.saveOrderDetail(new OrderDetail(order, product, quantity, subtotal));
                 cartItemService.deleteByProductId(product.getProductId());
                 total += subtotal;
             }
-            cartService.deleteByUserId(userLogin.getUserId());
+            // cartService.deleteByUserId(userLogin.getUserId());
             order.setTotal(total);
 
             cartService.deleteByUserId(userLogin.getUserId());
@@ -175,7 +199,7 @@ public class HomeController {
 
         }
         session.removeAttribute("cart");
-        orderService.addOrder(order);
+        orderService.saveOrder(order);
         return "redirect:/homePage";
 
     }
@@ -185,7 +209,7 @@ public class HomeController {
         return "loginAdmin_Staff";
     }
 
-    @PostMapping("/loginUser")
+    @PostMapping("/login-user")
     public String getLoginUser(Model model, @RequestParam("username") String username,
             @RequestParam("password") String password, HttpSession session) {
         List<User> listUsers = userService.getAllUsers();
@@ -193,10 +217,9 @@ public class HomeController {
 
         for (User user : listUsers) {
             if (user.getUserUsername().equals(username) && user.getUserPassword().equals(passEncoding)) {
-                model.addAttribute("alert", "success");
-                model.addAttribute("userLogin", user);
                 session.setAttribute("userId", user.getUserId());
-                session.setAttribute("username", username);
+                session.setAttribute("user", user);
+                model.addAttribute("alert", "success");
 
                 Cart cart = cartService.findByUserId(user.getUserId());
                 session.setAttribute("cart", cart);
@@ -204,7 +227,20 @@ public class HomeController {
                 model.addAttribute("alert", "error");
             }
         }
+
         return getHome(model);
+    }
+
+    @GetMapping("/users/logout")
+    public String logOutUser(Model model, HttpSession session) {
+
+        Long userId = (Long) session.getAttribute("userId");
+
+        if (userId != null) {
+            session.removeAttribute("user");
+        }
+
+        return "redirect:/homePage";
     }
 
     /* Forgot password admin and staff */

@@ -11,10 +11,12 @@
 			<h4>Edit user id = <span th:text="${user.userId}"></span>
 			</h4>
 			<br>
-			<form th:action="@{/users/updateUser/{id}(id=${user.userId})}" th:object="${user}" method="POST">
+			<form th:action="@{/users/update-user}" th:object="${user}" method="POST">
 				<div class="row">
 					<div class="col-sm-6 ol-md-6 col-xs-12">
 						<div class="white-box">
+							<input type="hidden" name="userId" th:value="${user.getUserId()}">
+							<input type="hidden" name="mode" value="admin">
 							<div class="form-group">
 								<label for="full-name" class="col-md-12">
 									<h5>User full-name</h5>
@@ -81,7 +83,7 @@
 						<div class="white-box">
 							<div class="form-actions">
 								<button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
-									Create</button>
+									Save</button>
 								<button type="button" onclick="location.href='/users'"
 									class="btn btn-default">Cancel</button>
 							</div>

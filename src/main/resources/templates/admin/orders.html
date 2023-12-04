@@ -53,7 +53,7 @@
                 </div>
                 <br>
                 <div class="row">
-                    <div class="col-lg-2">
+                    <div class="col-lg-1">
                         <h5>Order Id</h5>
                     </div>
                     <div class="col-lg-1">
@@ -63,23 +63,32 @@
                         <h5>Total</h5>
                     </div>
                     <div class="col-lg-2">
+                        <h5>Date</h5>
+                    </div>
+                    <div class="col-lg-1">
                         <h5>Action</h5>
+                    </div>
+                    <div class="col-lg-1">
+                        <h5>View Detail</h5>
                     </div>
                 </div>
                 <br>
 
                 <div class="content-body" th:each=" order: ${orders}">
                     <div class="row grouped-multiple-statistics-card">
-                        <div class="col-lg-2">
-                            <p th:text="${order.orderId}"></p>
+                        <div class="col-lg-1">
+                            <b th:text="${order.orderId}"></b>
                         </div>
                         <div class="col-lg-1">
-                            <p th:text="${order.user.userId}"></p>
+                            <b th:text="${order.user.userId}"></b>
                         </div>
                         <div class="col-lg-2">
-                            <p th:text="${order.total}"></p>
+                            <h6 th:text="${order.total+'00.000 VND'}"></h6>
                         </div>
                         <div class="col-lg-2">
+                            <h6 th:text="${order.getOrderDate()}"></h6>
+                        </div>
+                        <div class="col-lg-1">
                             <a th:href="@{/orders/changeStatus/{id}(id=${order.orderId})}">
                                 <button class="custom-btn btn-5" style="width: 100px;" th:if="${order.status == 0}">
                                     <h7>Pending</h7>
@@ -88,6 +97,36 @@
                                     <h7>Delivered</h7>
                                 </button>
                             </a>
+                        </div>
+                        <div class="col-lg-1">
+                            <button id="viewOrderDetail" class="custom-btn btn-14" style="width: 100px;"
+                                th:if="${order.status == 0}" onclick="showOrderDetail()">
+                                <h7>View</h7>
+                            </button>
+                        </div>
+                        <div class="orderDetail col-lg-4" style="display: none;">
+                            <button class="close" onclick="closeOrderDetail()">X</button>
+
+                            <div style="height: 55px;"></div>
+
+                            <div th:each=" item: ${orderDetails}">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <img th:src="${item.getProduct().productImages}" style="width: 120px;">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <h7 th:text="${item.getProduct().getProductName()}"></h7>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <p th:text="${item.getQuantity()}"></p>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <b th:text="${item.getPrice()+'00.000 VND'}"></b>
+                                    </div>
+                                </div>
+                                <hr>
+                                <br>
+                            </div>
                         </div>
                     </div>
                     <br>
@@ -98,5 +137,20 @@
 
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
+    <script>
+        function showOrderDetail ()
+        {
+            $( '.orderDetail' ).show( 'slow' );
+
+            // $( '.orderDetail' ).removeClass( "d-none" );
+        }
+
+        function closeOrderDetail ()
+        {
+            // $( '.orderDetail' ).addClass( "d-none" );
+            $( '.orderDetail' ).hide( 'slow' );
+
+        }
+    </script>
 
 </html>

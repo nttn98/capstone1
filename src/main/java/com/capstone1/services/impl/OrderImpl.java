@@ -16,7 +16,8 @@ public class OrderImpl implements OrderService {
     OrderRepository orderRepository;
 
     @Override
-    public Order addOrder(Order order) {
+    public Order saveOrder(Order order) {
+        orderRepository.alterAutoIncrementValue();
         return orderRepository.save(order);
     }
 

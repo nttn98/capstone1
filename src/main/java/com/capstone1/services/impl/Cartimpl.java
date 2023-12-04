@@ -1,9 +1,12 @@
 package com.capstone1.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.capstone1.model.Cart;
+import com.capstone1.model.CartItem;
 import com.capstone1.repository.CartRepository;
 import com.capstone1.services.CartService;
 
@@ -28,5 +31,7 @@ public class Cartimpl implements CartService {
     public void deleteByUserId(long userId) {
         cartRepository.deleteByUserUserId(userId);
     }
+
+   
 
 }

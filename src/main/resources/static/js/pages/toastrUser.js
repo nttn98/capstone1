@@ -5,7 +5,7 @@ function alert_action ( alert_action )
      if ( alert_action == 'success' )
      {
           $.toast( {
-               heading: 'Login successfull!!',
+               heading: 'Login successfull !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',
@@ -16,7 +16,7 @@ function alert_action ( alert_action )
      } else if ( alert_action == 'error' )
      {
           $.toast( {
-               heading: 'Username or password are not match!!',
+               heading: 'Username or password are not match !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'error',
@@ -37,6 +37,24 @@ function alert_action ( alert_action )
      {
           $.toast( {
                heading: 'We will send reset password mail to you!!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'success',
+               hideAfter: 3500
+          } );
+     } else if ( alert_action == "logout" )
+     {
+          $.toast( {
+               heading: 'Logout successful !!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'success',
+               hideAfter: 3500
+          } );
+     } else if ( alert_action == "edit" )
+     {
+          $.toast( {
+               heading: 'Edit successful !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',

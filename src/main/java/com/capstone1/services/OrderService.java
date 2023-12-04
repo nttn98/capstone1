@@ -8,7 +8,7 @@ public interface OrderService {
 
     Order getOrderById(long id);
 
-    Order addOrder(Order order);
+    Order saveOrder(Order order);
 
     List<Order> getAllOrders();
 

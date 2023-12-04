@@ -1,5 +1,7 @@
 package com.capstone1.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -24,12 +26,15 @@ public class Order {
     @JsonIgnore
     List<OrderDetail> orderDetails;
 
+    private LocalDateTime orderDate;
+
     public Order() {
     }
 
-    public Order(int status, User user) {
+    public Order(int status, User user, LocalDateTime orDateTime) {
         this.status = status;
         this.user = user;
+        this.orderDate = orDateTime;
 
     }
 
@@ -71,6 +76,18 @@ public class Order {
 
     public void setOrderDetails(List<OrderDetail> orderDetails) {
         this.orderDetails = orderDetails;
+    }
+
+    public String getOrderDate() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String formatDateTime = this.orderDate.format(formatter);
+
+        return formatDateTime;
+    }
+
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
     }
 
 }

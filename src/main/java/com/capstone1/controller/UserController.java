@@ -2,27 +2,27 @@ package com.capstone1.controller;
 
 import java.util.*;
 
-import org.hibernate.annotations.Parameter;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.capstone1.model.CartItem;
-import com.capstone1.model.Product;
 import com.capstone1.model.User;
-import com.capstone1.services.ProductService;
 import com.capstone1.services.UserService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
 
     private UserService userService;
     private Encoding encoding;
+    private HomeController homeController;
 
-    public UserController(UserService userService, Encoding encoding) {
+    public UserController(UserService userService, Encoding encoding, HomeController homeController) {
         super();
         this.userService = userService;
         this.encoding = encoding;
+        this.homeController = homeController;
     }
 
     @GetMapping("/users")
@@ -53,13 +53,12 @@ public class UserController {
         return "users/edit_user";
     }
 
-    @PostMapping("/users/updateUser/{id}")
-    public String updateUser(@PathVariable Long id, Model model,
-            @ModelAttribute("user") User user) {
-        User existUser = userService.getUserById(id);
+    @PostMapping("/users/update-user")
+    public String updateUser(Model model, @ModelAttribute("user") User user, @RequestParam("mode") String mode,
+            HttpSession session, @RequestParam("userId") Long userId) {
+        User existUser = userService.getUserById(userId);
 
         existUser.setUserFullname(user.getUserFullname());
-        existUser.setUserUsername(user.getUserUsername());
         existUser.setUserNumberphone(user.getUserNumberphone());
         existUser.setUserAddress(user.getUserAddress());
         existUser.setUserEmail(user.getUserEmail());
@@ -68,7 +67,13 @@ public class UserController {
         userService.updateUser(existUser);
         System.out.println("User edited successfully");
 
-        return "redirect:/users";
+        if (mode.equals("user")) {
+            session.setAttribute("user", existUser);
+            model.addAttribute("alert", "edit");
+            return homeController.getHome(model);
+        } else {
+            return "redirect:/users";
+        }
     }
 
     @GetMapping("/users/changeStatus/{id}")

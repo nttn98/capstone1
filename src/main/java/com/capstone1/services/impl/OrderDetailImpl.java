@@ -1,5 +1,7 @@
 package com.capstone1.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,14 @@ public class OrderDetailImpl implements OrderDetailService {
     OrderDetailRepository orderDetailRepository;
 
     @Override
-    public OrderDetail save(OrderDetail orderDetail) {
+    public OrderDetail saveOrderDetail(OrderDetail orderDetail) {
+        orderDetailRepository.alterAutoIncrementValue();
         return orderDetailRepository.save(orderDetail);
+    }
+
+    @Override
+    public List<OrderDetail> getAllOrderDeitals() {
+        return orderDetailRepository.findAll();
     }
 
 }

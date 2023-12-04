@@ -80,6 +80,14 @@ public class Cart {
         return listItem;
     }
 
+    public void deleteByProductId(long id) {
+        for (int i = 0; i < listItem.size(); i++) {
+            if (listItem.get(i).product.getProductId() == id) {
+                listItem.remove(i);
+            }
+        }
+    }
+
     public void setListItem(ArrayList<CartItem> listItem) {
         this.listItem = listItem;
     }
