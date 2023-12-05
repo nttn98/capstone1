@@ -9,7 +9,7 @@
 		<div th:replace="products/products.html :: main-menu"></div>
 		<div class="container mt-4">
 			<h2 class="page-title">Edit Product</h2>
-			<form th:action="@{/products/updateProduct/{id}(id=${product.productId})}" th:object="${product}"
+			<form th:action="@{/products/update-product/{id}(id=${product.productId})}" th:object="${product}"
 				method="POST" enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-sm-6 ol-md-6 col-xs-12">

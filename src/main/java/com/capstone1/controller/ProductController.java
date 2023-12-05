@@ -54,7 +54,7 @@ public class ProductController {
 		return "products/products";
 	}
 
-	@GetMapping("/products/createProduct")
+	@GetMapping("/products/create-product")
 	public String createProductForm(Model model) {
 		Product product = new Product();
 		List<Category> listCategories = categoryService.getAllCategories();
@@ -76,7 +76,7 @@ public class ProductController {
 		return "products/edit_product";
 	}
 
-	@PostMapping("/products/updateProduct/{id}")
+	@PostMapping("/products/update-product/{id}")
 	public String updateProduct(@PathVariable Long id, Model model, @RequestParam("productImg") MultipartFile file,
 			@ModelAttribute("product") Product product) {
 		// get product exist
@@ -110,7 +110,7 @@ public class ProductController {
 		return listProducts(model);
 	}
 
-	@GetMapping("/products/changeStatus/{id}")
+	@GetMapping("/products/change-status/{id}")
 	public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("product") Product product) {
 
 		// get product exist
@@ -128,16 +128,16 @@ public class ProductController {
 		return "redirect:/products";
 	}
 
-	@GetMapping("/products/deleteProduct/{id}")
+	@GetMapping("/products/delete-product/{id}")
 	public String deleteProduct(@PathVariable Long id) {
 		productService.deletePproductById(id);
 		return "redirect:/products";
 	}
 
 	// create Product
-	@PostMapping("/products/saveProduct")
+	@PostMapping("/products/save-product")
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
-			@ModelAttribute("product") Product product) {
+			@ModelAttribute("product") Product product, @RequestParam("quantity") long quantity) {
 
 		List<Product> productLists = productService.getAllProducts();
 
@@ -149,6 +149,7 @@ public class ProductController {
 			}
 		}
 		try {
+			product.setProductQuantity(quantity);
 			product = productService.saveProduct(product);
 
 			String fileName = product.getProductId() + ".png";

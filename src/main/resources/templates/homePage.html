@@ -127,32 +127,32 @@
 												<input type="hidden" name="userId"
 													th:value="${session.user.getUserId()}">
 												<input type="hidden" name="mode" value="user">
-												<div>
-													<p>Full-name:</p>
+												<div class="form-group">
+													<p>Full-name: </p>
 													<input type="text" th:value="${session.user.getUserFullname()}"
-														name="userFullname">
+														name="userFullname" class="form-control">
 												</div>
-												<div>
-													<p>Numberphone:</p>
+												<div class="form-group">
+													<p>Numberphone: </p>
 													<input type="text" th:value="${session.user.getUserNumberphone()}"
-														name="userNumberphone">
+														name="userNumberphone" class="form-control">
 												</div>
-												<div>
-													<p>Address:</p>
+												<div class="form-group">
+													<p>Address: </p>
 													<input type="text" th:value="${session.user.getUserAddress()}"
-														name="userAddress">
+														name="userAddress" class="form-control">
 												</div>
-												<div>
-													<p>Email:</p>
+												<div class="form-group">
+													<p>Email: </p>
 													<input type="email" th:value="${session.user.getUserEmail()}"
-														name="userEmail">
+														name="userEmail" class="form-control">
 												</div>
-												<div>
+												<div class="form-group">
 													<p>Date of birth</p>
 													<input type="date" th:value="${session.user.getUserDob()}"
-														name="userDob">
+														name="userDob" class="form-control">
 												</div>
-												<button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
+												<button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
 													Save</button>
 											</form>
 										</div>

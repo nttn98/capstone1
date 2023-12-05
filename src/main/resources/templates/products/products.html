@@ -49,7 +49,7 @@
 					<div class="collapse navbar-collapse" id="navbar-mobile">
 						<ul class="nav navbar-nav mr-auto float-left">
 
-							<a th:href="@{/products/createProduct}">
+							<a th:href="@{/products/create-product}">
 								<button class="custom-btn btn-13">
 									<h7>+ product</h7>
 								</button>
@@ -155,7 +155,7 @@
 							<p th:text="${product.productName}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="'$'+${product.productPrice}"></p>
+							<p th:text="${product.productPrice} +'00 VND'"></p>
 						</div>
 						<div class="col-lg-1">
 							<p th:text="${product.productQuantity}"></p>
@@ -177,7 +177,7 @@
 									<h7>Edit</h7>
 								</button>
 							</a>
-							<a th:href="@{/products/changeStatus/{id}(id=${product.productId})}">
+							<a th:href="@{/products/change-status/{id}(id=${product.productId})}">
 								<button class="custom-btn btn-5" style="width: 100px;"
 									th:if="${product.productStatus == 0}">
 									<h7>Disable</h7>

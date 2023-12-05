@@ -1,5 +1,7 @@
 package com.capstone1.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -61,8 +63,8 @@ public class Product {
 		return productQuantity;
 	}
 
-	public int getProductPrice() {
-		return (int) productPrice;
+	public double getProductPrice() {
+		return productPrice;
 	}
 
 	public String getProductImages() {

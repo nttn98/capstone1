@@ -39,7 +39,7 @@ public class UserController {
 
     }
 
-    @GetMapping("/users/createUser")
+    @GetMapping("/users/create-user")
     public String createUser(Model model) {
         User user = new User();
         model.addAttribute("user", user);
@@ -76,7 +76,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/users/changeStatus/{id}")
+    @GetMapping("/users/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("user") User user) {
         User existUser = userService.getUserById(id);
 
@@ -90,13 +90,13 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @GetMapping("/users/deleteUser/{id}")
+    @GetMapping("/users/delete-user/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
         return "redirect:/users";
     }
 
-    @PostMapping("/users/saveUser")
+    @PostMapping("/users/save-user")
     public String saveUser(Model model, @ModelAttribute("user") User user) {
         user.setUserPassword(encoding.toSHA1(user.getUserPassword()));
         userService.saveUser(user);
@@ -113,7 +113,7 @@ public class UserController {
         return "users/changePass_user";
     }
 
-    @PostMapping("users/doChangePass/{id}")
+    @PostMapping("users/do-change-pass/{id}")
     public String changePasswod(@PathVariable Long id, Model model, @ModelAttribute("user") User user,
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass) {
         User existUser = userService.getUserById(id);

@@ -17,7 +17,7 @@
 				<div class="navbar-container content">
 					<div class="collapse navbar-collapse" id="navbar-mobile">
 						<ul class="nav navbar-nav mr-auto float-left">
-							<a th:href="@{users/createUser}">
+							<a th:href="@{users/create-user}">
 								<button class="custom-btn btn-13">
 									<h7>+ user</h7>
 								</button>
@@ -107,7 +107,7 @@
 									<h7>Edit</h7>
 								</button>
 							</a>
-							<a th:href="@{/users/changeStatus/{id}(id=${user.userId})}">
+							<a th:href="@{/users/change-status/{id}(id=${user.userId})}">
 								<button class="custom-btn btn-5" style="width: 100px;" th:if="${user.userStatus == 0}">
 									<h7>Disable</h7>
 								</button>

@@ -82,13 +82,19 @@ public class HomeController {
     @GetMapping("/orders")
     public String listOrders(Model model) {
         List<Order> listOrders = orderService.getAllOrders();
-        List<OrderDetail> listOrderDetails = orderDetailService.getAllOrderDeitals();
         model.addAttribute("orders", listOrders);
-        model.addAttribute("orderDetails", listOrderDetails);
         return "admin/orders";
     }
 
-    @GetMapping("/orders/changeStatus/{id}")
+    @GetMapping("/orders/get-order-detail/{orderId}")
+    @ResponseBody
+    public List<OrderDetail> getOrderDetails(@PathVariable Long orderId, Model model) {
+        List<OrderDetail> listOrderDetails = orderDetailService.findByOrderId(orderId);
+        model.addAttribute("orderDetails", listOrderDetails);
+        return listOrderDetails;
+    }
+
+    @GetMapping("/orders/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("order") Order order) {
         Order existOrder = orderService.getOrderById(id);
         if (existOrder.getStatus() == 0) {
@@ -204,7 +210,7 @@ public class HomeController {
 
     }
 
-    @GetMapping("/loginAdmin")
+    @GetMapping("/login-admin")
     public String getLogin(Model model) {
         return "loginAdmin_Staff";
     }

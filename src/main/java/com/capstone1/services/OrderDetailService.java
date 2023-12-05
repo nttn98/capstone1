@@ -9,4 +9,6 @@ public interface OrderDetailService {
 
     List<OrderDetail> getAllOrderDeitals();
 
+    List<OrderDetail> findByOrderId(long orderId);
+
 }

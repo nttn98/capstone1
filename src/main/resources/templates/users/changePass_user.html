@@ -10,7 +10,7 @@
         <div class="container mt-4">
             <h2 class="page-title">Change password of user : <span th:text="${user.userFullname}"></span></h2>
             <br>
-            <form th:action="@{/users/doChangePass/{id}(id=${user.userId})}" th:object="${user}" method="POST">
+            <form th:action="@{/users/do-change-pass/{id}(id=${user.userId})}" th:object="${user}" method="POST">
                 <div class="row">
                     <div class="col-sm-6 ol-md-6 col-xs-12">
                         <div class="white-box">
