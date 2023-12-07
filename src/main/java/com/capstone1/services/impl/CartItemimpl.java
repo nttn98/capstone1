@@ -21,12 +21,12 @@ public class CartItemimpl implements CartItemService {
 
     @Override
     public CartItem findByProductId(long productId) {
-        return cartItemRepository.findByProductProductId(productId);
+        return cartItemRepository.findByProductId(productId);
     }
 
     @Override
     public void deleteByProductId(long productId) {
-        cartItemRepository.deleteByProductProductId(productId);
+        cartItemRepository.deleteByProductId(productId);
     }
 
 }

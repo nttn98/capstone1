@@ -1,5 +1,6 @@
 package com.capstone1.services.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 import java.util.List;
 
@@ -7,15 +8,13 @@ import com.capstone1.model.Manufacturer;
 import com.capstone1.repository.ManufacturerRepository;
 import com.capstone1.services.ManufacturerService;
 
+import jakarta.annotation.Resource;
+
 @Service
 public class Manufacturerimpl implements ManufacturerService {
 
-    private ManufacturerRepository manufacturerRepository;
-
-    public Manufacturerimpl(ManufacturerRepository manufacturerRepository) {
-        super();
-        this.manufacturerRepository = manufacturerRepository;
-    }
+    @Autowired
+    ManufacturerRepository manufacturerRepository;
 
     @Override
     public List<Manufacturer> getAllManufacturers() {
@@ -46,7 +45,12 @@ public class Manufacturerimpl implements ManufacturerService {
 
     @Override
     public Manufacturer changeStatusManufacturer(Manufacturer manufacturer) {
-       return manufacturerRepository.save(manufacturer);
+        return manufacturerRepository.save(manufacturer);
+    }
+
+    @Override
+    public Manufacturer findByName(String name) {
+        return manufacturerRepository.findByName(name);
     }
 
 }

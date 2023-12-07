@@ -7,11 +7,12 @@ import com.capstone1.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findByUserEmail(String email);
+    User findByEmail(String email);
 
     @Modifying
     @Transactional
     @Query(value = "ALTER TABLE users AUTO_INCREMENT = 1001 ", nativeQuery = true)
     void alterAutoIncrementValue();
 
+    User findByUsernameAndPassword(String username, String password);
 }

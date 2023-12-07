@@ -26,45 +26,32 @@ public class HomeController {
     TokenUserService tokenUserService;
     @Resource
     TokenAdminService tokenAdminService;
+    @Resource
+    StaffService staffService;
+    @Resource
+    UserService userService;
+    @Resource
+    ProductService productService;
+    @Resource
+    CategoryService categoryService;
+    @Resource
+    ManufacturerService manufacturerService;
+    @Resource
+    OrderService orderService;
+    @Resource
+    OrderDetailService orderDetailService;
+    @Resource
+    CartService cartService;
+    @Resource
+    CartItemService cartItemService;
 
+    @Autowired
+    Encoding encoding;
     @Autowired
     JavaMailSender mailSender;
 
-    private StaffService staffService;
-    private UserService userService;
-    private Encoding encoding;
-    private ProductService productService;
-    private CategoryService categoryService;
-    private ManufacturerService manufacturerService;
-
-    private OrderService orderService;
-    private OrderDetailService orderDetailService;
-    private CartService cartService;
-    private CartItemService cartItemService;
-
-    public HomeController(TokenUserService tokenUserService, TokenAdminService tokenAdminService,
-            JavaMailSender mailSender, StaffService staffService, UserService userService, Encoding encoding,
-            ProductService productService, CategoryService categoryService, ManufacturerService manufacturerService,
-            OrderService orderService, OrderDetailService orderDetailService, CartService cartService,
-            CartItemService cartItemService) {
-        this.tokenUserService = tokenUserService;
-        this.tokenAdminService = tokenAdminService;
-        this.mailSender = mailSender;
-        this.staffService = staffService;
-        this.userService = userService;
-        this.encoding = encoding;
-        this.productService = productService;
-        this.categoryService = categoryService;
-        this.manufacturerService = manufacturerService;
-
-        this.orderService = orderService;
-        this.orderDetailService = orderDetailService;
-        this.cartService = cartService;
-        this.cartItemService = cartItemService;
-    }
-
     @GetMapping({ "/home-page", "/" })
-    public String getHome(Model model) {
+    public String getHome(Model model, HttpSession session) {
 
         List<Product> listProducts = productService.getAllProducts();
         List<Category> listCategories = categoryService.getAllCategories();
@@ -73,6 +60,11 @@ public class HomeController {
         model.addAttribute("products", listProducts);
         model.addAttribute("categories", listCategories);
         model.addAttribute("manufacturers", listManufacturers);
+
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
 
         return "homePage";
     }
@@ -129,7 +121,7 @@ public class HomeController {
             cart = cartService.saveCart(new Cart(user));
         }
 
-        CartItem cartItem = cartItemService.findByProductId(product.getProductId());
+        CartItem cartItem = cartItemService.findByProductId(product.getId());
 
         if (cartItem == null) {
             cartItem = cartItemService.save(new CartItem(cart, product, quantity));
@@ -147,7 +139,7 @@ public class HomeController {
             cart = new Cart();
             cart.addProduct(product, null);
         } else {
-            CartItem cartItem = cart.checkProductExist(product.getProductId());
+            CartItem cartItem = cart.checkProductExist(product.getId());
             if (cartItem == null) {
                 cartItem = new CartItem(cart, product, 1);
             }
@@ -189,16 +181,16 @@ public class HomeController {
             order = orderService.saveOrder(new Order(0, userLogin, now));
             for (int i = 0; i < cart.getListItem().size(); i++) {
                 Product product = cart.getListItem().get(i).getProduct();
-                double subtotal = product.getProductPrice();
+                double subtotal = product.getPrice();
                 OrderDetail tempOrderDetail = orderDetailService
                         .saveOrderDetail(new OrderDetail(order, product,
-                                cartItemService.findByProductId(product.getProductId()).getQuantity(), subtotal));
-                cartItemService.deleteByProductId(product.getProductId());
+                                cartItemService.findByProductId(product.getId()).getQuantity(), subtotal));
+                cartItemService.deleteByProductId(product.getId());
                 total += tempOrderDetail.getFinalPrice();
 
             }
             order.setTotal(total);
-            cartService.deleteByUserId(userLogin.getUserId());
+            cartService.deleteByUserId(userLogin.getId());
             cart.getListItem().clear();
 
         }
@@ -216,22 +208,22 @@ public class HomeController {
     @PostMapping("/login-user")
     public String getLoginUser(Model model, @RequestParam("username") String username,
             @RequestParam("password") String password, HttpSession session) {
-        List<User> listUsers = userService.getAllUsers();
+        // List<User> listUsers = userService.getAllUsers();
         String passEncoding = encoding.toSHA1(password);
+        User user = userService.findByUsernameAndPassword(username, passEncoding);
 
-        for (User user : listUsers) {
-            if (user.getUserUsername().equals(username) && user.getUserPassword().equals(passEncoding)) {
-                session.setAttribute("userId", user.getUserId());
-                session.setAttribute("user", user);
-                model.addAttribute("alert", "success");
+        if (user != null && user.getStatus() == 0) {
+            session.setAttribute("userId", user.getId());
+            session.setAttribute("user", user);
+            model.addAttribute("alert", "success");
 
-                Cart cart = cartService.findByUserId(user.getUserId());
-                session.setAttribute("cart", cart);
-                return getHome(model);
-            }
+            Cart cart = cartService.findByUserId(user.getId());
+            session.setAttribute("cart", cart);
+            return getHome(model, session);
         }
+
         model.addAttribute("alert", "error");
-        return getHome(model);
+        return getHome(model, session);
     }
 
     @GetMapping("/users/logout")
@@ -276,9 +268,9 @@ public class HomeController {
         model.addAttribute("flag", true);
         model.addAttribute("message", "You have successfully changed your password.");
 
-        staff.setStaffPassword(encoding.toSHA1(password));
+        staff.setPassword(encoding.toSHA1(password));
 
-        tokenAdminService.deleteByStaffId(staff.getStaffId());
+        tokenAdminService.deleteByStaffId(staff.getId());
         staffService.saveStaff(staff);
 
         httpSession.removeAttribute("staff");
@@ -294,7 +286,7 @@ public class HomeController {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(30);
 
-        tokenAdminService.save(new TokenAdmin(tokenString, staff.getStaffId(), expirationTime));
+        tokenAdminService.save(new TokenAdmin(tokenString, staff.getId(), expirationTime));
 
         String siteURL = request.getRequestURL().toString();
         siteURL = siteURL.replace(request.getServletPath(), "");
@@ -329,41 +321,42 @@ public class HomeController {
         if (token == null) {
             model.addAttribute("flag", false);
             model.addAttribute("message", "Your token link is invalid!");
-            return getHome(model);
+            return getHome(model, httpSession);
         }
         User user = userService.getUserById(token.getUserId());
 
         model.addAttribute("flag", true);
         model.addAttribute("message", "You have successfully changed your password.");
 
-        user.setUserPassword(encoding.toSHA1(password));
+        user.setPassword(encoding.toSHA1(password));
 
-        tokenUserService.deleteByUserId(user.getUserId());
+        tokenUserService.deleteByUserId(user.getId());
         userService.saveUser(user);
 
         httpSession.removeAttribute("user");
 
-        return getHome(model);
+        return getHome(model, httpSession);
     }
 
     @PostMapping("/users/forgot-password")
-    public String forgotPasswordForUser(@RequestParam("email") String email, HttpServletRequest request, Model model) {
+    public String forgotPasswordForUser(@RequestParam("email") String email, HttpServletRequest request, Model model,
+            HttpSession session) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
         List<User> listUsers = userService.getAllUsers();
         // User existuser = userService.getUserByEmail(email);
         User existuser = userService.findByEmail(email);
         for (User user : listUsers) {
-            if (!user.getUserEmail().equals(email)) {
+            if (!user.getEmail().equals(email)) {
                 model.addAttribute("alert", "sendMailfail");
-                return getHome(model);
+                return getHome(model, session);
             }
         }
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(30);
 
-        tokenUserService.save(new TokenUser(tokenString, existuser.getUserId(), expirationTime));
+        tokenUserService.save(new TokenUser(tokenString, existuser.getId(), expirationTime));
 
         String siteURL = request.getRequestURL().toString();
         siteURL = siteURL.replace(request.getServletPath(), "");
@@ -373,7 +366,7 @@ public class HomeController {
         model.addAttribute("user", existuser);
         model.addAttribute("alert", "sendMailsuccess");
 
-        return getHome(model); // user
+        return getHome(model, session); // user
 
     }
 

@@ -29,7 +29,7 @@ public class CartItem {
         this.product = product;
         this.quantity = quantity;
         this.cart = cart;
-        this.price = product.getProductPrice();
+        this.price = product.getPrice();
     }
 
     public Product getProduct() {
@@ -65,7 +65,7 @@ public class CartItem {
     }
 
     public float getSubtotal() {
-        return (float) (this.product.getProductPrice() * this.quantity);
+        return (float) (this.product.getPrice() * this.quantity);
     }
 
     public void changeQuantity(int changeQuan) {

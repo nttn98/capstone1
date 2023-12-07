@@ -18,4 +18,6 @@ public interface ManufacturerService {
 
     void deleteManufacturerById(Long Id);
 
+    Manufacturer findByName(String name);
+
 }

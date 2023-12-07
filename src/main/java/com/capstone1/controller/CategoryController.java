@@ -12,14 +12,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.capstone1.model.Category;
 import com.capstone1.services.CategoryService;
 
+import jakarta.annotation.Resource;
+
 @Controller
 public class CategoryController {
-    private CategoryService categoryService;
 
-    public CategoryController(CategoryService categoryService) {
-        super();
-        this.categoryService = categoryService;
-    }
+    @Resource
+    CategoryService categoryService;
 
     @GetMapping("/categories")
     public String listCategories(Model model) {
@@ -36,45 +35,53 @@ public class CategoryController {
 
     }
 
-    @GetMapping("/categories/createCategory")
+    @GetMapping("/categories/create-category")
     public String createCategory(Model model) {
         Category category = new Category();
         model.addAttribute("category", category);
         return "categories/create_category";
     }
 
-    @PostMapping("/categories/saveCategory")
+    @PostMapping("/categories/save-category")
     public String saveCategory(Model model, @RequestParam("categoryImg") MultipartFile file,
             @ModelAttribute("category") Category category) {
+
+        Category checkCategory = categoryService.findByName(category.getName());
+        if (checkCategory != null) {
+            model.addAttribute("alert", "error");
+            return listCategories(model);
+        }
+
         try {
             category = categoryService.saveCategory(category);
 
-            String fileName = category.getCategoryId() + ".png";
+            String fileName = category.getId() + ".png";
             String uploadDir = "category-upload/";
 
-            category.setCategoryImages("/category-upload/" + fileName);
+            category.setImages("/category-upload/" + fileName);
             categoryService.saveCategory(category);
 
             saveFile(uploadDir, fileName, file);
 
             System.out.println("Category added successfully");
+            model.addAttribute("alert", "success");
 
         } catch (Exception e) {
-            System.out.println(e);
+            model.addAttribute("alert", "error");
         }
-        return "redirect:/categories";
+        return listCategories(model);
     }
 
-    @GetMapping("/categories/changeStatus/{id}")
+    @GetMapping("/categories/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("category") Category category) {
 
         // get product exist
         Category existCategory = categoryService.getCategoryById(id);
 
-        if (existCategory.getCategoryStatus() == 0) {
-            existCategory.setCategoryStatus(1);
+        if (existCategory.getStatus() == 0) {
+            existCategory.setStatus(1);
         } else {
-            existCategory.setCategoryStatus(0);
+            existCategory.setStatus(0);
         }
 
         // save updated
@@ -89,35 +96,41 @@ public class CategoryController {
         return "categories/edit_category";
     }
 
-    @PostMapping("/categories/updateCategory/{id}")
+    @PostMapping("/categories/update-category/{id}")
     public String updateCategory(@PathVariable Long id, Model model, @RequestParam("categoryImg") MultipartFile file,
             @ModelAttribute("category") Category category) {
         // get Category exist
-        System.out.println("heeeeeeeeeeeeeeeeeeeee");
         Category existCategory = categoryService.getCategoryById(id);
 
-        existCategory.setCategoryName(category.getCategoryName());
-        existCategory.setCategoryDescription(category.getCategoryDescription());
+        Category checkCategory = categoryService.findByName(category.getName());
+        if (checkCategory != null) {
+            model.addAttribute("alert", "error");
+            return listCategories(model);
+        } else {
+            existCategory.setName(category.getName());
+            existCategory.setDescription(category.getDescription());
+        }
 
         try {
-            String fileName = existCategory.getCategoryId() + ".png";
+            String fileName = existCategory.getId() + ".png";
             String uploadDir = "category-upload/";
 
-            existCategory.setCategoryImages("/category-upload/" + fileName);
+            existCategory.setImages("/category-upload/" + fileName);
 
             saveFile(uploadDir, fileName, file);
 
-            System.out.println("Category added successfully.");
+            System.out.println("Category edited successfully.");
+            model.addAttribute("alert", "success");
 
         } catch (Exception e) {
             System.out.println(e);
         }
         // save updated
         categoryService.updateCategory(existCategory);
-        return "redirect:/categories";
+        return listCategories(model);
     }
 
-    @GetMapping("/categories/deleteCategory/{id}")
+    @GetMapping("/categories/delete-category/{id}")
     public String deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
         return "redirect:/categories";

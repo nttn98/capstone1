@@ -126,7 +126,7 @@
 						<h5>Name of product</h5>
 					</div>
 					<div class="col-lg-1">
-						<h5>Price ($)</h5>
+						<h5>Price (VND)</h5>
 					</div>
 					<div class="col-lg-1">
 						<h5>Quantity</h5>
@@ -149,41 +149,39 @@
 				<div class="content-body" th:each=" product: ${products}">
 					<div class="row grouped-multiple-statistics-card">
 						<div class="col-lg-1">
-							<img th:src="${product.productImages}" style="width: 120px;">
+							<img th:src="${product.images}" style="width: 120px;">
 						</div>
 						<div class="col-lg-2">
-							<p th:text="${product.productName}"></p>
+							<p th:text="${product.name}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${product.productPrice} +'00 VND'"></p>
+							<p th:text="${product.price} +'00 VND'"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${product.productQuantity}"></p>
+							<p th:text="${product.quantity}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${product.category.categoryName}" </p>
+							<p th:text="${product.category.name}" </p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${product.manufacturer.manufacturerName}"></p>
+							<p th:text="${product.manufacturer.name}"></p>
 						</div>
 						<div class="col-lg-3">
-							<p th:text="${product.productDescription}"></p>
+							<p th:text="${product.description}"></p>
 						</div>
 						<p></p>
 						<div class="col-lg-2">
-							<a th:href="@{/products/edit/{id}(id=${product.productId})}"
-								th:if="${product.productStatus == 0}" style="text-decoration: none;">
+							<a th:href="@{/products/edit/{id}(id=${product.id})}" th:if="${product.status == 0}"
+								style="text-decoration: none;">
 								<button class="custom-btn btn-14" style="width: 100px;">
 									<h7>Edit</h7>
 								</button>
 							</a>
-							<a th:href="@{/products/change-status/{id}(id=${product.productId})}">
-								<button class="custom-btn btn-5" style="width: 100px;"
-									th:if="${product.productStatus == 0}">
+							<a th:href="@{/products/change-status/{id}(id=${product.id})}">
+								<button class="custom-btn btn-5" style="width: 100px;" th:if="${product.status == 0}">
 									<h7>Disable</h7>
 								</button>
-								<button class="custom-btn btn-6" style="width: 100px;"
-									th:if="${product.productStatus == 1}">
+								<button class="custom-btn btn-6" style="width: 100px;" th:if="${product.status == 1}">
 									<h7>Enable</h7>
 								</button>
 							</a>

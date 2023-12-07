@@ -80,7 +80,7 @@
                             <b name="orderId" th:text="${order.orderId}"></b>
                         </div>
                         <div class="col-lg-1">
-                            <b th:text="${order.user.userId}"></b>
+                            <b th:text="${order.user.id}"></b>
                         </div>
                         <div class="col-lg-2">
                             <h6 th:text="${order.total+'00 VND'}"></h6>
@@ -106,11 +106,29 @@
                         </div>
 
                     </div>
+                    <div class="orderDetail" th:classappend="${order.orderId}"
+                        style="padding: 70px;  width: 33%; top: 111px; position: fixed; right: 0px; display: none;">
+                        <button class="close" onclick="closeOrderDetail(this)"> X </button>
+                        <h5> Order id: [(${order.orderId})]</h5><br>
+                        <div class="row mb-3" th:each=" item: ${order.orderDetails}">
+                            <div class="col-lg-3">
+                                <img th:src="${item.product.getImages()}" style="width: 120px;">
+                            </div>
+                            <div class="col-lg-4">
+                                <h7 th:text="${item.product.getName()}"></h7>
+                            </div>
+                            <div class="col-lg-1">
+                                <p th:text="${item.quantity}">1</p>
+                            </div>
+                            <div class="col-lg-4"><b>[(${item.finalPrice})]00 VND</b></div>
+                        </div>
+
+                    </div>
                     <br>
                 </div>
-                <div class="orderDetail"
+                <!-- <div class="orderDetail"
                     style="padding:70px; margin-left: auto; width: 33%; top: 111px; position: fixed; right: 0;">
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -118,68 +136,84 @@
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
     <script th:inline="javascript">
-
-        let previousId = 0;
         function loadOrderDetail ( orderId )
         {
-            if ( $( '.orderDetail' ).is( ':visible' ) )
+            $( '.orderDetail' ).each( ( i, e ) =>
             {
-                if ( previousId === orderId )
-                {
-                    closeOrderDetail();
-                } else
-                {
-                    closeOrderDetail( function ()
-                    {
-                        {
-                            loadNewOrderDetail( orderId );
-                            previousId = orderId;
-                        }
-                    } );
-                }
-            } else
-            {
-                loadNewOrderDetail( orderId );
-                previousId = orderId;
-            }
-        }
 
-        function loadNewOrderDetail ( orderId )
-        {
-            $.ajax( {
-                url: '/orders/get-order-detail/' + orderId,
-                type: 'GET',
-                success: function ( data )
+                if ( $( e ).is( ':visible' ) && !$( e ).hasClass( orderId ) )
                 {
-                    var orderDetailContent = '';
-                    orderDetailContent += '<button class="close" onclick="closeOrderDetail()"> X </button>';
-                    orderDetailContent += '<h5> Order id: ' + orderId + '</h5>'
-                    orderDetailContent += '<br>'
-
-                    for ( var i = 0; i < data.length; i++ )
-                    {
-                        orderDetailContent += '<div class="row">';
-                        orderDetailContent += '<div class="col-lg-3"><img  src="' + data[ i ].product.productImages + '" style="width: 120px;"></div>';
-                        orderDetailContent += '<div class="col-lg-4"><h7>' + data[ i ].product.productName + '</h7></div>';
-                        orderDetailContent += '<div class="col-lg-1"><p>' + data[ i ].quantity + '</p></div>';
-                        orderDetailContent += '<div class="col-lg-4"><b>' + data[ i ].price + '.000 VND</b></div>';
-                        orderDetailContent += '</div><hr><br>';
-                    }
-
-                    $( '.orderDetail' ).html( orderDetailContent );
-                    $( '.orderDetail' ).show( 'slow' );
-                },
-                error: function ()
-                {
-                    console.error( 'Failed to load order details from the API' );
+                    $( e ).fadeOut();
                 }
             } );
-        }
 
-        function closeOrderDetail ( callback )
-        {
-            $( '.orderDetail' ).hide( 'slow', callback );
+            $( '.orderDetail.' + orderId ).fadeToggle();
         }
+        function closeOrderDetail ( e )
+        {
+            $( e ).parent().fadeOut();
+        }
+        // let previousId = 0;
+        // function loadOrderDetail ( orderId )
+        // {
+        //     if ( $( '.orderDetail' ).is( ':visible' ) )
+        //     {
+        //         if ( previousId === orderId )
+        //         {
+        //             closeOrderDetail();
+        //         } else
+        //         {
+        //             closeOrderDetail( function ()
+        //             {
+        //                 {
+        //                     loadNewOrderDetail( orderId );
+        //                     previousId = orderId;
+        //                 }
+        //             } );
+        //         }
+        //     } else
+        //     {
+        //         loadNewOrderDetail( orderId );
+        //         previousId = orderId;
+        //     }
+        // }
+
+        // function loadNewOrderDetail ( orderId )
+        // {
+        //     $.ajax( {
+        //         url: '/orders/get-order-detail/' + orderId,
+        //         type: 'GET',
+        //         success: function ( data )
+        //         {
+        //             var orderDetailContent = '';
+        //             orderDetailContent += '<button class="close" onclick="closeOrderDetail()"> X </button>';
+        //             orderDetailContent += '<h5> Order id: ' + orderId + '</h5>'
+        //             orderDetailContent += '<br>'
+
+        //             for ( var i = 0; i < data.length; i++ )
+        //             {
+        //                 orderDetailContent += '<div class="row">';
+        //                 orderDetailContent += '<div class="col-lg-3"><img  src="' + data[ i ].product.productImages + '" style="width: 120px;"></div>';
+        //                 orderDetailContent += '<div class="col-lg-4"><h7>' + data[ i ].product.productName + '</h7></div>';
+        //                 orderDetailContent += '<div class="col-lg-1"><p>' + data[ i ].quantity + '</p></div>';
+        //                 orderDetailContent += '<div class="col-lg-4"><b>' + data[ i ].price + '.000 VND</b></div>';
+        //                 orderDetailContent += '</div><hr><br>';
+        //             }
+
+        //             $( '.orderDetail' ).html( orderDetailContent );
+        //             $( '.orderDetail' ).show( 'slow' );
+        //         },
+        //         error: function ()
+        //         {
+        //             console.error( 'Failed to load order details from the API' );
+        //         }
+        //     } );
+        // }
+
+        // function closeOrderDetail ( callback )
+        // {
+        //     $( '.orderDetail' ).hide( 'slow', callback );
+        // }
 
     </script>
 

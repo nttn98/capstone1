@@ -9,17 +9,57 @@ import jakarta.persistence.*;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long categoryId;
-    private String categoryName;
-    private String categoryImages;
-    private String categoryDescription;
-    private int categoryStatus;
+    private long id;
+    private String name;
+    private String images;
+    private String description;
+    private int status;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Product> products;
 
     public Category() {
         super();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public List<Product> getProducts() {
@@ -29,49 +69,5 @@ public class Category {
     public void setProducts(List<Product> products) {
         this.products = products;
     }
-
-    public int getCategoryStatus() {
-        return categoryStatus;
-    }
-
-    public void setCategoryStatus(int categoryStatus) {
-        this.categoryStatus = categoryStatus;
-    }
-
-    public long getCategoryId() {
-        return categoryId;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public String getCategoryImages() {
-        return categoryImages;
-    }
-
-    public String getCategoryDescription() {
-        return categoryDescription;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public void setCategoryImages(String categoryImages) {
-        this.categoryImages = categoryImages;
-    }
-
-    public void setCategoryDescription(String categoryDescription) {
-        this.categoryDescription = categoryDescription;
-    }
-
-    // public List<Product> getProducts() {
-    // return products;
-    // }
-
-    // public void setProducts(List<Product> products) {
-    // this.products = products;
-    // }
 
 }

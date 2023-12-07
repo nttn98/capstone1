@@ -2,25 +2,25 @@ package com.capstone1.controller;
 
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 
 import com.capstone1.model.Staff;
 import com.capstone1.services.StaffService;
 
+import jakarta.annotation.Resource;
+
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class StaffController {
 
-    private StaffService staffService;
-    private Encoding encoding;
+    @Resource
+    StaffService staffService;
 
-    public StaffController(StaffService staffService, Encoding encoding) {
-        super();
-        this.staffService = staffService;
-        this.encoding = encoding;
-    }
+    @Autowired
+    Encoding encoding;
 
     @GetMapping(value = "/staffs")
     public String listStaffs(Model model) {
@@ -36,7 +36,7 @@ public class StaffController {
         }
     }
 
-    @GetMapping("/staffs/createStaff")
+    @GetMapping("/staffs/create-staff")
     public String createStaff(Model model) {
         Staff staff = new Staff();
         model.addAttribute("staff", staff);
@@ -50,16 +50,16 @@ public class StaffController {
         return "staffs/edit_staff";
     }
 
-    @PostMapping("staffs/updateStaff/{id}")
+    @PostMapping("staffs/update-staff/{id}")
     public String updateStaff(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
         Staff existStaff = staffService.getStaffById(id);
 
-        existStaff.setStaffFullname(staff.getStaffFullname());
-        existStaff.setStaffUsername(staff.getStaffUsername());
-        existStaff.setStaffNumberphone(staff.getStaffNumberphone());
-        existStaff.setStaffIdcard(staff.getStaffIdcard());
-        existStaff.setStaffEmail(staff.getStaffEmail());
-        existStaff.setStaffDob(staff.getStaffDob());
+        existStaff.setFullname(staff.getFullname());
+        existStaff.setUsername(staff.getUsername());
+        existStaff.setNumberphone(staff.getNumberphone());
+        existStaff.setIdcard(staff.getIdcard());
+        existStaff.setEmail(staff.getEmail());
+        existStaff.setDob(staff.getDob());
 
         staffService.updateStaff(existStaff);
         System.out.println("Staff edited successfully");
@@ -67,14 +67,14 @@ public class StaffController {
         return "redirect:/staffs";
     }
 
-    @GetMapping("/staffs/changeStatus/{id}")
+    @GetMapping("/staffs/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
         Staff existStaff = staffService.getStaffById(id);
 
-        if (existStaff.getStaffStatus() == 0) {
-            existStaff.setStaffStatus(1);
+        if (existStaff.getStatus() == 0) {
+            existStaff.setStatus(1);
         } else {
-            existStaff.setStaffStatus(0);
+            existStaff.setStatus(0);
         }
 
         staffService.updateStaff(existStaff);
@@ -84,7 +84,7 @@ public class StaffController {
     @GetMapping("/staffs/toChangePass/{id}")
     public String changePass(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
         Staff existStaff = staffService.getStaffById(id);
-        System.out.println("--------------------" + existStaff.getStaffPassword());
+        System.out.println("--------------------" + existStaff.getPassword());
         model.addAttribute("staff", existStaff);
         return "staffs/changePass_staff";
     }
@@ -94,29 +94,29 @@ public class StaffController {
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass) {
 
         Staff existStaff = staffService.getStaffById(id);
-        String oldStaffPass = existStaff.getStaffPassword();
+        String oldStaffPass = existStaff.getPassword();
 
         String oldPassword = encoding.toSHA1(oldPass);
 
         if (oldStaffPass.equals(oldPassword)) {
-            existStaff.setStaffPassword(newPass);
+            existStaff.setPassword(newPass);
             saveStaff(model, existStaff);
-            System.out.println("---------------------Success " + existStaff.getStaffPassword());
+            System.out.println("---------------------Success " + existStaff.getPassword());
         } else {
             System.out.println("---------------------Fail");
         }
         return "redirect:/staffs";
     }
 
-    @GetMapping("/staffs/deleteStaff/{id}")
+    @GetMapping("/staffs/delete-staff/{id}")
     public String deleteStaff(@PathVariable Long id) {
         staffService.deleteStaffById(id);
         return "redirect:/staffs";
     }
 
-    @PostMapping("/staffs/saveStaff")
+    @PostMapping("/staffs/save-staff")
     public String saveStaff(Model model, @ModelAttribute("staff") Staff staff) {
-        staff.setStaffPassword(encoding.toSHA1(staff.getStaffPassword()));
+        staff.setPassword(encoding.toSHA1(staff.getPassword()));
         staffService.saveStaff(staff);
         System.out.println("Staff added successfully");
         return "redirect:/staffs";

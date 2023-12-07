@@ -17,20 +17,17 @@ import com.capstone1.services.CategoryService;
 import com.capstone1.services.ManufacturerService;
 import com.capstone1.services.ProductService;
 
+import jakarta.annotation.Resource;
+
 @Controller
 public class ProductController {
 
-	private ProductService productService;
-	private CategoryService categoryService;
-	private ManufacturerService manufacturerService;
-
-	public ProductController(ProductService productService, CategoryService categoryService,
-			ManufacturerService manufacturerService) {
-		super();
-		this.productService = productService;
-		this.categoryService = categoryService;
-		this.manufacturerService = manufacturerService;
-	}
+	@Resource
+	ProductService productService;
+	@Resource
+	CategoryService categoryService;
+	@Resource
+	ManufacturerService manufacturerService;
 
 	@GetMapping("/products")
 	public String listProducts(Model model) {
@@ -82,18 +79,18 @@ public class ProductController {
 		// get product exist
 		Product existProduct = productService.getProductById(id);
 
-		existProduct.setProductName(product.getProductName());
-		existProduct.setProductPrice(product.getProductPrice());
-		existProduct.setProductQuantity(product.getProductQuantity());
+		existProduct.setName(product.getName());
+		existProduct.setPrice(product.getPrice());
+		existProduct.setQuantity(product.getQuantity());
 		existProduct.setCategory(product.getCategory());
-		existProduct.setProductDescription(product.getProductDescription());
+		existProduct.setDescription(product.getDescription());
 		existProduct.setManufacturer(product.getManufacturer());
 
 		try {
-			String fileName = existProduct.getProductId() + ".png";
+			String fileName = existProduct.getId() + ".png";
 			String uploadDir = "product-upload/";
 
-			existProduct.setProductImages("/product-upload/" + fileName);
+			existProduct.setImages("/product-upload/" + fileName);
 
 			saveFile(uploadDir, fileName, file);
 
@@ -116,10 +113,10 @@ public class ProductController {
 		// get product exist
 		Product existProduct = productService.getProductById(id);
 
-		if (existProduct.getProductStatus() == 0) {
-			existProduct.setProductStatus(1);
+		if (existProduct.getStatus() == 0) {
+			existProduct.setStatus(1);
 		} else {
-			existProduct.setProductStatus(0);
+			existProduct.setStatus(0);
 		}
 
 		// save updated
@@ -139,23 +136,20 @@ public class ProductController {
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
 			@ModelAttribute("product") Product product, @RequestParam("quantity") long quantity) {
 
-		List<Product> productLists = productService.getAllProducts();
-
-		for (Product product2 : productLists) {
-			if (product2.getProductName().equalsIgnoreCase(product.getProductName())) {
-				System.out.println("===================== duplicate");
-				model.addAttribute("alert", "error");
-				return listProducts(model);
-			}
+		Product checkProduct = productService.findByName(product.getName());
+		if (checkProduct != null) {
+			model.addAttribute("alert", "error");
+			return listProducts(model);
 		}
+
 		try {
-			product.setProductQuantity(quantity);
+			product.setQuantity(quantity);
 			product = productService.saveProduct(product);
 
-			String fileName = product.getProductId() + ".png";
+			String fileName = product.getId() + ".png";
 			String uploadDir = "product-upload/";
 
-			product.setProductImages("/product-upload/" + fileName);
+			product.setImages("/product-upload/" + fileName);
 			productService.saveProduct(product);
 
 			saveFile(uploadDir, fileName, file);

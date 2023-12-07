@@ -55,7 +55,7 @@
 									<p>0</p>
 								</span>
 								<span class="position-absolute cart-count" th:if="${session.cart!= null}">
-									<p th:text="${session.cart.listItem.size}"></p>
+									<p th:text="${session.cart.listItem.size()}"></p>
 								</span>
 								<i class="fa fa-shopping-cart" aria-hidden="true" style="padding-left: 8px;"></i>
 							</a>
@@ -73,12 +73,11 @@
 											<div class="row" th:each=" item : ${session.cart.getListItem()}"
 												style="margin-bottom: 10px;">
 												<div class="col-2">
-													<img th:src="${item.getProduct().getProductImages()}"
-														style="width: 100%;">
+													<img th:src="${item.getProduct().getImages()}" style="width: 100%;">
 												</div>
-												<div class="col-4" th:text="${item.getProduct().getProductName()}">
+												<div class="col-4" th:text="${item.getProduct().getName()}">
 												</div>
-												<input type="hidden" th:value="${item.getProduct().getProductId()}"
+												<input type="hidden" th:value="${item.getProduct().getId()}"
 													name="productId">
 												<div>
 
@@ -113,8 +112,7 @@
 							<a onclick="showLogin()" th:if="${session.user == null}"><i class="fa fa-user-o"
 									aria-hidden="true"></i></a>
 							<div th:if="${session.user != null}" class="dropdown">
-								<button class="dropbtn"
-									th:text="'Welcome, '+ ${session.user.getUserUsername()}"></button>
+								<button class="dropbtn" th:text="'Welcome, '+ ${session.user.getUsername()}"></button>
 								<div class="dropdown-content">
 									<a href="#" onclick="showUserProfile()">
 										Profile
@@ -133,33 +131,27 @@
 									<div class="container">
 										<div class="row" style="margin-bottom: 10px;" th:if="${session.user!=null}">
 											<form action="/users/update-user" method="POST" th:object="${user}">
-												<input type="hidden" name="userId"
-													th:value="${session.user.getUserId()}">
+												<input type="hidden" name="id" th:field="*{id}">
 												<input type="hidden" name="mode" value="user">
 												<div class="form-group">
 													<p>Full-name: </p>
-													<input type="text" th:value="${session.user.getUserFullname()}"
-														name="userFullname" class="form-control">
+													<input type="text" th:field="*{fullname}" class="form-control">
 												</div>
 												<div class="form-group">
 													<p>Numberphone: </p>
-													<input type="text" th:value="${session.user.getUserNumberphone()}"
-														name="userNumberphone" class="form-control">
+													<input type="text" th:field="*{numberphone}" class="form-control">
 												</div>
 												<div class="form-group">
 													<p>Address: </p>
-													<input type="text" th:value="${session.user.getUserAddress()}"
-														name="userAddress" class="form-control">
+													<input type="text" th:field="*{address}" class="form-control">
 												</div>
 												<div class="form-group">
 													<p>Email: </p>
-													<input type="email" th:value="${session.user.getUserEmail()}"
-														name="userEmail" class="form-control">
+													<input type="email" th:field="*{email}" class="form-control">
 												</div>
 												<div class="form-group">
 													<p>Date of birth</p>
-													<input type="date" th:value="${session.user.getUserDob()}"
-														name="userDob" class="form-control">
+													<input type="date" th:field="*{dob}" class="form-control">
 												</div>
 												<button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
 													Save</button>
@@ -223,7 +215,7 @@
 						</div>
 					</div>
 
-					<button onclick="closeLogin()" type="button" class="close" aria-label="Close">
+					<button onclick="closeLogin()" type="button" class="close close-mask" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
@@ -234,7 +226,7 @@
 
 		<div class="banner">
 			<div class="container-fluid">
-				<img src="img/Untitled.png" style="width: 100%;">
+				<img src="/img/Untitled.png" style="width: 100%;">
 			</div>
 		</div>
 
@@ -371,8 +363,8 @@
 				<div class="row">
 					<div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" product: ${products}">
 						<div class="card-botBody text-white">
-							<img th:src="${product.productImages}">
-							<a th:href="@{/users/add-to-cart/{producId}(producId=${product.productId})}">
+							<img th:src="${product.images}">
+							<a th:href="@{/users/add-to-cart/{producId}(producId=${product.id})}">
 								<figcaption>
 									<div class="box-1">
 										<div class="btn btn-one">
@@ -384,8 +376,8 @@
 								</figcaption>
 							</a>
 						</div>
-						<h5><a th:text=" ${product.productName}"></a></h5>
-						<p th:text="${product.productPrice}+'00 VND'"> </p>
+						<h5><a th:text=" ${product.name}"></a></h5>
+						<p th:text="${product.price}+'00 VND'"> </p>
 
 					</div>
 				</div>
@@ -406,7 +398,7 @@
 					<div class="row">
 						<div class="col-lg-4 col-sm-12 col-md-12">
 							<div class="card-botBody text-white">
-								<img src="img/WPC3DA-01.jpg">
+								<img src="/img/WPC3DA-01.jpg">
 								<a>5SPC WPC 3DMATION 01</a>
 								<p>22.200.000 VND</p>
 							</div>
@@ -435,7 +427,7 @@
 												<div class="post-img-wrapp">
 													<a
 														href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/">
-														<img width="300" height="169" src="img/news1.jpg">
+														<img width="300" height="169" src="/img/news1.jpg">
 												</div>
 												<div class="post-image-mask">
 													<span></span>

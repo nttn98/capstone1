@@ -10,86 +10,89 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long userId;
-    private String userUsername;
-    private String userPassword;
-    private long userNumberphone;
-    private String userAddress;
-    private String userFullname;
-    private String userEmail;
-    private Date userDob;
-    private int userStatus;
+    private long id;
+    private String username;
+    private String password;
+    private long numberphone;
+    private String address;
+    private String fullname;
+    private String email;
+    private Date dob;
+    private int status;
 
     public User() {
-        super();
     }
 
-    public void setUserUsername(String userUsername) {
-        this.userUsername = userUsername;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setUserNumberphone(long userNumberphone) {
-        this.userNumberphone = userNumberphone;
+    public String getPassword() {
+        return password;
     }
 
-    public void setUserAddress(String userAddress) {
-        this.userAddress = userAddress;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setUserFullname(String userFullname) {
-        this.userFullname = userFullname;
+    public long getNumberphone() {
+        return numberphone;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
+    public void setNumberphone(long numberphone) {
+        this.numberphone = numberphone;
     }
 
-    public void setUserDob(Date userDob) {
-        this.userDob = userDob;
+    public String getAddress() {
+        return address;
     }
 
-    public void setUserStatus(int userStatus) {
-        this.userStatus = userStatus;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public long getUserId() {
-        return userId;
+    public String getFullname() {
+        return fullname;
     }
 
-    public String getUserUsername() {
-        return userUsername;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
-    public String getUserPassword() {
-        return userPassword;
+    public String getEmail() {
+        return email;
     }
 
-    public long getUserNumberphone() {
-        return userNumberphone;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getUserAddress() {
-        return userAddress;
+    public Date getDob() {
+        return dob;
     }
 
-    public String getUserFullname() {
-        return userFullname;
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public int getStatus() {
+        return status;
     }
 
-    public Date getUserDob() {
-        return userDob;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
-    public int getUserStatus() {
-        return userStatus;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
 }

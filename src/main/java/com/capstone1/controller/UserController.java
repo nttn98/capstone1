@@ -2,6 +2,7 @@ package com.capstone1.controller;
 
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
@@ -9,21 +10,18 @@ import org.springframework.web.bind.annotation.*;
 import com.capstone1.model.User;
 import com.capstone1.services.UserService;
 
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class UserController {
 
-    private UserService userService;
+    @Resource
+    UserService userService;
+    @Autowired
+    HomeController homeController;
+    @Autowired
     private Encoding encoding;
-    private HomeController homeController;
-
-    public UserController(UserService userService, Encoding encoding, HomeController homeController) {
-        super();
-        this.userService = userService;
-        this.encoding = encoding;
-        this.homeController = homeController;
-    }
 
     @GetMapping("/users")
     public String listUsers(Model model) {
@@ -55,14 +53,14 @@ public class UserController {
 
     @PostMapping("/users/update-user")
     public String updateUser(Model model, @ModelAttribute("user") User user, @RequestParam("mode") String mode,
-            HttpSession session, @RequestParam("userId") Long userId) {
+            HttpSession session, @RequestParam("id") Long userId) {
         User existUser = userService.getUserById(userId);
 
-        existUser.setUserFullname(user.getUserFullname());
-        existUser.setUserNumberphone(user.getUserNumberphone());
-        existUser.setUserAddress(user.getUserAddress());
-        existUser.setUserEmail(user.getUserEmail());
-        existUser.setUserDob(user.getUserDob());
+        existUser.setFullname(user.getFullname());
+        existUser.setNumberphone(user.getNumberphone());
+        existUser.setAddress(user.getAddress());
+        existUser.setEmail(user.getEmail());
+        existUser.setDob(user.getDob());
 
         userService.updateUser(existUser);
         System.out.println("User edited successfully");
@@ -70,7 +68,7 @@ public class UserController {
         if (mode.equals("user")) {
             session.setAttribute("user", existUser);
             model.addAttribute("alert", "edit");
-            return homeController.getHome(model);
+            return homeController.getHome(model, session);
         } else {
             return "redirect:/users";
         }
@@ -80,10 +78,10 @@ public class UserController {
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("user") User user) {
         User existUser = userService.getUserById(id);
 
-        if (existUser.getUserStatus() == 0) {
-            existUser.setUserStatus(1);
+        if (existUser.getStatus() == 0) {
+            existUser.setStatus(1);
         } else {
-            existUser.setUserStatus(0);
+            existUser.setStatus(0);
         }
 
         userService.updateUser(existUser);
@@ -98,7 +96,7 @@ public class UserController {
 
     @PostMapping("/users/save-user")
     public String saveUser(Model model, @ModelAttribute("user") User user) {
-        user.setUserPassword(encoding.toSHA1(user.getUserPassword()));
+        user.setPassword(encoding.toSHA1(user.getPassword()));
         userService.saveUser(user);
         System.out.println("User added successfully");
         return "redirect:/users";
@@ -108,7 +106,7 @@ public class UserController {
     @GetMapping("/users/toChangePass/{id}")
     public String changePass(@PathVariable Long id, Model model, @ModelAttribute("user") User user) {
         User existUser = userService.getUserById(id);
-        System.out.println("--------------------" + existUser.getUserPassword());
+        System.out.println("--------------------" + existUser.getPassword());
         model.addAttribute("user", existUser);
         return "users/changePass_user";
     }
@@ -117,14 +115,14 @@ public class UserController {
     public String changePasswod(@PathVariable Long id, Model model, @ModelAttribute("user") User user,
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass) {
         User existUser = userService.getUserById(id);
-        String oldUserPass = existUser.getUserPassword();
+        String oldUserPass = existUser.getPassword();
 
         String oldPassword = encoding.toSHA1(oldPass);
 
         if (oldUserPass.equals(oldPassword)) {
-            existUser.setUserPassword(newPass);
+            existUser.setPassword(newPass);
             saveUser(model, existUser);
-            System.out.println("---------------------Success " + existUser.getUserPassword());
+            System.out.println("---------------------Success " + existUser.getPassword());
         } else {
             System.out.println("---------------------Fail");
         }

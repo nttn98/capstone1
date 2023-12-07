@@ -24,14 +24,12 @@ public class Cartimpl implements CartService {
 
     @Override
     public Cart findByUserId(long userId) {
-        return cartRepository.findByUserUserId(userId);
+        return cartRepository.findByUserId(userId);
     }
 
     @Override
     public void deleteByUserId(long userId) {
-        cartRepository.deleteByUserUserId(userId);
+        cartRepository.deleteByUserId(userId);
     }
-
-   
 
 }

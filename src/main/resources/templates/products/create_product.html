@@ -108,8 +108,7 @@
 									<h5>Product Name</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="name" th:field="*{productName}" type="text" class="form-control"
-										required>
+									<input id="name" th:field="*{name}" type="text" class="form-control" required>
 								</div>
 							</div>
 
@@ -119,8 +118,8 @@
 								</label>
 								<div class="col-md-12">
 									<select class="form-control" th:field="*{category}">
-										<option th:each="category : ${categories}" th:value="${category.categoryId}"
-											th:text="${category.categoryName}">
+										<option th:each="category : ${categories}" th:value="${category.id}"
+											th:text="${category.name}">
 										</option>
 
 									</select>
@@ -133,9 +132,8 @@
 								</label>
 								<div class="col-md-12">
 									<select class="form-control" th:field="*{manufacturer}">
-										<option th:each="manufacturer : ${manufacturers}"
-											th:value="${manufacturer.manufacturerId}"
-											th:text="${manufacturer.manufacturerName}">
+										<option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer.id}"
+											th:text="${manufacturer.name}">
 										</option>
 
 									</select>
@@ -147,7 +145,7 @@
 									<h5>Price</h5>
 								</label>
 								<div class="col-md-12">
-									<input th:field="*{productPrice}" class="form-control" type="text" id="price"
+									<input th:field="*{price}" class="form-control" type="text" id="price"
 										onkeydown="return onlyNumbers(event)" required>
 								</div>
 							</div>
@@ -171,7 +169,7 @@
 								<label for="description" class="col-sm-12 p-0">
 									<h5>Description</h5>
 								</label>
-								<textarea th:field="*{productDescription}" id="description" required></textarea>
+								<textarea th:field="*{description}" id="description" required></textarea>
 							</div>
 							<div class="form-actions">
 								<button type="submit" class="btn btn-success text-white"> <i class="fa fa-check"></i>

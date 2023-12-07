@@ -9,15 +9,15 @@
 		<div th:replace="products/products.html :: main-menu"></div>
 		<div class="container mt-4">
 			<h2 class="page-title">Edit Product</h2>
-			<form th:action="@{/products/update-product/{id}(id=${product.productId})}" th:object="${product}"
-				method="POST" enctype="multipart/form-data">
+			<form th:action="@{/products/update-product/{id}(id=${product.id})}" th:object="${product}" method="POST"
+				enctype="multipart/form-data">
 				<div class="row">
 					<div class="col-sm-6 ol-md-6 col-xs-12">
 						<div class="white-box">
 							<label for="input-file-now">Click to change product image</label>
 							<div class="dropify-wrapper">
 								<div class="dropify-message">
-									<img th:src="${product.productImages}" style="width: 230px; height: 100%;">
+									<img th:src="${product.images}" style="width: 230px; height: 100%;">
 								</div>
 								<input type="file" id="input-file-now" class="dropify" name="productImg">
 								<div class="dropify-preview">
@@ -35,7 +35,7 @@
 									<h5>Product Name</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="name" th:field="*{productName}" type="text" class="form-control">
+									<input id="name" th:field="*{name}" type="text" class="form-control">
 								</div>
 							</div>
 
@@ -45,8 +45,8 @@
 								</label>
 								<div class="col-md-12">
 									<select class="form-control" th:field="*{category}">
-										<option th:each="category : ${categories}" th:value="${category.categoryId}"
-											th:text="${category.categoryName}">
+										<option th:each="category : ${categories}" th:value="${category.id}"
+											th:text="${category.name}">
 										</option>
 
 									</select>
@@ -59,9 +59,8 @@
 								</label>
 								<div class="col-md-12">
 									<select class="form-control" th:field="*{manufacturer}">
-										<option th:each="manufacturer : ${manufacturers}"
-											th:value="${manufacturer.manufacturerId}"
-											th:text="${manufacturer.manufacturerName}">
+										<option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer.id}"
+											th:text="${manufacturer.name}">
 										</option>
 
 									</select>
@@ -73,7 +72,7 @@
 									<h5>Price</h5>
 								</label>
 								<div class="col-md-12">
-									<input th:field="*{productPrice}" class="form-control" type="text" id="price"
+									<input th:field="*{price}" class="form-control" type="text" id="price"
 										onkeydown="return onlyNumbers(event)">
 								</div>
 							</div>
@@ -83,7 +82,7 @@
 									<h5>Quantity</h5>
 								</label>
 								<div class="col-md-12">
-									<input th:field="*{productQuantity}" class="form-control" type="text"
+									<input th:field="*{quantity}" class="form-control" type="text"
 										onkeydown="return onlyNumbers(event)" value="1" id="quantity">
 								</div>
 							</div>
@@ -97,7 +96,7 @@
 								<label for="description" class="col-sm-12 p-0">
 									<h5>Description</h5>
 								</label>
-								<textarea th:field="*{productDescription}" id="description"></textarea>
+								<textarea th:field="*{description}" id="description"></textarea>
 							</div>
 							<div class="form-actions">
 								<button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>

@@ -12,14 +12,14 @@ public class Product {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long productId;
+	private long id;
 
-	private String productName;
-	private long productQuantity;
-	private double productPrice;
-	private String productImages;
-	private String productDescription;
-	private int productStatus;
+	private String name;
+	private long quantity;
+	private double price;
+	private String images;
+	private String description;
+	private int status;
 
 	@ManyToOne
 	@JoinColumn(name = "category_id")
@@ -35,12 +35,60 @@ public class Product {
 		super();
 	}
 
-	public Manufacturer getManufacturer() {
-		return manufacturer;
+	public long getId() {
+		return id;
 	}
 
-	public void setManufacturer(Manufacturer manufacturer) {
-		this.manufacturer = manufacturer;
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public long getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(long quantity) {
+		this.quantity = quantity;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public String getImages() {
+		return images;
+	}
+
+	public void setImages(String images) {
+		this.images = images;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public Category getCategory() {
@@ -51,60 +99,12 @@ public class Product {
 		this.category = category;
 	}
 
-	public long getProductId() {
-		return productId;
+	public Manufacturer getManufacturer() {
+		return manufacturer;
 	}
 
-	public String getProductName() {
-		return productName;
-	}
-
-	public long getProductQuantity() {
-		return productQuantity;
-	}
-
-	public double getProductPrice() {
-		return productPrice;
-	}
-
-	public String getProductImages() {
-		return productImages;
-	}
-
-	public int getProductStatus() {
-		return productStatus;
-	}
-
-	// public void setCategory(Category category) {
-	// this.category = category;
-	// }
-
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
-
-	public void setProductQuantity(long productQuantity) {
-		this.productQuantity = productQuantity;
-	}
-
-	public void setProductPrice(double productPrice) {
-		this.productPrice = productPrice;
-	}
-
-	public void setProductImages(String productImages) {
-		this.productImages = productImages;
-	}
-
-	public void setProductStatus(int productStatus) {
-		this.productStatus = productStatus;
-	}
-
-	public String getProductDescription() {
-		return productDescription;
-	}
-
-	public void setProductDescription(String productDescription) {
-		this.productDescription = productDescription;
+	public void setManufacturer(Manufacturer manufacturer) {
+		this.manufacturer = manufacturer;
 	}
 
 }

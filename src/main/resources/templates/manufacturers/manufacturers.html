@@ -19,7 +19,7 @@
                 <div class="navbar-container content">
                     <div class="collapse navbar-collapse" id="navbar-mobile">
                         <ul class="nav navbar-nav mr-auto float-left">
-                            <a th:href="@{manufacturers/createManufacturer}">
+                            <a th:href="@{/manufacturers/create-manufacturer}">
                                 <button class="custom-btn btn-13" style="width: 165px;">
                                     <h7>+ manufacturer</h7>
                                 </button>
@@ -75,29 +75,29 @@
                 <div class="content-body" th:each=" manufacturer: ${manufacturers}">
                     <div class="row grouped-multiple-statistics-card">
                         <div class="col-lg-2">
-                            <img th:src="${manufacturer.manufacturerImages}" style="width: 120px;">
+                            <img th:src="${manufacturer.images}" style="width: 120px;">
                         </div>
                         <div class="col-lg-3">
-                            <p th:text="${manufacturer.manufacturerName}"></p>
+                            <p th:text="${manufacturer.name}"></p>
                         </div>
                         <div class="col-lg-4">
-                            <p th:text="${manufacturer.manufacturerDescription}"></p>
+                            <p th:text="${manufacturer.description}"></p>
                         </div>
                         <p></p>
                         <div class="col-lg-3">
-                            <a th:href="@{/manufacturers/edit/{id}(id=${manufacturer.manufacturerId})}"
-                                th:if="${manufacturer.manufacturerStatus == 0}" style="text-decoration: none;">
+                            <a th:href="@{/manufacturers/edit/{id}(id=${manufacturer.id})}"
+                                th:if="${manufacturer.status == 0}" style="text-decoration: none;">
                                 <button class="custom-btn btn-14" style="width: 100px;">
                                     <h7>Edit</h7>
                                 </button>
                             </a>
-                            <a th:href="@{/manufacturers/changeStatus/{id}(id=${manufacturer.manufacturerId})}">
+                            <a th:href="@{/manufacturers/change-status/{id}(id=${manufacturer.id})}">
                                 <button class="custom-btn btn-5" style="width: 100px;"
-                                    th:if="${manufacturer.manufacturerStatus == 0}">
+                                    th:if="${manufacturer.status == 0}">
                                     <h7>Disable</h7>
                                 </button>
                                 <button class="custom-btn btn-6" style="width: 100px;"
-                                    th:if="${manufacturer.manufacturerStatus == 1}">
+                                    th:if="${manufacturer.status == 1}">
                                     <h7>Enable</h7>
                                 </button>
                             </a>
@@ -110,5 +110,9 @@
 
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
+    <script th:inline="javascript">
+
+        alert_action(/*[[${alert}]]*/ )
+    </script>
 
 </html>

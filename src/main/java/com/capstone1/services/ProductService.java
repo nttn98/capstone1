@@ -7,7 +7,7 @@ import org.springframework.data.domain.*;
 import com.capstone1.model.Product;
 
 public interface ProductService {
-	
+
 	List<Product> getAllProducts();
 
 	Product saveProduct(Product product);
@@ -19,6 +19,8 @@ public interface ProductService {
 	Product changeStatusProduct(Product product);
 
 	void deletePproductById(Long id);
+
+	Product findByName(String name);
 
 	Page<Product> findPaginated(int pageNo, int pageSize);
 }

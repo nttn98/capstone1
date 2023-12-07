@@ -8,10 +8,10 @@
 		<div th:replace="products/products.html :: main-menu"></div>
 
 		<div class="container mt-3">
-			<h4>Edit staff id = <span th:text="${staff.staffId}"></span>
+			<h4>Edit staff id = <span th:text="${staff.id}"></span>
 			</h4>
 			<br>
-			<form th:action="@{/staffs/updateStaff/{id}(id=${staff.staffId})}" th:object="${staff}" method="POST">
+			<form th:action="@{/staffs/update-staff/{id}(id=${staff.id})}" th:object="${staff}" method="POST">
 				<div class="row">
 					<div class="col-sm-6 ol-md-6 col-xs-12">
 						<div class="white-box">
@@ -20,7 +20,7 @@
 									<h5>Staff full-name</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="full-name" th:field="*{staffFullname}" type="text" class="form-control">
+									<input id="full-name" th:field="*{fullname}" type="text" class="form-control">
 								</div>
 							</div>
 							<div class="form-group">
@@ -28,7 +28,7 @@
 									<h5>User-name</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="staffName" th:field="*{staffUsername}" type="text" class="form-control">
+									<input id="staffName" th:field="*{username}" type="text" class="form-control">
 								</div>
 							</div>
 							<div class="form-group">
@@ -36,7 +36,7 @@
 									<h5>Password</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="password" th:value="${staff.getStaffPassword()}" type="password"
+									<input id="password" th:value="${staff.getPassword()}" type="password"
 										class="form-control mb-2" readonly>
 									<!-- <input type="checkbox" onclick="showPass()"> Show password -->
 								</div>
@@ -46,7 +46,7 @@
 									<h5>Phone-number</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="numberPhone" th:field="*{staffNumberphone}" type="text"
+									<input id="numberPhone" th:field="*{numberphone}" type="text"
 										onkeydown="return onlyNumbers(event)" class="form-control">
 								</div>
 							</div>
@@ -55,7 +55,7 @@
 									<h5>Id-card</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="idCard" th:field="*{staffIdcard}" type="text" class="form-control"
+									<input id="idCard" th:field="*{idcard}" type="text" class="form-control"
 										onkeydown="return onlyNumbers(event)">
 								</div>
 							</div>
@@ -64,7 +64,7 @@
 									<h5>Email</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="email" th:field="*{staffEmail}" type="email" class="form-control">
+									<input id="email" th:field="*{email}" type="email" class="form-control">
 								</div>
 							</div>
 							<div class="form-group">
@@ -72,7 +72,7 @@
 									<h5>Date of birth</h5>
 								</label>
 								<div class="col-md-12" style="margin-bottom: 40px;">
-									<input id="dob" th:field="*{staffDob}" type="date" class="form-control">
+									<input id="dob" th:field="*{dob}" type="date" class="form-control">
 								</div>
 							</div>
 						</div>

@@ -10,87 +10,91 @@ public class Staff {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long staffId;
-    private String staffFullname;
-    private String staffUsername;
-    private String staffPassword;
-    private long staffNumberphone;
-    private String staffEmail;
-    private Date staffDob;
-    private long staffIdcard;
+    private long id;
+    private String fullname;
+    private String username;
+    private String password;
+    private long numberphone;
+    private String email;
+    private Date dob;
+    private long idcard;
 
-    private int staffStatus;
+    private int status;
 
     public Staff() {
         super();
     }
 
-    public void setStaffFullname(String staffFullname) {
-        this.staffFullname = staffFullname;
+    public long getId() {
+        return id;
     }
 
-    public void setStaffUsername(String staffUsername) {
-        this.staffUsername = staffUsername;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setStaffPassword(String staffPassword) {
-        this.staffPassword = staffPassword;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setStaffNumberphone(long staffNumberphone) {
-        this.staffNumberphone = staffNumberphone;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
-    public void setStaffEmail(String staffEmail) {
-        this.staffEmail = staffEmail;
+    public String getUsername() {
+        return username;
     }
 
-    public void setStaffDob(Date staffDob) {
-        this.staffDob = staffDob;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public void setStaffIdcard(long staffIdcard) {
-        this.staffIdcard = staffIdcard;
+    public String getPassword() {
+        return password;
     }
 
-    public void setStaffStatus(int staffStatus) {
-        this.staffStatus = staffStatus;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public long getStaffId() {
-        return staffId;
+    public long getNumberphone() {
+        return numberphone;
     }
 
-    public String getStaffFullname() {
-        return staffFullname;
+    public void setNumberphone(long numberphone) {
+        this.numberphone = numberphone;
     }
 
-    public String getStaffUsername() {
-        return staffUsername;
+    public String getEmail() {
+        return email;
     }
 
-    public String getStaffPassword() {
-        return staffPassword;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public long getStaffNumberphone() {
-        return staffNumberphone;
+    public Date getDob() {
+        return dob;
     }
 
-    public String getStaffEmail() {
-        return staffEmail;
+    public void setDob(Date dob) {
+        this.dob = dob;
     }
 
-    public Date getStaffDob() {
-        return staffDob;
+    public long getIdcard() {
+        return idcard;
     }
 
-    public long getStaffIdcard() {
-        return staffIdcard;
+    public void setIdcard(long idcard) {
+        this.idcard = idcard;
     }
 
-    public int getStaffStatus() {
-        return staffStatus;
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
 }

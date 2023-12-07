@@ -20,4 +20,6 @@ public interface StaffService {
 
     void deleteStaffById(Long id);
 
+    Staff findByUsernameAndPassword(String usename, String passsword);
+
 }

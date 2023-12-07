@@ -19,7 +19,7 @@
                 <div class="navbar-container content">
                     <div class="collapse navbar-collapse" id="navbar-mobile">
                         <ul class="nav navbar-nav mr-auto float-left">
-                            <a th:href="@{categories/createCategory}">
+                            <a th:href="@{/categories/create-category}">
                                 <button class="custom-btn btn-13">
                                     <h7>+ category</h7>
                                 </button>
@@ -75,29 +75,27 @@
                 <div class="content-body" th:each=" category: ${categories}">
                     <div class="row grouped-multiple-statistics-card">
                         <div class="col-lg-2">
-                            <img th:src="${category.categoryImages}" style="width: 120px;">
+                            <img th:src="${category.images}" style="width: 120px;">
                         </div>
                         <div class="col-lg-3">
-                            <p th:text="${category.categoryName}"></p>
+                            <p th:text="${category.name}"></p>
                         </div>
                         <div class="col-lg-4">
-                            <p th:text="${category.categoryDescription}"></p>
+                            <p th:text="${category.description}"></p>
                         </div>
                         <p></p>
                         <div class="col-lg-3">
-                            <a th:href="@{/categories/edit/{id}(id=${category.categoryId})}"
-                                th:if="${category.categoryStatus == 0}" style="text-decoration: none;">
+                            <a th:href="@{/categories/edit/{id}(id=${category.id})}" th:if="${category.status == 0}"
+                                style="text-decoration: none;">
                                 <button class="custom-btn btn-14" style="width: 100px;">
                                     <h7>Edit</h7>
                                 </button>
                             </a>
-                            <a th:href="@{/categories/changeStatus/{id}(id=${category.categoryId})}">
-                                <button class="custom-btn btn-5" style="width: 100px;"
-                                    th:if="${category.categoryStatus == 0}">
+                            <a th:href="@{/categories/change-status/{id}(id=${category.id})}">
+                                <button class="custom-btn btn-5" style="width: 100px;" th:if="${category.status == 0}">
                                     <h7>Disable</h7>
                                 </button>
-                                <button class="custom-btn btn-6" style="width: 100px;"
-                                    th:if="${category.categoryStatus == 1}">
+                                <button class="custom-btn btn-6" style="width: 100px;" th:if="${category.status == 1}">
                                     <h7>Enable</h7>
                                 </button>
                             </a>
@@ -110,5 +108,10 @@
 
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
+
+    <script th:inline="javascript">
+
+        alert_action(/*[[${alert}]]*/ )
+    </script>
 
 </html>

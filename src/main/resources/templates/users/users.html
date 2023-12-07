@@ -83,35 +83,35 @@
 				<div class="content-body" th:each=" user: ${users}">
 					<div class="row grouped-multiple-statistics-card">
 						<div class="col-lg-2">
-							<p th:text="${user.userFullname}"></p>
+							<p th:text="${user.fullname}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${user.userUsername}"></p>
+							<p th:text="${user.username}"></p>
 						</div>
 						<div class="col-lg-2">
-							<p th:text="${user.userEmail}"></p>
+							<p th:text="${user.email}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${user.userNumberphone}"></p>
+							<p th:text="${user.numberphone}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${user.userDob}"></p>
+							<p th:text="${user.dob}"></p>
 						</div>
 						<div class="col-lg-2">
-							<p th:text="${user.userAddress}"></p>
+							<p th:text="${user.Address}"></p>
 						</div>
 						<div class="col-lg-2">
-							<a th:href="@{/users/edit/{id}(id=${user.userId})}" th:if="${user.userStatus == 0}"
+							<a th:href="@{/users/edit/{id}(id=${user.Id})}" th:if="${user.Status == 0}"
 								style="text-decoration: none;">
 								<button class="custom-btn btn-14" style="width: 100px;">
 									<h7>Edit</h7>
 								</button>
 							</a>
-							<a th:href="@{/users/change-status/{id}(id=${user.userId})}">
-								<button class="custom-btn btn-5" style="width: 100px;" th:if="${user.userStatus == 0}">
+							<a th:href="@{/users/change-status/{id}(id=${user.Id})}">
+								<button class="custom-btn btn-5" style="width: 100px;" th:if="${user.Status == 0}">
 									<h7>Disable</h7>
 								</button>
-								<button class="custom-btn btn-6" style="width: 100px;" th:if="${user.userStatus == 1}">
+								<button class="custom-btn btn-6" style="width: 100px;" th:if="${user.Status == 1}">
 									<h7>Enable</h7>
 								</button>
 							</a>

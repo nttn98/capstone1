@@ -9,7 +9,9 @@ import com.capstone1.model.Staff;
 @Repository
 public interface StaffRepository extends JpaRepository<Staff, Long> {
 
-    Staff findByStaffEmail(String email);
+    Staff findByEmail(String email);
+
+    Staff findByUsernameAndPassword(String username, String password);
 
     @Modifying
     @Transactional

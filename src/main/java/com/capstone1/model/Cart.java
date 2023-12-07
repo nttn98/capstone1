@@ -13,7 +13,7 @@ public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long cartId;
+    private long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -35,7 +35,7 @@ public class Cart {
     public boolean addProduct(Product product, Cart cart) {
         boolean result = false;
 
-        CartItem temp = checkProductExist(product.getProductId());
+        CartItem temp = checkProductExist(product.getId());
 
         if (temp == null) {
             CartItem newItem = new CartItem(cart, product, 1);
@@ -51,7 +51,7 @@ public class Cart {
         CartItem foundCartItem = null;
 
         for (int i = 0; i < listItem.size(); i++) {
-            if (listItem.get(i).getProduct().getProductId() == productID) {
+            if (listItem.get(i).getProduct().getId() == productID) {
                 return listItem.get(i);
             }
         }
@@ -60,9 +60,9 @@ public class Cart {
 
     }
 
-    public void removeItem(long productID) {
+    public void removeItem(long productId) {
         for (int i = 0; i < listItem.size(); i++) {
-            if (listItem.get(i).getProduct().getProductId() == productID) {
+            if (listItem.get(i).getProduct().getId() == productId) {
                 this.listItem.remove(i);
             }
         }
@@ -82,7 +82,7 @@ public class Cart {
 
     public void deleteByProductId(long id) {
         for (int i = 0; i < listItem.size(); i++) {
-            if (listItem.get(i).product.getProductId() == id) {
+            if (listItem.get(i).product.getId() == id) {
                 listItem.remove(i);
             }
         }
@@ -92,18 +92,18 @@ public class Cart {
         this.listItem = listItem;
     }
 
-    public void updateQuan(int productID, int quant) {
-        CartItem temp = checkProductExist(productID);
+    public void updateQuan(int productId, int quant) {
+        CartItem temp = checkProductExist(productId);
         temp.setQuantity(quant);
 
     }
 
-    public long getCartId() {
-        return cartId;
+    public long getId() {
+        return id;
     }
 
-    public void setCartId(long cartId) {
-        this.cartId = cartId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long totalSize() {

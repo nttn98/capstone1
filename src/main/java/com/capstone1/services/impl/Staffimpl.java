@@ -50,7 +50,12 @@ public class Staffimpl implements StaffService {
 
     @Override
     public Staff findByEmail(String email) {
-        return staffRepository.findByStaffEmail(email);
+        return staffRepository.findByEmail(email);
+    }
+
+    @Override
+    public Staff findByUsernameAndPassword(String usename, String passsword) {
+        return staffRepository.findByUsernameAndPassword(usename, passsword);
     }
 
 }

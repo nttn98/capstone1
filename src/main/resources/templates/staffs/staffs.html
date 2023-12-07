@@ -17,7 +17,7 @@
 				<div class="navbar-container content">
 					<div class="collapse navbar-collapse" id="navbar-mobile">
 						<ul class="nav navbar-nav mr-auto float-left">
-							<a th:href="@{staffs/createStaff}">
+							<a th:href="@{staffs/create-staff}">
 								<button class="custom-btn btn-13">
 									<h7>+ staff</h7>
 								</button>
@@ -83,37 +83,35 @@
 				<div class="content-body" th:each=" staff: ${staffs}">
 					<div class="row grouped-multiple-statistics-card">
 						<div class="col-lg-2">
-							<p th:text="${staff.staffFullname}"></p>
+							<p th:text="${staff.fullname}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${staff.staffUsername}"></p>
+							<p th:text="${staff.username}"></p>
 						</div>
 						<div class="col-lg-2">
-							<p th:text="${staff.staffEmail}"></p>
+							<p th:text="${staff.email}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${staff.staffNumberphone}"></p>
+							<p th:text="${staff.numberphone}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${staff.staffDob}"></p>
+							<p th:text="${staff.dob}"></p>
 						</div>
 						<div class="col-lg-2">
-							<p th:text="${staff.staffIdcard}"></p>
+							<p th:text="${staff.idcard}"></p>
 						</div>
 						<div class="col-lg-2">
-							<a th:href="@{/staffs/edit/{id}(id=${staff.staffId})}" th:if="${staff.staffStatus == 0}"
+							<a th:href="@{/staffs/edit/{id}(id=${staff.id})}" th:if="${staff.status == 0}"
 								style="text-decoration: none;">
 								<button class="custom-btn btn-14" style="width: 100px;">
 									<h7>Edit</h7>
 								</button>
 							</a>
-							<a th:href="@{/staffs/changeStatus/{id}(id=${staff.staffId})}">
-								<button class="custom-btn btn-5" style="width: 100px;"
-									th:if="${staff.staffStatus == 0}">
+							<a th:href="@{/staffs/change-status/{id}(id=${staff.id})}">
+								<button class="custom-btn btn-5" style="width: 100px;" th:if="${staff.status == 0}">
 									<h7>Disable</h7>
 								</button>
-								<button class="custom-btn btn-6" style="width: 100px;"
-									th:if="${staff.staffStatus == 1}">
+								<button class="custom-btn btn-6" style="width: 100px;" th:if="${staff.status == 1}">
 									<h7>Enable</h7>
 								</button>
 							</a>

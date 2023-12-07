@@ -2,6 +2,7 @@ package com.capstone1.services.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.*;
 
@@ -12,13 +13,8 @@ import com.capstone1.repository.*;
 @Service
 public class Productimpl implements ProductService {
 
-	private ProductRepository productRepository;
-
-	public Productimpl(ProductRepository productRepository) {
-		super();
-		this.productRepository = productRepository;
-
-	}
+	@Autowired
+	ProductRepository productRepository;
 
 	@Override
 	public List<Product> getAllProducts() {
@@ -56,6 +52,11 @@ public class Productimpl implements ProductService {
 	public Page<Product> findPaginated(int pageNo, int pageSize) {
 		PageRequest pageable = PageRequest.of(pageNo - 1, pageSize);
 		return this.productRepository.findAll(pageable);
+	}
+
+	@Override
+	public Product findByName(String name) {
+		return productRepository.findByName(name);
 	}
 
 }

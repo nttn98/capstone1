@@ -2,21 +2,20 @@ package com.capstone1.services.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 
 import com.capstone1.model.Category;
 import com.capstone1.repository.CategoryRepository;
 import com.capstone1.services.*;
 
+import jakarta.annotation.Resource;
+
 @Service
 public class Categoryimpl implements CategoryService {
 
-    private CategoryRepository categoryRepository;
-
-    public Categoryimpl(CategoryRepository categoryRepository) {
-        super();
-        this.categoryRepository = categoryRepository;
-    }
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Override
     public List<Category> getAllCategories() {
@@ -47,5 +46,10 @@ public class Categoryimpl implements CategoryService {
     @Override
     public Category changeStatusCategory(Category category) {
         return categoryRepository.save(category);
+    }
+
+    @Override
+    public Category findByName(String name) {
+        return categoryRepository.findByName(name);
     }
 }
