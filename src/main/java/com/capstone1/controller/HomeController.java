@@ -13,13 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import com.capstone1.model.*;
 import com.capstone1.services.*;
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import jakarta.annotation.Resource;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.*;
-import jakarta.websocket.server.PathParam;
 
 @Controller
 public class HomeController {
@@ -65,7 +63,7 @@ public class HomeController {
         this.cartItemService = cartItemService;
     }
 
-    @GetMapping({ "/homePage", "/" })
+    @GetMapping({ "/home-page", "/" })
     public String getHome(Model model) {
 
         List<Product> listProducts = productService.getAllProducts();
@@ -108,7 +106,7 @@ public class HomeController {
     }
 
     /* Order user */
-    @GetMapping("/users/addToCart/{productId}")
+    @GetMapping("/users/add-to-cart/{productId}")
     public String addToCart(Model model, @PathVariable long productId, HttpSession session,
             @RequestParam(name = "quantity", defaultValue = "1") int quantity) {
         Long userId = (Long) session.getAttribute("userId");
@@ -119,11 +117,10 @@ public class HomeController {
             addToCartWithoutUser(session, cart, temp);
         } else {
             User user = userService.getUserById(userId);
-
             addToCartWithUser(session, quantity, cart, temp, user);
         }
 
-        return "redirect:/homePage";
+        return "redirect:/home-page";
 
     }
 
@@ -159,28 +156,28 @@ public class HomeController {
         session.setAttribute("cart", cart);
     }
 
-    @GetMapping("/users/deleteProductInCart/{producId}")
-    public String deleteToCart(Model model, @PathVariable long producId, HttpSession session) {
+    @PostMapping("/users/delete-product-in-cart")
+    public String deleteToCart(Model model, @RequestParam long productId, HttpSession session) {
         Cart cart = (Cart) session.getAttribute("cart");
         Long userId = (Long) session.getAttribute("userId");
 
         if (userId == null) { // withLogin
-            cart.deleteByProductId(producId);
+            cart.deleteByProductId(productId);
         } else { // without login
-            cartItemService.deleteByProductId(producId);
-            cart.removeItem(producId);
+            cartItemService.deleteByProductId(productId);
+            cart.removeItem(productId);
             if (cart.getListItem().size() == 0) {
                 cartService.deleteByUserId(userId);
+                cart = null;
             }
         }
         session.setAttribute("cart", cart);
-        return "redirect:/homePage";
+        return "redirect:/home-page";
 
     }
 
     @GetMapping("/users/add-order")
-    public String addOrder(Model model, HttpSession session,
-            @RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+    public String addOrder(Model model, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         User userLogin = userService.getUserById(userId);
         Cart cart = (Cart) session.getAttribute("cart");
@@ -192,21 +189,22 @@ public class HomeController {
             order = orderService.saveOrder(new Order(0, userLogin, now));
             for (int i = 0; i < cart.getListItem().size(); i++) {
                 Product product = cart.getListItem().get(i).getProduct();
-                double subtotal = product.getProductPrice() * quantity;
-                orderDetailService.saveOrderDetail(new OrderDetail(order, product, quantity, subtotal));
+                double subtotal = product.getProductPrice();
+                OrderDetail tempOrderDetail = orderDetailService
+                        .saveOrderDetail(new OrderDetail(order, product,
+                                cartItemService.findByProductId(product.getProductId()).getQuantity(), subtotal));
                 cartItemService.deleteByProductId(product.getProductId());
-                total += subtotal;
-            }
-            // cartService.deleteByUserId(userLogin.getUserId());
-            order.setTotal(total);
+                total += tempOrderDetail.getFinalPrice();
 
+            }
+            order.setTotal(total);
             cartService.deleteByUserId(userLogin.getUserId());
             cart.getListItem().clear();
 
         }
         session.removeAttribute("cart");
         orderService.saveOrder(order);
-        return "redirect:/homePage";
+        return "redirect:/home-page";
 
     }
 
@@ -229,11 +227,10 @@ public class HomeController {
 
                 Cart cart = cartService.findByUserId(user.getUserId());
                 session.setAttribute("cart", cart);
-            } else {
-                model.addAttribute("alert", "error");
+                return getHome(model);
             }
         }
-
+        model.addAttribute("alert", "error");
         return getHome(model);
     }
 
@@ -243,10 +240,12 @@ public class HomeController {
         Long userId = (Long) session.getAttribute("userId");
 
         if (userId != null) {
+            session.removeAttribute("userId");
             session.removeAttribute("user");
+            session.removeAttribute("cart");
         }
 
-        return "redirect:/homePage";
+        return "redirect:/home-page";
     }
 
     /* Forgot password admin and staff */

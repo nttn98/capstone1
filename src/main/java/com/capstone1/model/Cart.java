@@ -106,4 +106,12 @@ public class Cart {
         this.cartId = cartId;
     }
 
+    public long totalSize() {
+        long count = 0;
+        for (CartItem item : listItem) {
+            count += item.getQuantity();
+        }
+        return count;
+    }
+
 }

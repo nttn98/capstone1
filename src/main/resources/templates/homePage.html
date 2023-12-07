@@ -55,40 +55,41 @@
 									<p>0</p>
 								</span>
 								<span class="position-absolute cart-count" th:if="${session.cart!= null}">
-									<p th:text="${session.cart.getListItem().size()}"></p>
+									<p th:text="${session.cart.totalSize()}"></p>
 								</span>
 								<i class="fa fa-shopping-cart" aria-hidden="true" style="padding-left: 8px;"></i>
 							</a>
 
 							<div class="cart position-fixed">
 								<h2>Shopping Cart</h2>
-								<button onclick="closecart()" type="button" class="close" aria-label="Close">
+								<button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 								<h3 th:if="${session.cart==null}">There are no items</h3>
 								<!-- product -->
 								<div class="product" th:if="${session.cart!=null}">
 									<div class="container">
-										<div class="row" th:each=" item : ${session.cart.getListItem()}"
-											style="margin-bottom: 10px;">
-											<div class="col-2">
-												<img th:src="${item.getProduct().getProductImages()}"
-													style="width: 100%;">
-											</div>
-											<div class="col-4" th:text="${item.getProduct().getProductName()}">
-											</div>
-											<input type="number" name="quantity" th:value="${item.getQuantity()}"
-												style="width: 50px; height: 50px;">
-											<div class="col-2" th:text="${item.getSubtotal()} +'.000 VND'">
-											</div>
+										<form th:action="@{/users/delete-product-in-cart}" method="POST">
+											<div class="row" th:each=" item : ${session.cart.getListItem()}"
+												style="margin-bottom: 10px;">
+												<div class="col-2">
+													<img th:src="${item.getProduct().getProductImages()}"
+														style="width: 100%;">
+												</div>
+												<div class="col-4" th:text="${item.getProduct().getProductName()}">
+												</div>
+												<input type="hidden" th:value="${item.getProduct().getProductId()}"
+													name="productId">
+												<input type="number" name="quantity" th:value="${item.getQuantity()}"
+													style="width: 50px; height: 50px;">
+												<div class="col-2" th:text="${item.getSubtotal()} +'00 VND'">
+												</div>
 
-											<div class="col-2">
-												<a
-													th:href="@{/users/deleteProductInCart/{productId}(productId=${item.getProduct().getProductId()})}">
-													<button class="close">x</button>
-												</a>
+												<div class="col-2">
+													<button type="submit" class="close">x</button>
+												</div>
 											</div>
-										</div>
+										</form>
 										<br>
 									</div>
 								</div>
@@ -101,7 +102,6 @@
 									<a th:href="@{/users/add-order}"><button class="btn-purchase">Order</button></a>
 								</div>
 							</div>
-
 						</li>
 						<li class="position-relative">
 							<a onclick="showLogin()" th:if="${session.user == null}"><i class="fa fa-user-o"
@@ -110,14 +110,17 @@
 								<button class="dropbtn"
 									th:text="'Welcome, '+ ${session.user.getUserUsername()}"></button>
 								<div class="dropdown-content">
-									<a onclick="showUserProfile()">Profile</a>
+									<a href="#" onclick="showUserProfile()">
+										Profile
+									</a>
 									<a href="#">View history Order</a>
 									<a th:href="@{/users/logout}">Logout</a>
 								</div>
 							</div>
 							<div class="userProfile position-fixed">
 								<h2>User profile</h2>
-								<button onclick="closeUserProfile()" type="button" class="close" aria-label="Close">
+								<button onclick="closeUserProfile()" type="button" class="close close-mask"
+									aria-label="Close">
 									<span aria-hidden="true">&times;</span>
 								</button>
 								<div class="user">
@@ -363,7 +366,7 @@
 					<div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" product: ${products}">
 						<div class="card-botBody text-white">
 							<img th:src="${product.productImages}">
-							<a th:href="@{/users/addToCart/{producId}(producId=${product.productId})}">
+							<a th:href="@{/users/add-to-cart/{producId}(producId=${product.productId})}">
 								<figcaption>
 									<div class="box-1">
 										<div class="btn btn-one">
@@ -376,7 +379,7 @@
 							</a>
 						</div>
 						<h5><a th:text=" ${product.productName}"></a></h5>
-						<p th:text="${product.productPrice}+'00.000 VND'"> </p>
+						<p th:text="${product.productPrice}+'00 VND'"> </p>
 
 					</div>
 				</div>
@@ -595,7 +598,7 @@
 			$( '.closeMask' ).click( ( e ) =>
 			{
 				if ( e.target.classList.contains( 'closeMask' ) )
-					$( 'button.close' ).click()
+					$( 'button.close.close-mask' ).click()
 			} );
 
 			$( document ).ready( function ()
@@ -655,13 +658,6 @@
 				$( '.closeMask' ).fadeOut();
 			}
 
-			// let org=111;
-			// $('.cart').on('change','input[name="quantity"]',(e)=>{
-			// 	let ele=$(e.target);
-			// 	let quantity=ele.val();
-			// 	let parent=ele.parent(".row");
-			// 	let subTotal=parseInt(parent.find('.sub-total').text(org*quantity))
-			// })
 			alert_action(/*[[${alert}]]*/ )
 		</script>
 

@@ -5,7 +5,7 @@ import java.util.*;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "cartItems")
+@Table(name = "cart_items")
 public class CartItem {
 
     @Id

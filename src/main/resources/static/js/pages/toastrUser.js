@@ -1,7 +1,5 @@
 function alert_action ( alert_action )
 {
-     var baseUrl = window.location.protocol + "//" + window.location.host;
-
      if ( alert_action == 'success' )
      {
           $.toast( {
