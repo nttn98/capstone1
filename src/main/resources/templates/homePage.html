@@ -55,7 +55,7 @@
 									<p>0</p>
 								</span>
 								<span class="position-absolute cart-count" th:if="${session.cart!= null}">
-									<p th:text="${session.cart.totalSize()}"></p>
+									<p th:text="${session.cart.listItem.size}"></p>
 								</span>
 								<i class="fa fa-shopping-cart" aria-hidden="true" style="padding-left: 8px;"></i>
 							</a>
@@ -80,8 +80,14 @@
 												</div>
 												<input type="hidden" th:value="${item.getProduct().getProductId()}"
 													name="productId">
-												<input type="number" name="quantity" th:value="${item.getQuantity()}"
-													style="width: 50px; height: 50px;">
+												<div>
+
+													<button type="button" onclick="quantityMinus(this)">-</button>
+													<input type="text" id="quantity" name="quantity"
+														th:value="${item.getQuantity()}"
+														style="width: 50px; height: 50px;" readonly>
+													<button type="button" onclick="quantityPlus(this)">+</button>
+												</div>
 												<div class="col-2" th:text="${item.getSubtotal()} +'00 VND'">
 												</div>
 
@@ -657,7 +663,16 @@
 				$( '.cart' ).removeClass( "w-35" )
 				$( '.closeMask' ).fadeOut();
 			}
-
+			function quantityPlus ( e )
+			{
+				let quantity = $( e ).closest( 'div' ).find( 'input' );
+				quantity.val( +quantity.val() + 1 );
+			}
+			function quantityMinus ( e )
+			{
+				let quantity = $( e ).closest( 'div' ).find( 'input' );
+				quantity.val( +quantity.val() - 1 );
+			}
 			alert_action(/*[[${alert}]]*/ )
 		</script>
 
