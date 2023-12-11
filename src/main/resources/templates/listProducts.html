@@ -2,13 +2,80 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
     <head th:replace="~{homePage :: head}"></head>
+    <link rel="styleSheet" href="/css/listProducts.css">
+
+    <title>List products</title>
 
     <body>
 
-        <head th:replace="~{homePage :: header}"></head>
+        <header>
+            <div class="container d-flex align-items-center justify-content-between" id="header">
+                <div th:replace="homePage :: logo"></div>
+                <div th:replace="homePage :: menu"></div>
+                <div th:replace="homePage :: header-action"></div>
+                <div th:replace="homePage :: login"></div>
+            </div>
+        </header>
+        <div class="closeMask"></div>
+        </div>
+        <div>
+            <h2 style="text-align: center;">Shop</h2>
+        </div>
 
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-2">
+                    <a href="/list-products">
+                        <p>All products</p>
+                    </a>
+                    <ul>Catogies
+                        <a th:each="category: ${categories}"
+                            th:href="@{/products-by-category(categoryName=${category.getName()})}">
+                            <li th:text="${category.getName()}"></li>
+                        </a>
+                    </ul>
+                    <ul>
+                        Manufacturers
+                        <a th:each="manufacturer: ${manufacturers}"
+                            th:href="@{/products-by-manufacturer(manufacturerName=${manufacturer.getName()})}">
+                            <li th:text="${manufacturer.getName()}"></li>
+                        </a>
+                    </ul>
+                </div>
+                <div class="col-lg-10">
+                    <div class="item" th:each=" item: ${products}">
+                        <div class="card mb-3">
+                            <div class="row no-gutters" style="background-color: black; border: 1px solid;">
+                                <div class="col-lg-3">
+                                    <img th:src="${item.getImages()}" width="200px" height="220px">
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="card-body">
+                                        <h5 class="card-title" th:text="${item.getName()}"> </h5>
+                                        <p class="card-text" th:text="${item.getDescription()}"> </p>
+                                        <p class="card-text" th:text="${item.getCategory().getName()}"> </p>
+                                        <p class="card-text" th:text="${item.getManufacturer().getName()}"> </p>
+                                        <p class="card-text" th:text="${item.getPrice()} + 00VND"> </p>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <a th:href="@{/users/add-to-cart/{producId}(producId=${item.id})}">
+                                        <button class="button-89" role="button"
+                                            style="margin-top: 60px; margin-left: 90px;">Add to cart</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
 
-        <footer th:replace="~{homePage :: footer}"></footer>
+        <footer th:replace=" ~{homePage.html :: footer}">
+        </footer>
+
+        <button id="topButton"><i class="fa fa-arrow-up"></i></button>
 
     </body>
     <script th:inline="javascript">

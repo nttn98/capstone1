@@ -22,5 +22,9 @@ public interface ProductService {
 
 	Product findByName(String name);
 
+	List<Product> findByCategoryName(String name);
+
+	List<Product> findByManufacturerName(String name);
+
 	Page<Product> findPaginated(int pageNo, int pageSize);
 }

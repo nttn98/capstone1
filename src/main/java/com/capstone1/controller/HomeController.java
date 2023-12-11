@@ -18,8 +18,6 @@ import jakarta.annotation.Resource;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
@@ -73,8 +71,50 @@ public class HomeController {
         return "homePage";
     }
 
-    @GetMapping("/listProducts")
-    public String getProductsForUser(Model model) {
+    @GetMapping("/list-products")
+    public String getProductsForUser(Model model, HttpSession session) {
+        List<Product> listProducts = productService.getAllProducts();
+        List<Category> listCategories = categoryService.getAllCategories();
+        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+
+        model.addAttribute("products", listProducts);
+        model.addAttribute("categories", listCategories);
+        model.addAttribute("manufacturers", listManufacturers);
+
+        return "listProducts";
+    }
+
+    @GetMapping("/products-by-category")
+    public String getProductsByCategory(Model model, @RequestParam("categoryName") String categoryName) {
+
+        if (categoryName != null) {
+            List<Product> listProducts = productService.findByCategoryName(categoryName);
+            model.addAttribute("products", listProducts);
+        }
+
+        List<Category> listCategories = categoryService.getAllCategories();
+        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+
+        model.addAttribute("categories", listCategories);
+        model.addAttribute("manufacturers", listManufacturers);
+
+        return "listProducts";
+    }
+
+    @GetMapping("/products-by-manufacturer")
+    public String getProductsByManufacturer(Model model, @RequestParam("manufacturerName") String manufacturerName) {
+
+        if (manufacturerName != null) {
+            List<Product> listProducts = productService.findByManufacturerName(manufacturerName);
+            model.addAttribute("products", listProducts);
+        }
+
+        List<Category> listCategories = categoryService.getAllCategories();
+        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+
+        model.addAttribute("categories", listCategories);
+        model.addAttribute("manufacturers", listManufacturers);
+
         return "listProducts";
     }
 

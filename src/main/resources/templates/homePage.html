@@ -26,26 +26,26 @@
 		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
 
 		<link rel="styleSheet" href="/css/homePage.css">
-		<title>Home Page</title>
 	</head>
+	<title>Home Page</title>
 
 	<body>
 		<header>
 			<div class="container d-flex align-items-center justify-content-between" id="header">
-				<div id="logo">
+				<div id="logo" th:fragment="logo">
 					<h1><a href="/">NAD</a></h1>
 				</div>
-				<div id="menu" class="w-35">
+				<div id="menu" class="w-35" th:fragment="menu">
 					<nav class="d-block">
 						<ul class="m-0 h-100 list-unstyled d-flex align-items-center justify-content-center">
 							<li><a href="/">Home</a></li>
-							<li><a href="/listProducts">Products</a></li>
+							<li><a href="/list-products">Products</a></li>
 							<li><a href="/about">About</a></li>
 							<li><a href="/contact">Contact</a></li>
 						</ul>
 					</nav>
 				</div>
-				<div id="header-action">
+				<div id="header-action" th:fragment="header-action">
 					<ul class=" m-0 list-unstyled d-flex align-items-center">
 						<li><input id="search" class="form-control mr-sm-2" placeholder="Search"></li>
 						<li class="position-relative">
@@ -213,7 +213,7 @@
 					</ul>
 				</div>
 				<!-- forgot password -->
-				<div class=" login position-fixed">
+				<div class=" login position-fixed" th:fragment="login">
 					<div class="container">
 						<div class="row justify-content-center">
 							<div class="col">
@@ -311,9 +311,9 @@
 
 
 			</div>
-			<div class="closeMask"></div>
-			</div>
 		</header>
+		<div class="closeMask"></div>
+		</div>
 
 		<div class="banner">
 			<div class="container-fluid">
@@ -612,166 +612,166 @@
 
 		<button id="topButton"><i class="fa fa-arrow-up"></i></button>
 
-		<script th:inline="javascript">
-			function showPass ()
-			{
-				var p = document.getElementById( "password" );
-				if ( p.type === "password" )
-				{
-					p.type = "text";
-				} else
-				{
-					p.type = "password";
-				}
-			}
-			function showNewPass ()
-			{
-				var p = document.getElementById( "newPassword" );
-				if ( p.type === "password" )
-				{
-					p.type = "text";
-				} else
-				{
-					p.type = "password";
-				}
-			}
-			function showConfirmPassword ()
-			{
-				var p = document.getElementById( "confirmPassword" );
-				if ( p.type === "password" )
-				{
-					p.type = "text";
-				} else
-				{
-					p.type = "password";
-				}
-			}
-			function onChange ()
-			{
-				var password = document.querySelector( 'input[id=newPassword]' );
-				var confirm = document.querySelector( 'input[id=confirmPassword]' );
-				if ( confirm.value === password.value )
-				{
-					confirm.setCustomValidity( '' );
-				} else
-				{
-					confirm.setCustomValidity( 'Passwords do not match' );
-				}
-			}
-			function showChangePassword ()
-			{
-				$( "#changePassword" ).removeClass( "d-none" );
-				$( "#profileForm" ).addClass( "d-none" );
-
-			}
-
-			function closeChangePassword ()
-			{
-				$( "#changePassword" ).addClass( "d-none" );
-				$( "#profileForm" ).removeClass( "d-none" );
-
-			}
-			function showRecoverPassword ()
-			{
-				$( "#CustomerLoginForm" ).addClass( "d-none" )
-				$( "#RecoverPasswordForm" ).removeClass( "d-none" );
-			}
-			function closeRecoverPassword ()
-			{
-				$( "#RecoverPasswordForm" ).addClass( "d-none" );
-				$( "#CustomerLoginForm" ).removeClass( "d-none" )
-				$( "#register" ).addClass( "d-none" );
-
-			}
-
-			function showRegister ()
-			{
-				$( "#register" ).removeClass( "d-none" );
-				$( "#CustomerLoginForm" ).addClass( "d-none" );
-			}
-			function closeRegister ()
-			{
-				$( "#register" ).addClass( "d-none" );
-				$( "#CustomerLoginForm" ).removeClass( "d-none" );
-
-			}
-
-			$( '.closeMask' ).click( ( e ) =>
-			{
-				if ( e.target.classList.contains( 'closeMask' ) )
-					$( 'button.close.close-mask' ).click();
-				closeRecoverPassword();
-			} );
-
-			$( document ).ready( function ()
-			{
-				$( window ).scroll( function ()
-				{
-					if ( $( this ).scrollTop() > 100 )
-					{
-						$( '#topButton' ).fadeIn();
-					} else
-					{
-						$( '#topButton' ).fadeOut();
-					}
-				} );
-
-				$( '#topButton' ).click( function ()
-				{
-					$( 'html, body' ).animate( { scrollTop: 0 }, 400 );
-					return false;
-				} );
-			} );
-
-			function showUserProfile ()
-			{
-				$( '.userProfile' ).addClass( "w-25" );
-				$( '.closeLogin' ).fadeIn();
-				$( '.closeMask' ).fadeIn();
-			}
-			function closeUserProfile ()
-			{
-				$( '.userProfile' ).removeClass( "w-25" );
-				$( '.closeMask' ).fadeOut();
-			}
-
-			function showLogin ()
-			{
-				$( '.login' ).addClass( "w-25" );
-				$( '.closeLogin' ).fadeIn();
-				$( '.closeMask' ).fadeIn();
-			}
-			function closeLogin ()
-			{
-				$( '.login' ).removeClass( "w-25" )
-				$( '.closeLogin' ).fadeOut();
-				$( '.closeMask' ).fadeOut();
-			}
-
-			function showcart ()
-			{
-				$( '.cart' ).addClass( "w-35" )
-				$( '.closeLogin' ).fadeIn();
-				$( '.closeMask' ).fadeIn();
-			}
-			function closecart ()
-			{
-				$( '.cart' ).removeClass( "w-35" )
-				$( '.closeMask' ).fadeOut();
-			}
-			function quantityPlus ( e )
-			{
-				let quantity = $( e ).closest( 'div' ).find( 'input' );
-				quantity.val( +quantity.val() + 1 );
-			}
-			function quantityMinus ( e )
-			{
-				let quantity = $( e ).closest( 'div' ).find( 'input' );
-				quantity.val( +quantity.val() - 1 );
-			}
-			alert_action(/*[[${alert}]]*/ )
-		</script>
-
 	</body>
+
+	<script th:inline="javascript">
+		function showPass ()
+		{
+			var p = document.getElementById( "password" );
+			if ( p.type === "password" )
+			{
+				p.type = "text";
+			} else
+			{
+				p.type = "password";
+			}
+		}
+		function showNewPass ()
+		{
+			var p = document.getElementById( "newPassword" );
+			if ( p.type === "password" )
+			{
+				p.type = "text";
+			} else
+			{
+				p.type = "password";
+			}
+		}
+		function showConfirmPassword ()
+		{
+			var p = document.getElementById( "confirmPassword" );
+			if ( p.type === "password" )
+			{
+				p.type = "text";
+			} else
+			{
+				p.type = "password";
+			}
+		}
+		function onChange ()
+		{
+			var password = document.querySelector( 'input[id=newPassword]' );
+			var confirm = document.querySelector( 'input[id=confirmPassword]' );
+			if ( confirm.value === password.value )
+			{
+				confirm.setCustomValidity( '' );
+			} else
+			{
+				confirm.setCustomValidity( 'Passwords do not match' );
+			}
+		}
+		function showChangePassword ()
+		{
+			$( "#changePassword" ).removeClass( "d-none" );
+			$( "#profileForm" ).addClass( "d-none" );
+
+		}
+
+		function closeChangePassword ()
+		{
+			$( "#changePassword" ).addClass( "d-none" );
+			$( "#profileForm" ).removeClass( "d-none" );
+
+		}
+		function showRecoverPassword ()
+		{
+			$( "#CustomerLoginForm" ).addClass( "d-none" )
+			$( "#RecoverPasswordForm" ).removeClass( "d-none" );
+		}
+		function closeRecoverPassword ()
+		{
+			$( "#RecoverPasswordForm" ).addClass( "d-none" );
+			$( "#CustomerLoginForm" ).removeClass( "d-none" )
+			$( "#register" ).addClass( "d-none" );
+
+		}
+
+		function showRegister ()
+		{
+			$( "#register" ).removeClass( "d-none" );
+			$( "#CustomerLoginForm" ).addClass( "d-none" );
+		}
+		function closeRegister ()
+		{
+			$( "#register" ).addClass( "d-none" );
+			$( "#CustomerLoginForm" ).removeClass( "d-none" );
+
+		}
+
+		$( '.closeMask' ).click( ( e ) =>
+		{
+			if ( e.target.classList.contains( 'closeMask' ) )
+				$( 'button.close.close-mask' ).click();
+			closeRecoverPassword();
+		} );
+
+		$( document ).ready( function ()
+		{
+			$( window ).scroll( function ()
+			{
+				if ( $( this ).scrollTop() > 100 )
+				{
+					$( '#topButton' ).fadeIn();
+				} else
+				{
+					$( '#topButton' ).fadeOut();
+				}
+			} );
+
+			$( '#topButton' ).click( function ()
+			{
+				$( 'html, body' ).animate( { scrollTop: 0 }, 400 );
+				return false;
+			} );
+		} );
+
+		function showUserProfile ()
+		{
+			$( '.userProfile' ).addClass( "w-25" );
+			$( '.closeLogin' ).fadeIn();
+			$( '.closeMask' ).fadeIn();
+		}
+		function closeUserProfile ()
+		{
+			$( '.userProfile' ).removeClass( "w-25" );
+			$( '.closeMask' ).fadeOut();
+		}
+
+		function showLogin ()
+		{
+			$( '.login' ).addClass( "w-25" );
+			$( '.closeLogin' ).fadeIn();
+			$( '.closeMask' ).fadeIn();
+		}
+		function closeLogin ()
+		{
+			$( '.login' ).removeClass( "w-25" )
+			$( '.closeLogin' ).fadeOut();
+			$( '.closeMask' ).fadeOut();
+		}
+
+		function showcart ()
+		{
+			$( '.cart' ).addClass( "w-35" )
+			$( '.closeLogin' ).fadeIn();
+			$( '.closeMask' ).fadeIn();
+		}
+		function closecart ()
+		{
+			$( '.cart' ).removeClass( "w-35" )
+			$( '.closeMask' ).fadeOut();
+		}
+		function quantityPlus ( e )
+		{
+			let quantity = $( e ).closest( 'div' ).find( 'input' );
+			quantity.val( +quantity.val() + 1 );
+		}
+		function quantityMinus ( e )
+		{
+			let quantity = $( e ).closest( 'div' ).find( 'input' );
+			quantity.val( +quantity.val() - 1 );
+		}
+		alert_action(/*[[${alert}]]*/ )
+	</script>
 
 </html>

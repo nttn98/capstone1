@@ -59,4 +59,14 @@ public class Productimpl implements ProductService {
 		return productRepository.findByName(name);
 	}
 
+	@Override
+	public List<Product> findByCategoryName(String name) {
+		return productRepository.findByCategoryName(name);
+	}
+
+	@Override
+	public List<Product> findByManufacturerName(String name) {
+		return productRepository.findByManufacturerName(name);
+	}
+
 }
