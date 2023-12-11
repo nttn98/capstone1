@@ -16,6 +16,8 @@
 
         <script src='/js/jquery.min.js'></script>
         <script src='/js/bootstrap.min.js'></script>
+        <script src="/js/pages/toastrUser.js"></script>
+        <script src="/js/pages/jquery.toast.js"></script>
 
         <link rel='stylesheet' href='/css/font-awesome.min.css'>
         <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -24,6 +26,9 @@
         <link rel="stylesheet" href="/css/pages/vertical-menu-modern.css">
         <link rel="stylesheet" href="/css/drop.css">
         <link rel="stylesheet" href="/css/products.css" />
+        <link rel="stylesheet" href="/css/loginAdmin_Staff.css" />
+        <link rel="stylesheet" href="/css/pages/jquery.toast.css" />
+
 
         <title>Login page</title>
 
@@ -40,30 +45,6 @@
                         </div>
                     </ul>
                 </div>
-                <div class="navbar-container content">
-                    <div class="collapse navbar-collapse" id="navbar-mobile">
-                        <ul class="nav navbar-nav mr-auto float-left">
-                        </ul>
-                        <ul class="nav navbar-nav float-right">
-                            <li class="dropdown dropdown-user nav-item"><a
-                                    class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-                                    <div class="avatar avatar-online">
-                                        <!-- <img src="../../../app-assets/images/portrait/small/avatar-s-1.png"
-						alt="avatar"><i></i> -->
-                                    </div>
-                                    <span class="user-name" style="width: 65px;">Nhan</span>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" href="">
-                                        <i class="feather icon-user"></i> Edit Profile</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="login-with-bg-image.html">
-                                        <i class="feather icon-power"></i> Logout</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
             </div>
         </nav>
 
@@ -71,10 +52,8 @@
             data-scroll-to-active="true">
             <div class="main-menu-content">
                 <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-                    <li class=" navigation-header"><span>General</span><i class=" feather icon-minus"
-                            data-toggle="tooltip" data-placement="right" data-original-title="General"></i>
-                    </li>
-                    <li class="nav-item has-sub open">
+
+                    <li class="nav-item has-sub open" th:if="${session.id!=null}">
                         <ul class="menu-content">
                             <li>
                                 <a class="menu-item" th:href="@{/products}">Products</a>
@@ -98,28 +77,27 @@
                 <div class="login-form-container">
                     <div id="CustomerLoginForm">
                         <div class=" content-header row">
-                            <h4 style="text-align: center;">Login</h4>
+                            <h2 style="text-align: center;">Login</h2>
                         </div>
-                        <form th:action="@{/loginAdmin}" method="post">
+                        <form th:action="@{/login-admin}" method="POST">
                             <div class="login-form">
                                 <label for="username">
-                                    <h7>Username</h7>
+                                    <h5>Username</h5>
                                 </label>
-                                <input type="text" name="username" id="username" required>
+                                <input type="hidden" name="mode" value="staff" class="form-control">
+                                <input type="text" name="username" id="username" class="form-control" required>
                                 <br>
                                 <label for="password" "">
-                                    <h7>Password</h7>
+                                    <h5>Password</h5>
                                 </label>
-                                <input type="password" value name="password" id="password">
+                                <input type="password" value name="password" id="password" class="form-control"
+                                    required>
                                 <div class="button-box">
-                                    <button type="submit" class="custom-btn btn-13">Sign In</button>
-                                    <a id="RecoverPassword">Forgot your
+                                    <button type="submit" class="custom-btn btn-13">Sign
+                                        In</button>
+                                    <a href="#" id="RecoverPassword">Forgot your
                                         password?</a>
                                 </div>
-                            </div>
-                            <div class="no-account">
-                                <a href="/register" id="customer_register_link">Create
-                                    account</a>
                             </div>
                         </form>
                     </div>
@@ -132,12 +110,14 @@
                                 <p>We will send you an email to reset your password.</p>
                             </div>
                             <div class="login-form">
-                                <label for="RecoverEmail">Email</label>
-                                <input type="email" name="email" id="RecoverEmail" class="input-full key"
+                                <label for="RecoverEmail">
+                                    <h5>Email</h5>
+                                </label>
+                                <input type="email" name="email" id="RecoverEmail" class="form-control input-full key"
                                     autocorrect="off" autocapitalize="off">
                                 <div class="login-toggle-btn">
                                     <div class="form-action-button">
-                                        <button type="submit" class="custom-btn btn-13">Submit</button>
+                                        <button type="submit" class="custom-btn btn-13"> Submit</button>
                                         <a href="#" id="HideRecoverPasswordLink">Cancel</a>
                                     </div>
                                 </div>
@@ -149,14 +129,10 @@
         </div>
     </body>
 
-    <footer class="footer navbar-border">
-        <p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span
-                class="float-md-left d-block d-md-inline-block">Copyright © 2023</span><span
-                class="float-md-right d-none d-lg-block"> Made by NaN <i class="feather icon-heart pink"></i></span>
-        </p>
-    </footer>
+    <footer th:replace="~{products/products :: footer}"></footer>
 
-    <script>
+
+    <script th:inline="javascript">
         $( "#RecoverPassword" ).click( function ()
         {
             $( "#RecoverPasswordForm" ).toggleClass( "d-none" );
@@ -167,6 +143,7 @@
             $( "#RecoverPasswordForm" ).toggleClass( "d-none" );
             $( "#CustomerLoginForm" ).toggleClass( "d-none" );
         } )
+        alert_action(/*[[${alert}]]*/ )
     </script>
 
 </html>

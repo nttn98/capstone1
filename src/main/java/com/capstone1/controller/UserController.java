@@ -3,10 +3,12 @@ package com.capstone1.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 
+import com.capstone1.model.Staff;
 import com.capstone1.model.User;
 import com.capstone1.services.UserService;
 
@@ -24,8 +26,14 @@ public class UserController {
     private Encoding encoding;
 
     @GetMapping("/users")
-    public String listUsers(Model model) {
+    public String listUsers(Model model, HttpSession session) {
         List<User> listUsers = userService.getAllUsers();
+
+        Boolean flag = homeController.checkLogin(model, session);
+        if (flag == false) {
+            return homeController.getLoginPage(model);
+        }
+
         if (listUsers.size() == 0) {
             User user = new User();
             model.addAttribute("user", user);
@@ -95,10 +103,16 @@ public class UserController {
     }
 
     @PostMapping("/users/save-user")
-    public String saveUser(Model model, @ModelAttribute("user") User user) {
+    public String saveUser(Model model, @ModelAttribute("user") User user, @RequestParam("mode") String mode,
+            HttpSession session) {
+
         user.setPassword(encoding.toSHA1(user.getPassword()));
         userService.saveUser(user);
         System.out.println("User added successfully");
+        model.addAttribute("alert", "successRegister");
+        if (mode.equals("user")) {
+            return homeController.getHome(model, session);
+        }
         return "redirect:/users";
     }
 
@@ -111,9 +125,10 @@ public class UserController {
         return "users/changePass_user";
     }
 
-    @PostMapping("users/do-change-pass/{id}")
-    public String changePasswod(@PathVariable Long id, Model model, @ModelAttribute("user") User user,
-            @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass) {
+    @PostMapping("users/do-change-pass")
+    public String changePasswod(@RequestParam Long id, Model model, @ModelAttribute("user") User user,
+            @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
+            HttpSession session, @RequestParam("mode") String mode) {
         User existUser = userService.getUserById(id);
         String oldUserPass = existUser.getPassword();
 
@@ -121,13 +136,20 @@ public class UserController {
 
         if (oldUserPass.equals(oldPassword)) {
             existUser.setPassword(newPass);
-            saveUser(model, existUser);
+            saveUser(model, existUser, mode, session);
             System.out.println("---------------------Success " + existUser.getPassword());
+            model.addAttribute("alert", "changePass");
+
         } else {
+            model.addAttribute("alert", "error");
             System.out.println("---------------------Fail");
         }
 
-        return "redirect:/users";
+        if (mode.equals("user")) {
+            return homeController.getHome(model, session);
+        } else {
+            return "redirect:/users";
+        }
 
     }
 }

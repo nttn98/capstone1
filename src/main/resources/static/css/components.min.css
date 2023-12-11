@@ -243,7 +243,8 @@ footer.navbar-shadow {
 }
 
 footer.navbar-border {
-    border-top: 1px solid #E4E7ED
+    position: fixed;
+    top: 900px;
 }
 
 footer.footer-transparent {

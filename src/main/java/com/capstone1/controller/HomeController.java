@@ -18,6 +18,8 @@ import jakarta.annotation.Resource;
 import jakarta.mail.*;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
@@ -44,6 +46,8 @@ public class HomeController {
     CartService cartService;
     @Resource
     CartItemService cartItemService;
+    @Resource
+    AdminService adminService;
 
     @Autowired
     Encoding encoding;
@@ -69,10 +73,99 @@ public class HomeController {
         return "homePage";
     }
 
+    @GetMapping("/listProducts")
+    public String getProductsForUser(Model model) {
+        return "listProducts";
+    }
+
+    @GetMapping("/dashBoard")
+    public String getDashBoardPage(Model model, HttpSession session) {
+        List<Product> listProducts = productService.getAllProducts();
+        List<Category> listCategories = categoryService.getAllCategories();
+        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+        List<User> listUsers = userService.getAllUsers();
+        List<Staff> listStaffs = staffService.getAllStaffs();
+
+        model.addAttribute("products", listProducts);
+        model.addAttribute("categories", listCategories);
+        model.addAttribute("manufacturers", listManufacturers);
+        model.addAttribute("users", listUsers);
+        model.addAttribute("staffs", listStaffs);
+
+        Staff staff = (Staff) session.getAttribute("staff");
+        if (staff != null) {
+            model.addAttribute("staff", staff);
+        }
+        return "admin/dashBoard";
+
+    }
+
+    @GetMapping("/login-admin")
+    public String getLoginPage(Model model) {
+        return "loginAdmin_Staff";
+    }
+
+    @PostMapping("/login-admin")
+    public String getLogin(Model model, HttpSession session, @RequestParam("username") String username,
+            @RequestParam("password") String password) {
+
+        String passEncoding = encoding.toSHA1(password);
+        Staff checkStaff = staffService.findByUsernameAndPassword(username, passEncoding);
+
+        if (username.equals("admin") && password.equals("admin")) {
+            Admin admin = adminService.findByUsernameAndPassword("admin", "admin");
+
+            session.setAttribute("admin", admin);
+            model.addAttribute("alert", "success");
+
+            return getDashBoardPage(model, session);
+
+        } else if (checkStaff != null && checkStaff.getStatus() == 0) {
+            // model.addAttribute("mode", mode);
+            session.setAttribute("staff", checkStaff);
+            model.addAttribute("alert", "success");
+            return getDashBoardPage(model, session);
+        } else {
+            model.addAttribute("alert", "error");
+            return getLoginPage(model);
+        }
+
+    }
+
+    public boolean checkLogin(Model model, HttpSession session) {
+        Staff staff = (Staff) session.getAttribute("staff");
+        Admin admin = (Admin) session.getAttribute("admin");
+
+        if (admin != null) {
+            model.addAttribute("admin", admin);
+        } else if (staff != null) {
+            model.addAttribute("staff", staff);
+        } else if (admin == null && staff == null) {
+            return false;
+        }
+        return true;
+    }
+
+    @GetMapping("/logout")
+    public String getLogout(Model model, HttpSession session) {
+
+        session.removeAttribute("admin");
+        session.removeAttribute("staff");
+
+        return getLoginPage(model);
+    }
+
     @GetMapping("/orders")
-    public String listOrders(Model model) {
+    public String listOrders(Model model, HttpSession session) {
         List<Order> listOrders = orderService.getAllOrders();
+        Boolean flag = checkLogin(model, session);
+        if (flag == false) {
+            return getLoginPage(model);
+        }
+
         model.addAttribute("orders", listOrders);
+        model.addAttribute("mode", "staff");
+
         return "admin/orders";
     }
 
@@ -85,7 +178,8 @@ public class HomeController {
     }
 
     @GetMapping("/orders/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("order") Order order) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("order") Order order,
+            HttpSession session) {
         Order existOrder = orderService.getOrderById(id);
         if (existOrder.getStatus() == 0) {
             existOrder.setStatus(1);
@@ -94,7 +188,7 @@ public class HomeController {
         }
         model.addAttribute("alert", "success");
         orderService.changeStatusOrder(existOrder);
-        return listOrders(model);
+        return listOrders(model, session);
     }
 
     /* Order user */
@@ -200,11 +294,6 @@ public class HomeController {
 
     }
 
-    @GetMapping("/login-admin")
-    public String getLogin(Model model) {
-        return "loginAdmin_Staff";
-    }
-
     @PostMapping("/login-user")
     public String getLoginUser(Model model, @RequestParam("username") String username,
             @RequestParam("password") String password, HttpSession session) {
@@ -254,14 +343,14 @@ public class HomeController {
 
     @PostMapping("/reset-password")
     public String resetPassword(Model model, @RequestParam("token") String tokenString,
-            @RequestParam("password") String password, HttpSession httpSession) {
+            @RequestParam("password") String password, HttpSession session) {
 
         System.out.println("----------------------" + password);
         TokenAdmin token = tokenAdminService.findByToken(tokenString);
         if (token == null) {
             model.addAttribute("flag", false);
             model.addAttribute("message", "Your token link is invalid!");
-            return getLogin(model);
+            return getLoginPage(model);
         }
         Staff staff = staffService.getStaffById(token.getStaffId());
 
@@ -273,16 +362,22 @@ public class HomeController {
         tokenAdminService.deleteByStaffId(staff.getId());
         staffService.saveStaff(staff);
 
-        httpSession.removeAttribute("staff");
-        return getLogin(model);
+        session.removeAttribute("staff");
+        model.addAttribute("alert", "recoverPass");
+
+        return getLoginPage(model);
     }
 
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam("email") String email, HttpServletRequest request) {
+    public String forgotPassword(@RequestParam("email") String email, HttpServletRequest request, Model model) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
 
         Staff staff = staffService.findByEmail(email);
+        if (staff == null) {
+            model.addAttribute("alert", "sendMailfail");
+            return getLoginPage(model);
+        }
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(30);
 
@@ -293,8 +388,9 @@ public class HomeController {
 
         String resetPasswordLink = siteURL + "/reset-password?token=" + tokenString;
         sendEmail(email, resetPasswordLink);
+        model.addAttribute("alert", "sendMailsuccess");
 
-        return "redirect:/loginAdmin";
+        return getLoginPage(model);
 
     }
 

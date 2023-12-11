@@ -4,15 +4,18 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capstone1.model.Manufacturer;
+import com.capstone1.model.Staff;
 import com.capstone1.services.ManufacturerService;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ManufacturerController {
@@ -20,8 +23,15 @@ public class ManufacturerController {
     @Resource
     ManufacturerService manufacturerService;
 
+    @Autowired
+    HomeController homeController;
+
     @GetMapping("/manufacturers")
-    public String listManufacturers(Model model) {
+    public String listManufacturers(Model model, HttpSession session) {
+        Boolean flag = homeController.checkLogin(model, session);
+        if (flag == false) {
+            return homeController.getLoginPage(model);
+        }
 
         List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
 
@@ -46,14 +56,14 @@ public class ManufacturerController {
     @PostMapping("/manufacturers/update-manufacturer/{id}")
     public String updateManufacturer(@PathVariable Long id, Model model,
             @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute("manufacturer") Manufacturer manufacturer) {
+            @ModelAttribute("manufacturer") Manufacturer manufacturer, HttpSession session) {
         // get Manufacturer exist
         Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
         Manufacturer checkManufacturer = manufacturerService.findByName(manufacturer.getName());
 
         if (checkManufacturer != null) {
             model.addAttribute("alert", "error");
-            return listManufacturers(model);
+            return listManufacturers(model, session);
         } else {
             existManufacturer.setName(manufacturer.getName());
             existManufacturer.setDescription(manufacturer.getDescription());
@@ -75,18 +85,18 @@ public class ManufacturerController {
         }
         // save updated
         manufacturerService.updateManufacturer(existManufacturer);
-        return listManufacturers(model);
+        return listManufacturers(model, session);
     }
 
     @PostMapping("/manufacturers/save-manufacturer")
     public String saveManufacturer(Model model, @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute("manufacturer") Manufacturer manufacturer) {
+            @ModelAttribute("manufacturer") Manufacturer manufacturer, HttpSession session) {
 
         Manufacturer checkManufacturer = manufacturerService.findByName(manufacturer.getName());
 
         if (checkManufacturer != null) {
             model.addAttribute("alert", "error");
-            return listManufacturers(model);
+            return listManufacturers(model, session);
         }
         try {
             manufacturer = manufacturerService.saveManufacturer(manufacturer);
@@ -105,7 +115,7 @@ public class ManufacturerController {
         } catch (Exception e) {
             model.addAttribute("alert", "error");
         }
-        return listManufacturers(model);
+        return listManufacturers(model, session);
     }
 
     @GetMapping("/manufacturers/change-status/{id}")

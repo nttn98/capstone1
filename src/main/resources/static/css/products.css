@@ -217,3 +217,161 @@ button.close {
   margin-bottom: 20px;
   font-size: 14px;
 }
+
+.clearfix {
+  position: fixed;
+}
+
+.closeMask {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, .6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  transition: .3s;
+  display: none;
+}
+
+.profile {
+  border: 1px solid black;
+  right: 0;
+  height: 100%;
+  background-color: white;
+  z-index: 11;
+  width: 0;
+  transition: 0.6s;
+  overflow: hidden;
+  color: black;
+}
+
+.profile .close {
+  width: 5%;
+  background-color: red;
+  color: white;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  margin: 15px;
+}
+
+.profile h2 {
+  padding: 25px 0px 40px 25px;
+}
+
+.profile button.btn-login {
+  padding: 10px 30px 10px 30px;
+  border-radius: 10px;
+  background-color: white;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.profile li {
+  margin: 20px 0;
+}
+
+div.staff a {
+  margin-left: 125px;
+  text-decoration: none;
+}
+
+div.staff p {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+
+div.staff input {
+  margin-left: 17px;
+  width: 382px;
+  margin-bottom: 10px;
+}
+
+div.staff button {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 50px;
+  width: 150px;
+  padding-left: 20px;
+  padding-right: 30px;
+}
+
+
+#description {
+  height: 180px;
+  width: 1096px;
+}
+
+.changePass {
+  border: 1px solid black;
+  right: 0;
+  height: 100%;
+  background-color: white;
+  z-index: 11;
+  width: 0;
+  transition: 0.6s;
+  overflow: hidden;
+  color: black;
+}
+
+.changePass .close {
+  width: 5%;
+  background-color: red;
+  color: white;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  margin: 15px;
+}
+
+.changePass h2 {
+  padding: 25px 0px 40px 25px;
+}
+
+.changePass button.btn-login {
+  padding: 10px 30px 10px 30px;
+  border-radius: 10px;
+  background-color: white;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.changePass li {
+  margin: 20px 0;
+}
+
+div.changePass a {
+  margin-left: 125px;
+  text-decoration: none;
+}
+
+div.changePass p {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+
+div.changePass input {
+  margin-left: 17px;
+  width: 382px;
+  margin-bottom: 10px;
+}
+
+div.changePass button {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: 50px;
+  width: 150px;
+  padding-left: 20px;
+  padding-right: 30px;
+}

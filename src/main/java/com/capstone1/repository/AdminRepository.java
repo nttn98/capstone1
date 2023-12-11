@@ -6,6 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.capstone1.model.*;
 
 public interface AdminRepository extends JpaRepository<Admin, Long> {
+
+    Admin findByUsernameAndPassword(String username, String password);
+
     @Modifying
     @Transactional
     @Query(value = "ALTER TABLE admins AUTO_INCREMENT = 1001 ", nativeQuery = true)

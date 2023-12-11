@@ -10,6 +10,7 @@ import com.capstone1.model.Staff;
 import com.capstone1.services.StaffService;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,8 @@ public class StaffController {
 
     @Autowired
     Encoding encoding;
+    @Autowired
+    HomeController homeController;
 
     @GetMapping(value = "/staffs")
     public String listStaffs(Model model) {
@@ -50,12 +53,13 @@ public class StaffController {
         return "staffs/edit_staff";
     }
 
-    @PostMapping("staffs/update-staff/{id}")
-    public String updateStaff(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
+    @PostMapping("/staffs/update-staff")
+    public String updateStaff(@RequestParam long id, Model model, @ModelAttribute("staff") Staff staff,
+            @RequestParam("mode") String mode, HttpSession session) {
+        System.out.println(id);
         Staff existStaff = staffService.getStaffById(id);
 
         existStaff.setFullname(staff.getFullname());
-        existStaff.setUsername(staff.getUsername());
         existStaff.setNumberphone(staff.getNumberphone());
         existStaff.setIdcard(staff.getIdcard());
         existStaff.setEmail(staff.getEmail());
@@ -63,8 +67,14 @@ public class StaffController {
 
         staffService.updateStaff(existStaff);
         System.out.println("Staff edited successfully");
+        model.addAttribute("alert", "edit");
 
-        return "redirect:/staffs";
+        if (mode.equals("staff")) {
+            session.setAttribute("staff", existStaff);
+            return homeController.getDashBoardPage(model, session);
+        } else {
+            return "redirect:/staffs";
+        }
     }
 
     @GetMapping("/staffs/change-status/{id}")
@@ -89,9 +99,10 @@ public class StaffController {
         return "staffs/changePass_staff";
     }
 
-    @PostMapping("/staffs/doChangePass/{id}")
-    public String changePassword(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff,
-            @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass) {
+    @PostMapping("/staffs/do-change-pass")
+    public String changePassword(@RequestParam("id") Long id, Model model, @ModelAttribute("staff") Staff staff,
+            @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
+            HttpSession session) {
 
         Staff existStaff = staffService.getStaffById(id);
         String oldStaffPass = existStaff.getPassword();
@@ -102,10 +113,16 @@ public class StaffController {
             existStaff.setPassword(newPass);
             saveStaff(model, existStaff);
             System.out.println("---------------------Success " + existStaff.getPassword());
+            model.addAttribute("alert", "success");
         } else {
             System.out.println("---------------------Fail");
+            model.addAttribute("alert", "error");
         }
-        return "redirect:/staffs";
+        Boolean flag = homeController.checkLogin(model, session);
+        if (flag == false) {
+            return homeController.getLoginPage(model);
+        }
+        return homeController.getDashBoardPage(model, session);
     }
 
     @GetMapping("/staffs/delete-staff/{id}")

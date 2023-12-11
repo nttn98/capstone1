@@ -26,7 +26,7 @@
 		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
 
 		<link rel="styleSheet" href="/css/homePage.css">
-		<title>Capstone1</title>
+		<title>Home Page</title>
 	</head>
 
 	<body>
@@ -39,7 +39,7 @@
 					<nav class="d-block">
 						<ul class="m-0 h-100 list-unstyled d-flex align-items-center justify-content-center">
 							<li><a href="/">Home</a></li>
-							<li><a href="/products">Products</a></li>
+							<li><a href="/listProducts">Products</a></li>
 							<li><a href="/about">About</a></li>
 							<li><a href="/contact">Contact</a></li>
 						</ul>
@@ -129,7 +129,8 @@
 								</button>
 								<div class="user">
 									<div class="container">
-										<div class="row" style="margin-bottom: 10px;" th:if="${session.user!=null}">
+										<div class="row" id="profileForm" style="margin-bottom: 10px;"
+											th:if="${session.user!=null}">
 											<form action="/users/update-user" method="POST" th:object="${user}">
 												<input type="hidden" name="id" th:field="*{id}">
 												<input type="hidden" name="mode" value="user">
@@ -156,6 +157,54 @@
 												<button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
 													Save</button>
 											</form>
+											<button class="btn btn-info" onclick="showChangePassword()"
+												style="margin-left: 80px; width: 250px;">Change
+												password</button>
+										</div>
+										<div class="row d-none" id="changePassword" style="margin-bottom: 10px;"
+											th:if="${session.user!=null}">
+											<form action="/users/do-change-pass" method="POST" th:object="${user}">
+												<input type="hidden" name="id" th:field="*{id}">
+												<input type="hidden" name="mode" value="user">
+
+												<label for="password" class="col-lg-12">
+													<h5>Enter your old password</h5>
+												</label>
+												<div class="form-group">
+													<input id="password" type="password" class="form-control " required
+														onchange="onChange()" name="oldPassword">
+
+													<input type="checkbox" onclick="showPass()" style="width: 20px;">
+													Show password
+												</div>
+												<label for="password" class="col-lg-12">
+													<h5> New Password</h5>
+												</label>
+												<div class="form-group">
+													<input id="newPassword" type="password" class="form-control "
+														required onchange="onChange()" name="newPassword">
+													<input type="checkbox" onclick="showNewPass()" style="width: 20px;">
+													Show password
+												</div>
+
+												<label for="password" class="col-lg-12">
+													<h5> Comfirm Password</h5>
+												</label>
+												<div class="form-group">
+													<input id="confirmPassword" type="password" class="form-control "
+														required onchange="onChange()">
+
+													<input type="checkbox" onclick="showConfirmPassword()"
+														style="width: 20px;">
+													Show password
+												</div>
+												<button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
+													Save</button>
+												<a href="#" onclick="closeChangePassword()"
+													style="text-align: center; display: block; margin-top: 10px;">
+													Cancle</a>
+											</form>
+
 										</div>
 									</div>
 								</div>
@@ -188,9 +237,10 @@
 											</div>
 											<button type="submit" class="btn-login">Submit</button>
 											<br>
-											<a href="#" id="RecoverPassword">Forgot your
-												password?</a>
 										</form>
+										<a href="#" id="RecoverPassword" onclick="showRecoverPassword()">Forgot your
+											password?</a>
+										<a href="#" onclick="showRegister()">Register</a>
 									</div>
 								</div>
 								<div class="card d-none" id="RecoverPasswordForm">
@@ -206,10 +256,49 @@
 											</div>
 											<button type="submit" class="btn-login">Submit</button>
 											<br>
-											<a href="#" id="HideRecoverPasswordLink">Cancel</a>
+											<a href="#" id="HideRecoverPasswordLink"
+												onclick="closeRecoverPassword()">Cancel</a>
 
 										</form>
 									</div>
+								</div>
+								<div class="card d-none" id="register">
+									<h2>Register</h2>
+									<form action="/users/save-user" method="POST" th:object="${user}">
+										<input type="hidden" name="mode" value="user">
+										<div class="form-group">
+											<p>Username: </p>
+											<input type="text" class="form-control" name="username">
+										</div>
+										<div class="form-group">
+											<p>Password: </p>
+											<input type="password" class="form-control" name="password">
+										</div>
+										<div class="form-group">
+											<p>Full-name: </p>
+											<input type="text" class="form-control" name="fullname">
+										</div>
+										<div class="form-group">
+											<p>Numberphone: </p>
+											<input type="text" class="form-control" name="numberphone">
+										</div>
+										<div class="form-group">
+											<p>Address: </p>
+											<input type="text" class="form-control" name="address">
+										</div>
+										<div class="form-group">
+											<p>Email: </p>
+											<input type="email" class="form-control" name="email">
+										</div>
+										<div class="form-group">
+											<p>Date of birth</p>
+											<input type="date" class="form-control" name="dob">
+										</div>
+										<button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
+											Register</button>
+										<a href="#" onclick="closeRegister()">Cancel</a>
+
+									</form>
 								</div>
 							</div>
 						</div>
@@ -219,6 +308,8 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
+
+
 			</div>
 			<div class="closeMask"></div>
 			</div>
@@ -316,38 +407,6 @@
 			</div>
 		</div>
 
-		<div class="topBody">
-			<div class="container">
-				<div class="row">
-					<div class="col">
-						<h2 style="text-align: center; padding: 50px 0px 50px 0;">Đâu Là PC Bạn Quan Tâm?!</h2>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-4 col-lg-3 col-sm-12 col-md-12">
-						<div class="card text-white">
-							<div class="card-img-overlay">
-								<p class="woodmart-title">WORKSTATION PC</p>
-								<div class="title-after_title" style="padding-bottom: 35px;">Dành cho nhà sáng tạo nội
-									dung và kỹ thuật đặc thù với
-									hiệu năng ổn định, nâng cao hiệu suất công việc.</div>
-								<div class="woodmart-button-wrapper text-center"><a
-										href="https://5spc.com/pc-workstation/" title="" class="seeMore">XEM
-										NGAY</a></div>
-							</div>
-							<img alt="workstation pc 5spc"
-								nitro-lazy-srcset="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-300x300.png 300w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-150x150.png 150w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-768x768.png 768w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-600x600.png 600w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-100x100.png 100w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc.png 1000w"
-								nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-300x300.png"
-								class="vc_single_image-img attachment-medium ls-is-cached lazyloaded" decoding="async"
-								nitro-lazy-empty="" id="NTg2OjgxMg==-1"
-								src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-300x300.png"
-								srcset="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-300x300.png 300w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-150x150.png 150w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-768x768.png 768w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-600x600.png 600w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc-100x100.png 100w, https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/workstation-pc-5spc.png 1000w">
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
 		<div class="botBody">
 			<div class="container">
 				<div class="row">
@@ -383,29 +442,6 @@
 				</div>
 			</div>
 
-			<div class="botBody2">
-				<div class="container">
-					<div class="row">
-						<div class="col">
-							<h2>HiEnd PC - PC Custom </h2>
-						</div>
-					</div>
-					<ul class="products-tabs-title">
-						<li class="products-tabs-title-item"><a>PC Edit Video</a></li>
-						<li class="products-tabs-title-item"><a>PC Graphic Design</a></li>
-					</ul>
-
-					<div class="row">
-						<div class="col-lg-4 col-sm-12 col-md-12">
-							<div class="card-botBody text-white">
-								<img src="/img/WPC3DA-01.jpg">
-								<a>5SPC WPC 3DMATION 01</a>
-								<p>22.200.000 VND</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
 		</div>
 		<div class="topFooter">
 			<div class="container">
@@ -484,8 +520,8 @@
 						<div id="text-21" class="woodmart-widget widget footer-widget  widget_text">
 							<h5 class="widget-title">CÔNG TY CÔNG NGHỆ NAD</h5>
 							<div class="textwidget">
-								<p><strong>Showroom</strong>: 527/1E/4 Phan Văn Trị, Phường 5, Q. Gò Vấp,
-									TP. HCM
+								<p><strong>Showroom</strong>: Lorem Ipsum is simply dummy text of the printing and
+									typesetting industry.
 								</p>
 								<p><strong>Hotline</strong>: 0000 000 000 – <strong>Email hỗ trợ Khách
 										hàng</strong>:
@@ -500,14 +536,14 @@
 							<div class="textwidget">
 								<h1><a href="/">NAD</a></h1>
 								<p><strong>RIGHT PC FOR RIGHT PEOPLE</strong></p>
-								<p><a href="https://www.facebook.com/5spc.official/"><img decoding="async" class=""
+								<p><a href="#"><img decoding="async" class=""
 											style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
 											src="https://5spc.com/wp-content/uploads/2022/06/icon-facebook-2.png"
 											height="45"></a>
-									&nbsp;&nbsp;<a href="https://www.youtube.com/channel/UCBv9olvUdB-wjRsUp8tXGfw"><img
-											decoding="async" style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
+									&nbsp;&nbsp;<a href="#"><img decoding="async"
+											style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
 											src="https://5spc.com/wp-content/uploads/2022/06/icon-youtube-2.png"></a>
-									&nbsp; <a href="https://www.instagram.com/5spc.official/"><img decoding="async"
+									&nbsp; <a href="#"><img decoding="async"
 											style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
 											src="https://5spc.com/wp-content/uploads/2022/06/icon-instagram-2.png"></a>
 								</p>
@@ -519,12 +555,10 @@
 							<h5 class="widget-title">HỖ TRỢ KHÁCH HÀNG</h5>
 							<div class="textwidget">
 								<ul>
-									<li class="fa fa-chevron-right"><a
-											href="https://5spc.com/chinh-sach-thanh-toan-huong-dan-mua-hang/">Hướng
+									<li class="fa fa-chevron-right"><a href="#">Hướng
 											dẫn
 											mua hàng</a></li>
-									<li class="fa fa-chevron-right"><a
-											href="https://5spc.com/chinh-sach-bao-hanh/">Chính sách bảo
+									<li class="fa fa-chevron-right"><a href="#">Chính sách bảo
 											hành</a>
 									</li>
 									<li class="fa fa-chevron-right"><a href="#">Góp ý – khiếu nại</a></li>
@@ -552,10 +586,10 @@
 							<h5 class="widget-title">CHÍNH SÁCH CHUNG</h5>
 							<div class="textwidget">
 								<ul>
-									<li class="fa fa-chevron-right"><a href="https://5spc.com/tin-tuc/">Tin
+									<li class="fa fa-chevron-right"><a href="#">Tin
 											tức – Sự
 											kiện</a></li>
-									<li class="fa fa-chevron-right"><a href="https://5spc.com/lien-he/">Liên
+									<li class="fa fa-chevron-right"><a href="#">Liên
 											hệ</a>
 									</li>
 								</ul>
@@ -570,8 +604,7 @@
 					<div class="min-footer">
 						<div class="col-left reset-mb-10">
 							Copyright 2021 © 5SPC. All Right Reserved. Công ty Cổ phần Thương mại Dịch vụ
-							Công nghệ
-							5SPC. MST: 0316981084. </div>
+							Công nghệ ----. MST: 00000000. </div>
 					</div>
 				</div>
 			</div>
@@ -580,23 +613,94 @@
 		<button id="topButton"><i class="fa fa-arrow-up"></i></button>
 
 		<script th:inline="javascript">
-
-			$( "#RecoverPassword" ).click( function ()
+			function showPass ()
 			{
-				$( "#RecoverPasswordForm" ).toggleClass( "d-none" );
-				$( "#CustomerLoginForm" ).toggleClass( "d-none" );
-			} )
-			$( "#HideRecoverPasswordLink" ).click( function ()
+				var p = document.getElementById( "password" );
+				if ( p.type === "password" )
+				{
+					p.type = "text";
+				} else
+				{
+					p.type = "password";
+				}
+			}
+			function showNewPass ()
 			{
-				$( "#RecoverPasswordForm" ).toggleClass( "d-none" );
-				$( "#CustomerLoginForm" ).toggleClass( "d-none" );
-			} );
+				var p = document.getElementById( "newPassword" );
+				if ( p.type === "password" )
+				{
+					p.type = "text";
+				} else
+				{
+					p.type = "password";
+				}
+			}
+			function showConfirmPassword ()
+			{
+				var p = document.getElementById( "confirmPassword" );
+				if ( p.type === "password" )
+				{
+					p.type = "text";
+				} else
+				{
+					p.type = "password";
+				}
+			}
+			function onChange ()
+			{
+				var password = document.querySelector( 'input[id=newPassword]' );
+				var confirm = document.querySelector( 'input[id=confirmPassword]' );
+				if ( confirm.value === password.value )
+				{
+					confirm.setCustomValidity( '' );
+				} else
+				{
+					confirm.setCustomValidity( 'Passwords do not match' );
+				}
+			}
+			function showChangePassword ()
+			{
+				$( "#changePassword" ).removeClass( "d-none" );
+				$( "#profileForm" ).addClass( "d-none" );
 
+			}
+
+			function closeChangePassword ()
+			{
+				$( "#changePassword" ).addClass( "d-none" );
+				$( "#profileForm" ).removeClass( "d-none" );
+
+			}
+			function showRecoverPassword ()
+			{
+				$( "#CustomerLoginForm" ).addClass( "d-none" )
+				$( "#RecoverPasswordForm" ).removeClass( "d-none" );
+			}
+			function closeRecoverPassword ()
+			{
+				$( "#RecoverPasswordForm" ).addClass( "d-none" );
+				$( "#CustomerLoginForm" ).removeClass( "d-none" )
+				$( "#register" ).addClass( "d-none" );
+
+			}
+
+			function showRegister ()
+			{
+				$( "#register" ).removeClass( "d-none" );
+				$( "#CustomerLoginForm" ).addClass( "d-none" );
+			}
+			function closeRegister ()
+			{
+				$( "#register" ).addClass( "d-none" );
+				$( "#CustomerLoginForm" ).removeClass( "d-none" );
+
+			}
 
 			$( '.closeMask' ).click( ( e ) =>
 			{
 				if ( e.target.classList.contains( 'closeMask' ) )
-					$( 'button.close.close-mask' ).click()
+					$( 'button.close.close-mask' ).click();
+				closeRecoverPassword();
 			} );
 
 			$( document ).ready( function ()

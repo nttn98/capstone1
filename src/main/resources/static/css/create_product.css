@@ -2,17 +2,14 @@ body {
     font-family: Montserrat;
 }
 
-#description {
-    height: 180px;
-    width: 1096px;
-}
 
-select.form-control {
-    -webkit-appearance: auto;
-}
 
 h1 a {
     font-family: "Kalam", cursive;
     font-size: 35px;
     color: white;
+}
+
+.clearfix {
+    position: fixed;
 }

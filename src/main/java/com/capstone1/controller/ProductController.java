@@ -4,20 +4,24 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.capstone1.model.Admin;
 import com.capstone1.model.Category;
 import com.capstone1.model.Manufacturer;
 import com.capstone1.model.Product;
+import com.capstone1.model.Staff;
 import com.capstone1.services.CategoryService;
 import com.capstone1.services.ManufacturerService;
 import com.capstone1.services.ProductService;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ProductController {
@@ -29,13 +33,18 @@ public class ProductController {
 	@Resource
 	ManufacturerService manufacturerService;
 
-	@GetMapping("/products")
-	public String listProducts(Model model) {
+	@Autowired
+	HomeController homeController;
 
+	@GetMapping("/products")
+	public String listProducts(Model model, HttpSession session) {
+		Boolean flag = homeController.checkLogin(model, session);
+		if (flag == false) {
+			return homeController.getLoginPage(model);
+		}
 		List<Product> listProducts = productService.getAllProducts();
 		List<Category> listCategories = categoryService.getAllCategories();
 		List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
-
 		model.addAttribute("categories", listCategories);
 		model.addAttribute("manufacturers", listManufacturers);
 
@@ -44,7 +53,7 @@ public class ProductController {
 
 			model.addAttribute("product", product);
 
-			return "products/create_product";
+			return createProductForm(model);
 		} else {
 			model.addAttribute("products", listProducts);
 		}
@@ -75,7 +84,7 @@ public class ProductController {
 
 	@PostMapping("/products/update-product/{id}")
 	public String updateProduct(@PathVariable Long id, Model model, @RequestParam("productImg") MultipartFile file,
-			@ModelAttribute("product") Product product) {
+			@ModelAttribute("product") Product product, HttpSession session) {
 		// get product exist
 		Product existProduct = productService.getProductById(id);
 
@@ -104,7 +113,7 @@ public class ProductController {
 		// save updated
 		productService.updateProduct(existProduct);
 
-		return listProducts(model);
+		return listProducts(model, session);
 	}
 
 	@GetMapping("/products/change-status/{id}")
@@ -134,12 +143,12 @@ public class ProductController {
 	// create Product
 	@PostMapping("/products/save-product")
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
-			@ModelAttribute("product") Product product, @RequestParam("quantity") long quantity) {
+			@ModelAttribute("product") Product product, @RequestParam("quantity") long quantity, HttpSession session) {
 
 		Product checkProduct = productService.findByName(product.getName());
 		if (checkProduct != null) {
 			model.addAttribute("alert", "error");
-			return listProducts(model);
+			return listProducts(model, session);
 		}
 
 		try {
@@ -160,7 +169,7 @@ public class ProductController {
 			model.addAttribute("alert", "error");
 
 		}
-		return listProducts(model);
+		return listProducts(model, session);
 	}
 
 	/* SAVE METHOD */

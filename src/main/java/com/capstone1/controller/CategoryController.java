@@ -4,26 +4,34 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capstone1.model.Category;
+import com.capstone1.model.Staff;
 import com.capstone1.services.CategoryService;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class CategoryController {
 
     @Resource
     CategoryService categoryService;
+    @Autowired
+    HomeController homeController;
 
     @GetMapping("/categories")
-    public String listCategories(Model model) {
+    public String listCategories(Model model, HttpSession session) {
         List<Category> listCategories = categoryService.getAllCategories();
-
+        Boolean flag = homeController.checkLogin(model, session);
+        if (flag == false) {
+            return homeController.getLoginPage(model);
+        }
         if (listCategories.size() == 0) {
             Category category = new Category();
             model.addAttribute("category", category);
@@ -44,12 +52,12 @@ public class CategoryController {
 
     @PostMapping("/categories/save-category")
     public String saveCategory(Model model, @RequestParam("categoryImg") MultipartFile file,
-            @ModelAttribute("category") Category category) {
+            @ModelAttribute("category") Category category, HttpSession session) {
 
         Category checkCategory = categoryService.findByName(category.getName());
         if (checkCategory != null) {
             model.addAttribute("alert", "error");
-            return listCategories(model);
+            return listCategories(model, session);
         }
 
         try {
@@ -69,7 +77,7 @@ public class CategoryController {
         } catch (Exception e) {
             model.addAttribute("alert", "error");
         }
-        return listCategories(model);
+        return listCategories(model, session);
     }
 
     @GetMapping("/categories/change-status/{id}")
@@ -98,14 +106,14 @@ public class CategoryController {
 
     @PostMapping("/categories/update-category/{id}")
     public String updateCategory(@PathVariable Long id, Model model, @RequestParam("categoryImg") MultipartFile file,
-            @ModelAttribute("category") Category category) {
+            @ModelAttribute("category") Category category, HttpSession session) {
         // get Category exist
         Category existCategory = categoryService.getCategoryById(id);
 
         Category checkCategory = categoryService.findByName(category.getName());
         if (checkCategory != null) {
             model.addAttribute("alert", "error");
-            return listCategories(model);
+            return listCategories(model, session);
         } else {
             existCategory.setName(category.getName());
             existCategory.setDescription(category.getDescription());
@@ -127,7 +135,7 @@ public class CategoryController {
         }
         // save updated
         categoryService.updateCategory(existCategory);
-        return listCategories(model);
+        return listCategories(model, session);
     }
 
     @GetMapping("/categories/delete-category/{id}")

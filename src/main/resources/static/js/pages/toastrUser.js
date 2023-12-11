@@ -58,6 +58,33 @@ function alert_action ( alert_action )
                icon: 'success',
                hideAfter: 3500
           } );
+     } else if ( alert_action == "recoverPass" )
+     {
+          $.toast( {
+               heading: ' You recovered your password successfull !!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'success',
+               hideAfter: 3500
+          } );
+     } else if ( alert_action == "successRegister" )
+     {
+          $.toast( {
+               heading: ' Register successfull !!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'success',
+               hideAfter: 3500
+          } );
+     } else if ( alert_action == "changePass" )
+     {
+          $.toast( {
+               heading: ' Changed password success !!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'success',
+               hideAfter: 3500
+          } );
      }
      localStorage.removeItem( 'alert-action' );
 }
