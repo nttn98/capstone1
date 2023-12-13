@@ -12,7 +12,7 @@
             <div class="container d-flex align-items-center justify-content-between" id="header">
                 <div th:replace="homePage :: logo"></div>
                 <div th:replace="homePage :: menu"></div>
-                <div th:replace="homePage :: header-action"></div>
+                <div th:replace="homePage :: header_section"></div>
                 <div th:replace="homePage :: login"></div>
             </div>
         </header>
@@ -72,7 +72,7 @@
         </div>
         </div>
 
-        <footer th:replace=" ~{homePage.html :: footer}">
+        <footer th:replace=" ~{homePage.html :: footer_section}">
         </footer>
 
         <button id="topButton"><i class="fa fa-arrow-up"></i></button>

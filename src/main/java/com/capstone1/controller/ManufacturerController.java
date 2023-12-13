@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capstone1.model.Manufacturer;
-import com.capstone1.model.Staff;
 import com.capstone1.services.ManufacturerService;
 
 import jakarta.annotation.Resource;
@@ -144,7 +143,7 @@ public class ManufacturerController {
         return "manufacturers/edit_manufacturer";
     }
 
-    @DeleteMapping("/manufacturers/delete-manufacturer/{id}")
+    @GetMapping("/manufacturers/delete-manufacturer/{id}")
     public String deleteManufacturer(@PathVariable Long id) {
         manufacturerService.deleteManufacturerById(id);
         return "redirect:/manufacturers";

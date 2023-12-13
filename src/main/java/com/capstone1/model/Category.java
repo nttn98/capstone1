@@ -11,7 +11,6 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
-    private String images;
     private String description;
     private int status;
 
@@ -36,14 +35,6 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getImages() {
-        return images;
-    }
-
-    public void setImages(String images) {
-        this.images = images;
     }
 
     public String getDescription() {

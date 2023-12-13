@@ -52,14 +52,48 @@ public class HomeController {
     @Autowired
     JavaMailSender mailSender;
 
+    // @GetMapping({ "/home-page", "/" })
+    // public String getHome(Model model, HttpSession session) {
+
+    // int limit = 3;
+    // List<Product> listProducts = productService.getAllProducts();
+    // listProducts = listProducts.subList(0, Math.min(limit, listProducts.size()));
+
+    // List<Category> listCategories = categoryService.getAllCategories();
+    // List<Manufacturer> listManufacturers =
+    // manufacturerService.getAllManufacturers();
+
+    // model.addAttribute("products", listProducts);
+    // model.addAttribute("categories", listCategories);
+    // model.addAttribute("manufacturers", listManufacturers);
+
+    // User user = (User) session.getAttribute("user");
+    // if (user != null) {
+    // model.addAttribute("user", user);
+    // }
+
+    // return "homePage";
+    // }
+
     @GetMapping({ "/home-page", "/" })
     public String getHome(Model model, HttpSession session) {
 
+        int limit = 3;
         List<Product> listProducts = productService.getAllProducts();
+        listProducts = listProducts.subList(0, Math.min(limit, listProducts.size()));
+
         List<Category> listCategories = categoryService.getAllCategories();
         List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
 
+        List<Product> listProductsByNVIDIA = productService.findByManufacturerName("nvidia");
+        listProductsByNVIDIA = listProductsByNVIDIA.subList(0, Math.min(limit, listProductsByNVIDIA.size()));
+
+        List<Product> listProductsByAMD = productService.findByManufacturerName("amd");
+        listProductsByAMD = listProductsByAMD.subList(0, Math.min(limit, listProductsByAMD.size()));
+
         model.addAttribute("products", listProducts);
+        model.addAttribute("productsByAMD", listProductsByAMD);
+        model.addAttribute("productsByNVIDIA", listProductsByNVIDIA);
         model.addAttribute("categories", listCategories);
         model.addAttribute("manufacturers", listManufacturers);
 
@@ -231,7 +265,7 @@ public class HomeController {
         return listOrders(model, session);
     }
 
-    /* Order user */
+    /* order user */
     @GetMapping("/users/add-to-cart/{productId}")
     public String addToCart(Model model, @PathVariable long productId, HttpSession session,
             @RequestParam(name = "quantity", defaultValue = "1") int quantity) {
@@ -334,6 +368,7 @@ public class HomeController {
 
     }
 
+    /* login user */
     @PostMapping("/login-user")
     public String getLoginUser(Model model, @RequestParam("username") String username,
             @RequestParam("password") String password, HttpSession session) {
@@ -479,14 +514,12 @@ public class HomeController {
             HttpSession session) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
-        List<User> listUsers = userService.getAllUsers();
-        // User existuser = userService.getUserByEmail(email);
+
         User existuser = userService.findByEmail(email);
-        for (User user : listUsers) {
-            if (!user.getEmail().equals(email)) {
-                model.addAttribute("alert", "sendMailfail");
-                return getHome(model, session);
-            }
+
+        if (existuser == null) {
+            model.addAttribute("alert", "sendMailfail");
+            return getHome(model, session);
         }
 
         LocalDateTime now = LocalDateTime.now();

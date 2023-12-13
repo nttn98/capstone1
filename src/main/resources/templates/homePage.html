@@ -1,777 +1,633 @@
-<!Doctype html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 
-<html xmlns:th="http://www.thymeleaf.org" lang="en" style="background-color: black;">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="shortcut icon" href="logo.png" type="image/png">
+        <script src="/js/jquery.min.js"></script>
+        <script src="/js/popper.min.js"></script>
+        <script src='/js/bootstrap.min.js'></script>
+        <script src="/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/jquery-3.0.0.min.js"></script>
+        <script src="/js/plugin.js"></script>
+        <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
+        <script src="/js/custom.js"></script>
+        <script src="/js/owl.carousel.js"></script>
+        <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+        <script src="/js/pages/jquery.toast.js"></script>
 
+        <link rel="stylesheet" href="/css/pages/jquery.toast.css" />
+        <link rel='stylesheet' href='/css/font-awesome.min.css'>
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/responsive.css">
+        <link rel="icon" href="images/fevicon.png" type="image/gif">
+        <link rel="stylesheet" href="/css/jquery.mCustomScrollbar.min.css">
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+        <link rel="stylesheet" href="/css/owl.carousel.min.css">
+        <link rel="stylesheet" href="/css/owl.theme.default.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
+            media="screen">
+    </head>
+    <title>Neco</title>
 
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&display=swap" rel="stylesheet">
+    <body>
+        <!-- header section start -->
+        <div class="header_section" th:fragment="header_section">
+            <div class="container" id="header">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div id="logo" th:fragment="logo" class="logo">
+                        <h1><a href="/">NAP</a></h1>
+                    </div> <button class="navbar-toggler" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-2">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="index.html">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/list-products">Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/about">About</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/contact">Contact</a>
+                            </li>
+                        </ul>
+                        <form class="form-inline my-2 my-lg-0">
+                            <li><input id="search" class="form-control mr-sm-1" placeholder="Search"></li>
+                        </form>
+                        <li class="nav-item">
+                            <a onclick="showcart()">
+                                <i class="nav-link fa fa-shopping-cart" aria-hidden="true" style="font-size: 30px;"></i>
+                                <span class="position-absolute cart-count" th:if="${session.cart  == null}">
+                                    <p>0</p>
+                                </span>
+                                <span class="position-absolute cart-count" th:if="${session.cart!= null}">
+                                    <p th:text="${session.cart.listItem.size()}"></p>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a onclick="showLogin()" th:if="${session.user == null}"><i class="nav-link fa fa-user"
+                                    aria-hidden="true" style="font-size: 30px;"></i></a>
+                            <div th:if="${session.user != null}" class="dropdown">
+                                <button class="dropbtn" th:text="'Welcome, '+ ${session.user.getUsername()}"></button>
+                                <div class="dropdown-content">
+                                    <a href="#" onclick="showUserProfile()">
+                                        Profile
+                                    </a>
+                                    <a href="#">View history Order</a>
+                                    <a th:href="@{/users/logout}">Logout</a>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                </nav>
 
-		<script src='/js/jquery.min.js'></script>
-		<script src='/js/bootstrap.min.js'></script>
-		<script src="/js/pages/toastrUser.js"></script>
-		<script src="/js/pages/jquery.toast.js"></script>
+                <div class=" login position-fixed" th:fragment="login">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col">
+                                <div class="card" id="CustomerLoginForm" style="border: none;">
+                                    <h2>Login</h2>
+                                    <div class="card-body">
+                                        <form action="/login-user" method="POST">
+                                            <div class="form-group">
+                                                <label for="username">
+                                                    <h6>Username</h6>
+                                                </label>
+                                                <input type="text" class="form-control" id="username" name="username"
+                                                    placeholder="Enter username" required>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="password">
+                                                    <h6>Password</h6>
+                                                </label>
+                                                <input type="password" class="form-control" id="password"
+                                                    name="password" placeholder="Enter password" required>
+                                            </div>
+                                            <button type="submit" class="btn-login">Submit</button>
+                                            <br>
+                                        </form>
+                                        <a href="#" id="RecoverPassword" onclick="showRecoverPassword()">Forgot your
+                                            password?</a>
+                                        <a href="#" onclick="showRegister()" style="padding-left: 5px;">Register</a>
+                                    </div>
+                                </div>
+                                <div class="card d-none" id="RecoverPasswordForm" style="border: none;">
+                                    <h2>Reset your password</h2>
+                                    <div class="card-body ">
+                                        <form method="post" action="/users/forgot-password" accept-charset="UTF-8">
+                                            <div class="form-group">
+                                                <label for="RecoverEmail">
+                                                    <h6>Email</h6>
+                                                </label>
+                                                <input type="email" name="email" id="RecoverEmail" class="form-control"
+                                                    autocorrect="off" autocapitalize="off">
+                                            </div>
+                                            <button type="submit" class="btn-login">Submit</button>
+                                            <br>
+                                            <a href="#" id="HideRecoverPasswordLink"
+                                                onclick="closeRecoverPassword()">Cancel</a>
 
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="card d-none" id="register" style="border: none;">
+                                    <h2>Register</h2>
+                                    <form action="/users/save-user" method="POST" th:object="${user}">
+                                        <input type="hidden" name="mode" value="user">
+                                        <div class="form-group">
+                                            <p>Username: </p>
+                                            <input type="text" class="form-control" name="username">
+                                        </div>
+                                        <div class="form-group">
+                                            <p>Password: </p>
+                                            <input type="password" class="form-control" name="password">
+                                        </div>
+                                        <div class="form-group">
+                                            <p>Full-name: </p>
+                                            <input type="text" class="form-control" name="fullname">
+                                        </div>
+                                        <div class="form-group">
+                                            <p>Numberphone: </p>
+                                            <input type="text" class="form-control" name="numberphone">
+                                        </div>
+                                        <div class="form-group">
+                                            <p>Address: </p>
+                                            <input type="text" class="form-control" name="address">
+                                        </div>
+                                        <div class="form-group">
+                                            <p>Email: </p>
+                                            <input type="email" class="form-control" name="email">
+                                        </div>
+                                        <div class="form-group">
+                                            <p>Date of birth</p>
+                                            <input type="date" class="form-control" name="dob">
+                                        </div>
+                                        <button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
+                                            Register</button>
+                                        <a href="#" onclick="closeRegister()">Cancel</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <button onclick="closeLogin()" type="button" class="close close-mask" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-		<link rel='stylesheet' href='/css/font-awesome.min.css'>
-		<link rel="stylesheet" href="/css/bootstrap.min.css">
-		<link rel="stylesheet" href="/css/bootstrap-extended.min.css">
-		<link rel="stylesheet" href="/css/drop.css">
-		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
+                <div class="cart position-fixed">
+                    <h2>Shopping Cart</h2>
+                    <button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h3 th:if="${session.cart==null}" style="margin-left: 20px;">There are no items</h3>
+                    <!-- product -->
+                    <div class="product" th:if="${session.cart!=null}">
+                        <div class="container">
+                            <form th:action="@{/users/delete-product-in-cart}" method="POST">
+                                <div class="row" th:each=" item : ${session.cart.getListItem()}"
+                                    style="margin-bottom: 10px;">
+                                    <div class="col-2">
+                                        <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
+                                    </div>
+                                    <div class="col-4" th:text="${item.getProduct().getName()}">
+                                    </div>
+                                    <input type="hidden" th:value="${item.getProduct().getId()}" name="productId">
+                                    <div>
 
-		<link rel="styleSheet" href="/css/homePage.css">
-	</head>
-	<title>Home Page</title>
+                                        <button type="button" onclick="quantityMinus(this)">-</button>
+                                        <input type="text" id="quantity" name="quantity"
+                                            th:value="${item.getQuantity()}" style="width: 50px; height: 50px;"
+                                            readonly>
+                                        <button type="button" onclick="quantityPlus(this)">+</button>
+                                    </div>
+                                    <div class="col-2" th:text="${item.getSubtotal()} +'00 VND'">
+                                    </div>
 
-	<body>
-		<header>
-			<div class="container d-flex align-items-center justify-content-between" id="header">
-				<div id="logo" th:fragment="logo">
-					<h1><a href="/">NAD</a></h1>
-				</div>
-				<div id="menu" class="w-35" th:fragment="menu">
-					<nav class="d-block">
-						<ul class="m-0 h-100 list-unstyled d-flex align-items-center justify-content-center">
-							<li><a href="/">Home</a></li>
-							<li><a href="/list-products">Products</a></li>
-							<li><a href="/about">About</a></li>
-							<li><a href="/contact">Contact</a></li>
-						</ul>
-					</nav>
-				</div>
-				<div id="header-action" th:fragment="header-action">
-					<ul class=" m-0 list-unstyled d-flex align-items-center">
-						<li><input id="search" class="form-control mr-sm-2" placeholder="Search"></li>
-						<li class="position-relative">
+                                    <div class="col-2">
+                                        <button type="submit" class="close">x</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <br>
+                        </div>
+                    </div>
+                    <hr th:if="${session.cart != null}">
+                    <div class="purchase-space" th:if="${session.cart != null}">
+                        <div class=" total-purchase">
+                            <h4>Total: <span th:text="${session.cart.getTotal()} +'.000 VND'"></span>
+                            </h4>
+                        </div><br>
+                        <a th:href="@{/users/add-order}"><button class="btn-purchase">Order</button></a>
+                    </div>
+                </div>
 
-							<a onclick="showcart()">
-								<span class="position-absolute cart-count" th:if="${session.cart  == null}">
-									<p>0</p>
-								</span>
-								<span class="position-absolute cart-count" th:if="${session.cart!= null}">
-									<p th:text="${session.cart.listItem.size()}"></p>
-								</span>
-								<i class="fa fa-shopping-cart" aria-hidden="true" style="padding-left: 8px;"></i>
-							</a>
+                <div class="closeMask"></div>
 
-							<div class="cart position-fixed">
-								<h2>Shopping Cart</h2>
-								<button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-								<h3 th:if="${session.cart==null}">There are no items</h3>
-								<!-- product -->
-								<div class="product" th:if="${session.cart!=null}">
-									<div class="container">
-										<form th:action="@{/users/delete-product-in-cart}" method="POST">
-											<div class="row" th:each=" item : ${session.cart.getListItem()}"
-												style="margin-bottom: 10px;">
-												<div class="col-2">
-													<img th:src="${item.getProduct().getImages()}" style="width: 100%;">
-												</div>
-												<div class="col-4" th:text="${item.getProduct().getName()}">
-												</div>
-												<input type="hidden" th:value="${item.getProduct().getId()}"
-													name="productId">
-												<div>
+            </div>
 
-													<button type="button" onclick="quantityMinus(this)">-</button>
-													<input type="text" id="quantity" name="quantity"
-														th:value="${item.getQuantity()}"
-														style="width: 50px; height: 50px;" readonly>
-													<button type="button" onclick="quantityPlus(this)">+</button>
-												</div>
-												<div class="col-2" th:text="${item.getSubtotal()} +'00 VND'">
-												</div>
+            <!-- banner section start -->
+            <div class="banner_section layout_padding">
+                <div id="main_slider" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h1 class="banner_taital">Tablates And Phons Repair Service</h1>
+                                        <p class="banner_text">There are many variations of passages of Lorem Ipsum
+                                            available, but the
+                                            majority have suffered alteration</p>
+                                        <div class="btn_main">
+                                            <div class="read_bt"><a href="#">Read More</a></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="image_1"><img src="img/admin.jpg"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
 
-												<div class="col-2">
-													<button type="submit" class="close">x</button>
-												</div>
-											</div>
-										</form>
-										<br>
-									</div>
-								</div>
-								<hr th:if="${session.cart != null}">
-								<div class="purchase-space" th:if="${session.cart != null}">
-									<div class=" total-purchase">
-										<h4>Total: <span th:text="${session.cart.getTotal()} +'.000 VND'"></span>
-										</h4>
-									</div><br>
-									<a th:href="@{/users/add-order}"><button class="btn-purchase">Order</button></a>
-								</div>
-							</div>
-						</li>
-						<li class="position-relative">
-							<a onclick="showLogin()" th:if="${session.user == null}"><i class="fa fa-user-o"
-									aria-hidden="true"></i></a>
-							<div th:if="${session.user != null}" class="dropdown">
-								<button class="dropbtn" th:text="'Welcome, '+ ${session.user.getUsername()}"></button>
-								<div class="dropdown-content">
-									<a href="#" onclick="showUserProfile()">
-										Profile
-									</a>
-									<a href="#">View history Order</a>
-									<a th:href="@{/users/logout}">Logout</a>
-								</div>
-							</div>
-							<div class="userProfile position-fixed">
-								<h2>User profile</h2>
-								<button onclick="closeUserProfile()" type="button" class="close close-mask"
-									aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-								<div class="user">
-									<div class="container">
-										<div class="row" id="profileForm" style="margin-bottom: 10px;"
-											th:if="${session.user!=null}">
-											<form action="/users/update-user" method="POST" th:object="${user}">
-												<input type="hidden" name="id" th:field="*{id}">
-												<input type="hidden" name="mode" value="user">
-												<div class="form-group">
-													<p>Full-name: </p>
-													<input type="text" th:field="*{fullname}" class="form-control">
-												</div>
-												<div class="form-group">
-													<p>Numberphone: </p>
-													<input type="text" th:field="*{numberphone}" class="form-control">
-												</div>
-												<div class="form-group">
-													<p>Address: </p>
-													<input type="text" th:field="*{address}" class="form-control">
-												</div>
-												<div class="form-group">
-													<p>Email: </p>
-													<input type="email" th:field="*{email}" class="form-control">
-												</div>
-												<div class="form-group">
-													<p>Date of birth</p>
-													<input type="date" th:field="*{dob}" class="form-control">
-												</div>
-												<button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
-													Save</button>
-											</form>
-											<button class="btn btn-info" onclick="showChangePassword()"
-												style="margin-left: 80px; width: 250px;">Change
-												password</button>
-										</div>
-										<div class="row d-none" id="changePassword" style="margin-bottom: 10px;"
-											th:if="${session.user!=null}">
-											<form action="/users/do-change-pass" method="POST" th:object="${user}">
-												<input type="hidden" name="id" th:field="*{id}">
-												<input type="hidden" name="mode" value="user">
+        <div class="blog_section layout_padding">
+            <div class="container-fluid">
+                <h1 class="blog_taital">What We Do</h1>
+                <p class="blog_text">There are many variations of passages of Lorem Ipsum available, but the majority
+                    have
+                    suffered alteration in some </p>
+                <div class="blog_section_2" th:each="item, iterStat : ${manufacturers}">
+                    <div class="row" th:if="${iterStat.index % 2 == 0}">
+                        <div class="col-md-6 padding_left_0">
+                            <div class="image_4"><img th:src="${item.getImages()}" width="400px"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="laptop_text" th:text="${item.getName()}"></h4>
+                            <p class="ipsum_text" th:text="${item.getDescription()}"></p>
+                            <div class="read_bt_2"><a href="#">Read More</a></div>
+                        </div>
+                    </div>
+                    <div class="row" th:if="${iterStat.index % 2 != 0}">
+                        <div class="col-md-6">
+                            <div class="blog_taital_main">
+                                <h4 class="laptop_text" th:text="${item.getName()}"> </h4>
+                                <p class="ipsum_text" th:text="${item.getDescription()}"> </p>
+                                <div class="read_bt_2"><a href="#">Read More</a></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 padding_right_0">
+                            <div class="image_5" href="#"><img th:src="${item.getImages()}" width="400px"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="blog_section_3">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="blog_taital_main">
+                                <h4 class="laptop_text">Tablate Rapair</h4>
+                                <p class="ipsum_text">There are many variations of passages of Lorem Ipsum
+                                    available, but the majority
+                                    have suffered alteration in some form, by injected humour, or randomised words
+                                    which don't look even
+                                    slightly believable. If you are going to use a passage of Lorem Ipsum, you need
+                                    to be sure </p>
+                                <div class="read_bt_2"><a href="#">Read More</a></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 padding_right_0">
+                            <div class="image_5" href="#"><img src="img/admin.jpg" width="400px"></div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
 
-												<label for="password" class="col-lg-12">
-													<h5>Enter your old password</h5>
-												</label>
-												<div class="form-group">
-													<input id="password" type="password" class="form-control " required
-														onchange="onChange()" name="oldPassword">
+        <div class="repair_section layout_padding">
+            <div class="container">
+                <h1 class="repair_taital">The lastest graphics</h1>
+                <p class="repair_text"
+                    style="margin-top: 10px; margin-bottom: 10px; font-size: 20px; font-weight: 600;">NVIDIA</p>
+                <div class="row">
+                    <div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" item : ${productsByNVIDIA}">
+                        <div class="card-botBody text-white">
+                            <img th:src="${item.getImages()}">
+                            <a th:href="@{/users/add-to-cart/{producId}(producId=${item.id})}">
+                                <figcaption>
+                                    <div class="box-1">
+                                        <div class="btn btn-one">
+                                            <span>
+                                                Add to Cart
+                                            </span>
+                                        </div>
+                                    </div>
+                                </figcaption>
+                            </a>
+                        </div>
+                        <h5><a th:text=" ${item.getName()}"></a></h5>
+                        <p th:text="${item.getPrice()}+'00 VND'"> </p>
+                    </div>
+                </div>
+            </div>
+            <p class="repair_text" style="margin-top: 10px; margin-bottom: 10px; font-size: 20px; font-weight: 600;">AMD
+            </p>
+            <div class="container">
+                <div class="row">
+                    <div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" item : ${productsByAMD}">
+                        <div class="card-botBody text-white">
+                            <img th:src="${item.getImages()}">
+                            <a th:href="@{/users/add-to-cart/{producId}(producId=${item.id})}">
+                                <figcaption>
+                                    <div class="box-1">
+                                        <div class="btn btn-one">
+                                            <span>
+                                                Add to Cart
+                                            </span>
+                                        </div>
+                                    </div>
+                                </figcaption>
+                            </a>
+                        </div>
+                        <h5><a th:text=" ${item.getName()}"></a></h5>
+                        <p th:text="${item.getPrice()}+'00 VND'"> </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <!--  repair section end -->
+        <!-- contact section start -->
+        <div class="contact_section layout_padding">
+            <div class="container-fluid">
+                <h1 class="contact_taital">Contact Us</h1>
+                <p class="contact_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt
+                </p>
+                <div class="contact_section_2">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="map_main">
+                                <div class="map-responsive">
+                                    <iframe
+                                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyA0s1a7phLN0iaD6-UE7m4qP-z21pH0eSc&amp;q=Eiffel+Tower+Paris+France"
+                                        width="600" height="550" frameborder="0" style="border:0; width: 100%;"
+                                        allowfullscreen=""></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mail_section_1">
+                                <input type="text" class="mail_text" placeholder="Name" name="text">
+                                <input type="text" class="mail_text" placeholder="Email" name="text">
+                                <input type="text" class="mail_text" placeholder="Phone Number" name="text">
+                                <textarea class="massage-bt" placeholder="Massage" rows="5" id="comment"
+                                    name="Massage"></textarea>
+                                <div class="send_bt"><a href="#">SEND</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- contact section end -->
+        <!-- footer section start -->
+        <div class="footer_section" th:fragment="footer_section">
+            <div class="container">
+                <div class="footer_location_text">
+                    <ul>
+                        <li><img src="images/map-icon.png"><span class="padding_left_10"><a href="#">Loram Ipusm hosting
+                                    web</a></span></li>
+                        <li><img src="images/call-icon.png"><span class="padding_left_10"><a href="#">Call :
+                                    +7586656566</a></span>
+                        </li>
+                        <li><img src="images/mail-icon.png"><span class="padding_left_10"><a
+                                    href="#">demo@gmail.com</a></span></li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6">
+                        <h2 class="useful_text">Useful link </h2>
+                        <div class="footer_menu">
+                            <ul>
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="about.html">About</a></li>
+                                <li><a href="repair.html">Service</a></li>
+                                <li><a href="contact.html">Contact Us</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <h2 class="useful_text">Repair</h2>
+                        <p class="lorem_text">Lorem ipsum dolor sit amet, consectetur adipiscinaliqua Loreadipiscing
+                        </p>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <h2 class="useful_text">social media</h2>
+                        <div class="social_icon">
+                            <ul>
+                                <li><a href="#"><img src="images/fb-icon.png"></a></li>
+                                <li><a href="#"><img src="images/twitter-icon.png"></a></li>
+                                <li><a href="#"><img src="images/linkedin-icon.png"></a></li>
+                                <li><a href="#"><img src="images/youtub-icon.png"></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-lg-3">
+                        <h1 class="useful_text">Our Repair center</h1>
+                        <p class="footer_text">Lorem ipsum dolor sit amet, consectetur adipiscinaliquaLoreadipiscing
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-													<input type="checkbox" onclick="showPass()" style="width: 20px;">
-													Show password
-												</div>
-												<label for="password" class="col-lg-12">
-													<h5> New Password</h5>
-												</label>
-												<div class="form-group">
-													<input id="newPassword" type="password" class="form-control "
-														required onchange="onChange()" name="newPassword">
-													<input type="checkbox" onclick="showNewPass()" style="width: 20px;">
-													Show password
-												</div>
+        <div class="copyright_section">
+            <div class="container">
+                <p class="copyright_text">2019 All Rights Reserved. Design by <a href="https://html.design">Free html
+                        Templates</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a></p>
+            </div>
+        </div>
 
-												<label for="password" class="col-lg-12">
-													<h5> Comfirm Password</h5>
-												</label>
-												<div class="form-group">
-													<input id="confirmPassword" type="password" class="form-control "
-														required onchange="onChange()">
+        <button id="topButton" style="display: none;"><i class="fa fa-arrow-up"></i></button>
 
-													<input type="checkbox" onclick="showConfirmPassword()"
-														style="width: 20px;">
-													Show password
-												</div>
-												<button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
-													Save</button>
-												<a href="#" onclick="closeChangePassword()"
-													style="text-align: center; display: block; margin-top: 10px;">
-													Cancle</a>
-											</form>
+    </body>
+    <script th:inline="javascript">
+        function showPass ()
+        {
+            var p = document.getElementById( "password" );
+            if ( p.type === "password" )
+            {
+                p.type = "text";
+            } else
+            {
+                p.type = "password";
+            }
+        }
+        function showNewPass ()
+        {
+            var p = document.getElementById( "newPassword" );
+            if ( p.type === "password" )
+            {
+                p.type = "text";
+            } else
+            {
+                p.type = "password";
+            }
+        }
+        function showConfirmPassword ()
+        {
+            var p = document.getElementById( "confirmPassword" );
+            if ( p.type === "password" )
+            {
+                p.type = "text";
+            } else
+            {
+                p.type = "password";
+            }
+        }
+        function onChange ()
+        {
+            var password = document.querySelector( 'input[id=newPassword]' );
+            var confirm = document.querySelector( 'input[id=confirmPassword]' );
+            if ( confirm.value === password.value )
+            {
+                confirm.setCustomValidity( '' );
+            } else
+            {
+                confirm.setCustomValidity( 'Passwords do not match' );
+            }
+        }
+        function showChangePassword ()
+        {
+            $( "#changePassword" ).removeClass( "d-none" );
+            $( "#profileForm" ).addClass( "d-none" );
 
-										</div>
-									</div>
-								</div>
-							</div>
-						</li>
-					</ul>
-				</div>
-				<!-- forgot password -->
-				<div class=" login position-fixed" th:fragment="login">
-					<div class="container">
-						<div class="row justify-content-center">
-							<div class="col">
-								<div class="card" id="CustomerLoginForm">
-									<h2>Login</h2>
-									<div class="card-body">
-										<form action="/login-user" method="POST">
-											<div class="form-group">
-												<label for="username">
-													<h6>Username</h6>
-												</label>
-												<input type="text" class="form-control" id="username" name="username"
-													placeholder="Enter username" required>
-											</div>
-											<div class="form-group">
-												<label for="password">
-													<h6>Password</h6>
-												</label>
-												<input type="password" class="form-control" id="password"
-													name="password" placeholder="Enter password" required>
-											</div>
-											<button type="submit" class="btn-login">Submit</button>
-											<br>
-										</form>
-										<a href="#" id="RecoverPassword" onclick="showRecoverPassword()">Forgot your
-											password?</a>
-										<a href="#" onclick="showRegister()">Register</a>
-									</div>
-								</div>
-								<div class="card d-none" id="RecoverPasswordForm">
-									<h2>Reset your password</h2>
-									<div class="card-body ">
-										<form method="post" action="/users/forgot-password" accept-charset="UTF-8">
-											<div class="form-group">
-												<label for="RecoverEmail">
-													<h6>Email</h6>
-												</label>
-												<input type="email" name="email" id="RecoverEmail" class="form-control"
-													autocorrect="off" autocapitalize="off">
-											</div>
-											<button type="submit" class="btn-login">Submit</button>
-											<br>
-											<a href="#" id="HideRecoverPasswordLink"
-												onclick="closeRecoverPassword()">Cancel</a>
+        }
 
-										</form>
-									</div>
-								</div>
-								<div class="card d-none" id="register">
-									<h2>Register</h2>
-									<form action="/users/save-user" method="POST" th:object="${user}">
-										<input type="hidden" name="mode" value="user">
-										<div class="form-group">
-											<p>Username: </p>
-											<input type="text" class="form-control" name="username">
-										</div>
-										<div class="form-group">
-											<p>Password: </p>
-											<input type="password" class="form-control" name="password">
-										</div>
-										<div class="form-group">
-											<p>Full-name: </p>
-											<input type="text" class="form-control" name="fullname">
-										</div>
-										<div class="form-group">
-											<p>Numberphone: </p>
-											<input type="text" class="form-control" name="numberphone">
-										</div>
-										<div class="form-group">
-											<p>Address: </p>
-											<input type="text" class="form-control" name="address">
-										</div>
-										<div class="form-group">
-											<p>Email: </p>
-											<input type="email" class="form-control" name="email">
-										</div>
-										<div class="form-group">
-											<p>Date of birth</p>
-											<input type="date" class="form-control" name="dob">
-										</div>
-										<button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
-											Register</button>
-										<a href="#" onclick="closeRegister()">Cancel</a>
+        function closeChangePassword ()
+        {
+            $( "#changePassword" ).addClass( "d-none" );
+            $( "#profileForm" ).removeClass( "d-none" );
 
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
+        }
+        function showRecoverPassword ()
+        {
+            $( "#CustomerLoginForm" ).addClass( "d-none" )
+            $( "#RecoverPasswordForm" ).removeClass( "d-none" );
+        }
+        function closeRecoverPassword ()
+        {
+            $( "#RecoverPasswordForm" ).addClass( "d-none" );
+            $( "#CustomerLoginForm" ).removeClass( "d-none" )
+            $( "#register" ).addClass( "d-none" );
 
-					<button onclick="closeLogin()" type="button" class="close close-mask" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
+        }
 
+        function showRegister ()
+        {
+            $( "#register" ).removeClass( "d-none" );
+            $( "#CustomerLoginForm" ).addClass( "d-none" );
+        }
+        function closeRegister ()
+        {
+            $( "#register" ).addClass( "d-none" );
+            $( "#CustomerLoginForm" ).removeClass( "d-none" );
 
-			</div>
-		</header>
-		<div class="closeMask"></div>
-		</div>
+        }
 
-		<div class="banner">
-			<div class="container-fluid">
-				<img src="/img/Untitled.png" style="width: 100%;">
-			</div>
-		</div>
+        $( '.closeMask' ).click( ( e ) =>
+        {
+            if ( e.target.classList.contains( 'closeMask' ) )
+                $( 'button.close.close-mask' ).click();
+            closeRecoverPassword();
+        } );
 
-		<div class="services" style="padding-top: 40px; background-color: rgb(23, 23, 23);">
-			<div class="container">
-				<div class="row">
-					<div class="col-sm-12 col-md-12 col-lg-3 ">
-						<div class="card mb-3">
-							<div class="row no-gutters">
-								<div class="col-md-3">
-									<img width="44" height="44" alt="risk" title="risk"
-										nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/risk.webp"
-										class="info-icon image-1 ls-is-cached lazyloaded" decoding="async"
-										nitro-lazy-empty="" id="NDg0OjE1OA==-1"
-										src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/risk.webp">
-								</div>
-								<div class="col-md-8">
-									<div class="card-body" style="padding: 0;">
-										<p class="card-text">Linh kiện chính hãng, được lựa chọn chất lượng kỹ lưỡng
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-12 col-md-12 col-lg-3 ">
-						<div class="card mb-3" style="max-width: 540px; background-color: rgb(23, 23, 23);">
-							<div class="row no-gutters">
-								<div class="col-md-3">
-									<img width="44" height="44" alt="price" title="price"
-										nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/price.webp"
-										class="info-icon image-1 ls-is-cached lazyloaded" decoding="async"
-										nitro-lazy-empty="" id="NTA0OjE2MQ==-1"
-										src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/price.webp">
-								</div>
-								<div class="col-md-8">
-									<div class="card-body" style="padding: 0;">
-										<p class="card-text">Tư vấn tận tình dựa trên kinh nghiệm test thực tế
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-12 col-md-12 col-lg-3 ">
-						<div class="card mb-3" style="max-width: 540px; background-color: rgb(23, 23, 23);">
-							<div class="row no-gutters">
-								<div class="col-md-3">
-									<img width="44" height="44" alt="risk" title="risk"
-										nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/risk.webp"
-										class="info-icon image-1 ls-is-cached lazyloaded" decoding="async"
-										nitro-lazy-empty="" id="NDg0OjE1OA==-1"
-										src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/risk.webp">
-								</div>
-								<div class="col-md-8">
-									<div class="card-body" style="padding: 0;">
-										<p class="card-text">30 ngày bảo hành 1-đổi-1 miễn phí cùng các gói Bảo hành
-											nâng cao.
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-12 col-md-12 col-lg-3 ">
-						<div class="card mb-3" style="max-width: 540px; background-color: rgb(23, 23, 23);">
-							<div class="row no-gutters">
-								<div class="col-md-3">
-									<img width="44" height="44" alt="Free" title="Free"
-										nitro-lazy-src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/Free.webp"
-										class="info-icon image-1 ls-is-cached lazyloaded" decoding="async"
-										nitro-lazy-empty="" id="NTQ0OjE1OA==-1"
-										src="https://cdn-fdand.nitrocdn.com/LzThsRtLOYCFCRTbQQNWwEiASRwfPIwB/assets/images/optimized/rev-942b106/wp-content/uploads/2022/10/Free.webp">
-								</div>
-								<div class="col-md-8">
-									<div class="card-body" style="padding: 0;">
-										<p class="card-text">Miễn phí lắp đặt & vận chuyển HCM. Cùng nhiều chính sách ưu
-											đãi.
-										</p>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+        $( document ).ready( function ()
+        {
+            $( window ).scroll( function ()
+            {
+                if ( $( this ).scrollTop() > 100 )
+                {
+                    $( '#topButton' ).fadeIn();
+                } else
+                {
+                    $( '#topButton' ).fadeOut();
+                }
+            } );
 
-				</div>
-			</div>
-		</div>
+            $( '#topButton' ).click( function ()
+            {
+                $( 'html, body' ).animate( { scrollTop: 0 }, 400 );
+                return false;
+            } );
+        } );
 
-		<div class="botBody">
-			<div class="container">
-				<div class="row">
-					<div class="col">
-						<h2>Best Seller In Store! </h2>
-					</div>
-				</div>
-				<ul class="products-tabs-title">
-					<li class="products-tabs-title-item"><a>PC Edit Video</a></li>
-					<li class="products-tabs-title-item"><a>PC Graphic Design</a></li>
-				</ul>
+        function showUserProfile ()
+        {
+            $( '.userProfile' ).addClass( "w-25" );
+            $( '.closeLogin' ).fadeIn();
+            $( '.closeMask' ).fadeIn();
+        }
+        function closeUserProfile ()
+        {
+            $( '.userProfile' ).removeClass( "w-25" );
+            $( '.closeMask' ).fadeOut();
+        }
 
-				<div class="row">
-					<div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" product: ${products}">
-						<div class="card-botBody text-white">
-							<img th:src="${product.images}">
-							<a th:href="@{/users/add-to-cart/{producId}(producId=${product.id})}">
-								<figcaption>
-									<div class="box-1">
-										<div class="btn btn-one">
-											<span>
-												Add to Cart
-											</span>
-										</div>
-									</div>
-								</figcaption>
-							</a>
-						</div>
-						<h5><a th:text=" ${product.name}"></a></h5>
-						<p th:text="${product.price}+'00 VND'"> </p>
+        function showLogin ()
+        {
+            $( '.login' ).addClass( "w-25" );
+            $( '.closeLogin' ).fadeIn();
+            $( '.closeMask' ).fadeIn();
+        }
+        function closeLogin ()
+        {
+            $( '.login' ).removeClass( "w-25" )
+            $( '.closeLogin' ).fadeOut();
+            $( '.closeMask' ).fadeOut();
+        }
 
-					</div>
-				</div>
-			</div>
-
-		</div>
-		<div class="topFooter">
-			<div class="container">
-				<div class="row">
-					<div class="col">
-						<h2>Tin tức cập nhật</h2>
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-lg-3 col-sm-12 col-md-12">
-						<div class="owl-item active" style="width: 404px;">
-							<div class="slide-post owl-carousel-item">
-								<article id="post-11469"
-									class="blog-post-loop post-slide blog-style-shadow blog-design-masonry post-11469 post type-post status-publish format-standard has-post-thumbnail hentry category-kien-thuc-do-hoa tag-ue tag-unreal-engine">
-									<div class="article-inner">
-										<header class="entry-header">
-											<figure class="entry-thumbnail">
-												<div class="post-img-wrapp">
-													<a
-														href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/">
-														<img width="300" height="169" src="/img/news1.jpg">
-												</div>
-												<div class="post-image-mask">
-													<span></span>
-												</div>
-											</figure>
-
-											<div class="post-date woodmart-post-date" onclick="">
-												<span class="post-date-day">
-													25 </span>
-												<span class="post-date-month">
-													Th3 </span>
-											</div>
-										</header>
-
-										<div class="article-body-container">
-											<div class="meta-categories-wrapp">
-												<div class="meta-post-categories"><a
-														href="https://5spc.com/category/kien-thuc-do-hoa/"
-														rel="category tag">Kiến Thức Đồ Hoạ</a></div>
-											</div>
-
-											<h3 class="entry-title title">
-												<a href="https://5spc.com/ra-mat-unreal-engine-5-2-game-engine-voi-kha-nang-do-hoa-realistic-dinh-cao/"
-													rel="bookmark">Ra mắt Unreal Engine 5.2 – Game Engine
-													với
-													khả
-													năng đồ
-													họa
-													realistic đỉnh cao</a>
-											</h3>
-											<div class="entry-content woodmart-entry-content">
-												<p>ĐẮM CHÌM VÀO THẾ GIỚI SIÊU THỰC VỚI UNREAL ENGINE 5.2 MỚI
-													RA
-													MẮT
-													Vừa qua,
-													tại
-													workshop State of Unreal 2023, các chuyên gia ...</p>
-												<a href="#"> Continue...</a>
-											</div>
-										</div>
-									</div>
-								</article>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<br>
-		<footer class="footer-container color-scheme-light">
-			<div class="container main-footer">
-				<aside class="footer-sidebar widget-area row" role="complementary">
-					<div class="footer-column footer-column-1 col-12 col-md-6">
-						<div id="text-21" class="woodmart-widget widget footer-widget  widget_text">
-							<h5 class="widget-title">CÔNG TY CÔNG NGHỆ NAD</h5>
-							<div class="textwidget">
-								<p><strong>Showroom</strong>: Lorem Ipsum is simply dummy text of the printing and
-									typesetting industry.
-								</p>
-								<p><strong>Hotline</strong>: 0000 000 000 – <strong>Email hỗ trợ Khách
-										hàng</strong>:
-									support@nad.com</p>
-							</div>
-						</div>
-					</div>
-					<div class="footer-column footer-column-2 col-12 col-md-6">
-					</div>
-					<div class="footer-column footer-column-3 col-12 col-sm-6 col-lg-3">
-						<div id="text-16" class="woodmart-widget widget footer-widget  widget_text">
-							<div class="textwidget">
-								<h1><a href="/">NAD</a></h1>
-								<p><strong>RIGHT PC FOR RIGHT PEOPLE</strong></p>
-								<p><a href="#"><img decoding="async" class=""
-											style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
-											src="https://5spc.com/wp-content/uploads/2022/06/icon-facebook-2.png"
-											height="45"></a>
-									&nbsp;&nbsp;<a href="#"><img decoding="async"
-											style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
-											src="https://5spc.com/wp-content/uploads/2022/06/icon-youtube-2.png"></a>
-									&nbsp; <a href="#"><img decoding="async"
-											style="width: 45px; margin-bottom: 0px; margin-top: 5px;"
-											src="https://5spc.com/wp-content/uploads/2022/06/icon-instagram-2.png"></a>
-								</p>
-							</div>
-						</div>
-					</div>
-					<div class="footer-column footer-column-4 col-12 col-sm-6 col-lg-3">
-						<div id="text-17" class="woodmart-widget widget footer-widget  widget_text">
-							<h5 class="widget-title">HỖ TRỢ KHÁCH HÀNG</h5>
-							<div class="textwidget">
-								<ul>
-									<li class="fa fa-chevron-right"><a href="#">Hướng
-											dẫn
-											mua hàng</a></li>
-									<li class="fa fa-chevron-right"><a href="#">Chính sách bảo
-											hành</a>
-									</li>
-									<li class="fa fa-chevron-right"><a href="#">Góp ý – khiếu nại</a></li>
-								</ul>
-							</div>
-						</div>
-					</div>
-
-					<div class="footer-column footer-column-5 col-12 col-sm-6 col-lg-3">
-						<div id="text-18" class="woodmart-widget widget footer-widget  widget_text">
-							<h5 class="widget-title">ĐỐI TÁC – DOANH NGHIỆP</h5>
-							<div class="textwidget">
-								<ul>
-									<li class="fa fa-chevron-right"><a href="#">Đơn vị vận chuyển</a></li>
-									<li class="fa fa-chevron-right"><a href="#">Cộng đồng</a></li>
-									<li class="fa fa-chevron-right"><a href="#">Dự án</a></li>
-								</ul>
-
-							</div>
-						</div>
-					</div>
-
-					<div class="footer-column footer-column-6 col-12 col-sm-6 col-lg-3">
-						<div id="text-19" class="woodmart-widget widget footer-widget  widget_text">
-							<h5 class="widget-title">CHÍNH SÁCH CHUNG</h5>
-							<div class="textwidget">
-								<ul>
-									<li class="fa fa-chevron-right"><a href="#">Tin
-											tức – Sự
-											kiện</a></li>
-									<li class="fa fa-chevron-right"><a href="#">Liên
-											hệ</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-				</aside>
-			</div>
-
-			<div class="copyrights-wrapper copyrights-two-columns">
-				<div class="container">
-					<div class="min-footer">
-						<div class="col-left reset-mb-10">
-							Copyright 2021 © 5SPC. All Right Reserved. Công ty Cổ phần Thương mại Dịch vụ
-							Công nghệ ----. MST: 00000000. </div>
-					</div>
-				</div>
-			</div>
-		</footer>
-
-		<button id="topButton"><i class="fa fa-arrow-up"></i></button>
-
-	</body>
-
-	<script th:inline="javascript">
-		function showPass ()
-		{
-			var p = document.getElementById( "password" );
-			if ( p.type === "password" )
-			{
-				p.type = "text";
-			} else
-			{
-				p.type = "password";
-			}
-		}
-		function showNewPass ()
-		{
-			var p = document.getElementById( "newPassword" );
-			if ( p.type === "password" )
-			{
-				p.type = "text";
-			} else
-			{
-				p.type = "password";
-			}
-		}
-		function showConfirmPassword ()
-		{
-			var p = document.getElementById( "confirmPassword" );
-			if ( p.type === "password" )
-			{
-				p.type = "text";
-			} else
-			{
-				p.type = "password";
-			}
-		}
-		function onChange ()
-		{
-			var password = document.querySelector( 'input[id=newPassword]' );
-			var confirm = document.querySelector( 'input[id=confirmPassword]' );
-			if ( confirm.value === password.value )
-			{
-				confirm.setCustomValidity( '' );
-			} else
-			{
-				confirm.setCustomValidity( 'Passwords do not match' );
-			}
-		}
-		function showChangePassword ()
-		{
-			$( "#changePassword" ).removeClass( "d-none" );
-			$( "#profileForm" ).addClass( "d-none" );
-
-		}
-
-		function closeChangePassword ()
-		{
-			$( "#changePassword" ).addClass( "d-none" );
-			$( "#profileForm" ).removeClass( "d-none" );
-
-		}
-		function showRecoverPassword ()
-		{
-			$( "#CustomerLoginForm" ).addClass( "d-none" )
-			$( "#RecoverPasswordForm" ).removeClass( "d-none" );
-		}
-		function closeRecoverPassword ()
-		{
-			$( "#RecoverPasswordForm" ).addClass( "d-none" );
-			$( "#CustomerLoginForm" ).removeClass( "d-none" )
-			$( "#register" ).addClass( "d-none" );
-
-		}
-
-		function showRegister ()
-		{
-			$( "#register" ).removeClass( "d-none" );
-			$( "#CustomerLoginForm" ).addClass( "d-none" );
-		}
-		function closeRegister ()
-		{
-			$( "#register" ).addClass( "d-none" );
-			$( "#CustomerLoginForm" ).removeClass( "d-none" );
-
-		}
-
-		$( '.closeMask' ).click( ( e ) =>
-		{
-			if ( e.target.classList.contains( 'closeMask' ) )
-				$( 'button.close.close-mask' ).click();
-			closeRecoverPassword();
-		} );
-
-		$( document ).ready( function ()
-		{
-			$( window ).scroll( function ()
-			{
-				if ( $( this ).scrollTop() > 100 )
-				{
-					$( '#topButton' ).fadeIn();
-				} else
-				{
-					$( '#topButton' ).fadeOut();
-				}
-			} );
-
-			$( '#topButton' ).click( function ()
-			{
-				$( 'html, body' ).animate( { scrollTop: 0 }, 400 );
-				return false;
-			} );
-		} );
-
-		function showUserProfile ()
-		{
-			$( '.userProfile' ).addClass( "w-25" );
-			$( '.closeLogin' ).fadeIn();
-			$( '.closeMask' ).fadeIn();
-		}
-		function closeUserProfile ()
-		{
-			$( '.userProfile' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeOut();
-		}
-
-		function showLogin ()
-		{
-			$( '.login' ).addClass( "w-25" );
-			$( '.closeLogin' ).fadeIn();
-			$( '.closeMask' ).fadeIn();
-		}
-		function closeLogin ()
-		{
-			$( '.login' ).removeClass( "w-25" )
-			$( '.closeLogin' ).fadeOut();
-			$( '.closeMask' ).fadeOut();
-		}
-
-		function showcart ()
-		{
-			$( '.cart' ).addClass( "w-35" )
-			$( '.closeLogin' ).fadeIn();
-			$( '.closeMask' ).fadeIn();
-		}
-		function closecart ()
-		{
-			$( '.cart' ).removeClass( "w-35" )
-			$( '.closeMask' ).fadeOut();
-		}
-		function quantityPlus ( e )
-		{
-			let quantity = $( e ).closest( 'div' ).find( 'input' );
-			quantity.val( +quantity.val() + 1 );
-		}
-		function quantityMinus ( e )
-		{
-			let quantity = $( e ).closest( 'div' ).find( 'input' );
-			quantity.val( +quantity.val() - 1 );
-		}
-		alert_action(/*[[${alert}]]*/ )
-	</script>
+        function showcart ()
+        {
+            $( '.cart' ).addClass( "w-32" )
+            $( '.closeLogin' ).fadeIn();
+            $( '.closeMask' ).fadeIn();
+        }
+        function closecart ()
+        {
+            $( '.cart' ).removeClass( "w-32" )
+            $( '.closeMask' ).fadeOut();
+        }
+        function quantityPlus ( e )
+        {
+            let quantity = $( e ).closest( 'div' ).find( 'input' );
+            quantity.val( +quantity.val() + 1 );
+        }
+        function quantityMinus ( e )
+        {
+            let quantity = $( e ).closest( 'div' ).find( 'input' );
+            quantity.val( +quantity.val() - 1 );
+        }
+        alert_action(/*[[${alert}]]*/ )
+    </script>
 
 </html>
