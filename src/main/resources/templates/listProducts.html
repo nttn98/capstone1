@@ -8,54 +8,57 @@
 
     <body>
 
-        <header>
-            <div class="container d-flex align-items-center justify-content-between" id="header">
-                <div th:replace="homePage :: logo"></div>
-                <div th:replace="homePage :: menu"></div>
-                <div th:replace="homePage :: header_section"></div>
-                <div th:replace="homePage :: login"></div>
-            </div>
-        </header>
+        <div th:replace="homePage :: header_section"></div>
+
         <div class="closeMask"></div>
         </div>
         <div>
-            <h2 style="text-align: center;">Shop</h2>
+            <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Shop</h2>
         </div>
 
         <div class="container">
             <div class="row">
                 <div class="col-lg-2">
                     <a href="/list-products">
-                        <p>All products</p>
+                        <p style="font-size: 18px;">All products</p>
                     </a>
-                    <ul>Catogies
+                    <ul style="margin-bottom: 10px; font-size: 18px"> Catogies
                         <a th:each="category: ${categories}"
                             th:href="@{/products-by-category(categoryName=${category.getName()})}">
-                            <li th:text="${category.getName()}"></li>
+                            <li th:text="${category.getName()}" style="margin-left: 10px; list-style: inside;"></li>
                         </a>
                     </ul>
-                    <ul>
-                        Manufacturers
+                    <ul style="margin-bottom: 10px; font-size: 18px;"> Manufacturers
                         <a th:each="manufacturer: ${manufacturers}"
                             th:href="@{/products-by-manufacturer(manufacturerName=${manufacturer.getName()})}">
-                            <li th:text="${manufacturer.getName()}"></li>
+                            <li th:text="${manufacturer.getName()}" style="margin-left: 10px; list-style: inside;"></li>
                         </a>
                     </ul>
                 </div>
                 <div class="col-lg-10">
                     <div class="item" th:each=" item: ${products}">
                         <div class="card mb-3">
-                            <div class="row no-gutters" style="background-color: black; border: 1px solid;">
+                            <div class="row no-gutters">
                                 <div class="col-lg-3">
-                                    <img th:src="${item.getImages()}" width="200px" height="220px">
+                                    <img th:src="${item.getImages()}"
+                                        style=" display: flex; justify-content: center; align-items: center; height: 100%;">
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="card-body">
                                         <h5 class="card-title" th:text="${item.getName()}"> </h5>
                                         <p class="card-text" th:text="${item.getDescription()}"> </p>
-                                        <p class="card-text" th:text="${item.getCategory().getName()}"> </p>
-                                        <p class="card-text" th:text="${item.getManufacturer().getName()}"> </p>
-                                        <p class="card-text" th:text="${item.getPrice()} + 00VND"> </p>
+
+                                        <p class="card-text" style="font-weight: 600;">Category: <span
+                                                th:text="${item.getCategory().getName()}"
+                                                style="font-weight: normal;"></span></p>
+
+                                        <p class="card-text" style="font-weight: 600;">Manufacturer: <span
+                                                th:text="${item.getManufacturer().getName()}"
+                                                style="font-weight: normal;"></span>
+                                        </p>
+                                        <p class="card-text" style="font-weight: 600;">Price: <span
+                                                th:text="${item.getPrice()} + 00VND"
+                                                style="font-weight: normal;"></span> </p>
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
@@ -216,13 +219,13 @@
 
         function showcart ()
         {
-            $( '.cart' ).addClass( "w-35" )
+            $( '.cart' ).addClass( "w-32" )
             $( '.closeLogin' ).fadeIn();
             $( '.closeMask' ).fadeIn();
         }
         function closecart ()
         {
-            $( '.cart' ).removeClass( "w-35" )
+            $( '.cart' ).removeClass( "w-32" )
             $( '.closeMask' ).fadeOut();
         }
         function quantityPlus ( e )

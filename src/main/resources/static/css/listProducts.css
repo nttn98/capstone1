@@ -1,10 +1,10 @@
 /* CSS */
 .button-89 {
-    --b: 3px;
+    --b: 1.5px;
     /* border thickness */
     --s: .45em;
     /* size of the corner */
-    --color: #ffffff;
+    --color: black;
 
     padding: calc(.5em + var(--s)) calc(.9em + var(--s));
     color: var(--color);
