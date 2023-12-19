@@ -16,6 +16,7 @@
 			<h2 class="page-title">Add User</h2>
 			<br>
 			<form action="/users/save-user" th:object="${user}" method="POST">
+				<input type="hidden" name="mode">
 				<div class="row">
 					<div class="col-sm-6 ol-md-6 col-xs-12">
 						<div class="white-box">

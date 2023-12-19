@@ -112,8 +112,9 @@ public class UserController {
         model.addAttribute("alert", "successRegister");
         if (mode.equals("user")) {
             return homeController.getHome(model, session);
+        } else {
+            return "redirect:/users";
         }
-        return "redirect:/users";
     }
 
     /* Change password */
