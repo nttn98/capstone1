@@ -13,7 +13,10 @@ public class Manufacturer {
     private long id;
     private String name;
     private String images;
+
+    @Column(columnDefinition = "LONGTEXT")
     private String description;
+
     private int status;
 
     @OneToMany(mappedBy = "manufacturer", cascade = CascadeType.ALL)

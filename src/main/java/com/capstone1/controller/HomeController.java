@@ -114,6 +114,10 @@ public class HomeController {
         model.addAttribute("products", listProducts);
         model.addAttribute("categories", listCategories);
         model.addAttribute("manufacturers", listManufacturers);
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
 
         return "listProducts";
     }
@@ -334,6 +338,23 @@ public class HomeController {
         session.setAttribute("cart", cart);
         return "redirect:/home-page";
 
+    }
+
+    @GetMapping("/users/purchase-page")
+    public String purchasePage(Model model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userId");
+        User userLogin = userService.getUserById(userId);
+        session.setAttribute("user", userLogin);
+        Cart cart = (Cart) session.getAttribute("cart");
+        LocalDateTime now = LocalDateTime.now();
+        Order order = null;
+        double total = 0;
+
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+        return "admin/purcharsePage.html";
     }
 
     @GetMapping("/users/add-order")

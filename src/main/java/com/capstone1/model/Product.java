@@ -16,9 +16,12 @@ public class Product {
 
 	private String name;
 	private long quantity;
-	private double price;
+	private long price;
 	private String images;
+
+	@Column(columnDefinition = "LONGTEXT")
 	private String description;
+
 	private int status;
 
 	@ManyToOne
@@ -59,11 +62,11 @@ public class Product {
 		this.quantity = quantity;
 	}
 
-	public double getPrice() {
+	public long getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(long price) {
 		this.price = price;
 	}
 

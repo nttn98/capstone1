@@ -18,6 +18,10 @@ public class Order {
     private int status = 0;
     private double total;
 
+    private String receiverName;
+    private String receiverAddress;
+    private Long receiverNumberphone;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -36,6 +40,30 @@ public class Order {
         this.user = user;
         this.orderDate = orDateTime;
 
+    }
+
+    public String getReceiverName() {
+        return receiverName;
+    }
+
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
+    }
+
+    public String getReceiverAddress() {
+        return receiverAddress;
+    }
+
+    public void setReceiverAddress(String receiverAddress) {
+        this.receiverAddress = receiverAddress;
+    }
+
+    public Long getReceiverNumberphone() {
+        return receiverNumberphone;
+    }
+
+    public void setReceiverNumberphone(Long receiverNumberphone) {
+        this.receiverNumberphone = receiverNumberphone;
     }
 
     public long getOrderId() {

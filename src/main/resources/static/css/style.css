@@ -46,6 +46,10 @@ body {
     width: 32% !important;
 }
 
+.w-25 {
+    width: 25% !important;
+}
+
 a {
     color: #1f1f1f;
     text-decoration: none !important;
@@ -107,6 +111,12 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
     opacity: 1
 }
 
+.logo h1 a {
+    font-family: "Kalam", cursive;
+    font-size: 35px;
+    /* color: white; */
+}
+
 button:focus {
     outline: none;
 }
@@ -115,6 +125,7 @@ ul, li, ol {
     margin: 0px;
     padding: 0px;
     list-style: none;
+    cursor: pointer;
 }
 
 p {
@@ -1003,7 +1014,7 @@ button {
     border-radius: 50%;
     height: 18px;
     width: 18px;
-    top: 12px;
+    top: 20px;
     right: 150px;
 }
 
@@ -1012,6 +1023,50 @@ button {
     margin: 0px;
     font-weight: normal;
     line-height: normal;
+}
+
+
+/*profile css*/
+.userProfile {
+    right: 0;
+    top: 0;
+    height: 100%;
+    background-color: white;
+    z-index: 11;
+    width: 0;
+    transition: 0.5s;
+    overflow: hidden;
+    color: black;
+}
+
+.userProfile .close, .cart .close {
+    width: 5%;
+    background-color: red;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    margin: 15px;
+}
+
+.userProfile h2 {
+    padding: 25px 0px 40px 25px;
+}
+
+.userProfile button.btn {
+    display: flow-root;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    width: 250px;
+}
+
+.user .row {
+    margin-right: 0;
+    margin-left: 0;
+    display: contents;
 }
 
 .closeMask {
@@ -1027,6 +1082,8 @@ button {
     transition: .3s;
     display: none;
 }
+
+
 
 /*--Button Styles--*/
 

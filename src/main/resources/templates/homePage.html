@@ -31,7 +31,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css"
             media="screen">
     </head>
-    <title>Neco</title>
+    <title>Home Page</title>
 
     <body>
         <!-- header section start -->
@@ -90,7 +90,91 @@
                         </li>
                     </div>
                 </nav>
+                <div class="userProfile position-fixed">
+                    <h2>User profile</h2>
+                    <button onclick="closeUserProfile()" type="button" class="close close-mask" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="user">
+                        <div class="container">
+                            <div class="row" id="profileForm" style="margin-bottom: 10px;"
+                                th:if="${session.user!=null}">
+                                <form action="/users/update-user" method="POST" th:object="${user}">
+                                    <input type="hidden" name="id" th:field="*{id}">
+                                    <input type="hidden" name="mode" value="user">
+                                    <div class="form-group">
+                                        <p>Full-name: </p>
+                                        <input type="text" th:field="*{fullname}" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <p>Numberphone: </p>
+                                        <input type="text" th:field="*{numberphone}" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <p>Address: </p>
+                                        <input type="text" th:field="*{address}" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <p>Email: </p>
+                                        <input type="email" th:field="*{email}" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <p>Date of birth</p>
+                                        <input type="date" th:field="*{dob}" class="form-control">
+                                    </div>
+                                    <button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
+                                        Save</button>
+                                </form>
+                                <button class="btn btn-info" onclick="showChangePassword()">Change
+                                    password</button>
+                            </div>
+                            <div class="row d-none" id="changePassword" style="margin-bottom: 10px;"
+                                th:if="${session.user!=null}">
+                                <form action="/users/do-change-pass" method="POST" th:object="${user}">
+                                    <input type="hidden" name="id" th:field="*{id}">
+                                    <input type="hidden" name="mode" value="user">
 
+                                    <label for="password" class="col-lg-12">
+                                        <h5>Enter your old password</h5>
+                                    </label>
+                                    <div class="form-group">
+                                        <input id="password" type="password" class="form-control " required
+                                            onchange="onChange()" name="oldPassword">
+
+                                        <input type="checkbox" onclick="showPass()" style="width: 20px;">
+                                        Show password
+                                    </div>
+                                    <label for="password" class="col-lg-12">
+                                        <h5> New Password</h5>
+                                    </label>
+                                    <div class="form-group">
+                                        <input id="newPassword" type="password" class="form-control " required
+                                            onchange="onChange()" name="newPassword">
+                                        <input type="checkbox" onclick="showNewPass()" style="width: 20px;">
+                                        Show password
+                                    </div>
+
+                                    <label for="password" class="col-lg-12">
+                                        <h5> Comfirm Password</h5>
+                                    </label>
+                                    <div class="form-group">
+                                        <input id="confirmPassword" type="password" class="form-control " required
+                                            onchange="onChange()">
+
+                                        <input type="checkbox" onclick="showConfirmPassword()" style="width: 20px;">
+                                        Show password
+                                    </div>
+                                    <button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
+                                        Save</button>
+                                    <a href="#" onclick="closeChangePassword()"
+                                        style="text-align: center; display: block; margin-top: 10px;">
+                                        Cancle</a>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class=" login position-fixed" th:fragment="login">
                     <div class="container">
                         <div class="row justify-content-center">
@@ -212,7 +296,7 @@
                                             readonly>
                                         <button type="button" onclick="quantityPlus(this)">+</button>
                                     </div>
-                                    <div class="col-2" th:text="${item.getSubtotal()} +'00 VND'">
+                                    <div class="col-2 formatPrice" th:text="${item.getSubtotal()}">
                                     </div>
 
                                     <div class="col-2">
@@ -226,10 +310,10 @@
                     <hr th:if="${session.cart != null}">
                     <div class="purchase-space" th:if="${session.cart != null}">
                         <div class=" total-purchase">
-                            <h4>Total: <span th:text="${session.cart.getTotal()} +'.000 VND'"></span>
+                            <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span>
                             </h4>
                         </div><br>
-                        <a th:href="@{/users/add-order}"><button class="btn-purchase">Order</button></a>
+                        <a th:href="@{/users/purchase-page}"><button class="btn-purchase">Purchase</button></a>
                     </div>
                 </div>
 
@@ -244,7 +328,7 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <h1 class="banner_taital">Tablates And Phons Repair Service</h1>
+                                        <h1 class="banner_taital">Lorem Ipsum</h1>
                                         <p class="banner_text">There are many variations of passages of Lorem Ipsum
                                             available, but the
                                             majority have suffered alteration</p>
@@ -253,7 +337,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="image_1"><img src="img/admin.jpg"></div>
+                                        <div class="image_1"><img src="img/test.png"></div>
                                     </div>
                                 </div>
                             </div>
@@ -343,7 +427,7 @@
                             </a>
                         </div>
                         <h5><a th:text=" ${item.getName()}"></a></h5>
-                        <p th:text="${item.getPrice()}+'00 VND'"> </p>
+                        <p th:text="${item.getPrice()}" class="formatPrice"> </p>
                     </div>
                 </div>
             </div>
@@ -367,7 +451,7 @@
                             </a>
                         </div>
                         <h5><a th:text=" ${item.getName()}"></a></h5>
-                        <p th:text="${item.getPrice()}+'00 VND'"> </p>
+                        <p th:text="${item.getPrice()}" class="formatPrice"> </p>
                     </div>
                 </div>
             </div>
@@ -459,17 +543,35 @@
             </div>
         </div>
 
-        <div class="copyright_section">
-            <div class="container">
-                <p class="copyright_text">2019 All Rights Reserved. Design by <a href="https://html.design">Free html
-                        Templates</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a></p>
-            </div>
-        </div>
-
         <button id="topButton" style="display: none;"><i class="fa fa-arrow-up"></i></button>
 
     </body>
     <script th:inline="javascript">
+        function formatPrice ( number )
+        {
+            var numStr = String( number );
+            var parts = numStr.split( '.' );
+            parts[ 0 ] = parts[ 0 ].replace( /\B(?=(\d{3})+(?!\d))/g, '.' );
+            var formattedNumber = parts.join( '.' );
+            if ( formattedNumber.indexOf( '.' ) === -1 && parts.length > 1 )
+            {
+                formattedNumber += '.' + parts[ 1 ];
+            }
+            return formattedNumber;
+        }
+        function formatPrices ()
+        {
+            var priceElements = document.getElementsByClassName( 'formatPrice' );
+            for ( var i = 0; i < priceElements.length; i++ )
+            {
+                var originalValue = parseFloat( priceElements[ i ].innerText );
+                var formattedValue = formatPrice( originalValue ) + " VND";
+                priceElements[ i ].innerText = formattedValue;
+            }
+        }
+        window.onload = formatPrices;
+
+
         function showPass ()
         {
             var p = document.getElementById( "password" );

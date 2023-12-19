@@ -11,7 +11,10 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String name;
+
+	@Column(columnDefinition = "LONGTEXT")
     private String description;
+
     private int status;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)

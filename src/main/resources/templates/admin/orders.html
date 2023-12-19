@@ -106,7 +106,7 @@
                             <div class="col-lg-1">
                                 <p th:text="${item.quantity}">1</p>
                             </div>
-                            <div class="col-lg-4"><b>[(${item.finalPrice})]00 VND</b></div>
+                            <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
                         </div>
 
                     </div>
@@ -122,6 +122,31 @@
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
     <script th:inline="javascript">
+        function formatPrice ( number )
+        {
+            var numStr = String( number );
+            var parts = numStr.split( '.' );
+            parts[ 0 ] = parts[ 0 ].replace( /\B(?=(\d{3})+(?!\d))/g, '.' );
+            var formattedNumber = parts.join( '.' );
+            if ( formattedNumber.indexOf( '.' ) === -1 && parts.length > 1 )
+            {
+                formattedNumber += '.' + parts[ 1 ];
+            }
+            return formattedNumber;
+        }
+        function formatPrices ()
+        {
+            var priceElements = document.getElementsByClassName( 'formatPrice' );
+            for ( var i = 0; i < priceElements.length; i++ )
+            {
+                var originalValue = parseFloat( priceElements[ i ].innerText );
+                var formattedValue = formatPrice( originalValue ) + " VND";
+                priceElements[ i ].innerText = formattedValue;
+            }
+        }
+        window.onload = formatPrices;
+
+
         function loadOrderDetail ( orderId )
         {
             $( '.orderDetail' ).each( ( i, e ) =>
