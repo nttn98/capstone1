@@ -346,19 +346,18 @@ public class HomeController {
         User userLogin = userService.getUserById(userId);
         session.setAttribute("user", userLogin);
         Cart cart = (Cart) session.getAttribute("cart");
-        LocalDateTime now = LocalDateTime.now();
-        Order order = null;
-        double total = 0;
 
         User user = (User) session.getAttribute("user");
         if (user != null) {
             model.addAttribute("user", user);
         }
+        model.addAttribute("cart", cart);
         return "admin/purcharsePage.html";
     }
 
     @GetMapping("/users/add-order")
-    public String addOrder(Model model, HttpSession session) {
+    public String addOrder(Model model, HttpSession session, @RequestParam("name") String name,
+            @RequestParam("address") String address, @RequestParam("numberphone") long numberphone) {
         Long userId = (Long) session.getAttribute("userId");
         User userLogin = userService.getUserById(userId);
         Cart cart = (Cart) session.getAttribute("cart");
@@ -378,6 +377,9 @@ public class HomeController {
                 total += tempOrderDetail.getFinalPrice();
 
             }
+            order.setReceiverName(name);
+            order.setReceiverAddress(address);
+            order.setReceiverNumberphone(numberphone);
             order.setTotal(total);
             cartService.deleteByUserId(userLogin.getId());
             cart.getListItem().clear();

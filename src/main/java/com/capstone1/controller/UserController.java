@@ -3,12 +3,10 @@ package com.capstone1.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.capstone1.model.Staff;
 import com.capstone1.model.User;
 import com.capstone1.services.UserService;
 
@@ -118,7 +116,7 @@ public class UserController {
     }
 
     /* Change password */
-    @GetMapping("/users/toChangePass/{id}")
+    @GetMapping("/users/to-change-pass/{id}")
     public String changePass(@PathVariable Long id, Model model, @ModelAttribute("user") User user) {
         User existUser = userService.getUserById(id);
         System.out.println("--------------------" + existUser.getPassword());

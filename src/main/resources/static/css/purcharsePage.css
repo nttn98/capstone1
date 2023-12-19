@@ -1,0 +1,21 @@
+ .receiver input {
+     width: -webkit-fill-available;
+ }
+
+ .receiver p {
+     margin-bottom: unset;
+     margin-top: 15px;
+ }
+
+ .receiver button {
+     display: block;
+     margin-left: auto;
+     margin-right: auto;
+     margin: 50px;
+ }
+
+ .inCart h4 {
+     display: block;
+     left: 500px;
+     margin-top: 50px;
+ }

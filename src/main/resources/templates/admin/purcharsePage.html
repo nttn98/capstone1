@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
     <head th:replace="~{homePage :: head}"></head>
+    <link rel="stylesheet" href="/css/purcharsePage.css">
+
     <title>Purcharse Page</title>
 
     <body>
@@ -9,20 +11,52 @@
 
         <div class="closeMask"></div>
         </div>
-        <div>
-            <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Receiver</h2>
-        </div>
 
-        <div class="formReceiver">
-            <form th:action="@{variable}" th:object="${variable}">
-                <p>Full-name</p>
-                <input th:value="${session.user.getFullname()}" name="fullname">
-                <p>Address</p>
-                <input th:value="${session.user.getAddress()}" name="address">
-                <p>Number-phone</p>
-                <input th:value="${session.user.getNumberphone()}" name="numberphone">
+
+        <div class="container formReceiver">
+            <form th:action="@{/users/add-order}" method="GET">
+                <div class="row">
+                    <div class="inCart col-lg-8">
+                        <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">In Cart</h2>
+                        <div th:if="${session.cart!=null}">
+                            <div class="row" th:each=" item : ${session.cart.getListItem()}"
+                                style="margin-bottom: 10px;">
+                                <div class="col-2">
+                                    <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
+                                </div>
+                                <div class="col-4" th:text="${item.getProduct().getName()}">
+                                </div>
+                                <input type="hidden" th:value="${item.getProduct().getId()}" name="productId">
+                                <div>
+
+                                    <button type="button" onclick="quantityMinus(this)">-</button>
+                                    <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
+                                        style="width: 50px; height: 50px;" readonly>
+                                    <button type="button" onclick="quantityPlus(this)">+</button>
+                                </div>
+                                <div class="col-2 formatPrice" th:text="${item.getSubtotal()}">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="receiver col-lg-4">
+                        <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Receiver</h2>
+                        <p>Full-name</p>
+                        <input type="text" th:value="${session.user.getFullname()}" name="name">
+                        <p>Address</p>
+                        <input type="text" th:value="${session.user.getAddress()}" name="address">
+                        <p>Number-phone</p>
+                        <input type="text" th:value="${session.user.getNumberphone()}" name="numberphone">
+                    </div>
+                    <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span></h4>
+                    <button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
+                        Order</button>
             </form>
         </div>
+        </div>
+
         <footer th:replace=" ~{homePage.html :: footer_section}">
         </footer>
 
@@ -31,29 +65,21 @@
 
     <script th:inline="javascript">
 
-        function formatPrice ( number )
+        $( document ).ready( function ()
         {
-            var numStr = String( number );
-            var parts = numStr.split( '.' );
-            parts[ 0 ] = parts[ 0 ].replace( /\B(?=(\d{3})+(?!\d))/g, '.' );
-            var formattedNumber = parts.join( '.' );
-            if ( formattedNumber.indexOf( '.' ) === -1 && parts.length > 1 )
+            $( '.formatPrice' ).each( ( i, e ) =>
             {
-                formattedNumber += '.' + parts[ 1 ];
-            }
-            return formattedNumber;
-        }
-        function formatPrices ()
-        {
-            var priceElements = document.getElementsByClassName( 'formatPrice' );
-            for ( var i = 0; i < priceElements.length; i++ )
+                let val = +( $( e ).text() );
+                $( e ).text( formatMoney( val ) );
+            } );
+
+            function formatMoney ( number )
             {
-                var originalValue = parseFloat( priceElements[ i ].innerText );
-                var formattedValue = formatPrice( originalValue ) + " VND";
-                priceElements[ i ].innerText = formattedValue;
+                return number.toLocaleString( 'vi-VN', {
+                    style: 'currency', currency: 'VND'
+                } );
             }
-        }
-        window.onload = formatPrices;
+        } );
 
 
         function showPass ()
