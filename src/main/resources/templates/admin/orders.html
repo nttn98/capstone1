@@ -69,7 +69,7 @@
                             <b th:text="${order.user.id}"></b>
                         </div>
                         <div class="col-lg-2">
-                            <h6 th:text="${order.total+'00 VND'}"></h6>
+                            <h6 th:text="${order.total}" class="formatPrice"></h6>
                         </div>
                         <div class="col-lg-2">
                             <h6 th:text="${order.getOrderDate()}"></h6>
@@ -112,141 +112,13 @@
                     </div>
                     <br>
                 </div>
-                <!-- <div class="orderDetail"
-                    style="padding:70px; margin-left: auto; width: 33%; top: 111px; position: fixed; right: 0;">
-                </div> -->
             </div>
         </div>
 
 
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
-    <script th:inline="javascript">
-        $( document ).ready( function ()
-        {
-            $( '.formatPrice' ).each( ( i, e ) =>
-            {
-                let val = +( $( e ).text() );
-                $( e ).text( formatMoney( val ) );
-            } );
+    <script th:inline="javascript" src="js/script/order.js"></script>
 
-            function formatMoney ( number )
-            {
-                return number.toLocaleString( 'vi-VN', {
-                    style: 'currency', currency: 'VND'
-                } );
-            }
-        } );
-
-        function loadOrderDetail ( orderId )
-        {
-            $( '.orderDetail' ).each( ( i, e ) =>
-            {
-
-                if ( $( e ).is( ':visible' ) && !$( e ).hasClass( orderId ) )
-                {
-                    $( e ).fadeOut();
-                }
-            } );
-
-            $( '.orderDetail.' + orderId ).fadeToggle();
-        }
-        function closeOrderDetail ( e )
-        {
-            $( e ).parent().fadeOut();
-        }
-
-        function showChangePass ()
-        {
-            $( '.changePass' ).addClass( 'w-25' );
-            $( '.profile' ).removeClass( "w-25" );
-        }
-        function closeChangePass ()
-        {
-            $( '.changePass' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-
-        }
-        function showProfile ()
-        {
-            $( '.profile' ).addClass( "w-25" );
-            $( '.changePass' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeIn();
-        }
-        function closeProfile ()
-        {
-            $( '.profile' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-        }
-        $( '.closeMask' ).click( ( e ) =>
-        {
-            if ( e.target.classList.contains( 'closeMask' ) )
-                $( 'button.close.close-mask' ).click();
-        } );
-        alert_action(/*[[${alert}]]*/ )
-
-        // let previousId = 0;
-        // function loadOrderDetail ( orderId )
-        // {
-        //     if ( $( '.orderDetail' ).is( ':visible' ) )
-        //     {
-        //         if ( previousId === orderId )
-        //         {
-        //             closeOrderDetail();
-        //         } else
-        //         {
-        //             closeOrderDetail( function ()
-        //             {
-        //                 {
-        //                     loadNewOrderDetail( orderId );
-        //                     previousId = orderId;
-        //                 }
-        //             } );
-        //         }
-        //     } else
-        //     {
-        //         loadNewOrderDetail( orderId );
-        //         previousId = orderId;
-        //     }
-        // }
-
-        // function loadNewOrderDetail ( orderId )
-        // {
-        //     $.ajax( {
-        //         url: '/orders/get-order-detail/' + orderId,
-        //         type: 'GET',
-        //         success: function ( data )
-        //         {
-        //             var orderDetailContent = '';
-        //             orderDetailContent += '<button class="close" onclick="closeOrderDetail()"> X </button>';
-        //             orderDetailContent += '<h5> Order id: ' + orderId + '</h5>'
-        //             orderDetailContent += '<br>'
-
-        //             for ( var i = 0; i < data.length; i++ )
-        //             {
-        //                 orderDetailContent += '<div class="row">';
-        //                 orderDetailContent += '<div class="col-lg-3"><img  src="' + data[ i ].product.productImages + '" style="width: 120px;"></div>';
-        //                 orderDetailContent += '<div class="col-lg-4"><h7>' + data[ i ].product.productName + '</h7></div>';
-        //                 orderDetailContent += '<div class="col-lg-1"><p>' + data[ i ].quantity + '</p></div>';
-        //                 orderDetailContent += '<div class="col-lg-4"><b>' + data[ i ].price + '.000 VND</b></div>';
-        //                 orderDetailContent += '</div><hr><br>';
-        //             }
-
-        //             $( '.orderDetail' ).html( orderDetailContent );
-        //             $( '.orderDetail' ).show( 'slow' );
-        //         },
-        //         error: function ()
-        //         {
-        //             console.error( 'Failed to load order details from the API' );
-        //         }
-        //     } );
-        // }
-
-        // function closeOrderDetail ( callback )
-        // {
-        //     $( '.orderDetail' ).hide( 'slow', callback );
-        // }
-
-    </script>
 
 </html>

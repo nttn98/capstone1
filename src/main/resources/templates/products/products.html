@@ -238,7 +238,7 @@
 							<p th:text="${product.name}"></p>
 						</div>
 						<div class="col-lg-1">
-							<p th:text="${product.price} +' VND'" class="formatPrice"></p>
+							<p th:text="${product.price}" class="formatPrice"></p>
 						</div>
 						<div class="col-lg-1">
 							<p th:text="${product.quantity}"></p>
@@ -275,68 +275,20 @@
 			</div>
 		</div>
 
-		<footer class="footer navbar-border">
-			<hr style="width: 1650px;
-			margin-top: -0.8rem;
-			margin-bottom: 7px;
-			border: 0;
-			padding-bottom: 0;
-			border-top: 1px solid rgba(0,0,0.1);">
-			<p class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span
-					class="float-md-left d-block d-md-inline-block" style="padding-right: 10px;">Copyright © 2023
-				</span><span class="float-md-right d-none d-lg-block"> Made by NaN <i
-						class="feather icon-heart pink"></i></span>
+		<footer class="footer"
+			style="padding: 15px 20px 35px 20px;position: fixed;top: 869px;background-color: black;color: white;z-index: 999; width: 1900px;">
+			<p class=" clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
+				<span class="float-md-left d-block d-md-inline-block" style="padding-right: 10px; ">
+					Copyright © 2023
+				</span>
+				<span class="float-md-right d-none d-lg-block">
+					Made by NaN
+				</span>
 			</p>
 			<div class="closeMask"></div>
 		</footer>
 	</body>
+	<script th:inline="javascript" src="js/script/product.js"></script>
 
-
-	<script th:inline="javascript">
-		$( document ).ready( function ()
-		{
-			$( '.formatPrice' ).each( ( i, e ) =>
-			{
-				let val = +( $( e ).text() );
-				$( e ).text( formatMoney( val ) );
-			} );
-
-			function formatMoney ( number )
-			{
-				return number.toLocaleString( 'vi-VN', {
-					style: 'currency', currency: 'VND'
-				} );
-			}
-		} );
-
-		function showChangePass ()
-		{
-			$( '.changePass' ).addClass( 'w-25' );
-			$( '.profile' ).removeClass( "w-25" );
-		}
-		function closeChangePass ()
-		{
-			$( '.changePass' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeOut();
-
-		}
-		function showProfile ()
-		{
-			$( '.profile' ).addClass( "w-25" );
-			$( '.changePass' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeIn();
-		}
-		function closeProfile ()
-		{
-			$( '.profile' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeOut();
-		}
-		$( '.closeMask' ).click( ( e ) =>
-		{
-			if ( e.target.classList.contains( 'closeMask' ) )
-				$( 'button.close.close-mask' ).click();
-		} );
-		alert_action(/*[[${alert}]]*/ )
-	</script>
 
 </html>
