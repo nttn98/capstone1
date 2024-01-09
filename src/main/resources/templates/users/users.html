@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 	<head th:replace="~{products/products ::head}"></head>
+	<script src="/js/pages/toastrUser.js"></script>
+
 
 	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
 		<nav th:fragment="header-navbar"
@@ -17,7 +19,7 @@
 				<div class="navbar-container content">
 					<div class="collapse navbar-collapse" id="navbar-mobile">
 						<ul class="nav navbar-nav mr-auto float-left">
-							<a th:href="@{users/create-user}">
+							<a th:href="@{/users/create-user}">
 								<button class="custom-btn btn-13" th:if="${session.staff==null}">
 									<h7>+ user</h7>
 								</button>
@@ -110,6 +112,35 @@
 
 		<footer th:replace="~{products/products :: footer}"></footer>
 	</body>
-	<script th:inline="javascript" src="js/script/user.js"></script>
+	<script th:inline="javascript">
+		function showChangePass ()
+		{
+			$( '.changePass' ).addClass( 'w-25' );
+			$( '.profile' ).removeClass( "w-25" );
+		}
+		function closeChangePass ()
+		{
+			$( '.changePass' ).removeClass( "w-25" );
+			$( '.closeMask' ).fadeOut();
+
+		}
+		function showProfile ()
+		{
+			$( '.profile' ).addClass( "w-25" );
+			$( '.changePass' ).removeClass( "w-25" );
+			$( '.closeMask' ).fadeIn();
+		}
+		function closeProfile ()
+		{
+			$( '.profile' ).removeClass( "w-25" );
+			$( '.closeMask' ).fadeOut();
+		}
+		$( '.closeMask' ).click( ( e ) =>
+		{
+			if ( e.target.classList.contains( 'closeMask' ) )
+				$( 'button.close.close-mask' ).click();
+		} );
+		alert_action(/*[[${alert}]]*/ )
+	</script>
 
 </html>

@@ -237,7 +237,6 @@ button.close {
 }
 
 .profile {
-  border: 1px solid black;
   right: 0;
   height: 100%;
   background-color: white;
@@ -310,7 +309,7 @@ div.staff button {
 }
 
 .changePass {
-  border: 1px solid black;
+  /* border: 1px solid black; */
   right: 0;
   height: 100%;
   background-color: white;

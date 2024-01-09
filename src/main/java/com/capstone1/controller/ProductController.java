@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.capstone1.model.Category;
 import com.capstone1.model.Manufacturer;
 import com.capstone1.model.Product;
- import com.capstone1.services.CategoryService;
+import com.capstone1.services.CategoryService;
 import com.capstone1.services.ManufacturerService;
 import com.capstone1.services.ProductService;
 
@@ -36,10 +36,7 @@ public class ProductController {
 
 	@GetMapping("/products")
 	public String listProducts(Model model, HttpSession session) {
-		Boolean flag = homeController.checkLogin(model, session);
-		if (flag == false) {
-			return homeController.getLoginPage(model);
-		}
+		homeController.isLogin(model, session);
 		List<Product> listProducts = productService.getAllProducts();
 		List<Category> listCategories = categoryService.getAllCategories();
 		List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();

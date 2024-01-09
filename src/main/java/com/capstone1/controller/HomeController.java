@@ -46,34 +46,10 @@ public class HomeController {
     CartItemService cartItemService;
     @Resource
     AdminService adminService;
-
     @Autowired
     Encoding encoding;
     @Autowired
     JavaMailSender mailSender;
-
-    // @GetMapping({ "/home-page", "/" })
-    // public String getHome(Model model, HttpSession session) {
-
-    // int limit = 3;
-    // List<Product> listProducts = productService.getAllProducts();
-    // listProducts = listProducts.subList(0, Math.min(limit, listProducts.size()));
-
-    // List<Category> listCategories = categoryService.getAllCategories();
-    // List<Manufacturer> listManufacturers =
-    // manufacturerService.getAllManufacturers();
-
-    // model.addAttribute("products", listProducts);
-    // model.addAttribute("categories", listCategories);
-    // model.addAttribute("manufacturers", listManufacturers);
-
-    // User user = (User) session.getAttribute("user");
-    // if (user != null) {
-    // model.addAttribute("user", user);
-    // }
-
-    // return "homePage";
-    // }
 
     @GetMapping({ "/home-page", "/" })
     public String getHome(Model model, HttpSession session) {
@@ -97,10 +73,7 @@ public class HomeController {
         model.addAttribute("categories", listCategories);
         model.addAttribute("manufacturers", listManufacturers);
 
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
+        isUserLogin(model, session);
 
         return "homePage";
     }
@@ -114,17 +87,16 @@ public class HomeController {
         model.addAttribute("products", listProducts);
         model.addAttribute("categories", listCategories);
         model.addAttribute("manufacturers", listManufacturers);
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
+        isUserLogin(model, session);
 
         return "listProducts";
     }
 
     @GetMapping("/products-by-category")
-    public String getProductsByCategory(Model model, @RequestParam("categoryName") String categoryName) {
+    public String getProductsByCategory(Model model, @RequestParam("categoryName") String categoryName,
+            HttpSession session) {
 
+        isUserLogin(model, session);
         if (categoryName != null) {
             List<Product> listProducts = productService.findByCategoryName(categoryName);
             model.addAttribute("products", listProducts);
@@ -140,8 +112,9 @@ public class HomeController {
     }
 
     @GetMapping("/products-by-manufacturer")
-    public String getProductsByManufacturer(Model model, @RequestParam("manufacturerName") String manufacturerName) {
-
+    public String getProductsByManufacturer(Model model, @RequestParam("manufacturerName") String manufacturerName,
+            HttpSession session) {
+        isUserLogin(model, session);
         if (manufacturerName != null) {
             List<Product> listProducts = productService.findByManufacturerName(manufacturerName);
             model.addAttribute("products", listProducts);
@@ -158,6 +131,8 @@ public class HomeController {
 
     @GetMapping("/dashBoard")
     public String getDashBoardPage(Model model, HttpSession session) {
+        isLogin(model, session);
+
         List<Product> listProducts = productService.getAllProducts();
         List<Category> listCategories = categoryService.getAllCategories();
         List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
@@ -224,6 +199,21 @@ public class HomeController {
         return true;
     }
 
+    public String isLogin(Model model, HttpSession session) {
+        Boolean flag = checkLogin(model, session);
+        if (flag == false) {
+            return getLoginPage(model);
+        }
+        return null;
+    }
+
+    public void isUserLogin(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            model.addAttribute("user", user);
+        }
+    }
+
     @GetMapping("/logout")
     public String getLogout(Model model, HttpSession session) {
 
@@ -233,14 +223,12 @@ public class HomeController {
         return getLoginPage(model);
     }
 
+    // get all orders in admin mode
     @GetMapping("/orders")
     public String listOrders(Model model, HttpSession session) {
-        List<Order> listOrders = orderService.getAllOrders();
-        Boolean flag = checkLogin(model, session);
-        if (flag == false) {
-            return getLoginPage(model);
-        }
 
+        isLogin(model, session);
+        List<Order> listOrders = orderService.getAllOrders();
         model.addAttribute("orders", listOrders);
         model.addAttribute("mode", "staff");
 
@@ -267,164 +255,6 @@ public class HomeController {
         model.addAttribute("alert", "success");
         orderService.changeStatusOrder(existOrder);
         return listOrders(model, session);
-    }
-
-    /* order user */
-    @GetMapping("/users/add-to-cart/{productId}")
-    public String addToCart(Model model, @PathVariable long productId, HttpSession session,
-            @RequestParam(name = "quantity", defaultValue = "1") int quantity) {
-        Long userId = (Long) session.getAttribute("userId");
-        Cart cart = (Cart) session.getAttribute("cart");
-        Product temp = productService.getProductById(productId);
-
-        if (userId == null) {
-            addToCartWithoutUser(session, cart, temp);
-        } else {
-            User user = userService.getUserById(userId);
-            addToCartWithUser(session, quantity, cart, temp, user);
-        }
-
-        return "redirect:/home-page";
-
-    }
-
-    private void addToCartWithUser(HttpSession session, int quantity, Cart cart, Product product, User user) {
-        if (cart == null) {
-            cart = cartService.saveCart(new Cart(user));
-        }
-
-        CartItem cartItem = cartItemService.findByProductId(product.getId());
-
-        if (cartItem == null) {
-            cartItem = cartItemService.save(new CartItem(cart, product, quantity));
-        } else {
-            cartItem.setQuantity(cartItem.getQuantity() + 1);
-            cartItemService.save(cartItem);
-        }
-
-        cart.addProduct(product, cart);
-        session.setAttribute("cart", cart);
-    }
-
-    private void addToCartWithoutUser(HttpSession session, Cart cart, Product product) {
-        if (cart == null) {
-            cart = new Cart();
-            cart.addProduct(product, null);
-        } else {
-            CartItem cartItem = cart.checkProductExist(product.getId());
-            if (cartItem == null) {
-                cartItem = new CartItem(cart, product, 1);
-            }
-            cart.addProduct(product, cart);
-        }
-        session.setAttribute("cart", cart);
-    }
-
-    @PostMapping("/users/delete-product-in-cart")
-    public String deleteToCart(Model model, @RequestParam long productId, HttpSession session) {
-        Cart cart = (Cart) session.getAttribute("cart");
-        Long userId = (Long) session.getAttribute("userId");
-
-        if (userId == null) { // withLogin
-            cart.deleteByProductId(productId);
-        } else { // without login
-            cartItemService.deleteByProductId(productId);
-            cart.removeItem(productId);
-            if (cart.getListItem().size() == 0) {
-                cartService.deleteByUserId(userId);
-                cart = null;
-            }
-        }
-        session.setAttribute("cart", cart);
-        return "redirect:/home-page";
-
-    }
-
-    @GetMapping("/users/purchase-page")
-    public String purchasePage(Model model, HttpSession session) {
-        Long userId = (Long) session.getAttribute("userId");
-        User userLogin = userService.getUserById(userId);
-        session.setAttribute("user", userLogin);
-        Cart cart = (Cart) session.getAttribute("cart");
-
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
-        model.addAttribute("cart", cart);
-        return "admin/purcharsePage.html";
-    }
-
-    @GetMapping("/users/add-order")
-    public String addOrder(Model model, HttpSession session, @RequestParam("name") String name,
-            @RequestParam("address") String address, @RequestParam("numberphone") long numberphone) {
-        Long userId = (Long) session.getAttribute("userId");
-        User userLogin = userService.getUserById(userId);
-        Cart cart = (Cart) session.getAttribute("cart");
-        LocalDateTime now = LocalDateTime.now();
-        Order order = null;
-        double total = 0;
-
-        if (cart != null && userLogin != null) {
-            order = orderService.saveOrder(new Order(0, userLogin, now));
-            for (int i = 0; i < cart.getListItem().size(); i++) {
-                Product product = cart.getListItem().get(i).getProduct();
-                double subtotal = product.getPrice();
-                OrderDetail tempOrderDetail = orderDetailService
-                        .saveOrderDetail(new OrderDetail(order, product,
-                                cartItemService.findByProductId(product.getId()).getQuantity(), subtotal));
-                cartItemService.deleteByProductId(product.getId());
-                total += tempOrderDetail.getFinalPrice();
-
-            }
-            order.setReceiverName(name);
-            order.setReceiverAddress(address);
-            order.setReceiverNumberphone(numberphone);
-            order.setTotal(total);
-            cartService.deleteByUserId(userLogin.getId());
-            cart.getListItem().clear();
-
-        }
-        session.removeAttribute("cart");
-        orderService.saveOrder(order);
-        return "redirect:/home-page";
-
-    }
-
-    /* login user */
-    @PostMapping("/login-user")
-    public String getLoginUser(Model model, @RequestParam("username") String username,
-            @RequestParam("password") String password, HttpSession session) {
-        // List<User> listUsers = userService.getAllUsers();
-        String passEncoding = encoding.toSHA1(password);
-        User user = userService.findByUsernameAndPassword(username, passEncoding);
-
-        if (user != null && user.getStatus() == 0) {
-            session.setAttribute("userId", user.getId());
-            session.setAttribute("user", user);
-            model.addAttribute("alert", "success");
-
-            Cart cart = cartService.findByUserId(user.getId());
-            session.setAttribute("cart", cart);
-            return getHome(model, session);
-        }
-
-        model.addAttribute("alert", "error");
-        return getHome(model, session);
-    }
-
-    @GetMapping("/users/logout")
-    public String logOutUser(Model model, HttpSession session) {
-
-        Long userId = (Long) session.getAttribute("userId");
-
-        if (userId != null) {
-            session.removeAttribute("userId");
-            session.removeAttribute("user");
-            session.removeAttribute("cart");
-        }
-
-        return "redirect:/home-page";
     }
 
     /* Forgot password admin and staff */

@@ -27,10 +27,7 @@ public class ManufacturerController {
 
     @GetMapping("/manufacturers")
     public String listManufacturers(Model model, HttpSession session) {
-        Boolean flag = homeController.checkLogin(model, session);
-        if (flag == false) {
-            return homeController.getLoginPage(model);
-        }
+        homeController.isLogin(model, session);
 
         List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
 

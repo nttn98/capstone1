@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 	<head th:replace="~{products/products ::head}"></head>
+	<script src="/js/pages/toastrUser.js"></script>
+
 
 	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
 		<nav th:fragment="header-navbar"
@@ -17,7 +19,7 @@
 				<div class="navbar-container content">
 					<div class="collapse navbar-collapse" id="navbar-mobile">
 						<ul class="nav navbar-nav mr-auto float-left">
-							<a th:href="@{staffs/create-staff}">
+							<a th:href="@{/staffs/create-staff}">
 								<button class="custom-btn btn-13">
 									<h7>+ staff</h7>
 								</button>
@@ -107,5 +109,19 @@
 
 		<footer th:replace="~{products/products :: footer}"></footer>
 	</body>
+	<script th:inline="javascript">
+		function showChangePass ()
+		{
+			$( '.changePass' ).addClass( 'w-25' );
+			$( '.profile' ).removeClass( "w-25" );
+		}
+		function closeChangePass ()
+		{
+			$( '.changePass' ).removeClass( "w-25" );
+			$( '.closeMask' ).fadeOut();
+
+		}
+		alert_action(/*[[${alert}]]*/ )
+	</script>
 
 </html>

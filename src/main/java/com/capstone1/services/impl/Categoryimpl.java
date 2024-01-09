@@ -9,8 +9,6 @@ import com.capstone1.model.Category;
 import com.capstone1.repository.CategoryRepository;
 import com.capstone1.services.*;
 
-import jakarta.annotation.Resource;
-
 @Service
 public class Categoryimpl implements CategoryService {
 

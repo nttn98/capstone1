@@ -276,7 +276,7 @@
 		</div>
 
 		<footer class="footer"
-			style="padding: 15px 20px 35px 20px;position: fixed;top: 869px;background-color: black;color: white;z-index: 999; width: 1900px;">
+			style="padding: 6px 20px 35px 20px;position: fixed;top: 888px;background-color: black;color: white;z-index: 999; width: 1900px;">
 			<p class=" clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
 				<span class="float-md-left d-block d-md-inline-block" style="padding-right: 10px; ">
 					Copyright © 2023
@@ -288,7 +288,53 @@
 			<div class="closeMask"></div>
 		</footer>
 	</body>
-	<script th:inline="javascript" src="js/script/product.js"></script>
+
+	<script th:inline="javascript">
+		function showChangePass ()
+		{
+			$( '.changePass' ).addClass( 'w-25' );
+			$( '.profile' ).removeClass( "w-25" );
+		}
+		function closeChangePass ()
+		{
+			$( '.changePass' ).removeClass( "w-25" );
+			$( '.closeMask' ).fadeOut();
+
+		}
+		function showProfile ()
+		{
+			$( '.profile' ).addClass( "w-25" );
+			$( '.changePass' ).removeClass( "w-25" );
+			$( '.closeMask' ).fadeIn();
+		}
+		function closeProfile ()
+		{
+			$( '.profile' ).removeClass( "w-25" );
+			$( '.closeMask' ).fadeOut();
+		}
+		$( '.closeMask' ).click( ( e ) =>
+		{
+			if ( e.target.classList.contains( 'closeMask' ) )
+				$( 'button.close.close-mask' ).click();
+		} );
+
+		$( document ).ready( () =>
+		{
+			$( '.formatPrice' ).each( ( i, e ) =>
+			{
+				let val = +( $( e ).text() );
+				$( e ).text( formatMoney( val ) );
+			} );
+
+			function formatMoney ( number )
+			{
+				return number.toLocaleString( 'vi-VN', {
+					style: 'currency', currency: 'VND'
+				} );
+			}
+		} );
+		alert_action(/*[[${ alert }]]*/ )
+	</script>
 
 
 </html>

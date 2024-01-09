@@ -25,8 +25,9 @@ public class StaffController {
     @Autowired
     HomeController homeController;
 
-    @GetMapping(value = "/staffs")
-    public String listStaffs(Model model) {
+    @GetMapping("/staffs")
+    public String listStaffs(Model model, HttpSession session) {
+        homeController.isLogin(model, session);
         List<Staff> listStaffs = staffService.getAllStaffs();
 
         if (listStaffs.size() == 0) {
@@ -55,8 +56,12 @@ public class StaffController {
 
     @PostMapping("/staffs/update-staff")
     public String updateStaff(@RequestParam long id, Model model, @ModelAttribute("staff") Staff staff,
-            @RequestParam("mode") String mode, HttpSession session) {
-        System.out.println(id);
+            HttpSession session) {
+
+        if (session == null) {
+            return "loginAdmin_Staff";
+        }
+
         Staff existStaff = staffService.getStaffById(id);
 
         existStaff.setFullname(staff.getFullname());
@@ -69,12 +74,7 @@ public class StaffController {
         System.out.println("Staff edited successfully");
         model.addAttribute("alert", "edit");
 
-        if (mode.equals("staff")) {
-            session.setAttribute("staff", existStaff);
-            return homeController.getDashBoardPage(model, session);
-        } else {
-            return "redirect:/staffs";
-        }
+        return listStaffs(model, session);
     }
 
     @GetMapping("/staffs/change-status/{id}")
@@ -111,17 +111,14 @@ public class StaffController {
 
         if (oldStaffPass.equals(oldPassword)) {
             existStaff.setPassword(newPass);
-            saveStaff(model, existStaff);
+            saveStaff(model, existStaff, session);
             System.out.println("---------------------Success " + existStaff.getPassword());
             model.addAttribute("alert", "success");
         } else {
             System.out.println("---------------------Fail");
             model.addAttribute("alert", "error");
         }
-        Boolean flag = homeController.checkLogin(model, session);
-        if (flag == false) {
-            return homeController.getLoginPage(model);
-        }
+        homeController.isLogin(model, session);
         return homeController.getDashBoardPage(model, session);
     }
 
@@ -132,11 +129,13 @@ public class StaffController {
     }
 
     @PostMapping("/staffs/save-staff")
-    public String saveStaff(Model model, @ModelAttribute("staff") Staff staff) {
+    public String saveStaff(Model model, @ModelAttribute("staff") Staff staff, HttpSession session) {
         staff.setPassword(encoding.toSHA1(staff.getPassword()));
         staffService.saveStaff(staff);
         System.out.println("Staff added successfully");
-        return "redirect:/staffs";
+        model.addAttribute("alert", "successRegister");
+
+        return listStaffs(model, session);
     }
 
 }

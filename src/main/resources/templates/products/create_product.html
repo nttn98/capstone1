@@ -144,7 +144,7 @@
 		<footer th:replace="~{products/products :: footer}"></footer>
 	</body>
 
-	<script>
+	<script th:inline="javascript">
 		$( '.dropify-wrapper' ).height( $( 'form > div > div:nth-child(2)' ).height() - 60 + 'px' )
 
 		$( "#input-file-now" ).change( function ( event )
@@ -166,6 +166,8 @@
 			event.preventDefault();
 			return false;
 		}
+		alert_action(/*[[${ alert }]]*/ )
+
 	</script>
 
 </html>

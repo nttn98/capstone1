@@ -12,5 +12,7 @@ public interface OrderService {
 
     List<Order> getAllOrders();
 
+    List<Order> findByUserId(long userId);
+
     Order changeStatusOrder(Order order);
 }

@@ -87,7 +87,8 @@
                                     <a href="#" onclick="showUserProfile()">
                                         Profile
                                     </a>
-                                    <a href="#">View history Order</a>
+                                    <a th:href="@{/users/order-history/{userId}(userId=${session.user.getId()})}">View
+                                        history Order</a>
                                     <a th:href="@{/users/logout}">Logout</a>
                                 </div>
                             </div>
@@ -341,7 +342,7 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="image_1"><img src="/img/test.png"></div>
+                                        <div class="image_1"><img src="/img/test.png" style="max-width: 80%;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -358,14 +359,14 @@
         </div>
 
         <div class="blog_section layout_padding">
-            <div class="container-fluid">
+            <div class="container">
                 <h1 class="blog_taital">What We Do</h1>
                 <p class="blog_text">There are many variations of passages of Lorem Ipsum available, but the majority
                     have
                     suffered alteration in some </p>
                 <div class="blog_section_2" th:each="item, iterStat : ${manufacturers}">
                     <div class="row" th:if="${iterStat.index % 2 == 0}">
-                        <div class="col-md-6 padding_left_0">
+                        <div class="col-md-6">
                             <div class="image_4"><img th:src="${item.getImages()}" width="400px"></div>
                         </div>
                         <div class="col-md-6">
@@ -376,13 +377,11 @@
                     </div>
                     <div class="row" th:if="${iterStat.index % 2 != 0}">
                         <div class="col-md-6">
-                            <div class="blog_taital_main">
-                                <h4 class="laptop_text" th:text="${item.getName()}"> </h4>
-                                <p class="ipsum_text" th:text="${item.getDescription()}"> </p>
-                                <div class="read_bt_2"><a href="#">Read More</a></div>
-                            </div>
+                            <h4 class="laptop_text" th:text="${item.getName()}"> </h4>
+                            <p class="ipsum_text" th:text="${item.getDescription()}"> </p>
+                            <div class="read_bt_2"><a href="#">Read More</a></div>
                         </div>
-                        <div class="col-md-6 padding_right_0">
+                        <div class="col-md-6">
                             <div class="image_5" href="#"><img th:src="${item.getImages()}" width="400px"></div>
                         </div>
                     </div>
@@ -471,7 +470,7 @@
                 </p>
                 <div class="contact_section_2">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-6" style="text-align: center;">
                             <div class="map_main">
                                 <div class="map-responsive">
                                     <iframe

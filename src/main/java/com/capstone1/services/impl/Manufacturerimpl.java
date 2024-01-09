@@ -8,8 +8,6 @@ import com.capstone1.model.Manufacturer;
 import com.capstone1.repository.ManufacturerRepository;
 import com.capstone1.services.ManufacturerService;
 
-import jakarta.annotation.Resource;
-
 @Service
 public class Manufacturerimpl implements ManufacturerService {
 

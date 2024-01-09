@@ -23,11 +23,8 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public String listCategories(Model model, HttpSession session) {
+        homeController.isLogin(model, session);
         List<Category> listCategories = categoryService.getAllCategories();
-        Boolean flag = homeController.checkLogin(model, session);
-        if (flag == false) {
-            return homeController.getLoginPage(model);
-        }
         if (listCategories.size() == 0) {
             Category category = new Category();
             model.addAttribute("category", category);
