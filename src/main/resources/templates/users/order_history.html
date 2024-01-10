@@ -11,7 +11,31 @@
         <div>
             <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order history</h2>
         </div>
+        <div th:each=" order : ${orders}">
+            <p th:text="${order.getOrderDate()}"></p>
+            <p th:text="${order.getReceiverName()}"></p>
+            <p>Address: [(${order.getReceiverAddress()})]</p>
+            <p>Numberphone: [(${order.getReceiverNumberphone()})]</p>
+            <p th:text="${order.getTotal()}" class="formatPrice"></p>
+            <i class="fa fa-arrow-down" aria-hidden="true"></i>
+            <i class="fa fa-arrow-up" aria-hidden="true"></i>
 
+            <div class="orderDetail" th:classappend="${order.orderId}" style="display: none;">
+                <h5> Order id: [(${order.orderId})]</h5><br>
+                <div class="row mb-3" th:each=" item: ${order.orderDetails}">
+                    <div class="col-lg-3">
+                        <img th:src="${item.product.getImages()}" style="width: 120px;">
+                    </div>
+                    <div class="col-lg-4">
+                        <h7 th:text="${item.product.getName()}"></h7>
+                    </div>
+                    <div class="col-lg-1">
+                        <p th:text="${item.quantity}">1</p>
+                    </div>
+                    <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
+                </div>
+            </div>
+        </div>
 
         <footer th:replace=" ~{homePage.html :: footer_section}">
         </footer>

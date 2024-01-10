@@ -329,7 +329,16 @@ public class UserController {
     public String historyOrders(@PathVariable long userId, HttpSession session, Model model) {
         homeController.isUserLogin(model, session);
         List<Order> orders = orderService.findByUserId(userId);
-        System.out.println(orders.size() + "-----------------------------------");
+        model.addAttribute("orders", orders);
         return "users/order_history";
+    }
+
+    @GetMapping("/users/order-detail/{orderId}")
+    @ResponseBody
+    public List<OrderDetail> orderDetail(@PathVariable long orderId, Model model) {
+        List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderId);
+        model.addAttribute("orderDetails", orderDetails);
+        return orderDetails;
+
     }
 }

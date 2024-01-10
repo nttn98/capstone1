@@ -27,14 +27,13 @@
                                 <div class="col-4" th:text="${item.getProduct().getName()}">
                                 </div>
                                 <input type="hidden" th:value="${item.getProduct().getId()}" name="productId">
-                                <div>
-
+                                <div style="margin: auto;">
                                     <button type="button" onclick="quantityMinus(this)">-</button>
                                     <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
                                         style="width: 50px; height: 50px;" readonly>
                                     <button type="button" onclick="quantityPlus(this)">+</button>
                                 </div>
-                                <div class="col-2 formatPrice" th:text="${item.getSubtotal()}">
+                                <div class="col-2 formatPrice" th:text="${item.getSubtotal()}" style="margin: auto;">
                                 </div>
 
                             </div>
@@ -50,9 +49,13 @@
                         <p>Number-phone</p>
                         <input type="text" th:value="${session.user.getNumberphone()}" name="numberphone">
                     </div>
-                    <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span></h4>
-                    <button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
-                        Order</button>
+                    <h4 style="padding: 20px; left: 465px;">Total: <span th:text="${session.cart.getTotal()}"
+                            class="formatPrice"></span></h4>
+                </div>
+                <button type="submit" class="btn btn-info"
+                    style="margin: 20px; display: block; margin-left: auto; margin-right: auto;"><i
+                        class="fa fa-check"></i>
+                    Order</button>
             </form>
         </div>
         </div>
