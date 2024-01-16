@@ -95,11 +95,6 @@
                         style="padding: 70px;  width: 33%; top: 111px; position: fixed; right: 0px; display: none;">
                         <button class="close" onclick="closeOrderDetail(this)"> X </button>
                         <h5> Order id: [(${order.id})]</h5><br>
-                        <!-- <h5>Receiver information</h5>
-                        <h6>Name: [(${order.receiverName})]</h6>
-                        <h6>Address: [(${order.receiverAddress})]</h6>
-                        <h6>Numberphone: [(${order.receiverNumberphone})]</h6>
-                        <br> -->
                         <div class="row mb-3" th:each=" item: ${order.orderDetails}">
                             <div class="col-lg-3">
                                 <img th:src="${item.product.getImages()}" style="width: 120px;">

@@ -231,7 +231,7 @@ public class HomeController {
         List<Order> listOrders = orderService.getAllOrders();
         model.addAttribute("orders", listOrders);
         model.addAttribute("mode", "staff");
-
+        listOrders.get(0).getReceiverName();
         return "admin/orders";
     }
 

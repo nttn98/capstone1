@@ -2,8 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
     <head th:replace="~{homePage :: head}"></head>
-
+    <link rel="stylesheet" href="/css/order_history.css">
     <title>Order History</title>
+
+
 
     <body>
         <div th:replace="homePage :: header_section"></div>
@@ -11,30 +13,61 @@
         <div>
             <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order history</h2>
         </div>
-        <div th:each=" order : ${orders}">
-            <p th:text="${order.getOrderDate()}"></p>
-            <p th:text="${order.getReceiverName()}"></p>
-            <p>Address: [(${order.getReceiverAddress()})]</p>
-            <p>Numberphone: [(${order.getReceiverNumberphone()})]</p>
-            <p th:text="${order.getTotal()}" class="formatPrice"></p>
-            <i class="fa fa-arrow-down" aria-hidden="true"></i>
-            <i class="fa fa-arrow-up" aria-hidden="true"></i>
 
-            <div class="orderDetail" th:classappend="${order.orderId}" style="display: none;">
-                <h5> Order id: [(${order.orderId})]</h5><br>
-                <div class="row mb-3" th:each=" item: ${order.orderDetails}">
-                    <div class="col-lg-3">
-                        <img th:src="${item.product.getImages()}" style="width: 120px;">
+
+        <div class="orders">
+            <div class="table-header">
+                <div>#</div>
+                <div>Date</div>
+                <div>Name</div>
+                <div>Address</div>
+                <div>Numberphone</div>
+                <div>Total</div>
+                <div>Details</div>
+            </div>
+
+            <div class="order" th:each=" order: ${orders}">
+                <div class="row">
+                    <div class="cell">[(${order.getId()})]</div>
+                    <div class="cell">[(${order.getOrderDate()})]</div>
+                    <div class="cell">[(${order.getReceiverName()})]</div>
+                    <div class="cell">[(${order.getReceiverAddress()})]</div>
+                    <div class="cell">[(${order.getReceiverNumberphone()})]</div>
+                    <div class="cell">
+                        <p class="formatPrice">[(${order.getTotal()})]</p>
                     </div>
-                    <div class="col-lg-4">
-                        <h7 th:text="${item.product.getName()}"></h7>
+                    <div class="cell details">
+                        <i id="orderDetail" class="fa fa-arrow-down" aria-hidden="true"
+                            th:onclick="'loadOrderDetail(\'' + ${order.id} + '\',this)'"></i>
                     </div>
-                    <div class="col-lg-1">
-                        <p th:text="${item.quantity}">1</p>
+                </div>
+
+                <div>
+                    <div class="orderDetail" th:classappend="${order.id}" style="display: none;">
+                        <div class="table-header" style="justify-content: space-evenly;">
+                            <div>Images</div>
+                            <div>Product name</div>
+                            <div>Quantity</div>
+                            <div>Price</div>
+                        </div>
+                        <div class="container-fluid" style="text-align: center;">
+                            <div class="row mb-3" th:each=" item: ${order.orderDetails}">
+                                <div class="col-lg-3">
+                                    <img th:src="${item.product.getImages()}" style="width: 120px;">
+                                </div>
+                                <div class="col-lg-4">
+                                    <h7 th:text="${item.product.getName()}"></h7>
+                                </div>
+                                <div class="col-lg-1">
+                                    <p th:text="${item.quantity}">1</p>
+                                </div>
+                                <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
                 </div>
             </div>
+        </div>
         </div>
 
         <footer th:replace=" ~{homePage.html :: footer_section}">
@@ -44,6 +77,27 @@
     </body>
 
     <script th:inline="javascript">
+
+
+        function loadOrderDetail ( id )
+        {
+            $( '.orderDetail' ).each( ( i, e ) =>
+            {
+
+                if ( $( e ).is( ':visible' ) && !$( e ).hasClass( id ) )
+                {
+                    $( e ).slideUp( 1000 );
+                }
+            } );
+
+            var orderDetail = $( '.orderDetail.' + id );
+            orderDetail.slideToggle( 1000 );
+
+        }
+        function closeOrderDetail ( e )
+        {
+            $( e ).parent().slideDown( 1000 );
+        }
 
         $( document ).ready( function ()
         {
@@ -60,7 +114,6 @@
                 } );
             }
         } );
-
 
         function showPass ()
         {

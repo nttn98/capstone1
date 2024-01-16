@@ -1,0 +1,50 @@
+body {
+    background-color: #f7f7f7;
+}
+
+.table-header>div {
+    width: 200px;
+    text-align: center;
+}
+
+.orders {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    transition: box-shadow 0.3s ease;
+    display: block;
+    margin: auto
+}
+
+.order {
+    margin-bottom: 10px;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.cell {
+    flex: 1;
+    text-align: center;
+}
+
+.cell.details {
+    cursor: pointer;
+}
