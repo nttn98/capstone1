@@ -17,5 +17,5 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     @Query(value = "DBCC CHECKIDENT('dbo.order_details', RESEED, 1001)", nativeQuery = true)
     void alterAutoIncrementValue();
 
-    List<OrderDetail> findByOrderOrderId(long orderId);
+    List<OrderDetail> findByOrderId(long orderId);
 }

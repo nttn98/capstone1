@@ -14,7 +14,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long orderId;
+    private long id;
     private int status = 0;
     private double total;
 
@@ -66,12 +66,12 @@ public class Order {
         this.receiverNumberphone = receiverNumberphone;
     }
 
-    public long getOrderId() {
-        return orderId;
+    public long getId() {
+        return id;
     }
 
-    public void setOrderId(long orderId) {
-        this.orderId = orderId;
+    public void setId(long orderId) {
+        this.id = orderId;
     }
 
     public int getStatus() {

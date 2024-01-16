@@ -9,8 +9,8 @@
 
 	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
 
-		<nav th:replace="categories/create_category.html :: header-navbar"></nav>
-		<div th:replace="products/products.html :: main-menu"></div>
+		<nav th:replace="~{categories/create_category.html :: header-navbar}"></nav>
+		<div th:replace="~{products/products.html :: main-menu}"></div>
 
 		<div class="container mt-4">
 			<h2 class="page-title">Add Staff</h2>

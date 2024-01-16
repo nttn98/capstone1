@@ -5,8 +5,8 @@
     <link rel="stylesheet" href="/css/edit_manufacturer.css">
 
     <body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
-        <nav th:replace="products/create_product.html :: header-navbar"></nav>
-        <div th:replace="products/products.html :: main-menu"></div>
+        <nav th:replace="~{products/create_product.html :: header-navbar}"></nav>
+        <div th:replace="~{products/products.html :: main-menu}"></div>
 
         <div class="container mt-4">
             <h2 class="page-title">Edit Manufacturer</h2>

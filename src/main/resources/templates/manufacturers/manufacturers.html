@@ -25,15 +25,15 @@
                                 </button>
                             </a>
                         </ul>
-                        <ul th:replace="products/products.html :: login-space"></ul>
+                        <ul th:replace="~{products/products.html :: login-space}"></ul>
                     </div>
-                    <div th:replace="products/products.html :: profile"></div>
-                    <div th:replace="products/products.html :: changePass"></div>
+                    <div th:replace="~{products/products.html :: profile}"></div>
+                    <div th:replace="~{products/products.html :: changePass}"></div>
                 </div>
             </div>
         </nav>
 
-        <div th:replace="products/products.html :: main-menu"></div>
+        <div th:replace="~{products/products.html :: main-menu}"></div>
 
         <div class="app-content content">
             <div class="content-wrapper">

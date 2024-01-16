@@ -1,7 +1,5 @@
 package com.capstone1.model;
 
-import java.util.*;
-
 import jakarta.persistence.*;
 
 @Entity

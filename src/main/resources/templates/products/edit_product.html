@@ -5,8 +5,8 @@
 
 	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
 
-		<nav th:replace="products/create_product.html :: header-navbar"></nav>
-		<div th:replace="products/products.html :: main-menu"></div>
+		<nav th:replace="~{products/create_product.html :: header-navbar}"></nav>
+		<div th:replace="~{products/products.html :: main-menu}"></div>
 		<div class="container mt-4">
 			<h2 class="page-title">Edit Product</h2>
 			<form th:action="@{/products/update-product/{id}(id=${product.id})}" th:object="${product}" method="POST"

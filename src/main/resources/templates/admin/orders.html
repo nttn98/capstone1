@@ -21,16 +21,15 @@
 
                             </a>
                         </ul>
-                        <ul th:replace="products/products.html :: login-space"></ul>
+                        <ul th:replace="~{products/products.html :: login-space}"></ul>
                     </div>
-                    <div th:replace="products/products.html :: profile"></div>
-                    <div th:replace="products/products.html :: changePass"></div>
-
+                    <div th:replace="~{products/products.html :: profile}"></div>
+                    <div th:replace="~{products/products.html :: changePass}"></div>
                 </div>
             </div>
         </nav>
 
-        <div th:replace="products/products.html :: main-menu"></div>
+        <div th:replace="~{products/products.html :: main-menu}"></div>
 
         <div class="app-content content">
             <div class="content-wrapper">
@@ -63,7 +62,7 @@
                 <div class="content-body" th:each=" order: ${orders}">
                     <div class="row grouped-multiple-statistics-card">
                         <div class="col-lg-1">
-                            <b name="orderId" th:text="${order.orderId}"></b>
+                            <b name="id" th:text="${order.id}"></b>
                         </div>
                         <div class="col-lg-1">
                             <b th:text="${order.user.id}"></b>
@@ -75,7 +74,7 @@
                             <h6 th:text="${order.getOrderDate()}"></h6>
                         </div>
                         <div class="col-lg-1">
-                            <a th:href="@{/orders/change-status/{id}(id=${order.orderId})}">
+                            <a th:href="@{/orders/change-status/{id}(id=${order.id})}">
                                 <button class="custom-btn btn-5" style="width: 100px;" th:if="${order.status == 0}">
                                     <h7>Pending</h7>
                                 </button>
@@ -86,16 +85,21 @@
                         </div>
                         <div class="col-lg-1">
                             <button id="viewOrderDetail" class="custom-btn btn-14" style="width: 100px;"
-                                th:onclick="'loadOrderDetail(\'' + ${order.orderId} + '\')'">
+                                th:onclick="'loadOrderDetail(\'' + ${order.id} + '\')'">
                                 <h7>View</h7>
                             </button>
                         </div>
 
                     </div>
-                    <div class="orderDetail" th:classappend="${order.orderId}"
+                    <div class="orderDetail" th:classappend="${order.id}"
                         style="padding: 70px;  width: 33%; top: 111px; position: fixed; right: 0px; display: none;">
                         <button class="close" onclick="closeOrderDetail(this)"> X </button>
-                        <h5> Order id: [(${order.orderId})]</h5><br>
+                        <h5> Order id: [(${order.id})]</h5><br>
+                        <!-- <h5>Receiver information</h5>
+                        <h6>Name: [(${order.receiverName})]</h6>
+                        <h6>Address: [(${order.receiverAddress})]</h6>
+                        <h6>Numberphone: [(${order.receiverNumberphone})]</h6>
+                        <br> -->
                         <div class="row mb-3" th:each=" item: ${order.orderDetails}">
                             <div class="col-lg-3">
                                 <img th:src="${item.product.getImages()}" style="width: 120px;">
@@ -134,18 +138,18 @@
             }
         } );
 
-        function loadOrderDetail ( orderId )
+        function loadOrderDetail ( id )
         {
             $( '.orderDetail' ).each( ( i, e ) =>
             {
 
-                if ( $( e ).is( ':visible' ) && !$( e ).hasClass( orderId ) )
+                if ( $( e ).is( ':visible' ) && !$( e ).hasClass( id ) )
                 {
                     $( e ).fadeOut();
                 }
             } );
 
-            $( '.orderDetail.' + orderId ).fadeToggle();
+            $( '.orderDetail.' + id ).fadeToggle();
         }
         function closeOrderDetail ( e )
         {
