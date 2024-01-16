@@ -13,9 +13,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Modifying
     @Transactional
-    // @Query(value = "ALTER TABLE orders AUTO_INCREMENT = 1001", nativeQuery =
+    @Query(value = "ALTER TABLE orders AUTO_INCREMENT = 1001", nativeQuery = true)
+    // @Query(value = "DBCC CHECKIDENT('dbo.orders', RESEED, 1001)", nativeQuery =
     // true)
-    @Query(value = "DBCC CHECKIDENT('dbo.orders', RESEED, 1001)", nativeQuery = true)
 
     void alterAutoIncrementValue();
 

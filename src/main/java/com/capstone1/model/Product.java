@@ -17,8 +17,8 @@ public class Product {
 	private long price;
 	private String images;
 
-	// @Column(columnDefinition = "LONGTEXT")
-	@Column(columnDefinition = "VARCHAR(MAX)")
+	@Column(columnDefinition = "LONGTEXT")
+	// @Column(columnDefinition = "VARCHAR(MAX)")
 	private String description;
 
 	private int status;

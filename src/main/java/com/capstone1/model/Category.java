@@ -12,8 +12,8 @@ public class Category {
     private long id;
     private String name;
 
-    // @Column(columnDefinition = "LONGTEXT")
-    @Column(columnDefinition = "VARCHAR(MAX)")
+    @Column(columnDefinition = "LONGTEXT")
+    // @Column(columnDefinition = "VARCHAR(MAX)")
     private String description;
 
     private int status;
