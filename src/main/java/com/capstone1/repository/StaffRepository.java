@@ -15,7 +15,10 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "ALTER TABLE staffs AUTO_INCREMENT = 1001", nativeQuery = true)
+    // @Query(value = "ALTER TABLE staffs AUTO_INCREMENT = 1001", nativeQuery =
+    // true)
+    @Query(value = "DBCC CHECKIDENT('dbo.staffs', RESEED, 1001)", nativeQuery = true)
+
     void alterAutoIncrementValue();
 
 }

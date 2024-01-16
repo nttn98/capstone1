@@ -13,7 +13,10 @@ public interface TokenUserRepository extends JpaRepository<TokenUser, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "ALTER TABLE token_users AUTO_INCREMENT = 1001", nativeQuery = true)
+    // @Query(value = "ALTER TABLE token_users AUTO_INCREMENT = 1001", nativeQuery =
+    // true)
+    @Query(value = "DBCC CHECKIDENT('dbo.token_users', RESEED, 1001)", nativeQuery = true)
+
     void alterAutoIncrementValue();
 
     TokenUser findByToken(String token);

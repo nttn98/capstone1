@@ -1,7 +1,5 @@
 package com.capstone1.model;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -19,7 +17,8 @@ public class Product {
 	private long price;
 	private String images;
 
-	@Column(columnDefinition = "LONGTEXT")
+	// @Column(columnDefinition = "LONGTEXT")
+	@Column(columnDefinition = "VARCHAR(MAX)")
 	private String description;
 
 	private int status;

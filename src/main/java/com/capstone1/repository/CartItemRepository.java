@@ -11,7 +11,10 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "ALTER TABLE cart_items AUTO_INCREMENT = 1001", nativeQuery = true)
+    // @Query(value = "ALTER TABLE cart_items AUTO_INCREMENT = 1001", nativeQuery =
+    // true)
+    @Query(value = "DBCC CHECKIDENT('dbo.cart_items', RESEED, 1001)", nativeQuery = true)
+
     void alterAutoIncrementValue();
 
     CartItem findByProductId(long productId);

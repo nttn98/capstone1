@@ -11,6 +11,9 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "ALTER TABLE categories AUTO_INCREMENT = 1001 ", nativeQuery = true)
+    // @Query(value = "ALTER TABLE categories AUTO_INCREMENT = 1001 ", nativeQuery =
+    // true)
+    @Query(value = "DBCC CHECKIDENT('dbo.categories', RESEED, 1001)", nativeQuery = true)
+
     void alterAutoIncrementValue();
 }
