@@ -1,5 +1,4 @@
-package com.capstone1.controller;
-
+package com.capstone1;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.templatemode.TemplateMode;
