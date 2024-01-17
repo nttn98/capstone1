@@ -75,7 +75,7 @@ public class HomeController {
 
         isUserLogin(model, session);
 
-        return "homePage.html";
+        return "homePage";
     }
 
     @GetMapping("/list-products")
