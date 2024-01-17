@@ -1,4 +1,4 @@
-package com.capstone1;
+package com.capstone1.controller;
 
 import java.io.IOException;
 
