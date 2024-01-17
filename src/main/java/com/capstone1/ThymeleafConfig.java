@@ -1,4 +1,5 @@
 package com.capstone1;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -9,7 +10,7 @@ public class ThymeleafConfig {
     @Bean
     public ClassLoaderTemplateResolver seconLoaderTemplateResolver() {
         ClassLoaderTemplateResolver seconLoaderTemplateResolver = new ClassLoaderTemplateResolver();
-        seconLoaderTemplateResolver.setPrefix("templates/");
+        seconLoaderTemplateResolver.setPrefix("/templates/");
         seconLoaderTemplateResolver.setSuffix(".html");
         seconLoaderTemplateResolver.setTemplateMode(TemplateMode.HTML);
         seconLoaderTemplateResolver.setCharacterEncoding("UTF-8");
