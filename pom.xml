@@ -79,17 +79,16 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.heroku.sdk</groupId>
+			<artifactId>heroku-deploy</artifactId>
+			<version>3.0.7</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
 		<plugins>
-			 
-			<plugin>
-				<groupid>com.heroku.sdk</groupid>
-				<artifactid>heroku-maven-plugin</artifactid>
-				<version>3.0.3</version>
-			</plugin>
-			 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
