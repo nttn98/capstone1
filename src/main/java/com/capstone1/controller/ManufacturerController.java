@@ -52,7 +52,7 @@ public class ManufacturerController {
     @PostMapping("/manufacturers/update-manufacturer/{id}")
     public String updateManufacturer(@PathVariable Long id, Model model,
             @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute("manufacturer") Manufacturer manufacturer, HttpSession session) {
+            @ModelAttribute Manufacturer manufacturer, HttpSession session) {
         // get Manufacturer exist
         Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
         Manufacturer checkManufacturer = manufacturerService.findByName(manufacturer.getName());
@@ -86,7 +86,7 @@ public class ManufacturerController {
 
     @PostMapping("/manufacturers/save-manufacturer")
     public String saveManufacturer(Model model, @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute("manufacturer") Manufacturer manufacturer, HttpSession session) {
+            @ModelAttribute Manufacturer manufacturer, HttpSession session) {
 
         Manufacturer checkManufacturer = manufacturerService.findByName(manufacturer.getName());
 
@@ -116,7 +116,7 @@ public class ManufacturerController {
 
     @GetMapping("/manufacturers/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model,
-            @ModelAttribute("manufacturer") Manufacturer manufacturer) {
+            @ModelAttribute Manufacturer manufacturer) {
 
         // get product exist
         Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);

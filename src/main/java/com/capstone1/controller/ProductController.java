@@ -79,7 +79,7 @@ public class ProductController {
 
 	@PostMapping("/products/update-product/{id}")
 	public String updateProduct(@PathVariable Long id, Model model, @RequestParam("productImg") MultipartFile file,
-			@ModelAttribute("product") Product product, HttpSession session) {
+			@ModelAttribute Product product, HttpSession session) {
 		// get product exist
 		Product existProduct = productService.getProductById(id);
 
@@ -112,7 +112,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/products/change-status/{id}")
-	public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("product") Product product) {
+	public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Product product) {
 
 		// get product exist
 		Product existProduct = productService.getProductById(id);
@@ -138,7 +138,7 @@ public class ProductController {
 	// create Product
 	@PostMapping("/products/save-product")
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
-			@ModelAttribute("product") Product product, @RequestParam("quantity") long quantity, HttpSession session) {
+			@ModelAttribute Product product, @RequestParam long quantity, HttpSession session) {
 
 		Product checkProduct = productService.findByName(product.getName());
 		if (checkProduct != null) {
@@ -192,7 +192,7 @@ public class ProductController {
 
 	/* Pagination */
 	@GetMapping("/page/{pageNo}")
-	public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model) {
+	public String findPaginated(@PathVariable int pageNo, Model model) {
 		int pageSize = 5;
 
 		Page<Product> page = productService.findPaginated(pageNo, pageSize);

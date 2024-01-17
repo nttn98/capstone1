@@ -55,7 +55,7 @@ public class StaffController {
     }
 
     @PostMapping("/staffs/update-staff")
-    public String updateStaff(@RequestParam long id, Model model, @ModelAttribute("staff") Staff staff,
+    public String updateStaff(@RequestParam long id, Model model, @ModelAttribute Staff staff,
             HttpSession session) {
 
         if (session == null) {
@@ -78,7 +78,7 @@ public class StaffController {
     }
 
     @GetMapping("/staffs/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Staff staff) {
         Staff existStaff = staffService.getStaffById(id);
 
         if (existStaff.getStatus() == 0) {
@@ -92,7 +92,7 @@ public class StaffController {
     }
 
     @GetMapping("/staffs/toChangePass/{id}")
-    public String changePass(@PathVariable Long id, Model model, @ModelAttribute("staff") Staff staff) {
+    public String changePass(@PathVariable Long id, Model model, @ModelAttribute Staff staff) {
         Staff existStaff = staffService.getStaffById(id);
         System.out.println("--------------------" + existStaff.getPassword());
         model.addAttribute("staff", existStaff);
@@ -100,7 +100,7 @@ public class StaffController {
     }
 
     @PostMapping("/staffs/do-change-pass")
-    public String changePassword(@RequestParam("id") Long id, Model model, @ModelAttribute("staff") Staff staff,
+    public String changePassword(@RequestParam Long id, Model model, @ModelAttribute Staff staff,
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
             HttpSession session) {
 
@@ -129,7 +129,7 @@ public class StaffController {
     }
 
     @PostMapping("/staffs/save-staff")
-    public String saveStaff(Model model, @ModelAttribute("staff") Staff staff, HttpSession session) {
+    public String saveStaff(Model model, @ModelAttribute Staff staff, HttpSession session) {
         staff.setPassword(encoding.toSHA1(staff.getPassword()));
         staffService.saveStaff(staff);
         System.out.println("Staff added successfully");

@@ -44,7 +44,7 @@ public class CategoryController {
     }
 
     @PostMapping("/categories/save-category")
-    public String saveCategory(Model model, @ModelAttribute("category") Category category, HttpSession session) {
+    public String saveCategory(Model model, @ModelAttribute Category category, HttpSession session) {
 
         Category checkCategory = categoryService.findByName(category.getName());
         if (checkCategory != null) {
@@ -60,7 +60,7 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("category") Category category) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Category category) {
 
         // get product exist
         Category existCategory = categoryService.getCategoryById(id);
@@ -84,7 +84,7 @@ public class CategoryController {
     }
 
     @PostMapping("/categories/update-category/{id}")
-    public String updateCategory(@PathVariable Long id, Model model, @ModelAttribute("category") Category category,
+    public String updateCategory(@PathVariable Long id, Model model, @ModelAttribute Category category,
             HttpSession session) {
         // get Category exist
         Category existCategory = categoryService.getCategoryById(id);

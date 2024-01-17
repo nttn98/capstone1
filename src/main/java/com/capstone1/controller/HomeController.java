@@ -93,7 +93,7 @@ public class HomeController {
     }
 
     @GetMapping("/products-by-category")
-    public String getProductsByCategory(Model model, @RequestParam("categoryName") String categoryName,
+    public String getProductsByCategory(Model model, @RequestParam String categoryName,
             HttpSession session) {
 
         isUserLogin(model, session);
@@ -112,7 +112,7 @@ public class HomeController {
     }
 
     @GetMapping("/products-by-manufacturer")
-    public String getProductsByManufacturer(Model model, @RequestParam("manufacturerName") String manufacturerName,
+    public String getProductsByManufacturer(Model model, @RequestParam String manufacturerName,
             HttpSession session) {
         isUserLogin(model, session);
         if (manufacturerName != null) {
@@ -159,8 +159,8 @@ public class HomeController {
     }
 
     @PostMapping("/login-admin")
-    public String getLogin(Model model, HttpSession session, @RequestParam("username") String username,
-            @RequestParam("password") String password) {
+    public String getLogin(Model model, HttpSession session, @RequestParam String username,
+            @RequestParam String password) {
 
         String passEncoding = encoding.toSHA1(password);
         Staff checkStaff = staffService.findByUsernameAndPassword(username, passEncoding);
@@ -244,7 +244,7 @@ public class HomeController {
     }
 
     @GetMapping("/orders/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("order") Order order,
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
             HttpSession session) {
         Order existOrder = orderService.getOrderById(id);
         if (existOrder.getStatus() == 0) {
@@ -271,7 +271,7 @@ public class HomeController {
 
     @PostMapping("/reset-password")
     public String resetPassword(Model model, @RequestParam("token") String tokenString,
-            @RequestParam("password") String password, HttpSession session) {
+            @RequestParam String password, HttpSession session) {
 
         System.out.println("----------------------" + password);
         TokenAdmin token = tokenAdminService.findByToken(tokenString);
@@ -297,7 +297,7 @@ public class HomeController {
     }
 
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam("email") String email, HttpServletRequest request, Model model) {
+    public String forgotPassword(@RequestParam String email, HttpServletRequest request, Model model) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
 
@@ -336,7 +336,7 @@ public class HomeController {
 
     @PostMapping("/users/reset-password")
     public String resetPasswordForUser(Model model, @RequestParam("token") String tokenString,
-            @RequestParam("password") String password, HttpSession httpSession) {
+            @RequestParam String password, HttpSession httpSession) {
 
         System.out.println("---------user-------------" + password);
         System.out.println("---------user-------------" + encoding.toSHA1(password));
@@ -363,7 +363,7 @@ public class HomeController {
     }
 
     @PostMapping("/users/forgot-password")
-    public String forgotPasswordForUser(@RequestParam("email") String email, HttpServletRequest request, Model model,
+    public String forgotPasswordForUser(@RequestParam String email, HttpServletRequest request, Model model,
             HttpSession session) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);

@@ -76,7 +76,7 @@ public class UserController {
     }
 
     @PostMapping("/users/update-user")
-    public String updateUser(Model model, @ModelAttribute("user") User user, @RequestParam("mode") String mode,
+    public String updateUser(Model model, @ModelAttribute User user, @RequestParam String mode,
             HttpSession session, @RequestParam("id") Long userId) {
         User existUser = userService.getUserById(userId);
 
@@ -99,7 +99,7 @@ public class UserController {
     }
 
     @GetMapping("/users/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute("user") User user) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute User user) {
         User existUser = userService.getUserById(id);
 
         if (existUser.getStatus() == 0) {
@@ -119,7 +119,7 @@ public class UserController {
     }
 
     @PostMapping("/users/save-user")
-    public String saveUser(Model model, @ModelAttribute("user") User user, @RequestParam("mode") String mode,
+    public String saveUser(Model model, @ModelAttribute User user, @RequestParam String mode,
             HttpSession session) {
 
         user.setPassword(encoding.toSHA1(user.getPassword()));
@@ -135,7 +135,7 @@ public class UserController {
 
     /* Change password */
     @GetMapping("/users/to-change-pass/{id}")
-    public String changePass(@PathVariable Long id, Model model, @ModelAttribute("user") User user) {
+    public String changePass(@PathVariable Long id, Model model, @ModelAttribute User user) {
         User existUser = userService.getUserById(id);
         System.out.println("--------------------" + existUser.getPassword());
         model.addAttribute("user", existUser);
@@ -143,9 +143,9 @@ public class UserController {
     }
 
     @PostMapping("users/do-change-pass")
-    public String changePasswod(@RequestParam Long id, Model model, @ModelAttribute("user") User user,
+    public String changePasswod(@RequestParam Long id, Model model, @ModelAttribute User user,
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
-            HttpSession session, @RequestParam("mode") String mode) {
+            HttpSession session, @RequestParam String mode) {
         User existUser = userService.getUserById(id);
         String oldUserPass = existUser.getPassword();
 
@@ -172,8 +172,8 @@ public class UserController {
 
     /* login user */
     @PostMapping("/login-user")
-    public String getLoginUser(Model model, @RequestParam("username") String username,
-            @RequestParam("password") String password, HttpSession session) {
+    public String getLoginUser(Model model, @RequestParam String username,
+            @RequestParam String password, HttpSession session) {
         // List<User> listUsers = userService.getAllUsers();
         String passEncoding = encoding.toSHA1(password);
         User user = userService.findByUsernameAndPassword(username, passEncoding);
@@ -209,7 +209,7 @@ public class UserController {
     /* order user */
     @GetMapping("/users/add-to-cart/{productId}")
     public String addToCart(Model model, @PathVariable long productId, HttpSession session,
-            @RequestParam(name = "quantity", defaultValue = "1") int quantity) {
+            @RequestParam(defaultValue = "1") int quantity) {
         Long userId = (Long) session.getAttribute("userId");
         Cart cart = (Cart) session.getAttribute("cart");
         Product temp = productService.getProductById(productId);
@@ -290,8 +290,8 @@ public class UserController {
     }
 
     @GetMapping("/users/add-order")
-    public String addOrder(Model model, HttpSession session, @RequestParam("name") String name,
-            @RequestParam("address") String address, @RequestParam("numberphone") long numberphone) {
+    public String addOrder(Model model, HttpSession session, @RequestParam String name,
+            @RequestParam String address, @RequestParam long numberphone) {
         Long userId = (Long) session.getAttribute("userId");
         User userLogin = userService.getUserById(userId);
         Cart cart = (Cart) session.getAttribute("cart");
