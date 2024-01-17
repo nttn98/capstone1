@@ -51,7 +51,7 @@ public class HomeController {
     @Autowired
     JavaMailSender mailSender;
 
-    @RequestMapping({ "/home-page", "/" })
+    @GetMapping({ "/home-page", "/" })
     public String getHome(Model model, HttpSession session) {
 
         int limit = 3;
