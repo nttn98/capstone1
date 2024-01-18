@@ -10,10 +10,9 @@ public class ThymeleafConfig {
     @Bean
     public ClassLoaderTemplateResolver seconLoaderTemplateResolver() {
         ClassLoaderTemplateResolver seconLoaderTemplateResolver = new ClassLoaderTemplateResolver();
-        seconLoaderTemplateResolver.setPrefix("/templates/");
         seconLoaderTemplateResolver.setSuffix(".html");
         seconLoaderTemplateResolver.setTemplateMode(TemplateMode.HTML);
-        seconLoaderTemplateResolver.setCharacterEncoding("UTF-8");
+        // seconLoaderTemplateResolver.setCharacterEncoding("UTF-8");
         seconLoaderTemplateResolver.setOrder(1);
         seconLoaderTemplateResolver.setCheckExistence(true);
         return seconLoaderTemplateResolver;
