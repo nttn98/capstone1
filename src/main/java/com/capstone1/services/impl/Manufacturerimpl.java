@@ -22,7 +22,7 @@ public class Manufacturerimpl implements ManufacturerService {
     @Override
 
     public Manufacturer saveManufacturer(Manufacturer manufacturer) {
-        manufacturerRepository.alterAutoIncrementValue();
+        // manufacturerRepository.alterAutoIncrementValue();
         return manufacturerRepository.save(manufacturer);
     }
 

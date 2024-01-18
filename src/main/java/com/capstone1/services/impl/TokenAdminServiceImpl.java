@@ -28,7 +28,7 @@ public class TokenAdminServiceImpl implements TokenAdminService {
 
     @Override
     public void save(TokenAdmin token) {
-        tokenAdminRepository.alterAutoIncrementValue();
+        // tokenAdminRepository.alterAutoIncrementValue();
         tokenAdminRepository.save(token);
     }
 

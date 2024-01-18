@@ -15,7 +15,7 @@ public class Cartimpl implements CartService {
 
     @Override
     public Cart saveCart(Cart cart) {
-        cartRepository.alterAutoIncrementValue();
+        // cartRepository.alterAutoIncrementValue();
         return cartRepository.save(cart);
     }
 

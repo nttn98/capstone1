@@ -9,12 +9,12 @@ import com.capstone1.model.Cart;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
 
-    @Modifying
-    @Transactional
-    @Query(value = "ALTER TABLE carts AUTO_INCREMENT = 1001", nativeQuery = true)
-    // @Query(value = "DBCC CHECKIDENT('dbo.carts', RESEED, 1001)", nativeQuery =
-    // true)
-    void alterAutoIncrementValue();
+    // @Modifying
+    // @Transactional
+    // @Query(value = "ALTER TABLE carts AUTO_INCREMENT = 1001", nativeQuery = true)
+    // // @Query(value = "DBCC CHECKIDENT('dbo.carts', RESEED, 1001)", nativeQuery =
+    // // true)
+    // void alterAutoIncrementValue();
 
     Cart findByUserId(long userId);
 

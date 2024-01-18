@@ -24,7 +24,7 @@ public class Staffimpl implements StaffService {
 
     @Override
     public Staff saveStaff(Staff staff) {
-        staffRepository.alterAutoIncrementValue();
+        // staffRepository.alterAutoIncrementValue();
         return staffRepository.save(staff);
     }
 

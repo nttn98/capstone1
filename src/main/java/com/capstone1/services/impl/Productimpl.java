@@ -23,7 +23,7 @@ public class Productimpl implements ProductService {
 
 	@Override
 	public Product saveProduct(Product product) {
-		productRepository.alterAutoIncrementValue();
+		// productRepository.alterAutoIncrementValue();
 		return productRepository.save(product);
 	}
 

@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 
 public interface TokenAdminRepository extends JpaRepository<TokenAdmin, Long> {
 
-    @Modifying
-    @Transactional
-    @Query(value = "ALTER TABLE token_admins AUTO_INCREMENT = 1001", nativeQuery = true)
-    // @Query(value = "DBCC CHECKIDENT('dbo.token_admins', RESEED, 1001)",
-    // nativeQuery = true)
+    // @Modifying
+    // @Transactional
+    // @Query(value = "ALTER TABLE token_admins AUTO_INCREMENT = 1001", nativeQuery = true)
+    // // @Query(value = "DBCC CHECKIDENT('dbo.token_admins', RESEED, 1001)",
+    // // nativeQuery = true)
 
-    void alterAutoIncrementValue();
+    // void alterAutoIncrementValue();
 
     TokenAdmin findByToken(String token);
 

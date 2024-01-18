@@ -13,12 +13,12 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
 
     Staff findByUsernameAndPassword(String username, String password);
 
-    @Modifying
-    @Transactional
-    @Query(value = "ALTER TABLE staffs AUTO_INCREMENT = 1001", nativeQuery = true)
-    // @Query(value = "DBCC CHECKIDENT('dbo.staffs', RESEED, 1001)", nativeQuery =
-    // true)
+    // @Modifying
+    // @Transactional
+    // @Query(value = "ALTER TABLE staffs AUTO_INCREMENT = 1001", nativeQuery = true)
+    // // @Query(value = "DBCC CHECKIDENT('dbo.staffs', RESEED, 1001)", nativeQuery =
+    // // true)
 
-    void alterAutoIncrementValue();
+    // void alterAutoIncrementValue();
 
 }

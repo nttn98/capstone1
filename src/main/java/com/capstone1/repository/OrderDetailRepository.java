@@ -10,12 +10,12 @@ import java.util.List;
 
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
 
-    @Modifying
-    @Transactional
-    @Query(value = "ALTER TABLE order_details AUTO_INCREMENT = 1001 ", nativeQuery = true)
-    // @Query(value = "DBCC CHECKIDENT('dbo.order_details', RESEED, 1001)",
-    // nativeQuery = true)
-    void alterAutoIncrementValue();
+    // @Modifying
+    // @Transactional
+    // @Query(value = "ALTER TABLE order_details AUTO_INCREMENT = 1001 ", nativeQuery = true)
+    // // @Query(value = "DBCC CHECKIDENT('dbo.order_details', RESEED, 1001)",
+    // // nativeQuery = true)
+    // void alterAutoIncrementValue();
 
     List<OrderDetail> findByOrderId(long orderId);
 }
