@@ -30,7 +30,7 @@ public class Userimpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-        // userRepository.alterAutoIncrementValue();
+        userRepository.alterAutoIncrementValue();
         return userRepository.save(user);
     }
 

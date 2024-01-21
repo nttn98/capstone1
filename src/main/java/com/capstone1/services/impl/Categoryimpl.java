@@ -23,7 +23,7 @@ public class Categoryimpl implements CategoryService {
 
     @Override
     public Category saveCategory(Category category) {
-        // categoryRepository.alterAutoIncrementValue();
+        categoryRepository.alterAutoIncrementValue();
         return categoryRepository.save(category);
     }
 

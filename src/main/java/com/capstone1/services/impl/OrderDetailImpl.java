@@ -17,7 +17,7 @@ public class OrderDetailImpl implements OrderDetailService {
 
     @Override
     public OrderDetail saveOrderDetail(OrderDetail orderDetail) {
-        // orderDetailRepository.alterAutoIncrementValue();
+        orderDetailRepository.alterAutoIncrementValue();
         return orderDetailRepository.save(orderDetail);
     }
 

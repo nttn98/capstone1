@@ -15,8 +15,7 @@ public class Manufacturer {
     private String images;
 
     @Column(columnDefinition = "LONGTEXT")
-    // @Column(columnDefinition = "VARCHAR(MAX)")
-    private String description;
+     private String description;
 
     private int status;
 

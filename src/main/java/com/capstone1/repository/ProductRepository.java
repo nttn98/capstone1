@@ -14,11 +14,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByManufacturerName(String name);
 
-    // @Modifying
-    // @Transactional
-    // @Query(value = "ALTER TABLE products AUTO_INCREMENT = 1001", nativeQuery = true)
-    // // @Query(value = "DBCC CHECKIDENT('dbo.products', RESEED, 1001)", nativeQuery =
-    // // true)
-
-    // void alterAutoIncrementValue();
+    @Modifying
+    @Transactional
+    @Query(value = "ALTER TABLE products AUTO_INCREMENT = 1001", nativeQuery = true)
+    void alterAutoIncrementValue();
 }

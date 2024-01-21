@@ -13,7 +13,6 @@ public class Category {
     private String name;
 
     @Column(columnDefinition = "LONGTEXT")
-    // @Column(columnDefinition = "VARCHAR(MAX)")
     private String description;
 
     private int status;

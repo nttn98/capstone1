@@ -28,7 +28,7 @@ public class TokenUserServiceImpl implements TokenUserService {
 
     @Override
     public void save(TokenUser token) {
-        // tokenUserRepository.alterAutoIncrementValue();
+        tokenUserRepository.alterAutoIncrementValue();
         tokenUserRepository.save(token);
     }
 
