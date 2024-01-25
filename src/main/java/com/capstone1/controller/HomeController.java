@@ -229,9 +229,10 @@ public class HomeController {
 
         isLogin(model, session);
         List<Order> listOrders = orderService.getAllOrders();
-        model.addAttribute("orders", listOrders);
+        if (listOrders.size() != 0) {
+            model.addAttribute("orders", listOrders);
+        }
         model.addAttribute("mode", "staff");
-        listOrders.get(0).getReceiverName();
         return "admin/orders";
     }
 

@@ -3,6 +3,7 @@
 
     <head th:replace="~{homePage :: head}"></head>
     <link rel="styleSheet" href="/css/listProducts.css">
+    <link rel="stylesheet" href="/css/theme-custom.css" />
 
     <title>List products</title>
 
@@ -10,9 +11,31 @@
 
         <div th:replace="~{homePage :: header_section}"></div>
         <div>
-            <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Shop</h2>
+            <h2 style="text-align: center; margin-top: 20px; margin-bottom: -25px;">Shop</h2>
         </div>
-
+        <div class="breadcrumb-wrapper">
+            <div class="breadcrumb-area breadcrumbs overlay-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="breadcrumb-content text-center">
+                                <nav class role="navigation" aria-label="breadcrumbs">
+                                    <ul class="breadcrumb-list">
+                                        <li>
+                                            <a href="/" title="Back to the home page">Home</a>
+                                        </li>
+                                        <li>
+                                            <span>Products</span>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- BREADCRUMBS SETCTION END -->
         <div class="container">
             <div class="row">
                 <div class="col-lg-2">
