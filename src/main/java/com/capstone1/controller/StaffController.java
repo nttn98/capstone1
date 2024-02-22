@@ -3,6 +3,8 @@ package com.capstone1.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 
@@ -26,11 +28,12 @@ public class StaffController {
     HomeController homeController;
 
     @GetMapping("/staffs")
-    public String listStaffs(Model model, HttpSession session) {
+    public String listStaffs(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         homeController.isLogin(model, session);
-        List<Staff> listStaffs = staffService.getAllStaffs();
+        Page<Staff> listStaffs = staffService.getAllStaffs(PageRequest.of(page, size));
 
-        if (listStaffs.size() == 0) {
+        if (listStaffs.isEmpty()) {
             Staff staff = new Staff();
             model.addAttribute("staff", staff);
             return "staffs/create_staff";
@@ -56,7 +59,8 @@ public class StaffController {
 
     @PostMapping("/staffs/update-staff")
     public String updateStaff(@RequestParam long id, Model model, @ModelAttribute Staff staff,
-            HttpSession session) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         if (session == null) {
             return "loginAdmin_Staff";
@@ -74,7 +78,7 @@ public class StaffController {
         System.out.println("Staff edited successfully");
         model.addAttribute("alert", "edit");
 
-        return listStaffs(model, session);
+        return listStaffs(model, session, page, size);
     }
 
     @GetMapping("/staffs/change-status/{id}")
@@ -102,7 +106,8 @@ public class StaffController {
     @PostMapping("/staffs/do-change-pass")
     public String changePassword(@RequestParam Long id, Model model, @ModelAttribute Staff staff,
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
-            HttpSession session) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         Staff existStaff = staffService.getStaffById(id);
         String oldStaffPass = existStaff.getPassword();
@@ -111,7 +116,7 @@ public class StaffController {
 
         if (oldStaffPass.equals(oldPassword)) {
             existStaff.setPassword(newPass);
-            saveStaff(model, existStaff, session);
+            saveStaff(model, existStaff, session, page, size);
             System.out.println("---------------------Success " + existStaff.getPassword());
             model.addAttribute("alert", "success");
         } else {
@@ -119,7 +124,7 @@ public class StaffController {
             model.addAttribute("alert", "error");
         }
         homeController.isLogin(model, session);
-        return homeController.getDashBoardPage(model, session);
+        return homeController.getDashBoardPage(model, session, page, size);
     }
 
     @GetMapping("/staffs/delete-staff/{id}")
@@ -129,13 +134,15 @@ public class StaffController {
     }
 
     @PostMapping("/staffs/save-staff")
-    public String saveStaff(Model model, @ModelAttribute Staff staff, HttpSession session) {
+    public String saveStaff(Model model, @ModelAttribute Staff staff, HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         staff.setPassword(encoding.toSHA1(staff.getPassword()));
         staffService.saveStaff(staff);
         System.out.println("Staff added successfully");
         model.addAttribute("alert", "successRegister");
 
-        return listStaffs(model, session);
+        return listStaffs(model, session, page, size);
     }
 
 }

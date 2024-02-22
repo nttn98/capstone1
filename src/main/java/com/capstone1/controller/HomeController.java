@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,92 +55,146 @@ public class HomeController {
     JavaMailSender mailSender;
 
     @GetMapping({ "/home-page", "/" })
-    public String getHome(Model model, HttpSession session) {
+    public String getHome(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         int limit = 3;
-        List<Product> listProducts = productService.getAllProducts();
-        listProducts = listProducts.subList(0, Math.min(limit, listProducts.size()));
+        // List<Product> listProducts = productService.getAllProducts();
+        // listProducts = listProducts.subList(0, Math.min(limit, listProducts.size()));
 
-        List<Category> listCategories = categoryService.getAllCategories();
-        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+        // List<Category> listCategories = categoryService.getAllCategories();
+        // List<Manufacturer> listManufacturers =
+        // manufacturerService.getAllManufacturers();
 
-        List<Product> listProductsByNVIDIA = productService.findByManufacturerName("nvidia");
-        listProductsByNVIDIA = listProductsByNVIDIA.subList(0, Math.min(limit, listProductsByNVIDIA.size()));
+        Page<Product> productsByNVIDIA = productService.findByManufacturerName("nvidia",
+                PageRequest.of(page, limit));
+        // listProductsByNVIDIA = listProductsByNVIDIA.subList(0, Math.min(limit,
+        // listProductsByNVIDIA.toList().size()));
 
-        List<Product> listProductsByAMD = productService.findByManufacturerName("amd");
-        listProductsByAMD = listProductsByAMD.subList(0, Math.min(limit, listProductsByAMD.size()));
+        Page<Product> productsByAMD = productService.findByManufacturerName("amd",
+                PageRequest.of(page, limit));
+        // listProductsByAMD = listProductsByAMD.subList(0, Math.min(limit,
+        // listProductsByAMD.size()));
 
-        model.addAttribute("products", listProducts);
-        model.addAttribute("productsByAMD", listProductsByAMD);
-        model.addAttribute("productsByNVIDIA", listProductsByNVIDIA);
-        model.addAttribute("categories", listCategories);
-        model.addAttribute("manufacturers", listManufacturers);
+        // model.addAttribute("products", listProducts);
+        model.addAttribute("productsByAMD", productsByAMD);
+        model.addAttribute("productsByNVIDIA", productsByNVIDIA);
+        // model.addAttribute("categories", listCategories);
+        // model.addAttribute("manufacturers", listManufacturers);
 
         isUserLogin(model, session);
 
         return "homePage";
     }
 
+    @GetMapping("/paging")
+    public String paginated(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Page<Product> products = null;
+        isUserLogin(model, session);
+
+        String condition = (String) session.getAttribute("condition");
+        System.out.println(condition);
+
+        if (condition.equals("all")) {
+            products = productService.getAllProducts(PageRequest.of(page, size));
+        } else if (condition.equals("category")) {
+
+            String categoryName = (String) session.getAttribute("categoryName");
+            products = productService.findByCategoryName(categoryName, PageRequest.of(page, size));
+
+        } else if (condition.equals("manufacturer")) {
+            String manufacturerName = (String) session.getAttribute("manufacturerName");
+            products = productService.findByManufacturerName(manufacturerName, PageRequest.of(page, size));
+        }
+
+        model.addAttribute("products", products);
+
+        List<Category> categories = categoryService.getAll();
+        List<Manufacturer> manufacturers = manufacturerService.getAll();
+
+        // model.addAttribute("products", products);
+        model.addAttribute("categories", categories);
+        model.addAttribute("manufacturers", manufacturers);
+
+        return "listProducts";
+    }
+
     @GetMapping("/list-products")
-    public String getProductsForUser(Model model, HttpSession session) {
-        List<Product> listProducts = productService.getAllProducts();
-        List<Category> listCategories = categoryService.getAllCategories();
-        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+    public String getProductsForUser(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, size));
+        List<Category> listCategories = categoryService.getAll();
+        List<Manufacturer> listManufacturers = manufacturerService.getAll();
 
         model.addAttribute("products", listProducts);
         model.addAttribute("categories", listCategories);
         model.addAttribute("manufacturers", listManufacturers);
         isUserLogin(model, session);
+        String condition = "all";
+        session.setAttribute("condition", condition);
 
-        return "listProducts";
+        return paginated(model, session, page, size);
     }
 
     @GetMapping("/products-by-category")
     public String getProductsByCategory(Model model, @RequestParam String categoryName,
-            HttpSession session) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
 
         isUserLogin(model, session);
         if (categoryName != null) {
-            List<Product> listProducts = productService.findByCategoryName(categoryName);
-            model.addAttribute("products", listProducts);
+            Page<Product> products = productService.findByCategoryName(categoryName, PageRequest.of(page, size));
+            model.addAttribute("products", products);
         }
 
-        List<Category> listCategories = categoryService.getAllCategories();
-        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+        List<Category> categories = categoryService.getAll();
+        List<Manufacturer> manufacturers = manufacturerService.getAll();
 
-        model.addAttribute("categories", listCategories);
-        model.addAttribute("manufacturers", listManufacturers);
+        model.addAttribute("categories", categories);
+        model.addAttribute("manufacturers", manufacturers);
 
-        return "listProducts";
+        String condition = "category";
+        session.setAttribute("categoryName", categoryName);
+        session.setAttribute("condition", condition);
+
+        return paginated(model, session, page, size);
     }
 
     @GetMapping("/products-by-manufacturer")
     public String getProductsByManufacturer(Model model, @RequestParam String manufacturerName,
-            HttpSession session) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         isUserLogin(model, session);
         if (manufacturerName != null) {
-            List<Product> listProducts = productService.findByManufacturerName(manufacturerName);
-            model.addAttribute("products", listProducts);
+            Page<Product> products = productService.findByManufacturerName(manufacturerName,
+                    PageRequest.of(page, size));
+            model.addAttribute("products", products);
         }
 
-        List<Category> listCategories = categoryService.getAllCategories();
-        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+        List<Category> categories = categoryService.getAll();
+        List<Manufacturer> manufacturers = manufacturerService.getAll();
 
-        model.addAttribute("categories", listCategories);
-        model.addAttribute("manufacturers", listManufacturers);
+        model.addAttribute("categories", categories);
+        model.addAttribute("manufacturers", manufacturers);
 
-        return "listProducts";
+        String condition = "manufacturer";
+        session.setAttribute("manufacturerName", manufacturerName);
+        session.setAttribute("condition", condition);
+
+        return paginated(model, session, page, size);
     }
 
     @GetMapping("/dashBoard")
-    public String getDashBoardPage(Model model, HttpSession session) {
+    public String getDashBoardPage(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         isLogin(model, session);
 
-        List<Product> listProducts = productService.getAllProducts();
-        List<Category> listCategories = categoryService.getAllCategories();
-        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
-        List<User> listUsers = userService.getAllUsers();
-        List<Staff> listStaffs = staffService.getAllStaffs();
+        Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, 5));
+        Page<Category> listCategories = categoryService.getAllCategories(PageRequest.of(page, size));
+        Page<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers(PageRequest.of(page, size));
+        Page<User> listUsers = userService.getAllUsers(PageRequest.of(page, size));
+        Page<Staff> listStaffs = staffService.getAllStaffs(PageRequest.of(page, size));
 
         model.addAttribute("products", listProducts);
         model.addAttribute("categories", listCategories);
@@ -160,7 +217,8 @@ public class HomeController {
 
     @PostMapping("/login-admin")
     public String getLogin(Model model, HttpSession session, @RequestParam String username,
-            @RequestParam String password) {
+            @RequestParam String password, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         String passEncoding = encoding.toSHA1(password);
         Staff checkStaff = staffService.findByUsernameAndPassword(username, passEncoding);
@@ -171,13 +229,12 @@ public class HomeController {
             session.setAttribute("admin", admin);
             model.addAttribute("alert", "success");
 
-            return getDashBoardPage(model, session);
-
+            return getDashBoardPage(model, session, page, size);
         } else if (checkStaff != null && checkStaff.getStatus() == 0) {
             // model.addAttribute("mode", mode);
             session.setAttribute("staff", checkStaff);
             model.addAttribute("alert", "success");
-            return getDashBoardPage(model, session);
+            return getDashBoardPage(model, session, page, size);
         } else {
             model.addAttribute("alert", "error");
             return getLoginPage(model);
@@ -337,7 +394,8 @@ public class HomeController {
 
     @PostMapping("/users/reset-password")
     public String resetPasswordForUser(Model model, @RequestParam("token") String tokenString,
-            @RequestParam String password, HttpSession httpSession) {
+            @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         System.out.println("---------user-------------" + password);
         System.out.println("---------user-------------" + encoding.toSHA1(password));
@@ -346,7 +404,7 @@ public class HomeController {
         if (token == null) {
             model.addAttribute("flag", false);
             model.addAttribute("message", "Your token link is invalid!");
-            return getHome(model, httpSession);
+            return getHome(model, session, page, size);
         }
         User user = userService.getUserById(token.getUserId());
 
@@ -358,14 +416,15 @@ public class HomeController {
         tokenUserService.deleteByUserId(user.getId());
         userService.saveUser(user);
 
-        httpSession.removeAttribute("user");
+        session.removeAttribute("user");
 
-        return getHome(model, httpSession);
+        return getHome(model, session, page, size);
     }
 
     @PostMapping("/users/forgot-password")
     public String forgotPasswordForUser(@RequestParam String email, HttpServletRequest request, Model model,
-            HttpSession session) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
 
@@ -373,7 +432,7 @@ public class HomeController {
 
         if (existuser == null) {
             model.addAttribute("alert", "sendMailfail");
-            return getHome(model, session);
+            return getHome(model, session, page, size);
         }
 
         LocalDateTime now = LocalDateTime.now();
@@ -389,7 +448,7 @@ public class HomeController {
         model.addAttribute("user", existuser);
         model.addAttribute("alert", "sendMailsuccess");
 
-        return getHome(model, session); // user
+        return getHome(model, session, page, size); // user
 
     }
 
@@ -400,7 +459,7 @@ public class HomeController {
 
         try {
             helper.setTo(recipientEmail);
-            helper.setFrom("contact@shopme.com", "NAD Support");
+            helper.setFrom("contact@shopme.com", "NAP Support");
 
             String subject = "Here's the link to reset your password";
             String content = "<p>Hello,</p>"

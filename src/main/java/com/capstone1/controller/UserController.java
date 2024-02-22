@@ -3,7 +3,10 @@ package com.capstone1.controller;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
@@ -45,12 +48,13 @@ public class UserController {
     private Encoding encoding;
 
     @GetMapping("/users")
-    public String listUsers(Model model, HttpSession session) {
+    public String listUsers(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         homeController.isLogin(model, session);
-        List<User> listUsers = userService.getAllUsers();
+        Page<User> listUsers = userService.getAllUsers(PageRequest.of(page, size));
 
-        if (listUsers.size() == 0) {
+        if (listUsers.isEmpty()) {
             User user = new User();
             model.addAttribute("user", user);
             return "users/create_user";
@@ -77,7 +81,8 @@ public class UserController {
 
     @PostMapping("/users/update-user")
     public String updateUser(Model model, @ModelAttribute User user, @RequestParam String mode,
-            HttpSession session, @RequestParam("id") Long userId) {
+            HttpSession session, @RequestParam("id") Long userId, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(userId);
 
         existUser.setFullname(user.getFullname());
@@ -92,9 +97,9 @@ public class UserController {
 
         if (mode.equals("user")) {
             session.setAttribute("user", existUser);
-            return homeController.getHome(model, session);
+            return homeController.getHome(model, session, page, size);
         } else {
-            return listUsers(model, session);
+            return listUsers(model, session, page, size);
         }
     }
 
@@ -120,16 +125,17 @@ public class UserController {
 
     @PostMapping("/users/save-user")
     public String saveUser(Model model, @ModelAttribute User user, @RequestParam String mode,
-            HttpSession session) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         user.setPassword(encoding.toSHA1(user.getPassword()));
         userService.saveUser(user);
         System.out.println("User added successfully");
         model.addAttribute("alert", "successRegister");
         if (mode.equals("user")) {
-            return homeController.getHome(model, session);
+            return homeController.getHome(model, session, page, size);
         } else {
-            return listUsers(model, session);
+            return listUsers(model, session, page, size);
         }
     }
 
@@ -145,7 +151,8 @@ public class UserController {
     @PostMapping("users/do-change-pass")
     public String changePasswod(@RequestParam Long id, Model model, @ModelAttribute User user,
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
-            HttpSession session, @RequestParam String mode) {
+            HttpSession session, @RequestParam String mode, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(id);
         String oldUserPass = existUser.getPassword();
 
@@ -153,7 +160,7 @@ public class UserController {
 
         if (oldUserPass.equals(oldPassword)) {
             existUser.setPassword(newPass);
-            saveUser(model, existUser, mode, session);
+            saveUser(model, existUser, mode, session, page, size);
             System.out.println("---------------------Success " + existUser.getPassword());
             model.addAttribute("alert", "changePass");
 
@@ -163,7 +170,7 @@ public class UserController {
         }
 
         if (mode.equals("user")) {
-            return homeController.getHome(model, session);
+            return homeController.getHome(model, session, page, size);
         } else {
             return "redirect:/users";
         }
@@ -173,7 +180,8 @@ public class UserController {
     /* login user */
     @PostMapping("/login-user")
     public String getLoginUser(Model model, @RequestParam String username,
-            @RequestParam String password, HttpSession session) {
+            @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         // List<User> listUsers = userService.getAllUsers();
         String passEncoding = encoding.toSHA1(password);
         User user = userService.findByUsernameAndPassword(username, passEncoding);
@@ -185,11 +193,11 @@ public class UserController {
 
             Cart cart = cartService.findByUserId(user.getId());
             session.setAttribute("cart", cart);
-            return homeController.getHome(model, session);
+            return homeController.getHome(model, session, page, size);
         }
 
         model.addAttribute("alert", "error");
-        return homeController.getHome(model, session);
+        return homeController.getHome(model, session, page, size);
     }
 
     @GetMapping("/users/logout")
@@ -209,7 +217,9 @@ public class UserController {
     /* order user */
     @GetMapping("/users/add-to-cart/{productId}")
     public String addToCart(Model model, @PathVariable long productId, HttpSession session,
-            @RequestParam(defaultValue = "1") int quantity) {
+            @RequestParam(defaultValue = "1") int quantity, @RequestParam("mode") String mode,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         Long userId = (Long) session.getAttribute("userId");
         Cart cart = (Cart) session.getAttribute("cart");
         Product temp = productService.getProductById(productId);
@@ -220,9 +230,13 @@ public class UserController {
             User user = userService.getUserById(userId);
             addToCartWithUser(session, quantity, cart, temp, user);
         }
-
-        return "redirect:/home-page";
-
+        if (mode.equals("inList")) {
+            return homeController.paginated(model, session, page, size);
+        } else if (mode.equals("inHome")) {
+            return "redirect:/home-page";
+        } else {
+            return "redirect:/home-page";
+        }
     }
 
     private void addToCartWithUser(HttpSession session, int quantity, Cart cart, Product product, User user) {

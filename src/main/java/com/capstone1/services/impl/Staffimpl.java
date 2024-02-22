@@ -1,6 +1,9 @@
 package com.capstone1.services.impl;
 
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.capstone1.model.Staff;
@@ -18,8 +21,8 @@ public class Staffimpl implements StaffService {
     }
 
     @Override
-    public List<Staff> getAllStaffs() {
-        return staffRepository.findAll();
+    public Page<Staff> getAllStaffs(Pageable p) {
+        return staffRepository.findAll(p);
     }
 
     @Override

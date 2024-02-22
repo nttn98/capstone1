@@ -82,13 +82,31 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
-                                    <a th:href="@{/users/add-to-cart/{producId}(producId=${item.id})}">
+                                    <!-- <a th:href="@{/users/add-to-cart/{producId}(producId=${item.id},mode=${user})}"> -->
+                                    <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}">
                                         <button class="button-89" role="button"
-                                            style="margin-top: 60px; margin-left: 90px;">Add to cart</button>
+                                            style="margin-top: 60px; margin-left: 90px;">Add to
+                                            cart</button>
                                     </a>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div style="margin-left: 520px;" th:if="${products.getNumberOfElements() != 0}">
+                    <div class="dataTables_paginate paging_simple_numbers" th:each=" item: ${products.getTotalPages()}">
+                        <ul class="pagination">
+                            <li
+                                th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
+                                <a class="page-link" th:href="@{'/paging?page=' + ${products.number - 1}}">Previous</a>
+                            </li>
+                            <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
+                                <a th:href="@{'/paging?page=' + ${page}}" th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})" th:text="${page + 1}"></a>
+                            </li>
+                            <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
+                                <a class="page-link" th:href="@{'/paging?page=' + ${products.number + 1}}">Next</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

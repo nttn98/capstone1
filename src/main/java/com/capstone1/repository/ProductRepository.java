@@ -1,5 +1,7 @@
 package com.capstone1.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,9 +12,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Product findByName(String name);
 
-    List<Product> findByCategoryName(String name);
+    Page<Product> findByCategoryName(String name, Pageable p);
 
-    List<Product> findByManufacturerName(String name);
+    Page<Product> findByManufacturerName(String name, Pageable p);
 
     @Modifying
     @Transactional

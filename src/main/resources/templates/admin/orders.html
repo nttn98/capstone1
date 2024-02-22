@@ -75,6 +75,10 @@
                         </div>
                         <div class="col-lg-1">
                             <a th:href="@{/orders/change-status/{id}(id=${order.id})}">
+                                <i class="fas fa-shipping-fast"></i>
+                                <i class="fas fa-check"></i>
+                                <i class="fas fa-times"></i>
+                                <i class="fas fa-box"></i>
                                 <button class="custom-btn btn-5" style="width: 100px;" th:if="${order.status == 0}">
                                     <h7>Pending</h7>
                                 </button>

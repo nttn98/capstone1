@@ -34,3 +34,8 @@
     background: var(--color);
     color: #fff;
 }
+
+.current-page {
+    background-color: lightskyblue !important;
+    pointer-events: none;
+}

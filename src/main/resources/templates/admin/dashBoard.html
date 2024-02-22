@@ -29,7 +29,7 @@
 		<link rel="stylesheet" href="/css/drop.css">
 		<link rel="stylesheet" href="/css/products.css" />
 		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
-		
+
 
 		<title>Admin page</title>
 
@@ -37,7 +37,6 @@
 	</head>
 
 	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
-
 		<!-- BEGIN: Header-->
 		<nav class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
 			<div class="navbar-wrapper">
@@ -195,7 +194,6 @@
 		<!-- END: Main Menu-->
 
 		<!-- BEGIN: Content-->
-
 		<div class="app-content content">
 			<div class="content-wrapper">
 				<div class="content-header row">
@@ -245,27 +243,27 @@
 						<div class="col-lg-6 col-md-5">
 							<div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
 								<p>Showing
-									1 to 10 of [(${products.size()})] entries</p>
+									1 to 5 entries</p>
 							</div>
 						</div>
 						<div class="col-lg-6 col-md-7">
-							<div class="dataTables_paginate paging_simple_numbers" id="productTable_paginate">
+							<div class="dataTables_paginate paging_simple_numbers"
+								th:each=" item: ${products.getTotalPages()}">
 								<ul class="pagination">
-									<li class="paginate_button page-item previous disabled" id="productTable_previous">
-										<a href="#" aria-controls="productTable" data-dt-idx="0" tabindex="0"
-											class="page-link">Previous</a>
+									<li
+										th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
+										<a class="page-link"
+											th:href="@{'/products?page=' + ${products.number - 1}}">Previous</a>
 									</li>
-									<li class="paginate_button page-item active">
-										<a href="#" aria-controls="productTable" data-dt-idx="1" tabindex="0"
-											class="page-link">1</a>
-									</li>
-									<li class="paginate_button page-item next" id="productTable_next">
-										<a href="#" aria-controls="productTable" data-dt-idx="7" tabindex="0"
-											class="page-link">Next</a>
-									</li>
-								</ul>
-							</div>
-						</div>
+									<li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
+                                        <a th:href="@{'/products?page=' + ${page}}" th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})" th:text="${page + 1}"></a>
+                                    </li>
+                                    <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
+                                        <a class="page-link" th:href="@{'/products?page=' + ${products.number + 1}}">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</div>

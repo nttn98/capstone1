@@ -1,6 +1,8 @@
 package com.capstone1.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.*;
 import java.util.List;
 
@@ -15,8 +17,8 @@ public class Manufacturerimpl implements ManufacturerService {
     ManufacturerRepository manufacturerRepository;
 
     @Override
-    public List<Manufacturer> getAllManufacturers() {
-        return manufacturerRepository.findAll();
+    public Page<Manufacturer> getAllManufacturers(Pageable p) {
+        return manufacturerRepository.findAll(p);
     }
 
     @Override
@@ -49,6 +51,11 @@ public class Manufacturerimpl implements ManufacturerService {
     @Override
     public Manufacturer findByName(String name) {
         return manufacturerRepository.findByName(name);
+    }
+
+    @Override
+    public List<Manufacturer> getAll() {
+        return manufacturerRepository.findAll();
     }
 
 }

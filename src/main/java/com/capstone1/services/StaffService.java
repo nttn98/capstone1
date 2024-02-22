@@ -2,11 +2,14 @@ package com.capstone1.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.capstone1.model.Staff;
 
 public interface StaffService {
 
-    List<Staff> getAllStaffs();
+    Page<Staff> getAllStaffs(Pageable p);
 
     Staff saveStaff(Staff staff);
 

@@ -8,7 +8,7 @@ import com.capstone1.model.Product;
 
 public interface ProductService {
 
-	List<Product> getAllProducts();
+	Page<Product> getAllProducts(Pageable p);
 
 	Product saveProduct(Product product);
 
@@ -22,9 +22,8 @@ public interface ProductService {
 
 	Product findByName(String name);
 
-	List<Product> findByCategoryName(String name);
+	Page<Product> findByCategoryName(String name, Pageable p);
 
-	List<Product> findByManufacturerName(String name);
+	Page<Product> findByManufacturerName(String name, Pageable p);
 
-	Page<Product> findPaginated(int pageNo, int pageSize);
 }

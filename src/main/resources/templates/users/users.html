@@ -42,70 +42,70 @@
 				<div class=" content-header row">
 					<h4>List Users</h4>
 				</div>
-				<br>
-				<div class="row">
-					<div class="col-lg-2">
-						<h5>User Full-name</h5>
-					</div>
-					<div class="col-lg-1">
-						<h5>Username</h5>
-					</div>
-					<div class="col-lg-2">
-						<h5>Email</h5>
-					</div>
-					<div class="col-lg-1">
-						<h5>Phone</h5>
-					</div>
-					<div class="col-lg-1">
-						<h5>DoB</h5>
-					</div>
-					<div class="col-lg-2">
-						<h5>Address</h5>
-					</div>
-					<div class="col-lg-2">
-						<h5>Action</h5>
-					</div>
-				</div>
-				<br>
-
-				<div class="content-body" th:each=" user: ${users}">
-					<div class="row grouped-multiple-statistics-card">
-						<div class="col-lg-2">
-							<p th:text="${user.fullname}"></p>
+				<div class="content-body">
+					<table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>User Full-name</th>
+								<th>Username</th>
+								<th>Email</th>
+								<th>Phone</th>
+								<th>DoB</th>
+								<th>Address</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody th:each="user, iterStat : ${users}" th:if="${iterStat.index < 10}">
+							<tr>
+								<td th:text="${user.id}"></td>
+								<td th:text="${user.fullname}"></td>
+								<td th:text="${user.username}"></td>
+								<td th:text="${user.email}"></td>
+								<td th:text="${user.numberphone}"></td>
+								<td th:text="${user.dob}"></td>
+								<td th:text="${user.Address}"></td>
+								<td>
+									<a th:href="@{/users/edit/{id}(id=${user.id})}" th:if="${user.status == 0}"
+										style="text-decoration: none;">
+										<button class="custom-btn btn-14 mb-2">
+											<h7>Edit</h7>
+										</button>
+									</a>
+									<br>
+									<a th:href="@{/users/change-status/{id}(id=${user.id})}">
+										<button class="custom-btn btn-5" th:if="${user.status == 0}">Disable</button>
+										<button class="custom-btn btn-6" th:if="${user.status == 1}">Enable</button>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="row">
+						<div class="col-lg-6 col-md-5">
+							<div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
+								<p>Showing 1 to 10 entries</p>
+							</div>
 						</div>
-						<div class="col-lg-1">
-							<p th:text="${user.username}"></p>
-						</div>
-						<div class="col-lg-2">
-							<p th:text="${user.email}"></p>
-						</div>
-						<div class="col-lg-1">
-							<p th:text="${user.numberphone}"></p>
-						</div>
-						<div class="col-lg-1">
-							<p th:text="${user.dob}"></p>
-						</div>
-						<div class="col-lg-2">
-							<p th:text="${user.Address}"></p>
-						</div>
-						<div class="col-lg-2">
-							<a th:href="@{/users/edit/{id}(id=${user.Id})}" th:if="${user.Status == 0}"
-								style="text-decoration: none;">
-								<button class="custom-btn btn-14" style="width: 100px;" th:if="${session.staff==null}">
-									<h7>Edit</h7>
-								</button>
-							</a>
-							<a th:href="@{/users/change-status/{id}(id=${user.Id})}">
-								<button class="custom-btn btn-5" style="width: 100px;" th:if="${user.Status == 0}">
-									<h7>Disable</h7>
-								</button>
-								<button class="custom-btn btn-6" style="width: 100px;" th:if="${user.Status == 1}">
-									<h7>Enable</h7>
-								</button>
-							</a>
-						</div>
+						<div class="col-lg-6 col-md-7">
+							<div class="dataTables_paginate paging_simple_numbers"
+								th:each=" item: ${users.getTotalPages()}">
+								<ul class="pagination">
+									<li
+										th:class="'paginate_button page-item previous ' + (${users.number == 0 ? 'disabled' : ''})">
+										<a class="page-link"
+											th:href="@{'/users?page=' + ${users.number - 1}}">Previous</a>
+									</li>
+									<li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, users.totalPages - 1)}">
+                                        <a th:href="@{'/users?page=' + ${page}}" th:class="'page-link ' + (${users.number == page ? 'current-page' : ''})" th:text="${page + 1}"></a>
+                                    </li>
+                                    <li th:class="'paginate_button page-item next ' + (${users.number == users.totalPages - 1 ? 'disabled' : ''})">
+                                        <a class="page-link " th:href="@{'/users?page=' + ${users.number + 1}}">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
 					</div>
-					<br>
 				</div>
 			</div>
 		</div>

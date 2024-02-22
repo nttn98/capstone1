@@ -2,11 +2,14 @@ package com.capstone1.services;
 
 import java.util.*;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.capstone1.model.User;
 
 public interface UserService {
 
-    List<User> getAllUsers();
+    Page<User> getAllUsers(Pageable p);
 
     User getUserById(Long id);
 

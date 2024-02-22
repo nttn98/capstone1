@@ -6,6 +6,7 @@ import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -35,15 +36,17 @@ public class ProductController {
 	HomeController homeController;
 
 	@GetMapping("/products")
-	public String listProducts(Model model, HttpSession session) {
+	public String listProducts(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size) {
 		homeController.isLogin(model, session);
-		List<Product> listProducts = productService.getAllProducts();
-		List<Category> listCategories = categoryService.getAllCategories();
-		List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
-		model.addAttribute("categories", listCategories);
-		model.addAttribute("manufacturers", listManufacturers);
+		Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, size));
+		// List<Category> listCategories = categoryService.getAllCategories();
+		// List<Manufacturer> listManufacturers =
+		// manufacturerService.getAllManufacturers();
+		// model.addAttribute("categories", listCategories);
+		// model.addAttribute("manufacturers", listManufacturers);
 
-		if (listProducts.size() == 0) {
+		if (listProducts.isEmpty()) {
 			Product product = new Product();
 
 			model.addAttribute("product", product);
@@ -58,11 +61,12 @@ public class ProductController {
 	@GetMapping("/products/create-product")
 	public String createProductForm(Model model) {
 		Product product = new Product();
-		List<Category> listCategories = categoryService.getAllCategories();
-		List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+		// List<Category> listCategories = categoryService.getAllCategories();
+		// List<Manufacturer> listManufacturers =
+		// manufacturerService.getAllManufacturers();
 
-		model.addAttribute("manufacturers", listManufacturers);
-		model.addAttribute("categories", listCategories);
+		// model.addAttribute("manufacturers", listManufacturers);
+		// model.addAttribute("categories", listCategories);
 		model.addAttribute("product", product);
 
 		return "products/create_product";
@@ -71,15 +75,17 @@ public class ProductController {
 
 	@GetMapping("/products/edit/{id}")
 	public String editProductForm(@PathVariable Long id, Model model) {
-		model.addAttribute("manufacturers", manufacturerService.getAllManufacturers());
-		model.addAttribute("categories", categoryService.getAllCategories());
+		// model.addAttribute("manufacturers",
+		// manufacturerService.getAllManufacturers());
+		// model.addAttribute("categories", categoryService.getAllCategories());
 		model.addAttribute("product", productService.getProductById(id));
 		return "products/edit_product";
 	}
 
 	@PostMapping("/products/update-product/{id}")
 	public String updateProduct(@PathVariable Long id, Model model, @RequestParam("productImg") MultipartFile file,
-			@ModelAttribute Product product, HttpSession session) {
+			@ModelAttribute Product product, HttpSession session, @RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size) {
 		// get product exist
 		Product existProduct = productService.getProductById(id);
 
@@ -108,7 +114,7 @@ public class ProductController {
 		// save updated
 		productService.updateProduct(existProduct);
 
-		return listProducts(model, session);
+		return listProducts(model, session, page, size);
 	}
 
 	@GetMapping("/products/change-status/{id}")
@@ -138,12 +144,14 @@ public class ProductController {
 	// create Product
 	@PostMapping("/products/save-product")
 	public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
-			@ModelAttribute Product product, @RequestParam long quantity, HttpSession session) {
+			@ModelAttribute Product product, @RequestParam long quantity, HttpSession session,
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "5") int size) {
 
 		Product checkProduct = productService.findByName(product.getName());
 		if (checkProduct != null) {
 			model.addAttribute("alert", "error");
-			return listProducts(model, session);
+			return listProducts(model, session, page, size);
 		}
 
 		try {
@@ -164,7 +172,7 @@ public class ProductController {
 			model.addAttribute("alert", "error");
 
 		}
-		return listProducts(model, session);
+		return listProducts(model, session, page, size);
 	}
 
 	/* SAVE METHOD */
@@ -188,21 +196,5 @@ public class ProductController {
 				throw new IOException("Could not save image file: " + fileName, ioe);
 			}
 		}
-	}
-
-	/* Pagination */
-	@GetMapping("/page/{pageNo}")
-	public String findPaginated(@PathVariable int pageNo, Model model) {
-		int pageSize = 5;
-
-		Page<Product> page = productService.findPaginated(pageNo, pageSize);
-		List<Product> listProducts = page.getContent();
-
-		model.addAttribute("currentpage", pageNo);
-		model.addAttribute("totalPages", page.getTotalPages());
-		model.addAttribute("totalItems", page.getTotalElements());
-		model.addAttribute("products", listProducts);
-
-		return "products";
 	}
 }

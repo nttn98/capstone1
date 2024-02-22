@@ -17,8 +17,8 @@ public class Productimpl implements ProductService {
 	ProductRepository productRepository;
 
 	@Override
-	public List<Product> getAllProducts() {
-		return productRepository.findAll();
+	public Page<Product> getAllProducts(Pageable p) {
+		return productRepository.findAll(p);
 	}
 
 	@Override
@@ -49,24 +49,18 @@ public class Productimpl implements ProductService {
 	}
 
 	@Override
-	public Page<Product> findPaginated(int pageNo, int pageSize) {
-		PageRequest pageable = PageRequest.of(pageNo - 1, pageSize);
-		return this.productRepository.findAll(pageable);
-	}
-
-	@Override
 	public Product findByName(String name) {
 		return productRepository.findByName(name);
 	}
 
 	@Override
-	public List<Product> findByCategoryName(String name) {
-		return productRepository.findByCategoryName(name);
+	public Page<Product> findByCategoryName(String name, Pageable p) {
+		return productRepository.findByCategoryName(name, p);
 	}
 
 	@Override
-	public List<Product> findByManufacturerName(String name) {
-		return productRepository.findByManufacturerName(name);
+	public Page<Product> findByManufacturerName(String name, Pageable p) {
+		return productRepository.findByManufacturerName(name, p);
 	}
 
 }

@@ -2,6 +2,8 @@ package com.capstone1.services.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.*;
 
 import com.capstone1.model.User;
@@ -19,8 +21,8 @@ public class Userimpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public Page<User> getAllUsers(Pageable p) {
+        return userRepository.findAll(p);
     }
 
     @Override

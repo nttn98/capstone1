@@ -11,7 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "ALTER TABLE dbo.users AUTO_INCREMENT = 1001 ", nativeQuery = true)
+    @Query(value = "ALTER TABLE users AUTO_INCREMENT = 1001 ", nativeQuery = true)
     void alterAutoIncrementValue();
 
     User findByUsernameAndPassword(String username, String password);

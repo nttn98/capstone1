@@ -1,5 +1,7 @@
 package com.capstone1.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.*;
 import org.springframework.transaction.annotation.Transactional;
 

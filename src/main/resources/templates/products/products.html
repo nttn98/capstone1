@@ -8,6 +8,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
 
 		<link rel="shortcut icon" href="logo.png" type="image/png">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,6 +22,7 @@
 		<script src="/js/pages/toastr.js"></script>
 		<script src="/js/pages/jquery.toast.js"></script>
 		<script src='/js/product.js'></script>
+
 
 		<link rel='stylesheet' href='/css/font-awesome.min.css'>
 		<link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -196,80 +198,75 @@
 		<!-- BEGIN: Content-->
 		<div class="app-content content">
 			<div class="content-wrapper">
-				<div class=" content-header row">
+				<div class="content-header row">
 					<h4>List Products</h4>
 				</div>
-				<br>
-				<div class="row">
-					<div class="col-lg-1">
-						<h5>Image</h5>
-					</div>
-					<div class="col-lg-2">
-						<h5>Name of product</h5>
-					</div>
-					<div class="col-lg-1">
-						<h5>Price (VND)</h5>
-					</div>
-					<div class="col-lg-1">
-						<h5>Quantity</h5>
-					</div>
-					<div class="col-lg-1">
-						<h5>Categories</h5>
-					</div>
-					<div class="col-lg-1">
-						<h5>Manufactures</h5>
-					</div>
-					<div class="col-lg-3">
-						<h5>Description</h5>
-					</div>
-					<div class="col-lg-2">
-						<h5>Action</h5>
-					</div>
-				</div>
-				<br>
-
-				<div class="content-body" th:each=" product: ${products}">
-					<div class="row grouped-multiple-statistics-card">
-						<div class="col-lg-1">
-							<img th:src="${product.images}" style="width: 120px;">
+				<div class="content-body">
+					<table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Image</th>
+								<th>Name</th>
+								<th>Price (VND)</th>
+								<th>Quantity</th>
+								<th>Categories</th>
+								<th>Manufacturers</th>
+								<th>Description</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody th:each="product, iterStat : ${products}" th:if="${iterStat.index < 10}">
+							<tr>
+								<td th:text="${product.id}"></td>
+								<td><img th:src="${product.images}" alt="Product Image" style="width: 120px;"></td>
+								<td th:text="${product.name}"></td>
+								<td th:text="${product.price}" class="formatPrice"></td>
+								<td th:text="${product.quantity}"></td>
+								<td th:text="${product.category.name}"></td>
+								<td th:text="${product.manufacturer.name}"></td>
+								<td th:text="${product.description}"></td>
+								<td>
+									<a th:href="@{/products/edit/{id}(id=${product.id})}"
+										th:if="${product.status == 0}">
+										<button class="custom-btn btn-14 mb-2"
+											th:if="${session.staff==null}">Edit</button>
+									</a>
+									<br>
+									<a th:href="@{/products/change-status/{id}(id=${product.id})}">
+										<button class="custom-btn btn-5" th:if="${product.status == 0}">Disable</button>
+										<button class="custom-btn btn-6" th:if="${product.status == 1}">Enable</button>
+									</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="row">
+						<div class="col-lg-6 col-md-5">
+							<div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
+								<p>Showing
+									1 to 5 entries</p>
+							</div>
 						</div>
-						<div class="col-lg-2">
-							<p th:text="${product.name}"></p>
-						</div>
-						<div class="col-lg-1">
-							<p th:text="${product.price}" class="formatPrice"></p>
-						</div>
-						<div class="col-lg-1">
-							<p th:text="${product.quantity}"></p>
-						</div>
-						<div class="col-lg-1">
-							<p th:text="${product.category.name}" </p>
-						</div>
-						<div class="col-lg-1">
-							<p th:text="${product.manufacturer.name}"></p>
-						</div>
-						<div class="col-lg-3">
-							<p th:text="${product.description}"></p>
-						</div>
-						<p></p>
-						<div class="col-lg-2">
-							<a th:href="@{/products/edit/{id}(id=${product.id})}" th:if="${product.status == 0}"
-								style="text-decoration: none;">
-								<button class="custom-btn btn-14" style="width: 100px;" th:if="${session.staff==null}">
-									<h7>Edit</h7>
-								</button>
-							</a>
-							<a th:href="@{/products/change-status/{id}(id=${product.id})}">
-								<button class="custom-btn btn-5" style="width: 100px;" th:if="${product.status == 0}">
-									<h7>Disable</h7>
-								</button>
-								<button class="custom-btn btn-6" style="width: 100px;" th:if="${product.status == 1}">
-									<h7>Enable</h7>
-								</button>
-							</a>
-						</div>
+						<div class="col-lg-6 col-md-7">
+							<div class="dataTables_paginate paging_simple_numbers"
+								th:each=" item: ${products.getTotalPages()}">
+								<ul class="pagination">
+									<li
+										th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
+										<a class="page-link"
+											th:href="@{'/products?page=' + ${products.number - 1}}">Previous</a>
+									</li>
+									<li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
+                                        <a th:href="@{'/products?page=' + ${page}}" th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})" th:text="${page + 1}"></a>
+                                    </li>
+                                    <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
+                                        <a class="page-link" th:href="@{'/products?page=' + ${products.number + 1}}">Next</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
 					</div>
-					<br>
 				</div>
 			</div>
 		</div>

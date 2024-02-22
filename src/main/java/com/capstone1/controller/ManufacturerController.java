@@ -5,6 +5,8 @@ import java.nio.file.*;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +28,13 @@ public class ManufacturerController {
     HomeController homeController;
 
     @GetMapping("/manufacturers")
-    public String listManufacturers(Model model, HttpSession session) {
+    public String listManufacturers(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
         homeController.isLogin(model, session);
 
-        List<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers();
+        Page<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers(PageRequest.of(page, size));
 
-        if (listManufacturers.size() == 0) {
+        if (listManufacturers.isEmpty()) {
             Manufacturer manufacturer = new Manufacturer();
 
             model.addAttribute("manufacturer", manufacturer);
@@ -52,14 +55,15 @@ public class ManufacturerController {
     @PostMapping("/manufacturers/update-manufacturer/{id}")
     public String updateManufacturer(@PathVariable Long id, Model model,
             @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute Manufacturer manufacturer, HttpSession session) {
+            @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         // get Manufacturer exist
         Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
         Manufacturer checkManufacturer = manufacturerService.findByName(manufacturer.getName());
 
         if (checkManufacturer != null) {
             model.addAttribute("alert", "error");
-            return listManufacturers(model, session);
+            return listManufacturers(page, size, model, session);
         } else {
             existManufacturer.setName(manufacturer.getName());
             existManufacturer.setDescription(manufacturer.getDescription());
@@ -81,18 +85,19 @@ public class ManufacturerController {
         }
         // save updated
         manufacturerService.updateManufacturer(existManufacturer);
-        return listManufacturers(model, session);
+        return listManufacturers(page, size, model, session);
     }
 
     @PostMapping("/manufacturers/save-manufacturer")
     public String saveManufacturer(Model model, @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute Manufacturer manufacturer, HttpSession session) {
+            @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         Manufacturer checkManufacturer = manufacturerService.findByName(manufacturer.getName());
 
         if (checkManufacturer != null) {
             model.addAttribute("alert", "error");
-            return listManufacturers(model, session);
+            return listManufacturers(page, size, model, session);
         }
         try {
             manufacturer = manufacturerService.saveManufacturer(manufacturer);
@@ -111,7 +116,7 @@ public class ManufacturerController {
         } catch (Exception e) {
             model.addAttribute("alert", "error");
         }
-        return listManufacturers(model, session);
+        return listManufacturers(page, size, model, session);
     }
 
     @GetMapping("/manufacturers/change-status/{id}")

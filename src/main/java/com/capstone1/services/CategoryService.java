@@ -2,11 +2,16 @@ package com.capstone1.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.capstone1.model.Category;
 
 public interface CategoryService {
 
-    List<Category> getAllCategories();
+    List<Category> getAll();
+
+    Page<Category> getAllCategories(Pageable p);
 
     Category saveCategory(Category category);
 

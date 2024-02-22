@@ -3,6 +3,8 @@ package com.capstone1.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,8 +19,8 @@ public class Categoryimpl implements CategoryService {
     CategoryRepository categoryRepository;
 
     @Override
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public Page<Category> getAllCategories(Pageable p) {
+        return categoryRepository.findAll(p);
     }
 
     @Override
@@ -50,5 +52,10 @@ public class Categoryimpl implements CategoryService {
     @Override
     public Category findByName(String name) {
         return categoryRepository.findByName(name);
+    }
+
+    @Override
+    public List<Category> getAll() {
+        return categoryRepository.findAll();
     }
 }

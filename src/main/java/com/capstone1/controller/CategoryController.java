@@ -3,11 +3,16 @@ package com.capstone1.controller;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.capstone1.model.Category;
+import com.capstone1.model.Product;
 import com.capstone1.services.CategoryService;
 
 import jakarta.annotation.Resource;
@@ -22,10 +27,13 @@ public class CategoryController {
     HomeController homeController;
 
     @GetMapping("/categories")
-    public String listCategories(Model model, HttpSession session) {
+    public String listCategories(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
         homeController.isLogin(model, session);
-        List<Category> listCategories = categoryService.getAllCategories();
-        if (listCategories.size() == 0) {
+
+        Page<Category> listCategories = categoryService.getAllCategories(PageRequest.of(page, size));
+
+        if (listCategories.isEmpty()) {
             Category category = new Category();
             model.addAttribute("category", category);
             return "categories/create_category";
@@ -44,19 +52,21 @@ public class CategoryController {
     }
 
     @PostMapping("/categories/save-category")
-    public String saveCategory(Model model, @ModelAttribute Category category, HttpSession session) {
+    public String saveCategory(Model model, @ModelAttribute Category category,
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         Category checkCategory = categoryService.findByName(category.getName());
         if (checkCategory != null) {
             model.addAttribute("alert", "error");
-            return listCategories(model, session);
+            return listCategories(page, size, model, session);
         } else {
             System.out.println("Category added successfully");
             model.addAttribute("alert", "success");
             categoryService.saveCategory(category);
         }
 
-        return listCategories(model, session);
+        return listCategories(page, size, model, session);
     }
 
     @GetMapping("/categories/change-status/{id}")
@@ -84,15 +94,17 @@ public class CategoryController {
     }
 
     @PostMapping("/categories/update-category/{id}")
-    public String updateCategory(@PathVariable Long id, Model model, @ModelAttribute Category category,
-            HttpSession session) {
+    public String updateCategory(@PathVariable Long id, Model model,
+            @ModelAttribute Category category,
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         // get Category exist
         Category existCategory = categoryService.getCategoryById(id);
 
         Category checkCategory = categoryService.findByName(category.getName());
         if (checkCategory != null) {
             model.addAttribute("alert", "error");
-            return listCategories(model, session);
+            return listCategories(page, size, model, session);
         } else {
             existCategory.setName(category.getName());
             existCategory.setDescription(category.getDescription());
@@ -100,7 +112,7 @@ public class CategoryController {
 
         }
 
-        return listCategories(model, session);
+        return listCategories(page, size, model, session);
     }
 
     @GetMapping("/categories/delete-category/{id}")
