@@ -39,3 +39,7 @@
     background-color: lightskyblue !important;
     pointer-events: none;
 }
+
+.navbar {
+    padding-top: 14px;
+}

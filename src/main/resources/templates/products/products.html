@@ -227,15 +227,13 @@
 								<td th:text="${product.manufacturer.name}"></td>
 								<td th:text="${product.description}"></td>
 								<td>
-									<a th:href="@{/products/edit/{id}(id=${product.id})}"
-										th:if="${product.status == 0}">
-										<button class="custom-btn btn-14 mb-2"
-											th:if="${session.staff==null}">Edit</button>
-									</a>
-									<br>
 									<a th:href="@{/products/change-status/{id}(id=${product.id})}">
 										<button class="custom-btn btn-5" th:if="${product.status == 0}">Disable</button>
 										<button class="custom-btn btn-6" th:if="${product.status == 1}">Enable</button>
+									</a>
+									<a th:href="@{/products/edit/{id}(id=${product.id})}"
+										th:if="${product.status == 0}">
+										<button class="custom-btn btn-14" th:if="${session.staff==null}">Edit</button>
 									</a>
 								</td>
 							</tr>

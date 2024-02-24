@@ -12,7 +12,6 @@
         <div class="closeMask"></div>
         </div>
 
-
         <div class="container formReceiver">
             <form th:action="@{/users/add-order}" method="GET">
                 <div class="row">
@@ -28,12 +27,9 @@
                                 </div>
                                 <input type="hidden" th:value="${item.getProduct().getId()}" name="productId">
                                 <div style="margin: auto;">
-                                    <button type="button" onclick="quantityMinus(this)">-</button>
-                                    <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
-                                        style="width: 50px; height: 50px;" readonly>
-                                    <button type="button" onclick="quantityPlus(this)">+</button>
+                                    <p th:text="${item.getQuantity()}"></p>
                                 </div>
-                                <div class="col-2 formatPrice" th:text="${item.getSubtotal()}" style="margin: auto;">
+                                <div class=" col-2 formatPrice" th:text="${item.getSubtotal()}" style="margin: auto;">
                                 </div>
 
                             </div>
@@ -230,16 +226,6 @@
         {
             $( '.cart' ).removeClass( "w-32" )
             $( '.closeMask' ).fadeOut();
-        }
-        function quantityPlus ( e )
-        {
-            let quantity = $( e ).closest( 'div' ).find( 'input' );
-            quantity.val( +quantity.val() + 1 );
-        }
-        function quantityMinus ( e )
-        {
-            let quantity = $( e ).closest( 'div' ).find( 'input' );
-            quantity.val( +quantity.val() - 1 );
         }
         alert_action(/*[[${alert}]]*/ )
     </script>

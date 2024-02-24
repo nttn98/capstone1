@@ -16,7 +16,8 @@ body {
     width: 90%;
     transition: box-shadow 0.3s ease;
     display: block;
-    margin: auto
+    margin: auto;
+    margin-bottom: 54px;
 }
 
 .order {

@@ -63,16 +63,16 @@
 								<td th:text="${staff.dob}"></td>
 								<td th:text="${staff.idcard}"></td>
 								<td>
-									<a th:href="@{/staffs/edit/{id}(id=${staff.id})}" th:if="${staff.status == 0}"
-										style="text-decoration: none;">
-										<button class="custom-btn btn-14 mb-2">
-											<h7>Edit</h7>
-										</button>
-									</a>
-									<br>
 									<a th:href="@{/staffs/change-status/{id}(id=${staff.id})}">
 										<button class="custom-btn btn-5" th:if="${staff.status == 0}">Disable</button>
 										<button class="custom-btn btn-6" th:if="${staff.status == 1}">Enable</button>
+									</a>
+									<br>
+									<a th:href="@{/staffs/edit/{id}(id=${staff.id})}" th:if="${staff.status == 0}"
+										style="text-decoration: none;">
+										<button class="custom-btn btn-14">
+											<h7>Edit</h7>
+										</button>
 									</a>
 								</td>
 							</tr>

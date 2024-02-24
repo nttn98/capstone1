@@ -59,18 +59,18 @@
                                 <td th:text="${manufacturer.name}"></td>
                                 <td th:text="${manufacturer.description}"></td>
                                 <td>
-                                    <a th:href="@{/manufacturers/edit/{id}(id=${manufacturer.id})}"
-                                        th:if="${manufacturer.status == 0}" style="text-decoration: none;">
-                                        <button class="custom-btn btn-14 mb-2">
-                                            <h7>Edit</h7>
-                                        </button>
-                                    </a>
-                                    <br>
                                     <a th:href="@{/manufacturers/change-status/{id}(id=${manufacturer.id})}">
                                         <button class="custom-btn btn-5"
                                             th:if="${manufacturer.status == 0}">Disable</button>
                                         <button class="custom-btn btn-6"
                                             th:if="${manufacturer.status == 1}">Enable</button>
+                                    </a>
+
+                                    <a th:href="@{/manufacturers/edit/{id}(id=${manufacturer.id})}"
+                                        th:if="${manufacturer.status == 0}" style="text-decoration: none;">
+                                        <button class="custom-btn btn-14">
+                                            <h7>Edit</h7>
+                                        </button>
                                     </a>
                                 </td>
                             </tr>

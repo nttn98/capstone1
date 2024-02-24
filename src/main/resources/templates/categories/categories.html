@@ -56,17 +56,16 @@
                                 <td th:text="${category.name}"></td>
                                 <td th:text="${category.description}"></td>
                                 <td>
-                                    <a th:href="@{/categories/edit/{id}(id=${category.id})}"
-                                        th:if="${category.status == 0}" style="text-decoration: none;">
-                                        <button class="custom-btn btn-14 mb-2">
-                                            <h7>Edit</h7>
-                                        </button>
-                                    </a>
-                                    <br>
                                     <a th:href="@{/categories/change-status/{id}(id=${category.id})}">
                                         <button class="custom-btn btn-5"
                                             th:if="${category.status == 0}">Disable</button>
                                         <button class="custom-btn btn-6" th:if="${category.status == 1}">Enable</button>
+                                    </a>
+                                    <a th:href="@{/categories/edit/{id}(id=${category.id})}"
+                                        th:if="${category.status == 0}" style="text-decoration: none;">
+                                        <button class="custom-btn btn-14 ">
+                                            <h7>Edit</h7>
+                                        </button>
                                     </a>
                                 </td>
                             </tr>

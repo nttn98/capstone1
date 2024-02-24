@@ -191,8 +191,16 @@ public class UserController {
             session.setAttribute("user", user);
             model.addAttribute("alert", "success");
 
+            Cart oldCart = (Cart) session.getAttribute("cart");
             Cart cart = cartService.findByUserId(user.getId());
-            session.setAttribute("cart", cart);
+
+            if (oldCart != null) {
+                for (CartItem item : oldCart.getListItem()) {
+                    addToCartWithUser(session, cart, item.getProduct(), user);
+                }
+            } else {
+                session.setAttribute("cart", cart);
+            }
             return homeController.getHome(model, session, page, size);
         }
 
@@ -223,12 +231,11 @@ public class UserController {
         Long userId = (Long) session.getAttribute("userId");
         Cart cart = (Cart) session.getAttribute("cart");
         Product temp = productService.getProductById(productId);
-
         if (userId == null) {
             addToCartWithoutUser(session, cart, temp);
         } else {
             User user = userService.getUserById(userId);
-            addToCartWithUser(session, quantity, cart, temp, user);
+            addToCartWithUser(session, cart, temp, user);
         }
         if (mode.equals("inList")) {
             return homeController.paginated(model, session, page, size);
@@ -239,7 +246,7 @@ public class UserController {
         }
     }
 
-    private void addToCartWithUser(HttpSession session, int quantity, Cart cart, Product product, User user) {
+    private void addToCartWithUser(HttpSession session, Cart cart, Product product, User user) {
         if (cart == null) {
             cart = cartService.saveCart(new Cart(user));
         }
@@ -247,7 +254,7 @@ public class UserController {
         CartItem cartItem = cartItemService.findByProductId(product.getId());
 
         if (cartItem == null) {
-            cartItem = cartItemService.save(new CartItem(cart, product, quantity));
+            cartItem = cartItemService.save(new CartItem(cart, product, 1));
         } else {
             cartItem.setQuantity(cartItem.getQuantity() + 1);
             cartItemService.save(cartItem);

@@ -38,7 +38,7 @@
                     </div>
                     <div class="cell details">
                         <i id="orderDetail" class="fa fa-arrow-down" aria-hidden="true"
-                            th:onclick="'loadOrderDetail(\'' + ${order.id} + '\',this)'"></i>
+                            th:onclick="'loadOrderDetail(\'' + ${order.id} + '\',this)'" style="display: block;"></i>
                     </div>
                 </div>
 
@@ -86,17 +86,17 @@
 
                 if ( $( e ).is( ':visible' ) && !$( e ).hasClass( id ) )
                 {
-                    $( e ).slideUp( 1000 );
+                    $( e ).slideUp( 500 );
                 }
             } );
 
             var orderDetail = $( '.orderDetail.' + id );
-            orderDetail.slideToggle( 1000 );
+            orderDetail.slideToggle( 500 );
 
         }
         function closeOrderDetail ( e )
         {
-            $( e ).parent().slideDown( 1000 );
+            $( e ).parent().slideDown( 500 );
         }
 
         $( document ).ready( function ()
@@ -186,18 +186,6 @@
 
         }
 
-        function showRegister ()
-        {
-            $( "#register" ).removeClass( "d-none" );
-            $( "#CustomerLoginForm" ).addClass( "d-none" );
-        }
-        function closeRegister ()
-        {
-            $( "#register" ).addClass( "d-none" );
-            $( "#CustomerLoginForm" ).removeClass( "d-none" );
-
-        }
-
         $( '.closeMask' ).click( ( e ) =>
         {
             if ( e.target.classList.contains( 'closeMask' ) )
@@ -260,16 +248,6 @@
         {
             $( '.cart' ).removeClass( "w-32" )
             $( '.closeMask' ).fadeOut();
-        }
-        function quantityPlus ( e )
-        {
-            let quantity = $( e ).closest( 'div' ).find( 'input' );
-            quantity.val( +quantity.val() + 1 );
-        }
-        function quantityMinus ( e )
-        {
-            let quantity = $( e ).closest( 'div' ).find( 'input' );
-            quantity.val( +quantity.val() - 1 );
         }
         alert_action(/*[[${alert}]]*/ )
     </script>
