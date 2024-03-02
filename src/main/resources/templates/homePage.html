@@ -326,25 +326,43 @@
             <div class="banner_section layout_padding">
                 <div id="main_slider" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
-                        <div class="carousel-item active">
+                        <div class="carousel-item active" th:each=" item: ${newests}">
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <h1 class="banner_taital">Lorem Ipsum</h1>
-                                        <p class="banner_text">There are many variations of passages of Lorem Ipsum
-                                            available, but the
-                                            majority have suffered alteration</p>
+                                        <h1 class="banner_taital" th:text="${item.name}"></h1>
+                                        <p class="banner_text" th:text="${item.description}"></p>
                                         <div class="btn_main">
-                                            <div class="read_bt"><a href="#">Read More</a></div>
+                                            <div class="read_bt"><a href="/products">See all</a></div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
-                                        <div class="image_1"><img src="/img/test.png" style="max-width: 80%;"></div>
+                                        <div class="image_1"><img th:src="${item.getImages()}" style="max-width: 80%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="carousel-item" th:each=" product: ${products}">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <h1 class="banner_taital" th:text="${product.name}"></h1>
+                                        <p class="banner_text" th:text="${product.description}"></p>
+                                        <div class="btn_main">
+                                            <div class="read_bt"><a href="/list-products">See all</a></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="image_1"><img th:src="${product.getImages()}"
+                                                style="max-width: 80%;">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+
                     <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
                         <i class="fa fa-angle-left"></i>
                     </a>

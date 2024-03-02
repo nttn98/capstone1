@@ -63,4 +63,8 @@ public class Productimpl implements ProductService {
 		return productRepository.findByManufacturerName(name, p);
 	}
 
+	public List<Product> getNewestProducts() {
+		return productRepository.findByIsNewest(1);
+	}
+
 }

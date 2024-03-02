@@ -2,11 +2,12 @@ package com.capstone1.controller;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.*;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -61,12 +62,11 @@ public class ProductController {
 	@GetMapping("/products/create-product")
 	public String createProductForm(Model model) {
 		Product product = new Product();
-		// List<Category> listCategories = categoryService.getAllCategories();
-		// List<Manufacturer> listManufacturers =
-		// manufacturerService.getAllManufacturers();
+		List<Category> listCategories = categoryService.getAll();
+		List<Manufacturer> listManufacturers = manufacturerService.getAll();
 
-		// model.addAttribute("manufacturers", listManufacturers);
-		// model.addAttribute("categories", listCategories);
+		model.addAttribute("manufacturers", listManufacturers);
+		model.addAttribute("categories", listCategories);
 		model.addAttribute("product", product);
 
 		return "products/create_product";
@@ -75,9 +75,8 @@ public class ProductController {
 
 	@GetMapping("/products/edit/{id}")
 	public String editProductForm(@PathVariable Long id, Model model) {
-		// model.addAttribute("manufacturers",
-		// manufacturerService.getAllManufacturers());
-		// model.addAttribute("categories", categoryService.getAllCategories());
+		model.addAttribute("manufacturers", manufacturerService.getAll());
+		model.addAttribute("categories", categoryService.getAll());
 		model.addAttribute("product", productService.getProductById(id));
 		return "products/edit_product";
 	}
@@ -135,6 +134,24 @@ public class ProductController {
 		return "redirect:/products";
 	}
 
+	@GetMapping("/products/change-newest/{id}")
+	public String changeNewest(@PathVariable Long id, Model model, @ModelAttribute Product product) {
+
+		// get product exist
+		Product existProduct = productService.getProductById(id);
+
+		if (existProduct.getIsNewest() == 1) {
+			existProduct.setIsNewest(0);
+		} else {
+			existProduct.setIsNewest(1);
+		}
+
+		// save updated
+		productService.updateProduct(existProduct);
+
+		return "redirect:/products";
+	}
+
 	@GetMapping("/products/delete-product/{id}")
 	public String deleteProduct(@PathVariable Long id) {
 		productService.deletePproductById(id);
@@ -147,12 +164,6 @@ public class ProductController {
 			@ModelAttribute Product product, @RequestParam long quantity, HttpSession session,
 			@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "5") int size) {
-
-		Product checkProduct = productService.findByName(product.getName());
-		if (checkProduct != null) {
-			model.addAttribute("alert", "error");
-			return listProducts(model, session, page, size);
-		}
 
 		try {
 			product.setQuantity(quantity);

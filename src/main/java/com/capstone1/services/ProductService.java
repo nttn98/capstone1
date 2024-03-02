@@ -10,6 +10,8 @@ public interface ProductService {
 
 	Page<Product> getAllProducts(Pageable p);
 
+	List<Product> getNewestProducts();
+
 	Product saveProduct(Product product);
 
 	Product getProductById(Long id);

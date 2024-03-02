@@ -2,7 +2,11 @@ package com.capstone1.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +62,9 @@ public class HomeController {
             @RequestParam(defaultValue = "10") int size) {
 
         int limit = 3;
-        // List<Product> listProducts = productService.getAllProducts();
+        Page<Product> newests = productService.getAllProducts(PageRequest.of(page, 1));
+        List<Product> products = productService.getNewestProducts();
+        products = products.subList(1, Math.min(size, products.size()));
         // listProducts = listProducts.subList(0, Math.min(limit, listProducts.size()));
 
         // List<Category> listCategories = categoryService.getAllCategories();
@@ -75,7 +81,8 @@ public class HomeController {
         // listProductsByAMD = listProductsByAMD.subList(0, Math.min(limit,
         // listProductsByAMD.size()));
 
-        // model.addAttribute("products", listProducts);
+        model.addAttribute("newests", newests);
+        model.addAttribute("products", products);
         model.addAttribute("productsByAMD", productsByAMD);
         model.addAttribute("productsByNVIDIA", productsByNVIDIA);
         // model.addAttribute("categories", listCategories);
@@ -281,12 +288,26 @@ public class HomeController {
     // get all orders in admin mode
     @GetMapping("/orders")
     public String listOrders(Model model, HttpSession session) {
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(0, "Prepared");
+        map.put(1, "Shipping");
+        map.put(2, "Delivered");
+        map.put(3, "Canceled");
 
         isLogin(model, session);
-        List<Order> listOrders = orderService.getAllOrders();
-        if (listOrders.size() != 0) {
-            model.addAttribute("orders", listOrders);
+
+        List<Order> orders = orderService.getAllOrders();
+
+        for (Order order : orders) {
+            order.setShowStatus(map.get(order.getStatus()));
         }
+
+        if (orders.size() != 0) {
+            model.addAttribute("orders", orders);
+        }
+
+        System.out.println(orders.get(0).getShowStatus());
+
         model.addAttribute("mode", "staff");
         return "admin/orders";
     }

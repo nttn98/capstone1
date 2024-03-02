@@ -16,9 +16,9 @@ public class Product {
 	private long quantity;
 	private long price;
 	private String images;
+	private int isNewest = 0;
 
 	@Column(columnDefinition = "LONGTEXT")
-	// @Column(columnDefinition = "VARCHAR(MAX)")
 	private String description;
 
 	private int status;
@@ -107,6 +107,14 @@ public class Product {
 
 	public void setManufacturer(Manufacturer manufacturer) {
 		this.manufacturer = manufacturer;
+	}
+
+	public int getIsNewest() {
+		return isNewest;
+	}
+
+	public void setIsNewest(int isNewest) {
+		this.isNewest = isNewest;
 	}
 
 }

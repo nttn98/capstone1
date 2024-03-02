@@ -2,7 +2,10 @@ package com.capstone1.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+
+import org.hibernate.mapping.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,6 +35,9 @@ public class Order {
 
     private LocalDateTime orderDate;
 
+    @Transient
+    private String showStatus;
+
     public Order() {
     }
 
@@ -40,6 +46,14 @@ public class Order {
         this.user = user;
         this.orderDate = orDateTime;
 
+    }
+
+    public String getShowStatus() {
+        return showStatus;
+    }
+
+    public void setShowStatus(String showStatus) {
+        this.showStatus = showStatus;
     }
 
     public String getReceiverName() {
