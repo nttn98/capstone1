@@ -1,396 +1,476 @@
 body {
-  font-family: Montserrat;
+    font-family: Montserrat;
 }
 
 h7 {
-  font-family: Montserrat;
-  font-size: 1rem;
+    font-family: Montserrat;
+    font-size: 1rem;
 }
 
 h1 a {
-  font-family: "Kalam", cursive;
-  font-size: 35px;
-  color: white;
+    font-family: "Kalam", cursive;
+    font-size: 35px;
+    color: white;
 }
 
 .custom-btn {
-  width: 130px;
-  height: 40px;
-  color: #fff;
-  border-radius: 5px;
-  padding: 10px 25px;
-  font-family: 'Lato', sans-serif;
-  font-weight: 500;
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  display: inline-block;
-  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
+    width: 130px;
+    height: 40px;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 25px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
     7px 7px 20px 0px rgba(0, 0, 0, .1),
     4px 4px 5px 0px rgba(0, 0, 0, .1);
-  outline: none;
-  margin-bottom: 10px;
+    outline: none;
+    margin-bottom: 10px;
 }
 
 
 /* 5 */
 .btn-5 {
-  width: 130px;
-  height: 40px;
-  line-height: 42px;
-  padding: 0;
-  border: none;
-  background: rgb(255, 27, 0);
-  background: linear-gradient(0deg, rgba(255, 27, 0, 1) 0%, rgba(251, 75, 2, 1) 100%);
+    width: 130px;
+    height: 40px;
+    line-height: 42px;
+    padding: 0;
+    border: none;
+    background: rgb(255, 27, 0);
+    background: linear-gradient(0deg, rgba(255, 27, 0, 1) 0%, rgba(251, 75, 2, 1) 100%);
 }
 
 .btn-5:hover {
-  color: #f0094a;
-  background: transparent;
-  box-shadow: none;
+    color: #f0094a;
+    background: transparent;
+    box-shadow: none;
 }
 
 .btn-5:before,
 .btn-5:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 2px;
-  width: 0;
-  background: #f0094a;
-  box-shadow:
-    -1px -1px 5px 0px #fff,
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    background: #f0094a;
+    box-shadow: -1px -1px 5px 0px #fff,
     7px 7px 20px 0px #0003,
     4px 4px 5px 0px #0002;
-  transition: 400ms ease all;
+    transition: 400ms ease all;
 }
 
 .btn-5:after {
-  right: inherit;
-  top: inherit;
-  left: 0;
-  bottom: 0;
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
 }
 
 .btn-5:hover:before,
 .btn-5:hover:after {
-  width: 100%;
-  transition: 800ms ease all;
+    width: 100%;
+    transition: 800ms ease all;
 }
 
 /* 6 */
 .btn-6 {
-  width: 130px;
-  height: 40px;
-  line-height: 42px;
-  padding: 0;
-  border: none;
-  background: rgb(2, 139, 40);
-  background: linear-gradient(0deg, rgb(2, 139, 40) 0%, rgb(2, 139, 40) 100%);
+    width: 130px;
+    height: 40px;
+    line-height: 42px;
+    padding: 0;
+    border: none;
+    background: rgb(2, 139, 40);
+    background: linear-gradient(0deg, rgb(2, 139, 40) 0%, rgb(2, 139, 40) 100%);
 }
 
 .btn-6:hover {
-  color: rgb(2, 139, 40);
-  background: transparent;
-  box-shadow: none;
+    color: rgb(2, 139, 40);
+    background: transparent;
+    box-shadow: none;
 }
 
 .btn-6:before,
 .btn-6:after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 2px;
-  width: 0;
-  background: rgb(2, 139, 40);
-  box-shadow:
-    -1px -1px 5px 0px #fff,
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    background: rgb(2, 139, 40);
+    box-shadow: -1px -1px 5px 0px #fff,
     7px 7px 20px 0px #0003,
     4px 4px 5px 0px #0002;
-  transition: 400ms ease all;
+    transition: 400ms ease all;
 }
 
 .btn-6:after {
-  right: inherit;
-  top: inherit;
-  left: 0;
-  bottom: 0;
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
 }
 
 .btn-6:hover:before,
 .btn-6:hover:after {
-  width: 100%;
-  transition: 800ms ease all;
+    width: 100%;
+    transition: 800ms ease all;
 }
 
 /* 13 */
 .btn-13 {
-  background-color: #89d8d3;
-  background-image: linear-gradient(315deg, #89d8d3 0%, #03c8a8 74%);
-  border: none;
-  z-index: 1;
+    background-color: #89d8d3;
+    background-image: linear-gradient(315deg, #89d8d3 0%, #03c8a8 74%);
+    border: none;
+    z-index: 1;
 }
 
 .btn-13:after {
-  position: absolute;
-  content: "";
-  width: 100%;
-  height: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
-  border-radius: 5px;
-  background-color: #4dccc6;
-  background-image: linear-gradient(315deg, #4dccc6 0%, #96e4df 74%);
-  box-shadow:
-    -7px -7px 20px 0px #fff9,
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 5px;
+    background-color: #4dccc6;
+    background-image: linear-gradient(315deg, #4dccc6 0%, #96e4df 74%);
+    box-shadow: -7px -7px 20px 0px #fff9,
     -4px -4px 5px 0px #fff9,
     7px 7px 20px 0px #0002,
     4px 4px 5px 0px #0001;
-  transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .btn-13:hover {
-  color: #fff;
+    color: #fff;
 }
 
 .btn-13:hover:after {
-  top: 0;
-  height: 100%;
+    top: 0;
+    height: 100%;
 }
 
 .btn-13:active {
-  top: 2px;
+    top: 2px;
 }
 
 /* 14 */
 .btn-14 {
-  background: rgb(255, 151, 0);
-  border: none;
-  z-index: 1;
+    background: rgb(255, 151, 0);
+    border: none;
+    z-index: 1;
 }
 
 .btn-14:after {
-  position: absolute;
-  content: "";
-  width: 100%;
-  height: 0;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  border-radius: 5px;
-  background-color: #eaf818;
-  background-image: linear-gradient(315deg, #eaf818 0%, #f6fc9c 74%);
-  box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5) 7px 7px 20px 0px rgba(0, 0, 0, .1),
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 0;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 5px;
+    background-color: #eaf818;
+    background-image: linear-gradient(315deg, #eaf818 0%, #f6fc9c 74%);
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5) 7px 7px 20px 0px rgba(0, 0, 0, .1),
     4px 4px 5px 0px rgba(0, 0, 0, .1);
-  transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .btn-14:hover {
-  color: #000;
+    color: #000;
 }
 
 .btn-14:hover:after {
-  top: auto;
-  bottom: 0;
-  height: 100%;
+    top: auto;
+    bottom: 0;
+    height: 100%;
 }
 
 .btn-14:active {
-  top: 2px;
+    top: 2px;
 }
 
 button.close {
-  width: 5%;
-  background-color: red;
-  color: white;
-  position: absolute;
-  right: 0;
-  top: -30px;
-  width: 36px;
-  height: 36px;
-  margin-top: 90px;
-  margin-right: 20px;
-  margin-left: 20px;
-  margin-bottom: 20px;
-  font-size: 14px;
+    width: 5%;
+    background-color: red;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: -30px;
+    width: 36px;
+    height: 36px;
+    margin-top: 90px;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
 }
 
 .clearfix {
-  position: fixed;
+    position: fixed;
 }
 
 .closeMask {
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, .6);
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 6;
-  transition: .3s;
-  display: none;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 6;
+    transition: .3s;
+    display: none;
 }
 
 .profile {
-  right: 0;
-  height: 100%;
-  background-color: white;
-  z-index: 11;
-  width: 0;
-  transition: 0.6s;
-  overflow: hidden;
-  color: black;
+    right: 0;
+    height: 100%;
+    background-color: white;
+    z-index: 11;
+    width: 0;
+    transition: 0.6s;
+    overflow: hidden;
+    color: black;
 }
 
 .profile .close {
-  width: 5%;
-  background-color: red;
-  color: white;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 50px;
-  height: 50px;
-  margin: 15px;
+    width: 5%;
+    background-color: red;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    margin: 15px;
 }
 
 .profile h2 {
-  padding: 25px 0px 40px 25px;
+    padding: 25px 0px 40px 25px;
 }
 
 .profile button.btn-login {
-  padding: 10px 30px 10px 30px;
-  border-radius: 10px;
-  background-color: white;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+    padding: 10px 30px 10px 30px;
+    border-radius: 10px;
+    background-color: white;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .profile li {
-  margin: 20px 0;
+    margin: 20px 0;
 }
 
 div.staff a {
-  margin-left: 125px;
-  text-decoration: none;
+    margin-left: 125px;
+    text-decoration: none;
 }
 
 div.staff p {
-  padding-left: 20px;
-  margin-bottom: 0;
+    padding-left: 20px;
+    margin-bottom: 0;
 }
 
 div.staff input {
-  margin-left: 17px;
-  width: 382px;
-  margin-bottom: 10px;
+    margin-left: 17px;
+    width: 382px;
+    margin-bottom: 10px;
 }
 
 div.staff button {
-  display: block;
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 50px;
-  width: 150px;
-  padding-left: 20px;
-  padding-right: 30px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 50px;
+    width: 150px;
+    padding-left: 20px;
+    padding-right: 30px;
 }
 
 
 #description {
-  height: 180px;
-  width: 1096px;
+    height: 180px;
+    width: 1096px;
 }
 
 .changePass {
-  /* border: 1px solid black; */
-  right: 0;
-  height: 100%;
-  background-color: white;
-  z-index: 11;
-  width: 0;
-  transition: 0.6s;
-  overflow: hidden;
-  color: black;
+    /* border: 1px solid black; */
+    right: 0;
+    height: 100%;
+    background-color: white;
+    z-index: 11;
+    width: 0;
+    transition: 0.6s;
+    overflow: hidden;
+    color: black;
 }
 
 .changePass .close {
-  width: 5%;
-  background-color: red;
-  color: white;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 50px;
-  height: 50px;
-  margin: 15px;
+    width: 5%;
+    background-color: red;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    margin: 15px;
 }
 
 .changePass h2 {
-  padding: 25px 0px 40px 25px;
+    padding: 25px 0px 40px 25px;
 }
 
 .changePass button.btn-login {
-  padding: 10px 30px 10px 30px;
-  border-radius: 10px;
-  background-color: white;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+    padding: 10px 30px 10px 30px;
+    border-radius: 10px;
+    background-color: white;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .changePass li {
-  margin: 20px 0;
+    margin: 20px 0;
 }
 
 div.changePass a {
-  margin-left: 125px;
-  text-decoration: none;
+    margin-left: 125px;
+    text-decoration: none;
 }
 
 div.changePass p {
-  padding-left: 20px;
-  margin-bottom: 0;
+    padding-left: 20px;
+    margin-bottom: 0;
 }
 
 div.changePass input {
-  margin-left: 17px;
-  width: 382px;
-  margin-bottom: 10px;
+    margin-left: 17px;
+    width: 382px;
+    margin-bottom: 10px;
 }
 
 div.changePass button {
-  display: block;
-  margin-right: auto;
-  margin-left: auto;
-  margin-top: 50px;
-  width: 150px;
-  padding-left: 20px;
-  padding-right: 30px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 50px;
+    width: 150px;
+    padding-left: 20px;
+    padding-right: 30px;
 }
 
 
 div.dataTables_paginate {
-  display: flex;
-  /* left: 550px; */
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-content: flex-end;
-  flex-direction: row;
+    display: flex;
+    /* left: 550px; */
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-content: flex-end;
+    flex-direction: row;
 }
 
 div.dataTables_info p {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .current-page {
-  background-color: lightskyblue !important;
-  pointer-events: none;
+    background-color: lightskyblue !important;
+    pointer-events: none;
+}
+
+.star-button {
+    background-color: transparent;
+    border: 2px solid #ccc;
+    width: 130px;
+    height: 40px;
+    border-radius: 5px;
+    padding: 10px 25px;
+    margin-bottom: 10px
+}
+
+.star-button .fas {
+    color: #ccc;
+}
+
+.star-button.selected .fas {
+    color: gold;
+}
+
+.tracking {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tracking a {
+    text-decoration: none;
+}
+
+.status-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 10px;
+}
+
+.circle-button {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: lightblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #0C141C;
+}
+
+.circle-button i{
+    font-size: xx-large;
+}
+
+.circle-button.selected {
+    background-color: green;
+    color: whitesmoke;
+}
+
+.circle-button.cancel {
+    background-color: red;
+}
+
+.circle-button:hover {
+    background-color: skyblue;
+}
+
+
+.status-line {
+    width: 50px;
+    border-top: 2px solid black;
+    margin: 0 5px;
+}
+
+.status-line.selected {
+    border-color: green;
+}
+
+.status-line.cancel {
+    border-color: red;
+}
+
+.circle-button,
+.status-line {
+    transition: background-color 0.7s ease;
 }

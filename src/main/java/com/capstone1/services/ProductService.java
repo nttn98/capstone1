@@ -20,7 +20,7 @@ public interface ProductService {
 
 	Product changeStatusProduct(Product product);
 
-	void deletePproductById(Long id);
+	void deleteProductById(Long id);
 
 	Product findByName(String name);
 

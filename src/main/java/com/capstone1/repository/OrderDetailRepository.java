@@ -16,4 +16,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     void alterAutoIncrementValue();
 
     List<OrderDetail> findByOrderId(long orderId);
+
+    void deleteByOrderId(Long orderId);
 }

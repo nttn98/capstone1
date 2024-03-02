@@ -1,199 +1,251 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="~{products/products ::head}"></head>
+<head th:replace="~{products/products ::head}"></head>
 
-    <body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
-        <nav th:fragment="header-navbar"
-            class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
-            <div class="navbar-wrapper">
-                <div class="navbar-header">
-                    <ul class="nav navbar-nav flex-row" style="padding: 10px;">
-                        <div id="logo">
-                            <h1><a href="/">NAP</a></h1>
-                        </div>
-                    </ul>
+<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
+<nav th:fragment="header-navbar"
+     class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
+    <div class="navbar-wrapper">
+        <div class="navbar-header">
+            <ul class="nav navbar-nav flex-row" style="padding: 10px;">
+                <div id="logo">
+                    <h1><a href="/">NAP</a></h1>
                 </div>
-                <div class="navbar-container content">
-                    <div class="collapse navbar-collapse" id="navbar-mobile">
-                        <ul class="nav navbar-nav mr-auto float-left">
-                            <a>
+            </ul>
+        </div>
+        <div class="navbar-container content">
+            <div class="collapse navbar-collapse" id="navbar-mobile">
+                <ul class="nav navbar-nav mr-auto float-left">
+                    <a>
 
-                            </a>
-                        </ul>
-                        <ul th:replace="~{products/products.html :: login-space}"></ul>
-                    </div>
-                    <div th:replace="~{products/products.html :: profile}"></div>
-                    <div th:replace="~{products/products.html :: changePass}"></div>
-                </div>
+                    </a>
+                </ul>
+                <ul th:replace="~{products/products.html :: login-space}"></ul>
             </div>
-        </nav>
+            <div th:replace="~{products/products.html :: profile}"></div>
+            <div th:replace="~{products/products.html :: changePass}"></div>
+        </div>
+    </div>
+</nav>
 
-        <div th:replace="~{products/products.html :: main-menu}"></div>
+<div th:replace="~{products/products.html :: main-menu}"></div>
 
-        <div class="app-content content">
-            <div class="content-wrapper">
-                <div class=" content-header row">
-                    <h4>List Orders</h4>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-lg-1">
-                        <h5>Order Id</h5>
-                    </div>
-                    <div class="col-lg-1">
-                        <h5>User Id</h5>
-                    </div>
-                    <div class="col-lg-2">
-                        <h5>Total</h5>
-                    </div>
-                    <div class="col-lg-2">
-                        <h5>Date</h5>
-                    </div>
-                    <div class="col-lg-1">
-                        <h5>Status</h5>
-                    </div>
-                    <div class="col-lg-1">
-                        <h5>View-detail</h5>
-                    </div>
-                </div>
-                <br>
-                <div class="content-body" th:each=" order: ${orders}">
-                    <div class="row grouped-multiple-statistics-card">
-                        <div class="col-lg-1">
-                            <b name="id" th:text="${order.id}"></b>
-                        </div>
-                        <div class="col-lg-1">
-                            <b th:text="${order.user.id}"></b>
-                        </div>
-                        <div class="col-lg-2">
-                            <h6 th:text="${order.total}" class="formatPrice"></h6>
-                        </div>
-                        <div class="col-lg-2">
-                            <h6 th:text="${order.getOrderDate()}"></h6>
-                        </div>
-                        <div class="col-lg-1">
-                            <a th:href="@{/orders/change-status/{id}(id=${order.id})}">
-                                <button class="custom-btn btn-5" style="width: 100px;">
-                                    <h7>[(${order.getShowStatus()})]</h7>
-                                </button>
-                                <!-- <button class="custom-btn btn-5" style="width: 100px;" th:if="${order.status == 0}">
-                                    <h7>Pending</h7>
-                                </button> -->
-                                <!-- <button class="custom-btn btn-6" style="width: 100px;" th:if="${order.status == 1}">
-                                    <h7>Delivered</h7>
-                                </button> -->
-                            </a>
-                        </div>
-                        <div class="col-lg-1">
-                            <button id="viewOrderDetail" class="custom-btn btn-14" style="width: 100px;"
-                                th:onclick="'loadOrderDetail(\'' + ${order.id} + '\')'">
-                                <h7>View</h7>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="orderDetail" th:classappend="${order.id}"
-                        style="padding: 70px; width: 1400px; height: 650px; top: 50%; left: 50%; transform: translate(-50%, -50%); position: fixed; display: none; z-index: 9999; background-color: white; border: 2px solid black; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
-                        <div class="tracking">
-                            <i class="fas fa-box"></i>
-                            <i class="fas fa-shipping-fast"></i>
-                            <i class="fas fa-check"></i>
-                            <i class="fas fa-times"></i>
-                        </div>
-                        <button class="close" onclick="closeOrderDetail(this)"> X </button>
-                        <h5> Order id: [(${order.id})]</h5><br>
-                        <div class="row mb-3" th:each=" item: ${order.orderDetails}">
-                            <div class="col-lg-3">
-                                <img th:src="${item.product.getImages()}" style="width: 120px;">
-                            </div>
-                            <div class="col-lg-4">
-                                <h7 th:text="${item.product.getName()}"></h7>
-                            </div>
-                            <div class="col-lg-1">
-                                <p th:text="${item.quantity}">1</p>
-                            </div>
-                            <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
-                        </div>
-                    </div>
-                    <br>
-                </div>
+<div class="app-content content">
+    <div class="content-wrapper">
+        <div class=" content-header row">
+            <h4>List Orders</h4>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-1">
+                <h5>Order Id</h5>
+            </div>
+            <div class="col-lg-1">
+                <h5>User Id</h5>
+            </div>
+            <div class="col-lg-2">
+                <h5>Total</h5>
+            </div>
+            <div class="col-lg-2">
+                <h5>Date</h5>
+            </div>
+            <div class="col-lg-1">
+                <h5>Status</h5>
+            </div>
+            <div class="col-lg-1">
+                <h5>View-detail</h5>
+            </div>
+            <div class="col-lg-1" th:if="${session.staff==null}">
+                <h5>Action</h5>
             </div>
         </div>
+        <br>
+        <div class="content-body" th:each=" order: ${orders}">
+            <div class="row grouped-multiple-statistics-card">
+                <div class="col-lg-1">
+                    <b name="id" th:text="${order.id}"></b>
+                </div>
+                <div class="col-lg-1">
+                    <b th:text="${order.user.id}"></b>
+                </div>
+                <div class="col-lg-2">
+                    <h6 th:text="${order.total}" class="formatPrice"></h6>
+                </div>
+                <div class="col-lg-2">
+                    <h6 th:text="${order.getOrderDate()}"></h6>
+                </div>
+                <div class="col-lg-1">
+                    <h6>[(${order.getShowStatus()})]</h6>
+                </div>
+                <div class="col-lg-1">
+                    <button id="viewOrderDetail" class="custom-btn btn-14" style="width: 100px;"
+                            th:onclick="'loadOrderDetail(\'' + ${order.id} + '\')'">
+                        <h7>View</h7>
+                    </button>
+                </div>
+                <div class="col-lg-1">
+                    <a th:href="@{/orders/delete/{id}(id=${order.id})}">
+                        <button class="custom-btn btn-5"
+                                th:if="${order.status == 3 && session.staff==null}">Delete
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <div class="orderDetail" th:classappend="${order.id}"
+                 style="padding: 70px; width: 1400px; height: 650px; top: 50%; left: 50%; transform: translate(-50%, -50%); position: fixed; display: none; z-index: 9999; background-color: white; border: 2px solid black; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+                <p id="orderStatus" th:text="${order.getStatus()}" style="display: none"></p>
+                <div class="tracking">
+                    <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=0'}" onclick="selectStatus(1)">
+                        <div class="status-box">
+                            <div class="circle-button selected" id="boxIcon"><i class="fas fa-box fa-lg"></i></div>
+                        </div>
+                    </a>
+                    <div class="status-line" id="line2"></div>
 
-        <footer th:replace="~{products/products :: footer}"></footer>
-    </body>
-    <script th:inline="javascript">
-        $( document ).ready( function ()
-        {
-            $( '.formatPrice' ).each( ( i, e ) =>
-            {
-                let val = +( $( e ).text() );
-                $( e ).text( formatMoney( val ) );
-            } );
+                    <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=1'}" onclick="selectStatus(2)">
+                        <div class="status-box">
+                            <div class="circle-button" id="shippingIcon"><i class="fas fa-shipping-fast fa-lg"></i>
+                            </div>
+                        </div>
+                    </a>
 
-            function formatMoney ( number )
-            {
-                return number.toLocaleString( 'vi-VN', {
-                    style: 'currency', currency: 'VND'
-                } );
+                    <div class="status-line" id="line3"></div>
+
+                    <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=2'}" onclick="selectStatus(3)">
+                        <div class="status-box">
+                            <div class="circle-button" id="checkIcon"><i class="fas fa-check fa-lg"></i></div>
+                        </div>
+                    </a>
+
+                    <div class="status-line" id="line4"></div>
+
+                    <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=3'}" onclick="selectStatus(4)">
+                        <div class="status-box">
+                            <div class="circle-button" id="timesIcon"><i class="fas fa-times fa-lg"></i></div>
+                        </div>
+                    </a>
+                </div>
+                <button class="close" onclick="closeOrderDetail(this)"> X</button>
+                <h5> Order id: [(${order.id})]</h5><br>
+                <div class="row mb-3" th:each=" item: ${order.orderDetails}">
+                    <div class="col-lg-3">
+                        <img th:src="${item.product.getImages()}" style="width: 120px;">
+                    </div>
+                    <div class="col-lg-4">
+                        <h7 th:text="${item.product.getName()}"></h7>
+                    </div>
+                    <div class="col-lg-1">
+                        <p th:text="${item.quantity}">1</p>
+                    </div>
+                    <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{products/products :: footer}"></footer>
+</body>
+<script th:inline="javascript">
+    function selectStatus(status, event) {
+
+        const icons = document.querySelectorAll('.circle-button');
+        const lines = document.querySelectorAll('.status-line');
+
+        // Remove 'selected' class from all icons and lines
+        icons.forEach(icon => icon.classList.remove('selected'));
+        lines.forEach(line => line.classList.remove('selected'));
+
+        // Add 'selected' class to the clicked icon and its preceding line
+        for (let i = 1; i <= status; i++) {
+            icons[i - 1].classList.add('selected');
+            if (i < status) {
+                lines[i - 1].classList.add('selected');
             }
-        } );
-
-        function loadOrderDetail ( id )
-        {
-            $( '.orderDetail' ).each( ( i, e ) =>
-            {
-
-                if ( $( e ).is( ':visible' ) && !$( e ).hasClass( id ) )
-                {
-                    $( e ).fadeOut();
-                }
-            } );
-
-            $( '.orderDetail.' + id ).fadeToggle();
-            $( '.closeMask' ).fadeIn();
-
         }
-        function closeOrderDetail ( e )
-        {
-            $( e ).parent().fadeOut();
+        // Add 'cancel' class to icons and lines for status 4
+        if (status === 4) {
+            icons.forEach(icon => icon.classList.add('cancel'));
+            lines.forEach(line => line.classList.add('cancel'));
+            // Disable click event handlers for all <a> tags within the .tracking div
+            document.querySelectorAll('.tracking a').forEach(function (a) {
+                a.onclick = function (event) {
+                    event.preventDefault(); // Prevent default action of the <a> tag
+                    return false;
+                };
+            });
         }
-
-        function showChangePass ()
-        {
-            $( '.changePass' ).addClass( 'w-25' );
-            $( '.profile' ).removeClass( "w-25" );
-        }
-        function closeChangePass ()
-        {
-            $( '.changePass' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-
-        }
-        function showProfile ()
-        {
-            $( '.profile' ).addClass( "w-25" );
-            $( '.changePass' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeIn();
-        }
-        function closeProfile ()
-        {
-            $( '.profile' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-        }
-        $( '.closeMask' ).click( ( e ) =>
-        {
-            if ( e.target.classList.contains( 'closeMask' ) )
-            {
-                $( 'button.close.close-mask' ).click();
-                $( '.orderDetail' ).fadeOut(); // Hide all order details
+    }
 
 
+    $(document).ready(function () {
+        $('.formatPrice').each((i, e) => {
+            let val = +($(e).text());
+            $(e).text(formatMoney(val));
+        });
+
+        function formatMoney(number) {
+            return number.toLocaleString('vi-VN', {
+                style: 'currency', currency: 'VND'
+            });
+        }
+    });
+
+    function loadOrderDetail(id) {
+        $('.orderDetail').each((i, e) => {
+
+            if ($(e).is(':visible') && !$(e).hasClass(id)) {
+                $(e).fadeOut();
             }
-        } );
-        alert_action(/*[[${alert}]]*/ )
+        });
 
-    </script>
+        $('.orderDetail.' + id).fadeToggle();
+        $('.closeMask').fadeIn();
+
+    }
+
+    function closeOrderDetail(e) {
+        $(e).parent().fadeOut();
+        $('.closeMask').fadeOut();
+    }
+
+    function showChangePass() {
+        $('.changePass').addClass('w-25');
+        $('.profile').removeClass("w-25");
+    }
+
+    function closeChangePass() {
+        $('.changePass').removeClass("w-25");
+        $('.closeMask').fadeOut();
+
+    }
+
+    function showProfile() {
+        $('.profile').addClass("w-25");
+        $('.changePass').removeClass("w-25");
+        $('.closeMask').fadeIn();
+    }
+
+    function closeProfile() {
+        $('.profile').removeClass("w-25");
+        $('.closeMask').fadeOut();
+    }
+
+    $('.closeMask').click((e) => {
+        if (e.target.classList.contains('closeMask')) {
+            $('button.close.close-mask').click();
+            $('.orderDetail').fadeOut(); // Hide all order details
+        }
+    });
+
+    var orderStatus = parseInt(document.getElementById("orderStatus").innerText);
+    selectStatus(orderStatus + 1);
+
+    alert_action(/*[[${alert}]]*/)
+
+</script>
 
 
 </html>

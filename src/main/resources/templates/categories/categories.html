@@ -63,7 +63,7 @@
                                     </a>
                                     <a th:href="@{/categories/edit/{id}(id=${category.id})}"
                                         th:if="${category.status == 0}" style="text-decoration: none;">
-                                        <button class="custom-btn btn-14 ">
+                                        <button class="custom-btn btn-14" th:if="${session.staff==null}">
                                             <h7>Edit</h7>
                                         </button>
                                     </a>

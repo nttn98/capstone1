@@ -73,7 +73,7 @@
 									<br>
 									<a th:href="@{/users/edit/{id}(id=${user.id})}" th:if="${user.status == 0}"
 										style="text-decoration: none;">
-										<button class="custom-btn btn-14 mb-2">
+										<button class="custom-btn btn-14 mb-2" th:if="${session.staff==null}">
 											<h7>Edit</h7>
 										</button>
 									</a>

@@ -2,325 +2,333 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
-		<link rel="shortcut icon" href="logo.png" type="image/png">
+    <link rel="shortcut icon" href="logo.png" type="image/png">
 
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&display=swap" rel="stylesheet">
-		<link
-			href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i"
-			rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300&display=swap" rel="stylesheet">
+    <link
+            href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i%7COpen+Sans:300,300i,400,400i,600,600i,700,700i"
+            rel="stylesheet">
 
-		<script src='/js/jquery.min.js'></script>
-		<script src='/js/bootstrap.min.js'></script>
-		<script src="/js/pages/toastr.js"></script>
-		<script src="/js/pages/jquery.toast.js"></script>
-		<script src='/js/product.js'></script>
+    <script src='/js/jquery.min.js'></script>
+    <script src='/js/bootstrap.min.js'></script>
+    <script src="/js/pages/toastr.js"></script>
+    <script src="/js/pages/jquery.toast.js"></script>
+    <script src='/js/product.js'></script>
 
-		<link rel='stylesheet' href='/css/font-awesome.min.css'>
-		<link rel="stylesheet" href="/css/bootstrap.min.css">
-		<link rel="stylesheet" href="/css/bootstrap-extended.min.css">
-		<link rel="stylesheet" href="/css/components.min.css">
-		<link rel="stylesheet" href="/css/pages/vertical-menu-modern.css">
-		<link rel="stylesheet" href="/css/drop.css">
-		<link rel="stylesheet" href="/css/products.css" />
-		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
-
-
-		<title>Admin page</title>
+    <link rel='stylesheet' href='/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-extended.min.css">
+    <link rel="stylesheet" href="/css/components.min.css">
+    <link rel="stylesheet" href="/css/pages/vertical-menu-modern.css">
+    <link rel="stylesheet" href="/css/drop.css">
+    <link rel="stylesheet" href="/css/products.css"/>
+    <link rel="stylesheet" href="/css/pages/jquery.toast.css"/>
 
 
-	</head>
+    <title>Admin page</title>
 
-	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
-		<!-- BEGIN: Header-->
-		<nav class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
-			<div class="navbar-wrapper">
-				<div class="navbar-header">
-					<ul class="nav navbar-nav flex-row" style="padding: 10px;">
-						<div id="logo">
-							<h1><a href="/">NAP</a></h1>
-						</div>
-					</ul>
-				</div>
-				<div class="navbar-container content">
-					<div class="collapse navbar-collapse" id="navbar-mobile">
-						<ul class="nav navbar-nav mr-auto float-left">
 
-							<a th:href="@{/products/create-product}">
-								<button class="custom-btn btn-13" th:if="${session.staff==null}">
-									<h7>+ product</h7>
-								</button>
-							</a>
+</head>
 
-						</ul>
-						<ul th:fragment="login-space" class="nav navbar-nav float-right" style="width: 80px;">
-							<li class="dropdown dropdown-user nav-item"><a
-									class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-									<!-- <div class="avatar avatar-online">
-										<img src="/img/admin.jpg" alt="avatar"><i></i>
-									</div> -->
-									<span class="user-name" style="width: auto;">
+<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
+<!-- BEGIN: Header-->
+<nav class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
+    <div class="navbar-wrapper">
+        <div class="navbar-header">
+            <ul class="nav navbar-nav flex-row" style="padding: 10px;">
+                <div id="logo">
+                    <h1><a href="/">NAP</a></h1>
+                </div>
+            </ul>
+        </div>
+        <div class="navbar-container content">
+            <div class="collapse navbar-collapse" id="navbar-mobile">
+                <ul class="nav navbar-nav mr-auto float-left">
+
+                    <a th:href="@{/products/create-product}">
+                        <button class="custom-btn btn-13" th:if="${session.staff==null}">
+                            <h7>+ product</h7>
+                        </button>
+                    </a>
+
+                </ul>
+                <ul th:fragment="login-space" class="nav navbar-nav float-right" style="width: 80px;">
+                    <li class="dropdown dropdown-user nav-item"><a
+                            class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+                        <!-- <div class="avatar avatar-online">
+                            <img src="/img/admin.jpg" alt="avatar"><i></i>
+                        </div> -->
+                        <span class="user-name" style="width: auto;">
 										<p th:if="${session.staff!=null}" th:text="${session.staff.getUsername()}"></p>
 										<p th:if="${session.admin!=null}" th:text="${session.admin.getUsername()}"></p>
 									</span>
-								</a>
-								<div class="dropdown-menu dropdown-menu" style="margin-left: -55px;">
-									<a class="dropdown-item" href="#" onclick="showProfile()"
-										th:if="${session.admin==null}">
-										<i class="feather icon-user"></i> Edit Profile</a>
-									<a class="dropdown-item" th:href="@{/logout}">
-										<i class="feather icon-power"></i> Logout</a>
-								</div>
-								<div th:fragment="profile" class="profile position-fixed">
-									<h2>User profile</h2>
-									<button onclick="closeProfile()" type="button" class="close close-mask"
-										aria-label="Close">
-										<span aria-hidden="true" style="font-size: 25px;">&times;</span>
-									</button>
-									<div class="staff" th:if="${session.staff!=null}">
-										<div class="container">
-											<div class="row" style="margin-bottom: 10px;" id="profileForm">
-												<form action="/staffs/update-staff" method="POST" th:object="${staff}">
-													<input type="hidden" name="id" th:field="*{id}">
-													<input type="hidden" name="mode" value="staff">
-													<div class="form-group">
-														<p>Full-name: </p>
-														<input type="text" class="form-control" th:field="*{fullname}">
-													</div>
-													<div class="form-group">
-														<p>Numberphone: </p>
-														<input type="text" class="form-control"
-															th:field="*{numberphone}">
-													</div>
-													<div class="form-group">
-														<p>Email: </p>
-														<input type="email" class="form-control" th:field="*{email}">
-													</div>
-													<div class="form-group">
-														<p>Dob: </p>
-														<input type="date" class="form-control" th:field="*{dob}">
-													</div>
-													<div class="form-group">
-														<p>Id card: </p>
-														<input type="text" class="form-control" th:field="*{idcard}">
-													</div>
+                    </a>
+                        <div class="dropdown-menu dropdown-menu" style="margin-left: -55px;">
+                            <a class="dropdown-item" href="#" onclick="showProfile()"
+                               th:if="${session.admin==null}">
+                                <i class="feather icon-user"></i> Edit Profile</a>
+                            <a class="dropdown-item" th:href="@{/logout}">
+                                <i class="feather icon-power"></i> Logout</a>
+                        </div>
+                        <div th:fragment="profile" class="profile position-fixed">
+                            <h2>User profile</h2>
+                            <button onclick="closeProfile()" type="button" class="close close-mask"
+                                    aria-label="Close">
+                                <span aria-hidden="true" style="font-size: 25px;">&times;</span>
+                            </button>
+                            <div class="staff" th:if="${session.staff!=null}">
+                                <div class="container">
+                                    <div class="row" style="margin-bottom: 10px;" id="profileForm">
+                                        <form action="/staffs/update-staff" method="POST" th:object="${staff}">
+                                            <input type="hidden" name="id" th:field="*{id}">
+                                            <input type="hidden" name="mode" value="staff">
+                                            <div class="form-group">
+                                                <p>Full-name: </p>
+                                                <input type="text" class="form-control" th:field="*{fullname}">
+                                            </div>
+                                            <div class="form-group">
+                                                <p>Numberphone: </p>
+                                                <input type="text" class="form-control"
+                                                       th:field="*{numberphone}">
+                                            </div>
+                                            <div class="form-group">
+                                                <p>Email: </p>
+                                                <input type="email" class="form-control" th:field="*{email}">
+                                            </div>
+                                            <div class="form-group">
+                                                <p>Dob: </p>
+                                                <input type="date" class="form-control" th:field="*{dob}">
+                                            </div>
+                                            <div class="form-group">
+                                                <p>Id card: </p>
+                                                <input type="text" class="form-control" th:field="*{idcard}">
+                                            </div>
 
-													<button type="submit" class="btn btn-info">
-														<i class="fa fa-check"></i>
-														Save
-													</button>
-												</form>
-												<a href="#">
-													<button class="btn btn-info" onclick="showChangePass()">
-														<i class="fa fa-check"></i>
-														Change password
-													</button>
-												</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div th:fragment="changePass" class="changePass position-fixed"
-									th:if="${session.staff!=null}">
-									<h2>Change password</h2>
-									<button onclick="closeChangePass()" type="button" class="close close-mask"
-										aria-label="Close">
-										<span aria-hidden="true">&times;</span>
-									</button>
-									<div class="container">
-										<div class="row ">
-											<div class="col-lg-12">
-												<form action="/staffs/do-change-pass" method="POST">
-													<input type="hidden" th:value="${session.staff.getId()}" name="id">
-													<div class="form-group">
-														<p> Enter old password: </p>
-														<input type="password" name="oldPassword" class="form-control">
-													</div>
-													<div class="form-group">
-														<p> Enter new password: </p>
-														<input type="password" name="newPassword" class="form-control">
-													</div>
-													<button type="submit" class="btn btn-info">
-														<i class="fa fa-check"></i>
-														Save
-													</button>
-													<br>
-													<a href="#" onclick="closeChangePass()">Cancel</a>
-												</form>
-											</div>
-										</div>
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</nav>
-		<!-- END: Header-->
-		<!-- BEGIN: Main Menu-->
-		<div th:fragment="main-menu" id="main-menu" class="main-menu menu-fixed menu-dark menu-shadow"
-			data-scroll-to-active="true">
-			<div class="main-menu-content">
-				<ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-					<li class=" navigation-header"><span>General</span><i class=" feather icon-minus"
-							data-toggle="tooltip" data-placement="right" data-original-title="General"></i>
-					</li>
-					<li class="nav-item has-sub open">
-						<ul class="menu-content">
-							<li>
-								<a class="menu-item" th:href="@{/products}">Products</a>
-							</li>
-							<li><a class="menu-item" th:href="@{/users}">Users</a>
-							</li>
-							<li><a class="menu-item" th:href="@{/staffs}" th:if="${session.staff==null}">Staffs</a>
-							</li>
-							<li><a class="menu-item" th:href="@{/categories}">Categories</a>
-							</li>
-							<li><a class="menu-item" th:href="@{/manufacturers}">Manufactures</a>
-							</li>
-							<li><a class="menu-item" th:href="@{/orders}">Orders</a>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<!-- END: Main Menu-->
-
-		<!-- BEGIN: Content-->
-		<div class="app-content content">
-			<div class="content-wrapper">
-				<div class="content-header row">
-					<h4>List Products</h4>
-				</div>
-				<div class="content-body">
-					<table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Image</th>
-								<th>Name</th>
-								<th>Price (VND)</th>
-								<th>Quantity</th>
-								<th>Categories</th>
-								<th>Manufacturers</th>
-								<th>Description</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody th:each="product, iterStat : ${products}" th:if="${iterStat.index < 10}">
-							<tr>
-								<td th:text="${product.id}"></td>
-								<td><img th:src="${product.images}" alt="Product Image" style="width: 120px;"></td>
-								<td th:text="${product.name}"></td>
-								<td th:text="${product.price}" class="formatPrice"></td>
-								<td th:text="${product.quantity}"></td>
-								<td th:text="${product.category.name}"></td>
-								<td th:text="${product.manufacturer.name}"></td>
-								<td th:text="${product.description}"></td>
-								<td>
-									<a th:href="@{/products/edit/{id}(id=${product.id})}"
-										th:if="${product.status == 0}">
-										<button class="custom-btn btn-14 mb-2"
-											th:if="${session.staff==null}">Edit</button>
-									</a>
-									<br>
-									<a th:href="@{/products/change-status/{id}(id=${product.id})}">
-										<button class="custom-btn btn-5" th:if="${product.status == 0}">Disable</button>
-										<button class="custom-btn btn-6" th:if="${product.status == 1}">Enable</button>
-									</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-					<div class="row">
-						<div class="col-lg-6 col-md-5">
-							<div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
-								<p>Showing
-									1 to 5 entries</p>
-							</div>
-						</div>
-						<div class="col-lg-6 col-md-7">
-							<div class="dataTables_paginate paging_simple_numbers"
-								th:each=" item: ${products.getTotalPages()}">
-								<ul class="pagination">
-									<li
-										th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
-										<a class="page-link"
-											th:href="@{'/products?page=' + ${products.number - 1}}">Previous</a>
-									</li>
-									<li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
-                                        <a th:href="@{'/products?page=' + ${page}}" th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})" th:text="${page + 1}"></a>
-                                    </li>
-                                    <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
-                                        <a class="page-link" th:href="@{'/products?page=' + ${products.number + 1}}">Next</a>
-                                    </li>
-                                </ul>
+                                            <button type="submit" class="btn btn-info">
+                                                <i class="fa fa-check"></i>
+                                                Save
+                                            </button>
+                                        </form>
+                                        <a href="#">
+                                            <button class="btn btn-info" onclick="showChangePass()">
+                                                <i class="fa fa-check"></i>
+                                                Change password
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-					</div>
-				</div>
-			</div>
-		</div>
+                        <div th:fragment="changePass" class="changePass position-fixed"
+                             th:if="${session.staff!=null}">
+                            <h2>Change password</h2>
+                            <button onclick="closeChangePass()" type="button" class="close close-mask"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <div class="container">
+                                <div class="row ">
+                                    <div class="col-lg-12">
+                                        <form action="/staffs/do-change-pass" method="POST">
+                                            <input type="hidden" th:value="${session.staff.getId()}" name="id">
+                                            <div class="form-group">
+                                                <p> Enter old password: </p>
+                                                <input type="password" name="oldPassword" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <p> Enter new password: </p>
+                                                <input type="password" name="newPassword" class="form-control">
+                                            </div>
+                                            <button type="submit" class="btn btn-info">
+                                                <i class="fa fa-check"></i>
+                                                Save
+                                            </button>
+                                            <br>
+                                            <a href="#" onclick="closeChangePass()">Cancel</a>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<!-- END: Header-->
+<!-- BEGIN: Main Menu-->
+<div th:fragment="main-menu" id="main-menu" class="main-menu menu-fixed menu-dark menu-shadow"
+     data-scroll-to-active="true">
+    <div class="main-menu-content">
+        <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+            <li class=" navigation-header"><span>General</span><i class=" feather icon-minus"
+                                                                  data-toggle="tooltip" data-placement="right"
+                                                                  data-original-title="General"></i>
+            </li>
+            <li class="nav-item has-sub open">
+                <ul class="menu-content">
+                    <li>
+                        <a class="menu-item" th:href="@{/products}">Products</a>
+                    </li>
+                    <li><a class="menu-item" th:href="@{/users}">Users</a>
+                    </li>
+                    <li><a class="menu-item" th:href="@{/staffs}" th:if="${session.staff==null}">Staffs</a>
+                    </li>
+                    <li><a class="menu-item" th:href="@{/categories}">Categories</a>
+                    </li>
+                    <li><a class="menu-item" th:href="@{/manufacturers}">Manufactures</a>
+                    </li>
+                    <li><a class="menu-item" th:href="@{/orders}">Orders</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- END: Main Menu-->
 
-		<footer th:replace="~{products/products :: footer}"></footer>
-	</body>
+<!-- BEGIN: Content-->
+<div class="app-content content">
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <h4>List Products</h4>
+        </div>
+        <div class="content-body">
+            <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price (VND)</th>
+                    <th>Quantity</th>
+                    <th>Categories</th>
+                    <th>Manufacturers</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody th:each="product, iterStat : ${products}" th:if="${iterStat.index < 10}">
+                <tr>
+                    <td th:text="${product.id}"></td>
+                    <td><img th:src="${product.images}" alt="Product Image" style="width: 120px;"></td>
+                    <td th:text="${product.name}"></td>
+                    <td th:text="${product.price}" class="formatPrice"></td>
+                    <td th:text="${product.quantity}"></td>
+                    <td th:text="${product.category.name}"></td>
+                    <td th:text="${product.manufacturer.name}"></td>
+                    <td th:text="${product.description}"></td>
+                    <td>
+                        <a th:href="@{/products/change-newest/{id}(id=${product.id})}"
+                           th:if="${product.status == 0}">
+                            <button id="starButton" class="star-button" th:if="${product.isNewest == 0}">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button id="starButton" class="star-button selected fas"
+                                    th:if="${product.isNewest == 1}">
+                                <i class="fas fa-star"></i>
+                            </button>
+                        </a>
+                        <a th:href="@{/products/change-status/{id}(id=${product.id})}">
+                            <button class="custom-btn btn-5" th:if="${product.status == 0}">Disable</button>
+                            <button class="custom-btn btn-6" th:if="${product.status == 1}">Enable</button>
+                        </a>
+                        <a th:href="@{/products/edit/{id}(id=${product.id})}"
+                           th:if="${product.status == 0}">
+                            <button class="custom-btn btn-14" th:if="${session.staff==null}">Edit</button>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-lg-6 col-md-5">
+                    <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
+                        <p>Showing
+                            1 to 5 entries</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-7">
+                    <div class="dataTables_paginate paging_simple_numbers"
+                         th:each=" item: ${products.getTotalPages()}">
+                        <ul class="pagination">
+                            <li
+                                    th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
+                                <a class="page-link"
+                                   th:href="@{'/products?page=' + ${products.number - 1}}">Previous</a>
+                            </li>
+                            <li class="paginate_button page-item active"
+                                th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
+                                <a th:href="@{'/products?page=' + ${page}}"
+                                   th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})"
+                                   th:text="${page + 1}"></a>
+                            </li>
+                            <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
+                                <a class="page-link" th:href="@{'/products?page=' + ${products.number + 1}}">Next</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-	<script th:inline="javascript">
-		function showChangePass ()
-		{
-			$( '.changePass' ).addClass( 'w-25' );
-			$( '.profile' ).removeClass( "w-25" );
-		}
-		function closeChangePass ()
-		{
-			$( '.changePass' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeOut();
+<footer th:replace="~{products/products :: footer}"></footer>
+</body>
 
-		}
-		function showProfile ()
-		{
-			$( '.profile' ).addClass( "w-25" );
-			$( '.changePass' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeIn();
-		}
-		function closeProfile ()
-		{
-			$( '.profile' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeOut();
-		}
-		$( '.closeMask' ).click( ( e ) =>
-		{
-			if ( e.target.classList.contains( 'closeMask' ) )
-				$( 'button.close.close-mask' ).click();
-		} );
+<script th:inline="javascript">
+    function showChangePass() {
+        $('.changePass').addClass('w-25');
+        $('.profile').removeClass("w-25");
+    }
 
-		$( document ).ready( () =>
-		{
-			$( '.formatPrice' ).each( ( i, e ) =>
-			{
-				let val = +( $( e ).text() );
-				$( e ).text( formatMoney( val ) );
-			} );
+    function closeChangePass() {
+        $('.changePass').removeClass("w-25");
+        $('.closeMask').fadeOut();
 
-			function formatMoney ( number )
-			{
-				return number.toLocaleString( 'vi-VN', {
-					style: 'currency', currency: 'VND'
-				} );
-			}
-		} );
-		$( document ).ready( function ()
-		{
-			$( '#productTable' ).DataTable();
-		} );
-		alert_action(/*[[${ alert }]]*/ )
-	</script>
+    }
+
+    function showProfile() {
+        $('.profile').addClass("w-25");
+        $('.changePass').removeClass("w-25");
+        $('.closeMask').fadeIn();
+    }
+
+    function closeProfile() {
+        $('.profile').removeClass("w-25");
+        $('.closeMask').fadeOut();
+    }
+
+    $('.closeMask').click((e) => {
+        if (e.target.classList.contains('closeMask'))
+            $('button.close.close-mask').click();
+    });
+
+    $(document).ready(() => {
+        $('.formatPrice').each((i, e) => {
+            let val = +($(e).text());
+            $(e).text(formatMoney(val));
+        });
+
+        function formatMoney(number) {
+            return number.toLocaleString('vi-VN', {
+                style: 'currency', currency: 'VND'
+            });
+        }
+    });
+    $(document).ready(function () {
+        $('#productTable').DataTable();
+    });
+    alert_action(/*[[${ alert }]]*/)
+</script>
 
 </html>
