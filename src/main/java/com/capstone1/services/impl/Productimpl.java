@@ -63,6 +63,11 @@ public class Productimpl implements ProductService {
 		return productRepository.findByManufacturerName(name, p);
 	}
 
+	@Override
+	public Page<Product> findByNameContaining(String keywords, Pageable p) {
+		return productRepository.findByNameContaining(keywords,p);
+	}
+
 	public List<Product> getNewestProducts() {
 		return productRepository.findByIsNewest(1);
 	}

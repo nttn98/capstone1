@@ -414,6 +414,7 @@ div.dataTables_info p {
     display: flex;
     align-items: center;
     justify-content: center;
+    /*margin-top: -50px;*/
 }
 
 .tracking a {
@@ -428,8 +429,8 @@ div.dataTables_info p {
 }
 
 .circle-button {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background-color: lightblue;
     display: flex;
@@ -439,7 +440,7 @@ div.dataTables_info p {
 }
 
 .circle-button i{
-    font-size: xx-large;
+    font-size: x-large;
 }
 
 .circle-button.selected {
@@ -452,7 +453,7 @@ div.dataTables_info p {
 }
 
 .circle-button:hover {
-    background-color: skyblue;
+    background-color: lightgreen;
 }
 
 

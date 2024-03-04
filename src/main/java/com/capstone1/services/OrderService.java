@@ -3,6 +3,8 @@ package com.capstone1.services;
 import java.util.List;
 
 import com.capstone1.model.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
 
@@ -10,7 +12,7 @@ public interface OrderService {
 
     Order saveOrder(Order order);
 
-    List<Order> getAllOrders();
+    Page<Order> getAllOrders(Pageable p);
 
     List<Order> findByUserId(long userId);
 

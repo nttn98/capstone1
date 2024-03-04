@@ -18,6 +18,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByManufacturerName(String name, Pageable p);
 
+    Page<Product> findByNameContaining(String keywords, Pageable p);
+
     @Modifying
     @Transactional
     @Query(value = "ALTER TABLE products AUTO_INCREMENT = 1001", nativeQuery = true)

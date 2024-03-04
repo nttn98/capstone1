@@ -28,4 +28,6 @@ public interface ProductService {
 
 	Page<Product> findByManufacturerName(String name, Pageable p);
 
+	Page<Product> findByNameContaining (String keywords, Pageable p);
+
 }

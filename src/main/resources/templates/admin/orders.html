@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{products/products ::head}"></head>
+<link rel="stylesheet" href="/css/order.css"/>
 
 <body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
 <nav th:fragment="header-navbar"
@@ -37,63 +38,92 @@
             <h4>List Orders</h4>
         </div>
         <br>
-        <div class="row">
-            <div class="col-lg-1">
-                <h5>Order Id</h5>
-            </div>
-            <div class="col-lg-1">
-                <h5>User Id</h5>
-            </div>
-            <div class="col-lg-2">
-                <h5>Total</h5>
-            </div>
-            <div class="col-lg-2">
-                <h5>Date</h5>
-            </div>
-            <div class="col-lg-1">
-                <h5>Status</h5>
-            </div>
-            <div class="col-lg-1">
-                <h5>View-detail</h5>
-            </div>
-            <div class="col-lg-1" th:if="${session.staff==null}">
-                <h5>Action</h5>
-            </div>
-        </div>
-        <br>
         <div class="content-body" th:each=" order: ${orders}">
-            <div class="row grouped-multiple-statistics-card">
-                <div class="col-lg-1">
-                    <b name="id" th:text="${order.id}"></b>
-                </div>
-                <div class="col-lg-1">
-                    <b th:text="${order.user.id}"></b>
-                </div>
-                <div class="col-lg-2">
-                    <h6 th:text="${order.total}" class="formatPrice"></h6>
-                </div>
-                <div class="col-lg-2">
-                    <h6 th:text="${order.getOrderDate()}"></h6>
-                </div>
-                <div class="col-lg-1">
-                    <h6>[(${order.getShowStatus()})]</h6>
-                </div>
-                <div class="col-lg-1">
-                    <button id="viewOrderDetail" class="custom-btn btn-14" style="width: 100px;"
-                            th:onclick="'loadOrderDetail(\'' + ${order.id} + '\')'">
-                        <h7>View</h7>
-                    </button>
-                </div>
-                <div class="col-lg-1">
-                    <a th:href="@{/orders/delete/{id}(id=${order.id})}">
-                        <button class="custom-btn btn-5"
-                                th:if="${order.status == 3 && session.staff==null}">Delete
+            <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User Id</th>
+                    <th>Total</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>View-detail</th>
+                    <th th:if="${session.staff==null}">Action</th>
+                </tr>
+                </thead>
+                <tbody th:each="order, iterStat : ${orders}" th:if="${iterStat.index < 10}">
+                <tr>
+                    <td th:text="${order.id}"></td>
+                    <td th:text="${order.user.id}"></td>
+                    <td th:text="${order.total}" class="formatPrice"></td>
+                    <td th:text="${order.getOrderDate()}"></td>
+                    <td>[(${order.getShowStatus()})]</td>
+                    <td>
+                        <button id="viewOrderDetail" class="custom-btn btn-14" style="width: 100px;"
+                                th:onclick="'loadOrderDetail(\'' + ${order.id} + '\')'">
+                            <h7>View</h7>
                         </button>
-                    </a>
+                    </td>
+                    <td>
+                        <a th:href="@{/orders/delete/{id}(id=${order.id})}">
+                            <button class="custom-btn btn-5"
+                                    th:if="${order.status == 3 && session.staff==null}">Delete
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-lg-6 col-md-5">
+                    <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
+                        <p>Showing
+                            1 to 5 entries</p>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-7">
+                    <div class="dataTables_paginate paging_simple_numbers"
+                         th:each=" item: ${orders.getTotalPages()}">
+                        <ul class="pagination">
+                            <li
+                                    th:class="'paginate_button page-item previous ' + (${orders.number == 0 ? 'disabled' : ''})">
+                                <a class="page-link"
+                                   th:href="@{'/orders?page=' + ${orders.number - 1}}">Previous</a>
+                            </li>
+                            <li class="paginate_button page-item active"
+                                th:each="page : ${#numbers.sequence(0, orders.totalPages - 1)}">
+                                <a th:href="@{'/orders?page=' + ${page}}"
+                                   th:class="'page-link ' + (${orders.number == page ? 'current-page' : ''})"
+                                   th:text="${page + 1}"></a>
+                            </li>
+                            <li th:class="'paginate_button page-item next ' + (${orders.number == orders.totalPages - 1 ? 'disabled' : ''})">
+                                <a class="page-link" th:href="@{'/orders?page=' + ${orders.number + 1}}">Next</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="orderDetail" th:classappend="${order.id}"
                  style="padding: 70px; width: 1400px; height: 650px; top: 50%; left: 50%; transform: translate(-50%, -50%); position: fixed; display: none; z-index: 9999; background-color: white; border: 2px solid black; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+                <h5 style="margin-top: -50px"> #[(${order.id})]</h5>
+                <div class="shipping">
+                    <h3>Shipping Information</h3>
+                    <div id="shipping-details">
+                        <div class="shipping-line">
+                            <span class="label">Name:</span>
+                            <span class="info" th:text="${order.getReceiverName()}"></span>
+                        </div>
+                        <div class="shipping-line">
+                            <span class="label">Address:</span>
+                            <span class="info" th:text="${order.getReceiverAddress()}"></span>
+                        </div>
+                        <div class="shipping-line">
+                            <span class="label">Phone:</span>
+                            <span class="info" th:text="${order.getReceiverNumberphone()}"></span>
+                        </div>
+                    </div>
+                </div>
+
                 <p id="orderStatus" th:text="${order.getStatus()}" style="display: none"></p>
                 <div class="tracking">
                     <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=0'}" onclick="selectStatus(1)">
@@ -126,19 +156,35 @@
                         </div>
                     </a>
                 </div>
-                <button class="close" onclick="closeOrderDetail(this)"> X</button>
-                <h5> Order id: [(${order.id})]</h5><br>
-                <div class="row mb-3" th:each=" item: ${order.orderDetails}">
-                    <div class="col-lg-3">
-                        <img th:src="${item.product.getImages()}" style="width: 120px;">
-                    </div>
-                    <div class="col-lg-4">
-                        <h7 th:text="${item.product.getName()}"></h7>
-                    </div>
-                    <div class="col-lg-1">
-                        <p th:text="${item.quantity}">1</p>
-                    </div>
-                    <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
+                <button class="close" onclick="closeOrderDetail(this)"
+                        style="width: 40px; height: 40px; margin-top: 54px"> X
+                </button>
+                <div class="order-detail" th:each=" item: ${order.orderDetails}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        <tbody th:each=" item: ${order.orderDetails}">
+                        <tr>
+                            <td><img th:src="${item.product.getImages()}" style="width: 120px;">
+                            </td>
+                            <td th:text="${item.product.getName()}"></td>
+                            <td th:text="${item.quantity}"></td>
+                            <td th:text="${item.product.getPrice()}" class="formatPrice"></td>
+                            <td th:text="${item.getPrice()}" class="formatPrice"></td>
+                        </tr>
+                        </tbody>
+                        <tr>
+                            <td colspan="3" class="total">Grand Total:</td>
+                            <td class="total formatPrice" th:text="${item.getFinalPrice()}"></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
             <br>

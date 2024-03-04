@@ -284,7 +284,8 @@ public class HomeController {
 
     // get all orders in admin mode
     @GetMapping("/orders")
-    public String listOrders(Model model, HttpSession session) {
+    public String listOrders(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "5") int size) {
         HashMap<Integer, String> map = new HashMap<>();
         map.put(0, "Prepared");
         map.put(1, "Shipping");
@@ -293,7 +294,7 @@ public class HomeController {
 
         isLogin(model, session);
 
-        List<Order> orders = orderService.getAllOrders();
+        Page<Order> orders = orderService.getAllOrders(PageRequest.of(page, size));
 
         for (Order order : orders) {
             order.setShowStatus(map.get(order.getStatus()));
@@ -315,26 +316,29 @@ public class HomeController {
         model.addAttribute("orderDetails", listOrderDetails);
         return listOrderDetails;
     }
+
     @GetMapping("/orders/delete/{orderId}")
-    public String deleteOrder(@PathVariable Long orderId, Model model, HttpSession session) {
+    public String deleteOrder(@PathVariable Long orderId, Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "5") int size) {
         orderService.deleteOrderById(orderId);
         orderDetailService.deleteByOrderId(orderId);
         model.addAttribute("alert", "success");
-        return listOrders(model, session);
+        return listOrders(model, session, page, size);
     }
 
     @GetMapping("/orders/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
-                               HttpSession session, @RequestParam("status") int newStatus) {
+                               HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "5") int size) {
         Order existOrder = orderService.getOrderById(id);
 
-        if(existOrder.getStatus()!=newStatus){
+        if (existOrder.getStatus() != newStatus) {
             existOrder.setStatus(newStatus);
         }
 
         model.addAttribute("alert", "success");
         orderService.changeStatusOrder(existOrder);
-        return listOrders(model, session);
+        return listOrders(model, session, page, size);
     }
 
     /* Forgot password admin and staff */
