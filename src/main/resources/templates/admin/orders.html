@@ -78,7 +78,6 @@
                 <div class="orderDetail" th:classappend="${order.id}"
                      style="padding: 70px; width: 1400px; height: 650px; top: 50%; left: 50%; transform: translate(-50%, -50%); position: fixed; display: none; z-index: 9999; background-color: white; border: 2px solid black; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
                     <h5 style="margin-top: -50px"> #[(${order.id})] </h5>
-                    <p class="orderStatus" th:th:text="${order.status}"></p>
                     <div class="shipping">
                         <h3>Shipping Information</h3>
                         <div id="shipping-details">
@@ -133,33 +132,27 @@
                     <button class="close" onclick="closeOrderDetail(this)"
                             style="width: 40px; height: 40px; margin-top: 54px"> X
                     </button>
-                    <div class="order-detail" th:each=" item: ${order.orderDetails}">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Name</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th>Total</th>
-                            </tr>
-                            </thead>
-                            <tbody th:each=" item: ${order.orderDetails}">
-                            <tr>
-                                <td><img th:src="${item.product.getImages()}" style="width: 120px;">
-                                </td>
-                                <td th:text="${item.product.getName()}"></td>
-                                <td th:text="${item.quantity}"></td>
-                                <td th:text="${item.product.getPrice()}" class="formatPrice"></td>
-                                <td th:text="${item.getPrice()}" class="formatPrice"></td>
-                            </tr>
-                            </tbody>
-                            <tr>
-                                <td colspan="3" class="total">Grand Total:</td>
-                                <td class="total formatPrice" th:text="${item.getFinalPrice()}"></td>
-                            </tr>
-                        </table>
-                    </div>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each=" item: ${order.orderDetails}">
+                            <td><img th:src="${item.product.getImages()}" style="width: 120px;">
+                            </td>
+                            <td th:text="${item.product.getName()}"></td>
+                            <td th:text="${item.quantity}"></td>
+                            <td th:text="${item.product.getPrice()}" class="formatPrice"></td>
+                            <td th:text="${item.getPrice()}" class="formatPrice"></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
