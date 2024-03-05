@@ -38,7 +38,7 @@
             <h4>List Orders</h4>
         </div>
         <br>
-        <div class="content-body" th:each=" order: ${orders}">
+        <div class="content-body">
             <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
                 <thead>
                 <tr>
@@ -48,7 +48,7 @@
                     <th>Date</th>
                     <th>Status</th>
                     <th>View-detail</th>
-                    <th th:if="${session.staff==null}">Action</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody th:each="order, iterStat : ${orders}" th:if="${iterStat.index < 10}">
@@ -60,7 +60,7 @@
                     <td>[(${order.getShowStatus()})]</td>
                     <td>
                         <button id="viewOrderDetail" class="custom-btn btn-14" style="width: 100px;"
-                                th:onclick="'loadOrderDetail(\'' + ${order.id} + '\')'">
+                                th:onclick="'loadOrderDetail(\'' + ${order.id} + '\', ' + ${order.status} + ');'">
                             <h7>View</h7>
                         </button>
                     </td>
@@ -74,157 +74,130 @@
                 </tr>
                 </tbody>
             </table>
-            <div class="row">
-                <div class="col-lg-6 col-md-5">
-                    <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
-                        <p>Showing
-                            1 to 5 entries</p>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-7">
-                    <div class="dataTables_paginate paging_simple_numbers"
-                         th:each=" item: ${orders.getTotalPages()}">
-                        <ul class="pagination">
-                            <li
-                                    th:class="'paginate_button page-item previous ' + (${orders.number == 0 ? 'disabled' : ''})">
-                                <a class="page-link"
-                                   th:href="@{'/orders?page=' + ${orders.number - 1}}">Previous</a>
-                            </li>
-                            <li class="paginate_button page-item active"
-                                th:each="page : ${#numbers.sequence(0, orders.totalPages - 1)}">
-                                <a th:href="@{'/orders?page=' + ${page}}"
-                                   th:class="'page-link ' + (${orders.number == page ? 'current-page' : ''})"
-                                   th:text="${page + 1}"></a>
-                            </li>
-                            <li th:class="'paginate_button page-item next ' + (${orders.number == orders.totalPages - 1 ? 'disabled' : ''})">
-                                <a class="page-link" th:href="@{'/orders?page=' + ${orders.number + 1}}">Next</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="orderDetail" th:classappend="${order.id}"
-                 style="padding: 70px; width: 1400px; height: 650px; top: 50%; left: 50%; transform: translate(-50%, -50%); position: fixed; display: none; z-index: 9999; background-color: white; border: 2px solid black; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
-                <h5 style="margin-top: -50px"> #[(${order.id})]</h5>
-                <div class="shipping">
-                    <h3>Shipping Information</h3>
-                    <div id="shipping-details">
-                        <div class="shipping-line">
-                            <span class="label">Name:</span>
-                            <span class="info" th:text="${order.getReceiverName()}"></span>
-                        </div>
-                        <div class="shipping-line">
-                            <span class="label">Address:</span>
-                            <span class="info" th:text="${order.getReceiverAddress()}"></span>
-                        </div>
-                        <div class="shipping-line">
-                            <span class="label">Phone:</span>
-                            <span class="info" th:text="${order.getReceiverNumberphone()}"></span>
-                        </div>
-                    </div>
-                </div>
-
-                <p id="orderStatus" th:text="${order.getStatus()}" style="display: none"></p>
-                <div class="tracking">
-                    <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=0'}" onclick="selectStatus(1)">
-                        <div class="status-box">
-                            <div class="circle-button selected" id="boxIcon"><i class="fas fa-box fa-lg"></i></div>
-                        </div>
-                    </a>
-                    <div class="status-line" id="line2"></div>
-
-                    <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=1'}" onclick="selectStatus(2)">
-                        <div class="status-box">
-                            <div class="circle-button" id="shippingIcon"><i class="fas fa-shipping-fast fa-lg"></i>
+            <div th:each=" order: ${orders}">
+                <div class="orderDetail" th:classappend="${order.id}"
+                     style="padding: 70px; width: 1400px; height: 650px; top: 50%; left: 50%; transform: translate(-50%, -50%); position: fixed; display: none; z-index: 9999; background-color: white; border: 2px solid black; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+                    <h5 style="margin-top: -50px"> #[(${order.id})] </h5>
+                    <p class="orderStatus" th:th:text="${order.status}"></p>
+                    <div class="shipping">
+                        <h3>Shipping Information</h3>
+                        <div id="shipping-details">
+                            <div class="shipping-line">
+                                <span class="label">Name:</span>
+                                <span class="info" th:text="${order.getReceiverName()}"></span>
+                            </div>
+                            <div class="shipping-line">
+                                <span class="label">Address:</span>
+                                <span class="info" th:text="${order.getReceiverAddress()}"></span>
+                            </div>
+                            <div class="shipping-line">
+                                <span class="label">Phone:</span>
+                                <span class="info" th:text="${order.getReceiverNumberphone()}"></span>
                             </div>
                         </div>
-                    </a>
-
-                    <div class="status-line" id="line3"></div>
-
-                    <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=2'}" onclick="selectStatus(3)">
-                        <div class="status-box">
-                            <div class="circle-button" id="checkIcon"><i class="fas fa-check fa-lg"></i></div>
-                        </div>
-                    </a>
-
-                    <div class="status-line" id="line4"></div>
-
-                    <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=3'}" onclick="selectStatus(4)">
-                        <div class="status-box">
-                            <div class="circle-button" id="timesIcon"><i class="fas fa-times fa-lg"></i></div>
-                        </div>
-                    </a>
-                </div>
-                <button class="close" onclick="closeOrderDetail(this)"
-                        style="width: 40px; height: 40px; margin-top: 54px"> X
-                </button>
-                <div class="order-detail" th:each=" item: ${order.orderDetails}">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>Name</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                        </tr>
-                        </thead>
-                        <tbody th:each=" item: ${order.orderDetails}">
-                        <tr>
-                            <td><img th:src="${item.product.getImages()}" style="width: 120px;">
-                            </td>
-                            <td th:text="${item.product.getName()}"></td>
-                            <td th:text="${item.quantity}"></td>
-                            <td th:text="${item.product.getPrice()}" class="formatPrice"></td>
-                            <td th:text="${item.getPrice()}" class="formatPrice"></td>
-                        </tr>
-                        </tbody>
-                        <tr>
-                            <td colspan="3" class="total">Grand Total:</td>
-                            <td class="total formatPrice" th:text="${item.getFinalPrice()}"></td>
-                        </tr>
-                    </table>
+                    </div>
+                    <div class="tracking" th:classappend="${'status-'+order.id}">
+                        <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=0'}">
+                            <div class="status-box">
+                                <div class="circle-button1 selected" th:classappend="${'status-'+order.id}"
+                                     id="boxIcon"><i
+                                        class="fas fa-box fa-lg"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="status-line2" th:classappend="${'status-'+order.id}" id="line2"></div>
+                        <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=1'}">
+                            <div class="status-box">
+                                <div class="circle-button2" th:classappend="${'status-'+order.id}" id="shippingIcon"><i
+                                        class="fas fa-shipping-fast fa-lg"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="status-line3" th:classappend="${'status-'+order.id}" id="line3"></div>
+                        <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=2'}">
+                            <div class="status-box">
+                                <div class="circle-button3" th:classappend="${'status-'+order.id}" id="checkIcon"><i
+                                        class="fas fa-check fa-lg"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="status-line4" th:classappend="${'status-'+order.id}" id="line4"></div>
+                        <a th:href="@{'/orders/change-status/' + ${order.id} + '?status=3'}">
+                            <div class="status-box">
+                                <div class="circle-button4" th:classappend="${'status-'+order.id}" id="timesIcon"><i
+                                        class="fas fa-times fa-lg"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <button class="close" onclick="closeOrderDetail(this)"
+                            style="width: 40px; height: 40px; margin-top: 54px"> X
+                    </button>
+                    <div class="order-detail" th:each=" item: ${order.orderDetails}">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                            </tr>
+                            </thead>
+                            <tbody th:each=" item: ${order.orderDetails}">
+                            <tr>
+                                <td><img th:src="${item.product.getImages()}" style="width: 120px;">
+                                </td>
+                                <td th:text="${item.product.getName()}"></td>
+                                <td th:text="${item.quantity}"></td>
+                                <td th:text="${item.product.getPrice()}" class="formatPrice"></td>
+                                <td th:text="${item.getPrice()}" class="formatPrice"></td>
+                            </tr>
+                            </tbody>
+                            <tr>
+                                <td colspan="3" class="total">Grand Total:</td>
+                                <td class="total formatPrice" th:text="${item.getFinalPrice()}"></td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <br>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-5">
+                <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
+                    <p>Showing
+                        1 to 5 entries</p>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-7">
+                <div class="dataTables_paginate paging_simple_numbers"
+                     th:each=" item: ${orders.getTotalPages()}">
+                    <ul class="pagination">
+                        <li
+                                th:class="'paginate_button page-item previous ' + (${orders.number == 0 ? 'disabled' : ''})">
+                            <a class="page-link"
+                               th:href="@{'/orders?page=' + ${orders.number - 1}}">Previous</a>
+                        </li>
+                        <li class="paginate_button page-item active"
+                            th:each="page : ${#numbers.sequence(0, orders.totalPages - 1)}">
+                            <a th:href="@{'/orders?page=' + ${page}}"
+                               th:class="'page-link ' + (${orders.number == page ? 'current-page' : ''})"
+                               th:text="${page + 1}"></a>
+                        </li>
+                        <li th:class="'paginate_button page-item next ' + (${orders.number == orders.totalPages - 1 ? 'disabled' : ''})">
+                            <a class="page-link" th:href="@{'/orders?page=' + ${orders.number + 1}}">Next</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+</body>
 
 <footer th:replace="~{products/products :: footer}"></footer>
-</body>
 <script th:inline="javascript">
-    function selectStatus(status, event) {
-
-        const icons = document.querySelectorAll('.circle-button');
-        const lines = document.querySelectorAll('.status-line');
-
-        // Remove 'selected' class from all icons and lines
-        icons.forEach(icon => icon.classList.remove('selected'));
-        lines.forEach(line => line.classList.remove('selected'));
-
-        // Add 'selected' class to the clicked icon and its preceding line
-        for (let i = 1; i <= status; i++) {
-            icons[i - 1].classList.add('selected');
-            if (i < status) {
-                lines[i - 1].classList.add('selected');
-            }
-        }
-        // Add 'cancel' class to icons and lines for status 4
-        if (status === 4) {
-            icons.forEach(icon => icon.classList.add('cancel'));
-            lines.forEach(line => line.classList.add('cancel'));
-            // Disable click event handlers for all <a> tags within the .tracking div
-            document.querySelectorAll('.tracking a').forEach(function (a) {
-                a.onclick = function (event) {
-                    event.preventDefault(); // Prevent default action of the <a> tag
-                    return false;
-                };
-            });
-        }
-    }
-
 
     $(document).ready(function () {
         $('.formatPrice').each((i, e) => {
@@ -239,7 +212,32 @@
         }
     });
 
-    function loadOrderDetail(id) {
+    function selectStatus(id, status) {
+        const icons = document.querySelectorAll(`[class^="circle-button"].status-${id}`);
+        const lines = document.querySelectorAll(`[class^="status-line"].status-${id}`);
+
+        icons.forEach(icon => icon.classList.remove('selected'));
+        lines.forEach(line => line.classList.remove('selected'));
+
+        for (let i = 1; i <= status; i++) {
+            icons[i - 1].classList.add('selected');
+            if (i < status) {
+                lines[i - 1].classList.add('selected');
+            }
+        }
+        if (status === 4) {
+            icons.forEach(icon => icon.classList.add('cancel'));
+            lines.forEach(line => line.classList.add('cancel'));
+            document.querySelectorAll(`.tracking.status-${id} a`).forEach(function (a) {
+                a.onclick = function (event) {
+                    event.preventDefault(); // Prevent default action of the <a> tag
+                    return false;
+                };
+            });
+        }
+    }
+
+    function loadOrderDetail(id, s) {
         $('.orderDetail').each((i, e) => {
 
             if ($(e).is(':visible') && !$(e).hasClass(id)) {
@@ -249,6 +247,9 @@
 
         $('.orderDetail.' + id).fadeToggle();
         $('.closeMask').fadeIn();
+
+        var status = parseInt(s) + 1;
+        selectStatus(id, status)
 
     }
 
@@ -285,9 +286,6 @@
             $('.orderDetail').fadeOut(); // Hide all order details
         }
     });
-
-    var orderStatus = parseInt(document.getElementById("orderStatus").innerText);
-    selectStatus(orderStatus + 1);
 
     alert_action(/*[[${alert}]]*/)
 

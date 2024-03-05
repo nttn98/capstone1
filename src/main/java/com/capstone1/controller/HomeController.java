@@ -323,6 +323,7 @@ public class HomeController {
         orderService.deleteOrderById(orderId);
         orderDetailService.deleteByOrderId(orderId);
         model.addAttribute("alert", "success");
+
         return listOrders(model, session, page, size);
     }
 
@@ -336,7 +337,7 @@ public class HomeController {
             existOrder.setStatus(newStatus);
         }
 
-        model.addAttribute("alert", "success");
+        model.addAttribute("alert", "edit");
         orderService.changeStatusOrder(existOrder);
         return listOrders(model, session, page, size);
     }
