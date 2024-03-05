@@ -7,6 +7,8 @@ import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +51,7 @@ public class UserController {
 
     @GetMapping("/users")
     public String listUsers(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+                            @RequestParam(defaultValue = "10") int size) {
 
         homeController.isLogin(model, session);
         Page<User> listUsers = userService.getAllUsers(PageRequest.of(page, size));
@@ -81,8 +83,8 @@ public class UserController {
 
     @PostMapping("/users/update-user")
     public String updateUser(Model model, @ModelAttribute User user, @RequestParam String mode,
-            HttpSession session, @RequestParam("id") Long userId, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+                             HttpSession session, @RequestParam("id") Long userId, @RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(userId);
 
         existUser.setFullname(user.getFullname());
@@ -125,8 +127,8 @@ public class UserController {
 
     @PostMapping("/users/save-user")
     public String saveUser(Model model, @ModelAttribute User user, @RequestParam String mode,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+                           HttpSession session, @RequestParam(defaultValue = "0") int page,
+                           @RequestParam(defaultValue = "10") int size) {
 
         user.setPassword(encoding.toSHA1(user.getPassword()));
         userService.saveUser(user);
@@ -150,9 +152,9 @@ public class UserController {
 
     @PostMapping("users/do-change-pass")
     public String changePasswod(@RequestParam Long id, Model model, @ModelAttribute User user,
-            @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
-            HttpSession session, @RequestParam String mode, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+                                @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
+                                HttpSession session, @RequestParam String mode, @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(id);
         String oldUserPass = existUser.getPassword();
 
@@ -177,11 +179,31 @@ public class UserController {
 
     }
 
+    /*check username is unique*/
+    @GetMapping("/checkUsernameAvailability")
+    @ResponseBody // Ensure the returned boolean is serialized as a response body
+    public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam("username") String username) {
+        try {
+            User existingUser = userService.findByUsername(username);
+            if (existingUser == null) {
+                return ResponseEntity.ok(true); // Username is available
+            } else {
+                return ResponseEntity.ok(false); // Username is not available
+            }
+        } catch (Exception e) {
+            // Log the exception
+            e.printStackTrace();
+            // Return an internal server error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+
+
     /* login user */
     @PostMapping("/login-user")
     public String getLoginUser(Model model, @RequestParam String username,
-            @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+                               @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "10") int size) {
         // List<User> listUsers = userService.getAllUsers();
         String passEncoding = encoding.toSHA1(password);
         User user = userService.findByUsernameAndPassword(username, passEncoding);
@@ -229,9 +251,9 @@ public class UserController {
     /* order user */
     @GetMapping("/users/add-to-cart/{productId}")
     public String addToCart(Model model, @PathVariable long productId, HttpSession session,
-            @RequestParam(defaultValue = "1") int quantity, @RequestParam("mode") String mode,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+                            @RequestParam(defaultValue = "1") int quantity, @RequestParam("mode") String mode,
+                            @RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "5") int size) {
         Long userId = (Long) session.getAttribute("userId");
         Cart cart = (Cart) session.getAttribute("cart");
         Product temp = productService.getProductById(productId);
@@ -318,7 +340,7 @@ public class UserController {
 
     @GetMapping("/users/add-order")
     public String addOrder(Model model, HttpSession session, @RequestParam String name,
-            @RequestParam String address, @RequestParam long numberphone) {
+                           @RequestParam String address, @RequestParam long numberphone) {
         Long userId = (Long) session.getAttribute("userId");
         User userLogin = userService.getUserById(userId);
         Cart cart = (Cart) session.getAttribute("cart");
@@ -353,11 +375,39 @@ public class UserController {
 
     // get order by user id
     @GetMapping("/users/order-history/{userId}")
-    public String historyOrders(@PathVariable long userId, HttpSession session, Model model) {
+    public String historyOrders(@PathVariable long userId, HttpSession session, Model model, @RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "5") int size) {
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(0, "Prepared");
+        map.put(1, "Shipping");
+        map.put(2, "Delivered");
+        map.put(3, "Canceled");
+
         homeController.isUserLogin(model, session);
-        List<Order> orders = orderService.findByUserId(userId);
+        Page<Order> orders = orderService.findByUserId(userId, PageRequest.of(page, size));
+        for (Order order : orders) {
+            order.setShowStatus(map.get(order.getStatus()));
+        }
         model.addAttribute("orders", orders);
         return "users/order_history";
+    }
+
+    /*Change Status */
+    @GetMapping("/orders/user-change-status/{id}")
+    public String userChangeOrderStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
+                                        HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "5") int size) {
+        System.out.println("testtttt");
+
+        Order existOrder = orderService.getOrderById(id);
+        if (existOrder.getStatus() != newStatus) {
+            existOrder.setStatus(newStatus);
+        }
+        User user = (User) session.getAttribute("user");
+
+        orderService.changeStatusOrder(existOrder);
+        return historyOrders(user.getId(), session, model, page, size);
+
     }
 
     @GetMapping("/users/order-detail/{orderId}")

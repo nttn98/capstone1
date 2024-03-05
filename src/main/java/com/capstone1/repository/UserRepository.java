@@ -9,6 +9,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmail(String email);
 
+    User findByUsername(String username);
+
     @Modifying
     @Transactional
     @Query(value = "ALTER TABLE users AUTO_INCREMENT = 1001 ", nativeQuery = true)

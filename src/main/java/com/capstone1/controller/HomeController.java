@@ -327,10 +327,11 @@ public class HomeController {
         return listOrders(model, session, page, size);
     }
 
+    /* Change order status*/
     @GetMapping("/orders/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
-                               HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "5") int size) {
+    public String changeOrderStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
+                                    HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "5") int size) {
         Order existOrder = orderService.getOrderById(id);
 
         if (existOrder.getStatus() != newStatus) {
@@ -341,6 +342,7 @@ public class HomeController {
         orderService.changeStatusOrder(existOrder);
         return listOrders(model, session, page, size);
     }
+
 
     /* Forgot password admin and staff */
 
@@ -500,9 +502,7 @@ public class HomeController {
             helper.setSubject(subject);
             helper.setText(content, true);
             mailSender.send(message);
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }

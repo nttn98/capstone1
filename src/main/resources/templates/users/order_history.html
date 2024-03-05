@@ -1,255 +1,238 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-    <head th:replace="~{homePage :: head}"></head>
-    <link rel="stylesheet" href="/css/order_history.css">
-    <title>Order History</title>
+<head th:replace="~{homePage :: head}"></head>
+<link rel="stylesheet" href="/css/order_history.css">
+<title>Order History</title>
 
 
+<body>
+<div th:replace="~{homePage :: header_section}"></div>
 
-    <body>
-        <div th:replace="~{homePage :: header_section}"></div>
+<div>
+    <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order history</h2>
+</div>
+
+
+<div class="orders">
+    <div class="table-header">
+        <div>#</div>
+        <div>Date</div>
+        <div>Name</div>
+        <div>Address</div>
+        <div>Numberphone</div>
+        <div>Total</div>
+        <div>Status</div>
+        <div>Action</div>
+        <div>Details</div>
+    </div>
+
+    <div class="order" th:each=" order: ${orders}">
+        <div class="row">
+            <div class="cell">[(${order.getId()})]</div>
+            <div class="cell">[(${order.getOrderDate()})]</div>
+            <div class="cell">[(${order.getReceiverName()})]</div>
+            <div class="cell">[(${order.getReceiverAddress()})]</div>
+            <div class="cell">[(${order.getReceiverNumberphone()})]</div>
+            <div class="cell">
+                <p class="formatPrice" style="padding-top: 10px">[(${order.getTotal()})]</p>
+            </div>
+            <div class="cell" th:text="${order.getShowStatus()}"></div>
+            <div class="cell">
+                <a th:href="@{'/orders/user-change-status/' + ${order.id} + '?status=3'}">
+                    <button class="custom-btn btn-5" th:if="${order.getStatus()!=3}" >Cancel</button>
+                </a>
+            </div>
+            <div class="cell details">
+                <i id="orderDetail" class="fa fa-arrow-down" aria-hidden="true"
+                   th:onclick="'loadOrderDetail(\'' + ${order.id} + '\',this)'" style="display: block;"></i>
+            </div>
+        </div>
 
         <div>
-            <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order history</h2>
-        </div>
-
-
-        <div class="orders">
-            <div class="table-header">
-                <div>#</div>
-                <div>Date</div>
-                <div>Name</div>
-                <div>Address</div>
-                <div>Numberphone</div>
-                <div>Total</div>
-                <div>Details</div>
-            </div>
-
-            <div class="order" th:each=" order: ${orders}">
-                <div class="row">
-                    <div class="cell">[(${order.getId()})]</div>
-                    <div class="cell">[(${order.getOrderDate()})]</div>
-                    <div class="cell">[(${order.getReceiverName()})]</div>
-                    <div class="cell">[(${order.getReceiverAddress()})]</div>
-                    <div class="cell">[(${order.getReceiverNumberphone()})]</div>
-                    <div class="cell">
-                        <p class="formatPrice">[(${order.getTotal()})]</p>
-                    </div>
-                    <div class="cell details">
-                        <i id="orderDetail" class="fa fa-arrow-down" aria-hidden="true"
-                            th:onclick="'loadOrderDetail(\'' + ${order.id} + '\',this)'" style="display: block;"></i>
-                    </div>
+            <div class="orderDetail" th:classappend="${order.id}" style="display: none;">
+                <div class="table-header" style="justify-content: space-evenly;">
+                    <div>Images</div>
+                    <div>Product name</div>
+                    <div>Quantity</div>
+                    <div>Price</div>
                 </div>
-
-                <div>
-                    <div class="orderDetail" th:classappend="${order.id}" style="display: none;">
-                        <div class="table-header" style="justify-content: space-evenly;">
-                            <div>Images</div>
-                            <div>Product name</div>
-                            <div>Quantity</div>
-                            <div>Price</div>
+                <div class="container-fluid" style="text-align: center;">
+                    <div class="row mb-3" th:each=" item: ${order.orderDetails}">
+                        <div class="col-lg-3">
+                            <img th:src="${item.product.getImages()}" style="width: 120px;">
                         </div>
-                        <div class="container-fluid" style="text-align: center;">
-                            <div class="row mb-3" th:each=" item: ${order.orderDetails}">
-                                <div class="col-lg-3">
-                                    <img th:src="${item.product.getImages()}" style="width: 120px;">
-                                </div>
-                                <div class="col-lg-4">
-                                    <h7 th:text="${item.product.getName()}"></h7>
-                                </div>
-                                <div class="col-lg-1">
-                                    <p th:text="${item.quantity}">1</p>
-                                </div>
-                                <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
-                            </div>
+                        <div class="col-lg-4">
+                            <h7 th:text="${item.product.getName()}"></h7>
                         </div>
+                        <div class="col-lg-1">
+                            <p th:text="${item.quantity}">1</p>
+                        </div>
+                        <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
                     </div>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
+</div>
+</div>
 
-        <footer th:replace=" ~{homePage.html :: footer_section}">
-        </footer>
+<footer th:replace=" ~{homePage.html :: footer_section}">
+</footer>
 
-        <button id="topButton"><i class="fa fa-arrow-up"></i></button>
-    </body>
+<button id="topButton"><i class="fa fa-arrow-up"></i></button>
+</body>
 
-    <script th:inline="javascript">
+<script th:inline="javascript">
 
 
-        function loadOrderDetail ( id )
-        {
-            $( '.orderDetail' ).each( ( i, e ) =>
-            {
+    function loadOrderDetail(id) {
+        $('.orderDetail').each((i, e) => {
 
-                if ( $( e ).is( ':visible' ) && !$( e ).hasClass( id ) )
-                {
-                    $( e ).slideUp( 500 );
-                }
-            } );
-
-            var orderDetail = $( '.orderDetail.' + id );
-            orderDetail.slideToggle( 500 );
-
-        }
-        function closeOrderDetail ( e )
-        {
-            $( e ).parent().slideDown( 500 );
-        }
-
-        $( document ).ready( function ()
-        {
-            $( '.formatPrice' ).each( ( i, e ) =>
-            {
-                let val = +( $( e ).text() );
-                $( e ).text( formatMoney( val ) );
-            } );
-
-            function formatMoney ( number )
-            {
-                return number.toLocaleString( 'vi-VN', {
-                    style: 'currency', currency: 'VND'
-                } );
+            if ($(e).is(':visible') && !$(e).hasClass(id)) {
+                $(e).slideUp(500);
             }
-        } );
+        });
 
-        function showPass ()
-        {
-            var p = document.getElementById( "password" );
-            if ( p.type === "password" )
-            {
-                p.type = "text";
-            } else
-            {
-                p.type = "password";
+        var orderDetail = $('.orderDetail.' + id);
+        orderDetail.slideToggle(500);
+
+    }
+
+    function closeOrderDetail(e) {
+        $(e).parent().slideDown(500);
+    }
+
+    $(document).ready(function () {
+        $('.formatPrice').each((i, e) => {
+            let val = +($(e).text());
+            $(e).text(formatMoney(val));
+        });
+
+        function formatMoney(number) {
+            return number.toLocaleString('vi-VN', {
+                style: 'currency', currency: 'VND'
+            });
+        }
+    });
+
+    function showPass() {
+        var p = document.getElementById("password");
+        if (p.type === "password") {
+            p.type = "text";
+        } else {
+            p.type = "password";
+        }
+    }
+
+    function showNewPass() {
+        var p = document.getElementById("newPassword");
+        if (p.type === "password") {
+            p.type = "text";
+        } else {
+            p.type = "password";
+        }
+    }
+
+    function showConfirmPassword() {
+        var p = document.getElementById("confirmPassword");
+        if (p.type === "password") {
+            p.type = "text";
+        } else {
+            p.type = "password";
+        }
+    }
+
+    function onChange() {
+        var password = document.querySelector('input[id=newPassword]');
+        var confirm = document.querySelector('input[id=confirmPassword]');
+        if (confirm.value === password.value) {
+            confirm.setCustomValidity('');
+        } else {
+            confirm.setCustomValidity('Passwords do not match');
+        }
+    }
+
+    function showChangePassword() {
+        $("#changePassword").removeClass("d-none");
+        $("#profileForm").addClass("d-none");
+
+    }
+
+    function closeChangePassword() {
+        $("#changePassword").addClass("d-none");
+        $("#profileForm").removeClass("d-none");
+
+    }
+
+    function showRecoverPassword() {
+        $("#CustomerLoginForm").addClass("d-none")
+        $("#RecoverPasswordForm").removeClass("d-none");
+    }
+
+    function closeRecoverPassword() {
+        $("#RecoverPasswordForm").addClass("d-none");
+        $("#CustomerLoginForm").removeClass("d-none")
+        $("#register").addClass("d-none");
+
+    }
+
+    $('.closeMask').click((e) => {
+        if (e.target.classList.contains('closeMask'))
+            $('button.close.close-mask').click();
+        closeRecoverPassword();
+    });
+
+    $(document).ready(function () {
+        $(window).scroll(function () {
+            if ($(this).scrollTop() > 100) {
+                $('#topButton').fadeIn();
+            } else {
+                $('#topButton').fadeOut();
             }
-        }
-        function showNewPass ()
-        {
-            var p = document.getElementById( "newPassword" );
-            if ( p.type === "password" )
-            {
-                p.type = "text";
-            } else
-            {
-                p.type = "password";
-            }
-        }
-        function showConfirmPassword ()
-        {
-            var p = document.getElementById( "confirmPassword" );
-            if ( p.type === "password" )
-            {
-                p.type = "text";
-            } else
-            {
-                p.type = "password";
-            }
-        }
-        function onChange ()
-        {
-            var password = document.querySelector( 'input[id=newPassword]' );
-            var confirm = document.querySelector( 'input[id=confirmPassword]' );
-            if ( confirm.value === password.value )
-            {
-                confirm.setCustomValidity( '' );
-            } else
-            {
-                confirm.setCustomValidity( 'Passwords do not match' );
-            }
-        }
-        function showChangePassword ()
-        {
-            $( "#changePassword" ).removeClass( "d-none" );
-            $( "#profileForm" ).addClass( "d-none" );
+        });
 
-        }
+        $('#topButton').click(function () {
+            $('html, body').animate({scrollTop: 0}, 400);
+            return false;
+        });
+    });
 
-        function closeChangePassword ()
-        {
-            $( "#changePassword" ).addClass( "d-none" );
-            $( "#profileForm" ).removeClass( "d-none" );
+    function showUserProfile() {
+        $('.userProfile').addClass("w-25");
+        $('.closeLogin').fadeIn();
+        $('.closeMask').fadeIn();
+    }
 
-        }
-        function showRecoverPassword ()
-        {
-            $( "#CustomerLoginForm" ).addClass( "d-none" )
-            $( "#RecoverPasswordForm" ).removeClass( "d-none" );
-        }
-        function closeRecoverPassword ()
-        {
-            $( "#RecoverPasswordForm" ).addClass( "d-none" );
-            $( "#CustomerLoginForm" ).removeClass( "d-none" )
-            $( "#register" ).addClass( "d-none" );
+    function closeUserProfile() {
+        $('.userProfile').removeClass("w-25");
+        $('.closeMask').fadeOut();
+    }
 
-        }
+    function showLogin() {
+        $('.login').addClass("w-25");
+        $('.closeLogin').fadeIn();
+        $('.closeMask').fadeIn();
+    }
 
-        $( '.closeMask' ).click( ( e ) =>
-        {
-            if ( e.target.classList.contains( 'closeMask' ) )
-                $( 'button.close.close-mask' ).click();
-            closeRecoverPassword();
-        } );
+    function closeLogin() {
+        $('.login').removeClass("w-25")
+        $('.closeLogin').fadeOut();
+        $('.closeMask').fadeOut();
+    }
 
-        $( document ).ready( function ()
-        {
-            $( window ).scroll( function ()
-            {
-                if ( $( this ).scrollTop() > 100 )
-                {
-                    $( '#topButton' ).fadeIn();
-                } else
-                {
-                    $( '#topButton' ).fadeOut();
-                }
-            } );
+    function showcart() {
+        $('.cart').addClass("w-32")
+        $('.closeLogin').fadeIn();
+        $('.closeMask').fadeIn();
+    }
 
-            $( '#topButton' ).click( function ()
-            {
-                $( 'html, body' ).animate( { scrollTop: 0 }, 400 );
-                return false;
-            } );
-        } );
+    function closecart() {
+        $('.cart').removeClass("w-32")
+        $('.closeMask').fadeOut();
+    }
 
-        function showUserProfile ()
-        {
-            $( '.userProfile' ).addClass( "w-25" );
-            $( '.closeLogin' ).fadeIn();
-            $( '.closeMask' ).fadeIn();
-        }
-        function closeUserProfile ()
-        {
-            $( '.userProfile' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-        }
-
-        function showLogin ()
-        {
-            $( '.login' ).addClass( "w-25" );
-            $( '.closeLogin' ).fadeIn();
-            $( '.closeMask' ).fadeIn();
-        }
-        function closeLogin ()
-        {
-            $( '.login' ).removeClass( "w-25" )
-            $( '.closeLogin' ).fadeOut();
-            $( '.closeMask' ).fadeOut();
-        }
-
-        function showcart ()
-        {
-            $( '.cart' ).addClass( "w-32" )
-            $( '.closeLogin' ).fadeIn();
-            $( '.closeMask' ).fadeIn();
-        }
-        function closecart ()
-        {
-            $( '.cart' ).removeClass( "w-32" )
-            $( '.closeMask' ).fadeOut();
-        }
-        alert_action(/*[[${alert}]]*/ )
-    </script>
+    alert_action(/*[[${alert}]]*/)
+</script>
 
 </html>

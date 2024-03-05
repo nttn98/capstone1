@@ -14,7 +14,7 @@ public interface OrderService {
 
     Page<Order> getAllOrders(Pageable p);
 
-    List<Order> findByUserId(long userId);
+    Page<Order> findByUserId(long userId, Pageable p);
 
     Order changeStatusOrder(Order order);
 
