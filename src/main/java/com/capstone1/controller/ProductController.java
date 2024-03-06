@@ -7,6 +7,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -105,7 +107,7 @@ public class ProductController {
 
             System.out.println("Product edited successfully.");
 
-            model.addAttribute("alert", "success");
+            model.addAttribute("alert", "edit");
         } catch (Exception e) {
             model.addAttribute("alert", "error");
         }
@@ -117,7 +119,8 @@ public class ProductController {
     }
 
     @GetMapping("/products/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Product product) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session, @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "5") int size) {
 
         // get product exist
         Product existProduct = productService.getProductById(id);
@@ -127,15 +130,17 @@ public class ProductController {
         } else {
             existProduct.setStatus(0);
         }
+        model.addAttribute("alert", "edit");
 
         // save updated
         productService.updateProduct(existProduct);
 
-        return "redirect:/products";
+        return listProducts(model, session, page, size);
     }
 
     @GetMapping("/products/change-newest/{id}")
-    public String changeNewest(@PathVariable Long id, Model model, @ModelAttribute Product product) {
+    public String changeNewest(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session, @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "5") int size) {
 
         // get product exist
         Product existProduct = productService.getProductById(id);
@@ -145,11 +150,11 @@ public class ProductController {
         } else {
             existProduct.setIsNewest(1);
         }
-
+        model.addAttribute("alert", "edit");
         // save updated
         productService.updateProduct(existProduct);
 
-        return "redirect:/products";
+        return listProducts(model, session, page, size);
     }
 
     @GetMapping("/products/delete-product/{id}")
@@ -247,6 +252,22 @@ public class ProductController {
             } catch (IOException ioe) {
                 throw new IOException("Could not save image file: " + fileName, ioe);
             }
+        }
+    }
+
+    @GetMapping("/checkProductNameAvailability")
+    @ResponseBody // Ensure the returned boolean is serialized as a response body
+    public ResponseEntity<Boolean> checkProductNameAvailability(@RequestParam("name") String name) {
+        try {
+            Product productExist = productService.findByName(name);
+            if (productExist == null) {
+                return ResponseEntity.ok(true); // name is available
+            } else {
+                return ResponseEntity.ok(false); // name is not available
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
 }

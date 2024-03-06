@@ -21,6 +21,7 @@
                     <a>
 
                     </a>
+                    <h4 style="margin: auto;margin-left: 700px">List Orders</h4>
                 </ul>
                 <ul th:replace="~{products/products.html :: login-space}"></ul>
             </div>
@@ -34,10 +35,6 @@
 
 <div class="app-content content">
     <div class="content-wrapper">
-        <div class=" content-header row">
-            <h4>List Orders</h4>
-        </div>
-        <br>
         <div class="content-body">
             <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
                 <thead>
@@ -51,7 +48,9 @@
                     <th>Action</th>
                 </tr>
                 </thead>
-                <tbody th:each="order, iterStat : ${orders}" th:if="${iterStat.index < 10}">
+                <tbody th:each="order, iterStat : ${orders}"
+                       th:if="${iterStat.index < 10 && orders.getTotalPages() > 0}">
+
                 <tr>
                     <td th:text="${order.id}"></td>
                     <td th:text="${order.user.id}"></td>
@@ -76,7 +75,7 @@
             </table>
             <div th:each=" order: ${orders}">
                 <div class="orderDetail" th:classappend="${order.id}"
-                     style="padding: 70px; width: 1400px; height: 650px; top: 50%; left: 50%; transform: translate(-50%, -50%); position: fixed; display: none; z-index: 9999; background-color: white; border: 2px solid black; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+                     style="overflow: auto;padding: 70px; width: 1400px; height: 650px; top: 50%; left: 50%; transform: translate(-50%, -50%); position: fixed; display: none; z-index: 9999; background-color: white; border: 2px solid black; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
                     <h5 style="margin-top: -50px"> #[(${order.id})] </h5>
                     <div class="shipping">
                         <h3>Shipping Information</h3>
@@ -149,7 +148,7 @@
                             <td th:text="${item.product.getName()}"></td>
                             <td th:text="${item.quantity}"></td>
                             <td th:text="${item.product.getPrice()}" class="formatPrice"></td>
-                            <td th:text="${item.getPrice()}" class="formatPrice"></td>
+                            <td th:text="${item.getFinalPrice()}" class="formatPrice"></td>
                         </tr>
                         </tbody>
                     </table>
@@ -159,8 +158,10 @@
         <div class="row">
             <div class="col-lg-6 col-md-5">
                 <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
-                    <p>Showing
-                        1 to 5 entries</p>
+                    <div>
+                        <p>Showing
+                            1 to 10 of [(${orders.getTotalElements()})] total</p>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-7">

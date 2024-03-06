@@ -3,6 +3,7 @@ package com.capstone1.controller;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import com.capstone1.model.*;
 import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,12 +14,6 @@ import org.springframework.stereotype.*;
 import org.springframework.ui.*;
 import org.springframework.web.bind.annotation.*;
 
-import com.capstone1.model.Cart;
-import com.capstone1.model.CartItem;
-import com.capstone1.model.Order;
-import com.capstone1.model.OrderDetail;
-import com.capstone1.model.Product;
-import com.capstone1.model.User;
 import com.capstone1.services.CartItemService;
 import com.capstone1.services.CartService;
 import com.capstone1.services.OrderDetailService;
@@ -106,7 +101,8 @@ public class UserController {
     }
 
     @GetMapping("/users/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute User user) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute User user, HttpSession session, @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(id);
 
         if (existUser.getStatus() == 0) {
@@ -114,9 +110,9 @@ public class UserController {
         } else {
             existUser.setStatus(0);
         }
-
+        model.addAttribute("alert", "edit");
         userService.updateUser(existUser);
-        return "redirect:/users";
+        return listUsers(model, session, page, size);
     }
 
     @GetMapping("/users/delete-user/{id}")
@@ -180,9 +176,9 @@ public class UserController {
     }
 
     /*check username is unique*/
-    @GetMapping("/checkUsernameAvailability")
+    @GetMapping("/checkUserUsernameAvailability")
     @ResponseBody // Ensure the returned boolean is serialized as a response body
-    public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam("username") String username) {
+    public ResponseEntity<Boolean> checkUserUsernameAvailability(@RequestParam("username") String username) {
         try {
             User existingUser = userService.findByUsername(username);
             if (existingUser == null) {
@@ -191,9 +187,7 @@ public class UserController {
                 return ResponseEntity.ok(false); // Username is not available
             }
         } catch (Exception e) {
-            // Log the exception
             e.printStackTrace();
-            // Return an internal server error response
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
@@ -208,7 +202,7 @@ public class UserController {
         String passEncoding = encoding.toSHA1(password);
         User user = userService.findByUsernameAndPassword(username, passEncoding);
 
-        if (user != null && user.getStatus() == 0) {
+        if (user != null && user.getStatus() == 1) {
             session.setAttribute("userId", user.getId());
             session.setAttribute("user", user);
             model.addAttribute("alert", "success");
@@ -416,6 +410,5 @@ public class UserController {
         List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderId);
         model.addAttribute("orderDetails", orderDetails);
         return orderDetails;
-
     }
 }

@@ -2,11 +2,12 @@ package com.capstone1.controller;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +30,7 @@ public class ManufacturerController {
 
     @GetMapping("/manufacturers")
     public String listManufacturers(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
+                                    @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
         homeController.isLogin(model, session);
 
         Page<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers(PageRequest.of(page, size));
@@ -54,20 +55,15 @@ public class ManufacturerController {
 
     @PostMapping("/manufacturers/update-manufacturer/{id}")
     public String updateManufacturer(@PathVariable Long id, Model model,
-            @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+                                     @RequestParam("manufacturerImg") MultipartFile file,
+                                     @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "10") int size) {
         // get Manufacturer exist
         Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
-        Manufacturer checkManufacturer = manufacturerService.findByName(manufacturer.getName());
 
-        if (checkManufacturer != null) {
-            model.addAttribute("alert", "error");
-            return listManufacturers(page, size, model, session);
-        } else {
-            existManufacturer.setName(manufacturer.getName());
-            existManufacturer.setDescription(manufacturer.getDescription());
-        }
+        existManufacturer.setName(manufacturer.getName());
+        existManufacturer.setDescription(manufacturer.getDescription());
+
 
         try {
             String fileName = existManufacturer.getId() + ".png";
@@ -78,7 +74,7 @@ public class ManufacturerController {
             saveFile(uploadDir, fileName, file);
 
             System.out.println("Manufacturer edited successfully.");
-            model.addAttribute("alert", "success");
+            model.addAttribute("alert", "edit");
 
         } catch (Exception e) {
             System.out.println(e);
@@ -90,15 +86,9 @@ public class ManufacturerController {
 
     @PostMapping("/manufacturers/save-manufacturer")
     public String saveManufacturer(Model model, @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+                                   @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
+                                   @RequestParam(defaultValue = "10") int size) {
 
-        Manufacturer checkManufacturer = manufacturerService.findByName(manufacturer.getName());
-
-        if (checkManufacturer != null) {
-            model.addAttribute("alert", "error");
-            return listManufacturers(page, size, model, session);
-        }
         try {
             manufacturer = manufacturerService.saveManufacturer(manufacturer);
 
@@ -121,7 +111,8 @@ public class ManufacturerController {
 
     @GetMapping("/manufacturers/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model,
-            @ModelAttribute Manufacturer manufacturer) {
+                               @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
+                               @RequestParam(defaultValue = "10") int size) {
 
         // get product exist
         Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
@@ -131,11 +122,11 @@ public class ManufacturerController {
         } else {
             existManufacturer.setStatus(0);
         }
-
+        model.addAttribute("alert", "edit");
         // save updated
         manufacturerService.updateManufacturer(existManufacturer);
 
-        return "redirect:/manufacturers";
+        return listManufacturers(page, size, model, session);
     }
 
     @GetMapping("/manufacturers/edit/{id}")
@@ -172,6 +163,22 @@ public class ManufacturerController {
             } catch (IOException ioe) {
                 throw new IOException("Could not save image file: " + fileName, ioe);
             }
+        }
+    }
+
+    @GetMapping("/checkManuFactureNameAvailability")
+    @ResponseBody // Ensure the returned boolean is serialized as a response body
+    public ResponseEntity<Boolean> checkManuFactureNameAvailability(@RequestParam("name") String name) {
+        try {
+            Manufacturer manufacturerExist = manufacturerService.findByName(name);
+            if (manufacturerExist == null) {
+                return ResponseEntity.ok(true); // name is available
+            } else {
+                return ResponseEntity.ok(false); // name is not available
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
 }

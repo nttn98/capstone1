@@ -2,6 +2,7 @@ package com.capstone1.controller;
 
 import com.capstone1.model.*;
 import com.capstone1.services.*;
+import com.heroku.api.http.Http;
 import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -213,7 +214,7 @@ public class HomeController {
     }
 
     @GetMapping("/login-admin")
-    public String getLoginPage(Model model) {
+    public String getLoginPage(Model model, HttpSession session) {
         return "loginAdmin_Staff";
     }
 
@@ -232,14 +233,14 @@ public class HomeController {
             model.addAttribute("alert", "success");
 
             return getDashBoardPage(model, session, page, size);
-        } else if (checkStaff != null && checkStaff.getStatus() == 0) {
+        } else if (checkStaff != null && checkStaff.getStatus() == 1) {
             // model.addAttribute("mode", mode);
             session.setAttribute("staff", checkStaff);
             model.addAttribute("alert", "success");
             return getDashBoardPage(model, session, page, size);
         } else {
             model.addAttribute("alert", "error");
-            return getLoginPage(model);
+            return getLoginPage(model, session);
         }
 
     }
@@ -247,23 +248,25 @@ public class HomeController {
     public boolean checkLogin(Model model, HttpSession session) {
         Staff staff = (Staff) session.getAttribute("staff");
         Admin admin = (Admin) session.getAttribute("admin");
-
+        System.out.println(admin);
         if (admin != null) {
             model.addAttribute("admin", admin);
+            return true;
         } else if (staff != null) {
             model.addAttribute("staff", staff);
-        } else if (admin == null && staff == null) {
+            return true;
+        } else {
             return false;
         }
-        return true;
     }
 
-    public String isLogin(Model model, HttpSession session) {
-        Boolean flag = checkLogin(model, session);
-        if (flag == false) {
-            return getLoginPage(model);
+    public void isLogin(Model model, HttpSession session) {
+        boolean flag = checkLogin(model, session);
+        System.out.println(flag);
+        if (!flag) {
+            System.out.println("here");
+            getLoginPage(model, session);
         }
-        return null;
     }
 
     public void isUserLogin(Model model, HttpSession session) {
@@ -279,7 +282,7 @@ public class HomeController {
         session.removeAttribute("admin");
         session.removeAttribute("staff");
 
-        return getLoginPage(model);
+        return getLoginPage(model, session);
     }
 
     // get all orders in admin mode
@@ -295,7 +298,6 @@ public class HomeController {
         isLogin(model, session);
 
         Page<Order> orders = orderService.getAllOrders(PageRequest.of(page, size));
-
         for (Order order : orders) {
             order.setShowStatus(map.get(order.getStatus()));
         }
@@ -365,7 +367,7 @@ public class HomeController {
         if (token == null) {
             model.addAttribute("flag", false);
             model.addAttribute("message", "Your token link is invalid!");
-            return getLoginPage(model);
+            return getLoginPage(model, session);
         }
         Staff staff = staffService.getStaffById(token.getStaffId());
 
@@ -380,18 +382,18 @@ public class HomeController {
         session.removeAttribute("staff");
         model.addAttribute("alert", "recoverPass");
 
-        return getLoginPage(model);
+        return getLoginPage(model, session);
     }
 
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam String email, HttpServletRequest request, Model model) {
+    public String forgotPassword(@RequestParam String email, HttpServletRequest request, Model model, HttpSession session) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
 
         Staff staff = staffService.findByEmail(email);
         if (staff == null) {
             model.addAttribute("alert", "sendMailfail");
-            return getLoginPage(model);
+            return getLoginPage(model, session);
         }
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(30);
@@ -405,7 +407,7 @@ public class HomeController {
         sendEmail(email, resetPasswordLink);
         model.addAttribute("alert", "sendMailsuccess");
 
-        return getLoginPage(model);
+        return getLoginPage(model, session);
 
     }
 

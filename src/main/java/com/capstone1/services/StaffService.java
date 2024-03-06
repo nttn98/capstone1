@@ -11,6 +11,8 @@ public interface StaffService {
 
     Page<Staff> getAllStaffs(Pageable p);
 
+    Staff findByUserName(String username);
+
     Staff saveStaff(Staff staff);
 
     Staff updateStaff(Staff staff);

@@ -293,7 +293,7 @@
                                 <div class="form-group">
                                     <p>Username: </p>
                                     <input type="text" class="form-control" id="usernameInput" name="username"
-                                           onfocusout="checkUsername()">
+                                           onfocusout="checkUserUsername()">
                                     <span id="usernameError" style="color: red;"></span>
 
                                 </div>
@@ -563,12 +563,12 @@
 
 </body>
 <script th:inline="javascript">
-    function checkUsername() {
-        var username = document.getElementById("usernameInput").value;
+    function checkUserUsername() {
+        var username = document.getElementById("usernameInput").value.trim();
         var errorSpan = document.getElementById('usernameError');
         var submitButton = document.getElementById('submitRegister');
 
-        fetch('/checkUsernameAvailability?username=' + encodeURIComponent(username))
+        fetch('/checkUserUsernameAvailability?username=' + encodeURIComponent(username))
                 .then(response => response.json())
                 .then(isAvailable => {
                     if (isAvailable) {

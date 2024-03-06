@@ -26,6 +26,11 @@ public class Staffimpl implements StaffService {
     }
 
     @Override
+    public Staff findByUserName(String username) {
+        return staffRepository.findByUsername(username);
+    }
+
+    @Override
     public Staff saveStaff(Staff staff) {
         staffRepository.alterAutoIncrementValue();
         return staffRepository.save(staff);

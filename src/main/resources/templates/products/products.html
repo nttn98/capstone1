@@ -55,7 +55,7 @@
 									<h7>+ product</h7>
 								</button>
 							</a>
-
+                            <h4 style="margin: auto;margin-left: 600px">List Products</h4>
 						</ul>
 						<ul th:fragment="login-space" class="nav navbar-nav float-right" style="width: 80px;">
 							<li class="dropdown dropdown-user nav-item"><a
@@ -196,9 +196,6 @@
 		<!-- BEGIN: Content-->
 		<div class="app-content content">
 			<div class="content-wrapper">
-				<div class="content-header row">
-					<h4>List Products</h4>
-				</div>
 				<div class="content-body">
 					<table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
 						<thead>
@@ -251,7 +248,7 @@
 						<div class="col-lg-6 col-md-5">
 							<div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
 								<p>Showing
-									1 to 5 entries</p>
+									1 to 5 of [(${products.getTotalElements()})] total</p>
 							</div>
 						</div>
 						<div class="col-lg-6 col-md-7">

@@ -341,7 +341,7 @@ form .form-section i {
 form .form-actions {
     border-top: 1px solid #D3DCE9;
     padding: 20px 0;
-    margin-top: 20px
+    /*margin-top: 20px*/
 }
 
 form .form-actions.center {

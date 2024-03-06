@@ -1,116 +1,144 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-	<head th:replace="~{products/products::head}"></head>
-	<link rel="stylesheet" href="/css/create_user.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-		integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
-		crossorigin="anonymous" referrerpolicy="no-referrer" />
+<head th:replace="~{products/products::head}"></head>
+<link rel="stylesheet" href="/css/create_user.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
-	<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
+<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
 
-		<nav th:replace="~{categories/create_category.html :: header-navbar}"></nav>
-		<div th:replace="~{products/products.html :: main-menu}"></div>
+<nav th:replace="~{categories/create_category.html :: header-navbar}"></nav>
+<div th:replace="~{products/products.html :: main-menu}"></div>
 
-		<div class="container mt-4">
-			<h2 class="page-title">Add User</h2>
-			<br>
-			<form action="/users/save-user" th:object="${user}" method="POST">
-				<input type="hidden" name="mode">
-				<div class="row">
-					<div class="col-sm-6 ol-md-6 col-xs-12">
-						<div class="white-box">
-							<div class="form-group">
-								<label for="full-name" class="col-md-12">
-									<h5>User full-name</h5>
-								</label>
-								<div class="col-md-12">
-									<input id="full-name" th:field="*{fullname}" type="text" class="form-control">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="userName" class="col-md-12">
-									<h5>User-name</h5>
-								</label>
-								<div class="col-md-12">
-									<input id="userName" th:field="*{username}" type="text" class="form-control"
-										required>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="password" class="col-md-12">
-									<h5>Password</h5>
-								</label>
-								<div class="col-md-12">
-									<input id="password" th:field="*{password}" type="password"
-										class="form-control mb-1" required>
+<div class="container mt-4">
+    <h2 class="page-title">Add User</h2>
+    <br>
+    <form action="/users/save-user" th:object="${user}" method="POST">
+        <input type="hidden" name="mode">
+        <div class="row">
+            <div class="col-sm-6 ol-md-6 col-xs-12">
+                <div class="white-box">
+                    <div class="form-group">
+                        <label for="full-name" class="col-md-12">
+                            <h5>User full-name</h5>
+                        </label>
+                        <div class="col-md-12">
+                            <input id="full-name" th:field="*{fullname}" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="userName" class="col-md-12">
+                            <h5>Username</h5>
+                        </label>
+                        <div class="col-md-12">
+                            <input id="userName" th:field="*{username}" type="text" class="form-control"
+                                   required onfocusout="checkUserUsername()">
+                            <span id="nameError" style="color: red;"></span>
 
-									<input type="checkbox" onclick="showPass()"> Show password
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="numberPhone" class="col-md-12">
-									<h5>Number-phone</h5>
-								</label>
-								<div class="col-md-12">
-									<input id="numberPhone" th:field="*{numberphone}" type="text" class="form-control"
-										required>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="address" class="col-md-12">
-									<h5>Address</h5>
-								</label>
-								<div class="col-md-12">
-									<input id="address" th:field="*{address}" type="text" class="form-control" required>
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="email" class="col-md-12">
-									<h5>Email</h5>
-								</label>
-								<div class="col-md-12">
-									<input id="email" th:field="*{email}" type="email" class="form-control">
-								</div>
-							</div>
-							<div class="form-group">
-								<label for="dob" class="col-md-12">
-									<h5>Date of birth</h5>
-								</label>
-								<div class="col-md-12" style="margin-bottom: 35px;">
-									<input id="dob" th:field="*{dob}" type="date" class="form-control">
-								</div>
-							</div>
-						</div>
-					</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="col-md-12">
+                            <h5>Password</h5>
+                        </label>
+                        <div class="col-md-12">
+                            <input id="password" th:field="*{password}" type="password"
+                                   class="form-control mb-1" required>
 
-					<div class="col-12">
-						<div class="white-box">
-							<div class="form-actions">
-								<button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
-									Create</button>
-								<button type="button" onclick="location.href='/users'"
-									class="btn btn-default">Cancel</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</form>
-		</div>
-		<footer th:replace="~{products/products :: footer}"></footer>
-	</body>
-	<script>
-		function showPass ()
-		{
-			var p = document.getElementById( "password" );
-			if ( p.type === "password" )
-			{
-				p.type = "text";
-			} else
-			{
-				p.type = "password";
-			}
-		}
-	</script>
+                            <input type="checkbox" onclick="showPass()"> Show password
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="numberPhone" class="col-md-12">
+                            <h5>Number-phone</h5>
+                        </label>
+                        <div class="col-md-12">
+                            <input id="numberPhone" th:field="*{numberphone}" type="text" class="form-control"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address" class="col-md-12">
+                            <h5>Address</h5>
+                        </label>
+                        <div class="col-md-12">
+                            <input id="address" th:field="*{address}" type="text" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="col-md-12">
+                            <h5>Email</h5>
+                        </label>
+                        <div class="col-md-12">
+                            <input id="email" th:field="*{email}" type="email" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob" class="col-md-12">
+                            <h5>Date of birth</h5>
+                        </label>
+                        <div class="col-md-12" style="margin-bottom: 35px;">
+                            <input id="dob" th:field="*{dob}" type="date" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="white-box">
+                    <div class="form-actions">
+                        <button id="submitRegister" type="submit" class="btn btn-info"><i class="fa fa-check"></i>
+                            Create
+                        </button>
+                        <button type="button" onclick="location.href='/users'"
+                                class="btn btn-default">Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<footer th:replace="~{products/products :: footer}"></footer>
+</body>
+<script>
+
+    function checkUserUsername() {
+        var username = document.getElementById("userName").value;
+        var errorSpan = document.getElementById('nameError');
+        var submitButton = document.getElementById('submitRegister');
+
+        fetch('/checkUserUsernameAvailability?username=' + encodeURIComponent(username))
+                .then(response => response.json())
+                .then(isAvailable => {
+                    if (isAvailable) {
+                        errorSpan.textContent = '';
+                        submitButton.disabled = false; // Enable the submit button
+                        submitButton.classList.remove('btn-danger'); // Remove red color class
+                        submitButton.classList.add('btn-info'); // Add default color class
+                    } else {
+                        errorSpan.textContent = 'Username already taken';
+                        submitButton.disabled = true; // Disable the submit button
+                        submitButton.classList.remove('btn-info'); // Remove default color class
+                        submitButton.classList.add('btn-danger'); // Add red color class
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    errorSpan.textContent = 'Error fetching user data';
+                });
+    }
+
+    function showPass() {
+        var p = document.getElementById("password");
+        if (p.type === "password") {
+            p.type = "text";
+        } else {
+            p.type = "password";
+        }
+    }
+</script>
 
 </html>

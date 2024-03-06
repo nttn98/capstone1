@@ -24,6 +24,7 @@
                                     <h7>+ manufacturer</h7>
                                 </button>
                             </a>
+                            <h4 style="margin: auto;margin-left: 600px">List Manufacturers</h4>
                         </ul>
                         <ul th:replace="~{products/products.html :: login-space}"></ul>
                     </div>
@@ -37,9 +38,6 @@
 
         <div class="app-content content">
             <div class="content-wrapper">
-                <div class=" content-header row">
-                    <h4>List manufacturers</h4>
-                </div>
                 <div class="content-body">
                     <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
                         <thead>
@@ -61,13 +59,13 @@
                                 <td>
                                     <a th:href="@{/manufacturers/change-status/{id}(id=${manufacturer.id})}">
                                         <button class="custom-btn btn-5"
-                                            th:if="${manufacturer.status == 0}">Disable</button>
+                                            th:if="${manufacturer.status == 1}">Disable</button>
                                         <button class="custom-btn btn-6"
-                                            th:if="${manufacturer.status == 1}">Enable</button>
+                                            th:if="${manufacturer.status == 0}">Enable</button>
                                     </a>
 
                                     <a th:href="@{/manufacturers/edit/{id}(id=${manufacturer.id})}"
-                                        th:if="${manufacturer.status == 0}" style="text-decoration: none;">
+                                        th:if="${manufacturer.status == 1}" style="text-decoration: none;">
                                         <button class="custom-btn btn-14" th:if="${session.staff==null}">
                                             <h7>Edit</h7>
                                         </button>
@@ -80,7 +78,7 @@
                         <div class="col-lg-6 col-md-5">
                             <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
                                 <p>Showing
-                                    1 to 10 of [(${manufacturers.toList().size()})] entries</p>
+                                    1 to 10 of [(${manufacturers.getTotalElements()})] total</p>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-7">
