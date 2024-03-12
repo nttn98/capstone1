@@ -32,6 +32,11 @@ public class Cart {
         this.listItem = new ArrayList<>();
     }
 
+    public void addCartItem(CartItem cartItem) {
+        listItem.add(cartItem);
+        cartItem.setCart(this);
+    }
+
     public boolean addProduct(Product product, Cart cart) {
         boolean result = false;
 

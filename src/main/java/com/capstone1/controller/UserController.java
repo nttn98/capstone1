@@ -211,16 +211,27 @@ public class UserController {
             model.addAttribute("alert", "success");
 
             Cart oldCart = (Cart) session.getAttribute("oldCart");
+
             Cart cart = cartService.findByUserId(user.getId());
+
+            if (cart == null) {
+                cart = cartService.saveCart(new Cart(user));
+            }
 
             if (oldCart != null) {
                 for (CartItem item : oldCart.getListItem()) {
-                    addToCartWithUser(session, cart, item.getProduct(), user);
+                    Product product = item.getProduct();
+                    CartItem cartItem = cartItemService.findByProductId(product.getId());
+                    if (cartItem == null) {
+                        cartItem = new CartItem(cart, product, item.getQuantity());
+                    } else {
+                        cartItem.setQuantity(cartItem.getQuantity() + item.getQuantity());
+                    }
+                    cartItemService.save(cartItem);
+                    cart.addCartItem(cartItem);
                 }
-                session.removeAttribute("cart");
             }
 
-            cart = cartService.findByUserId(user.getId());
             session.setAttribute("cart", cart);
 
             return homeController.getHome(model, session, page, size);
@@ -283,7 +294,7 @@ public class UserController {
             cartItemService.save(cartItem);
         }
 
-        cart.addProduct(product, cart);
+        cart.addCartItem(cartItem);
         session.setAttribute("cart", cart);
 
     }
@@ -297,7 +308,7 @@ public class UserController {
             if (cartItem == null) {
                 cartItem = new CartItem(cart, product, 1);
             }
-            cart.addProduct(product, cart);
+            cart.addCartItem(cartItem);
         }
         session.setAttribute("oldCart", cart);
         session.setAttribute("cart", cart);

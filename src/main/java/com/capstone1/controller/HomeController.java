@@ -63,28 +63,18 @@ public class HomeController {
         Page<Product> newests = productService.getAllProducts(PageRequest.of(page, 1));
         List<Product> products = productService.getNewestProducts();
         products = products.subList(1, Math.min(size, products.size()));
-        // listProducts = listProducts.subList(0, Math.min(limit, listProducts.size()));
-
-        // List<Category> listCategories = categoryService.getAllCategories();
-        // List<Manufacturer> listManufacturers =
-        // manufacturerService.getAllManufacturers();
 
         Page<Product> productsByNVIDIA = productService.findByManufacturerName("nvidia",
                 PageRequest.of(page, limit));
-        // listProductsByNVIDIA = listProductsByNVIDIA.subList(0, Math.min(limit,
-        // listProductsByNVIDIA.toList().size()));
 
         Page<Product> productsByAMD = productService.findByManufacturerName("amd",
                 PageRequest.of(page, limit));
-        // listProductsByAMD = listProductsByAMD.subList(0, Math.min(limit,
-        // listProductsByAMD.size()));
 
         model.addAttribute("newests", newests);
         model.addAttribute("products", products);
         model.addAttribute("productsByAMD", productsByAMD);
         model.addAttribute("productsByNVIDIA", productsByNVIDIA);
-        // model.addAttribute("categories", listCategories);
-        // model.addAttribute("manufacturers", listManufacturers);
+
         isUserLogin(model, session);
 
         return "homePage";
