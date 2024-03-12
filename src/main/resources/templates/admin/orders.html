@@ -34,7 +34,7 @@
 <div th:replace="~{products/products.html :: main-menu}"></div>
 
 <div class="app-content content">
-    <div class="content-wrapper">
+    <div th:if="${orders!=null}" class="content-wrapper">
         <div class="content-body">
             <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
                 <thead>
@@ -48,10 +48,9 @@
                     <th>Action</th>
                 </tr>
                 </thead>
-                <tbody th:each="order, iterStat : ${orders}"
-                       th:if="${iterStat.index < 10 && orders.getTotalPages() > 0}">
-
-                <tr>
+                <tbody>
+                <tr th:each="order, iterStat : ${orders}"
+                    th:if="${iterStat.index < 10 && orders.getTotalPages() > 0}">
                     <td th:text="${order.id}"></td>
                     <td th:text="${order.user.id}"></td>
                     <td th:text="${order.total}" class="formatPrice"></td>
@@ -186,6 +185,9 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div th:if="${orders==null}" class="content-wrapper">
+        <h2 class="m-auto"> There are no orders now.</h2>
     </div>
 </div>
 </body>

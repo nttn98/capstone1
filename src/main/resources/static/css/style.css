@@ -981,7 +981,7 @@ button {
     z-index: 11;
     width: 0;
     transition: 0.5s;
-    overflow: hidden;
+    overflow: auto;
     color: black;
 }
 

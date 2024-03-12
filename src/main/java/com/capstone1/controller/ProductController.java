@@ -41,7 +41,8 @@ public class ProductController {
     @GetMapping("/products")
     public String listProducts(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "5") int size) {
-        homeController.isLogin(model, session);
+        homeController.isUserLogin(model, session);
+
         Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, size));
         // List<Category> listCategories = categoryService.getAllCategories();
         // List<Manufacturer> listManufacturers =
@@ -196,6 +197,8 @@ public class ProductController {
     public String searchProduct(Model model, HttpSession session, @RequestParam("keywords") String keywords, @RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "5") int size) {
 //        System.out.println(keywords);
+        homeController.isUserLogin(model, session);
+
         Page<Product> foundProducts = productService.findByNameContaining(keywords, PageRequest.of(page, size));
         List<Category> categories = categoryService.getAll();
         List<Manufacturer> manufacturers = manufacturerService.getAll();
@@ -203,6 +206,7 @@ public class ProductController {
         model.addAttribute("categories", categories);
         model.addAttribute("manufacturers", manufacturers);
         model.addAttribute("products", foundProducts);
+
         session.setAttribute("keywords", keywords);
 
 //        System.out.println(foundProducts.toList().size());

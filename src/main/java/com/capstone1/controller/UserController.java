@@ -48,7 +48,10 @@ public class UserController {
     public String listUsers(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
                             @RequestParam(defaultValue = "10") int size) {
 
-        homeController.isLogin(model, session);
+        String target = homeController.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Page<User> listUsers = userService.getAllUsers(PageRequest.of(page, size));
 
         if (listUsers.isEmpty()) {

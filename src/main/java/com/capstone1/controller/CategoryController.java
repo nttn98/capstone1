@@ -32,7 +32,10 @@ public class CategoryController {
     @GetMapping("/categories")
     public String listCategories(@RequestParam(defaultValue = "0") int page,
                                  @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
-        homeController.isLogin(model, session);
+        String target = homeController.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
 
         Page<Category> listCategories = categoryService.getAllCategories(PageRequest.of(page, size));
         if (listCategories.isEmpty()) {

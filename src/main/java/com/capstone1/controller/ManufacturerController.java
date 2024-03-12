@@ -31,8 +31,10 @@ public class ManufacturerController {
     @GetMapping("/manufacturers")
     public String listManufacturers(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
-        homeController.isLogin(model, session);
-
+        String target = homeController.isLogin(model, session);
+        if(target!=null){
+            return target;
+        }
         Page<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers(PageRequest.of(page, size));
 
         if (listManufacturers.isEmpty()) {

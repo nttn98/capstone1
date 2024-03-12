@@ -260,13 +260,14 @@ public class HomeController {
         }
     }
 
-    public void isLogin(Model model, HttpSession session) {
+    public String isLogin(Model model, HttpSession session) {
         boolean flag = checkLogin(model, session);
         System.out.println(flag);
         if (!flag) {
             System.out.println("here");
-            getLoginPage(model, session);
+            return getLoginPage(model, session);
         }
+        return null;
     }
 
     public void isUserLogin(Model model, HttpSession session) {
@@ -289,6 +290,10 @@ public class HomeController {
     @GetMapping("/orders")
     public String listOrders(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "5") int size) {
+        String target = isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         HashMap<Integer, String> map = new HashMap<>();
         map.put(0, "Prepared");
         map.put(1, "Shipping");

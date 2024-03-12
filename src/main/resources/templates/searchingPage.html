@@ -45,19 +45,22 @@
                 <ul style="margin-bottom: 10px; font-size: 18px"> Catogies
                     <a th:each="category: ${categories}"
                        th:href="@{/products-by-category(categoryName=${category.getName()})}">
-                        <li th:text="${category.getName()}" style="margin-left: 10px; list-style: inside;"></li>
+                        <li th:text="${category.getName()}" th:if="${category.getProducts().size()}"
+                            style="margin-left: 10px; list-style: inside;"></li>
                     </a>
                 </ul>
                 <ul style="margin-bottom: 10px; font-size: 18px;"> Manufacturers
                     <a th:each="manufacturer: ${manufacturers}"
                        th:href="@{/products-by-manufacturer(manufacturerName=${manufacturer.getName()})}">
-                        <li th:text="${manufacturer.getName()}" style="margin-left: 10px; list-style: inside;">
+                        <li th:text="${manufacturer.getName()}" th:if="${manufacturer.getProducts().size()}"
+                            style="margin-left: 10px; list-style: inside;">
                         </li>
                     </a>
                 </ul>
             </div>
             <div class="col-lg-10">
-                <div th:if="${products.toList().size() == 0}"><h2 style="text-align: center">There are no products</h2></div>
+                <div th:if="${products.toList().size() == 0}"><h2 style="text-align: center">There are no products</h2>
+                </div>
                 <div class="item" th:each=" item: ${products}">
                     <div class="card mb-3">
                         <div class="row no-gutters" style="align-items: center;">

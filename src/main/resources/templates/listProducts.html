@@ -84,14 +84,16 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
-                                <!-- <a th:href="@{/users/add-to-cart/{producId}(producId=${item.id},mode=${user})}"> -->
+                            <div class="col-lg-3" th:if="${item.getQuantity()!=0}">
                                 <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}">
                                     <button class="button-89" role="button"
                                             style="margin-top: 60px; margin-left: 90px;">Add to
                                         cart
                                     </button>
                                 </a>
+                            </div>
+                            <div class="col-lg-3" th:if="${item.getQuantity()==0}">
+                                <h5 style="padding-left: 70px">Out of stock</h5>
                             </div>
                         </div>
                     </div>

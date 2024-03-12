@@ -6,15 +6,17 @@
 <title>Order History</title>
 
 
-<body>
+<body class="header_section">
 <div th:replace="~{homePage :: header_section}"></div>
 
 <div>
-    <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Order history</h2>
+    <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Orders history</h2>
+</div>
+<div class="m-auto text-center" th:if="${orders.getTotalPages()==0}">
+    <h2 style="margin-bottom: 151px">There are no orders now</h2>
 </div>
 
-
-<div class="orders">
+<div class="orders" th:if="${orders.getTotalPages()!=0}">
     <div class="table-header">
         <div>#</div>
         <div>Date</div>
@@ -40,7 +42,7 @@
             <div class="cell" th:text="${order.getShowStatus()}"></div>
             <div class="cell">
                 <a th:href="@{'/orders/user-change-status/' + ${order.id} + '?status=3'}">
-                    <button class="custom-btn btn-5" th:if="${order.getStatus()!=3}" >Cancel</button>
+                    <button class="custom-btn btn-5" th:if="${order.getStatus()!=3}">Cancel</button>
                 </a>
             </div>
             <div class="cell details">
@@ -75,9 +77,8 @@
         </div>
     </div>
 </div>
-</div>
 
-<footer th:replace=" ~{homePage.html :: footer_section}">
+<footer th:replace=" ~{homePage.html :: footer_section}" style="position: absolute; top: 393px">
 </footer>
 
 <button id="topButton"><i class="fa fa-arrow-up"></i></button>

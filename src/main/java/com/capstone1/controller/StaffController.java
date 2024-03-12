@@ -33,7 +33,10 @@ public class StaffController {
     @GetMapping("/staffs")
     public String listStaffs(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
                              @RequestParam(defaultValue = "10") int size) {
-        homeController.isLogin(model, session);
+        String target = homeController.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Page<Staff> listStaffs = staffService.getAllStaffs(PageRequest.of(page, size));
 
         if (listStaffs.isEmpty()) {
