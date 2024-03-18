@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.List;
 
+import com.capstone1.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +42,10 @@ public class ProductController {
     @GetMapping("/products")
     public String listProducts(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
                                @RequestParam(defaultValue = "5") int size) {
-        homeController.isUserLogin(model, session);
+        String target = homeController.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
 
         Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, size));
         // List<Category> listCategories = categoryService.getAllCategories();

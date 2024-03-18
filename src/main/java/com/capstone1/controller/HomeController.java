@@ -2,7 +2,6 @@ package com.capstone1.controller;
 
 import com.capstone1.model.*;
 import com.capstone1.services.*;
-import com.heroku.api.http.Http;
 import jakarta.annotation.Resource;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -55,9 +54,9 @@ public class HomeController {
     @Autowired
     JavaMailSender mailSender;
 
-    @GetMapping({"/home-page", "/"})
+    @GetMapping({ "/home-page", "/" })
     public String getHome(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                          @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size) {
 
         int limit = 3;
         Page<Product> newests = productService.getAllProducts(PageRequest.of(page, 1));
@@ -82,7 +81,7 @@ public class HomeController {
 
     @GetMapping("/paging")
     public String paginated(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "5") int size) {
         Page<Product> products = null;
         isUserLogin(model, session);
 
@@ -115,7 +114,7 @@ public class HomeController {
 
     @GetMapping("/list-products")
     public String getProductsForUser(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "5") int size) {
         Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, size));
         List<Category> listCategories = categoryService.getAll();
         List<Manufacturer> listManufacturers = manufacturerService.getAll();
@@ -132,8 +131,8 @@ public class HomeController {
 
     @GetMapping("/products-by-category")
     public String getProductsByCategory(Model model, @RequestParam String categoryName,
-                                        HttpSession session, @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "5") int size) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
 
         isUserLogin(model, session);
         if (categoryName != null) {
@@ -156,8 +155,8 @@ public class HomeController {
 
     @GetMapping("/products-by-manufacturer")
     public String getProductsByManufacturer(Model model, @RequestParam String manufacturerName,
-                                            HttpSession session, @RequestParam(defaultValue = "0") int page,
-                                            @RequestParam(defaultValue = "5") int size) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         isUserLogin(model, session);
         if (manufacturerName != null) {
             Page<Product> products = productService.findByManufacturerName(manufacturerName,
@@ -180,7 +179,7 @@ public class HomeController {
 
     @GetMapping("/dashBoard")
     public String getDashBoardPage(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                                   @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         isLogin(model, session);
 
         Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, 5));
@@ -210,8 +209,8 @@ public class HomeController {
 
     @PostMapping("/login-admin")
     public String getLogin(Model model, HttpSession session, @RequestParam String username,
-                           @RequestParam String password, @RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "10") int size) {
+            @RequestParam String password, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         String passEncoding = encoding.toSHA1(password);
         Staff checkStaff = staffService.findByUsernameAndPassword(username, passEncoding);
@@ -279,7 +278,7 @@ public class HomeController {
     // get all orders in admin mode
     @GetMapping("/orders")
     public String listOrders(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "5") int size) {
         String target = isLogin(model, session);
         if (target != null) {
             return target;
@@ -301,7 +300,7 @@ public class HomeController {
             model.addAttribute("orders", orders);
         }
 
-//        model.addAttribute("mode", "staff");
+        // model.addAttribute("mode", "staff");
 
         return "admin/orders";
     }
@@ -315,8 +314,9 @@ public class HomeController {
     }
 
     @GetMapping("/orders/delete/{orderId}")
-    public String deleteOrder(@PathVariable Long orderId, Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "5") int size) {
+    public String deleteOrder(@PathVariable Long orderId, Model model, HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         orderService.deleteOrderById(orderId);
         orderDetailService.deleteByOrderId(orderId);
         model.addAttribute("alert", "success");
@@ -324,11 +324,11 @@ public class HomeController {
         return listOrders(model, session, page, size);
     }
 
-    /* Change order status*/
+    /* Change order status */
     @GetMapping("/orders/change-status/{id}")
     public String changeOrderStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
-                                    HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "5") int size) {
+            HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         Order existOrder = orderService.getOrderById(id);
 
         if (existOrder.getStatus() != newStatus) {
@@ -339,7 +339,6 @@ public class HomeController {
         orderService.changeStatusOrder(existOrder);
         return listOrders(model, session, page, size);
     }
-
 
     /* Forgot password admin and staff */
 
@@ -355,7 +354,7 @@ public class HomeController {
 
     @PostMapping("/reset-password")
     public String resetPassword(Model model, @RequestParam("token") String tokenString,
-                                @RequestParam String password, HttpSession session) {
+            @RequestParam String password, HttpSession session) {
 
         System.out.println("----------------------" + password);
         TokenAdmin token = tokenAdminService.findByToken(tokenString);
@@ -381,7 +380,8 @@ public class HomeController {
     }
 
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam String email, HttpServletRequest request, Model model, HttpSession session) {
+    public String forgotPassword(@RequestParam String email, HttpServletRequest request, Model model,
+            HttpSession session) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
 
@@ -420,8 +420,8 @@ public class HomeController {
 
     @PostMapping("/users/reset-password")
     public String resetPasswordForUser(Model model, @RequestParam("token") String tokenString,
-                                       @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                                       @RequestParam(defaultValue = "10") int size) {
+            @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         System.out.println("---------user-------------" + password);
         System.out.println("---------user-------------" + encoding.toSHA1(password));
@@ -449,8 +449,8 @@ public class HomeController {
 
     @PostMapping("/users/forgot-password")
     public String forgotPasswordForUser(@RequestParam String email, HttpServletRequest request, Model model,
-                                        HttpSession session, @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "10") int size) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
 
