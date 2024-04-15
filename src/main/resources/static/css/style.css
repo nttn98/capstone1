@@ -709,7 +709,7 @@ button {
     text-align: center;
 }
 
-.send_bt a {
+.send_bt input {
     width: 100%;
     float: left;
     background-color: #171717;
@@ -720,7 +720,7 @@ button {
     margin-top: 40px;
 }
 
-.send_bt a:hover {
+.send_bt input:hover {
     background-color: #e4e219;
     color: #ffffff;
 }
@@ -1307,5 +1307,3 @@ div[class*=box] {
     height: 600px;
     margin: auto;
 }
-
-

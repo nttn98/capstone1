@@ -4,10 +4,10 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.List;
 
-import com.capstone1.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,13 +41,13 @@ public class ProductController {
 
     @GetMapping("/products")
     public String listProducts(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "5") int size) {
         String target = homeController.isLogin(model, session);
         if (target != null) {
             return target;
         }
-
-        Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, size));
+        Page<Product> listProducts = productService
+                .getAllProducts(PageRequest.of(page, size, Sort.by("id").descending()));
         // List<Category> listCategories = categoryService.getAllCategories();
         // List<Manufacturer> listManufacturers =
         // manufacturerService.getAllManufacturers();
@@ -90,8 +90,8 @@ public class ProductController {
 
     @PostMapping("/products/update-product/{id}")
     public String updateProduct(@PathVariable Long id, Model model, @RequestParam("productImg") MultipartFile file,
-                                @ModelAttribute Product product, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "5") int size) {
+            @ModelAttribute Product product, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         // get product exist
         Product existProduct = productService.getProductById(id);
 
@@ -124,8 +124,9 @@ public class ProductController {
     }
 
     @GetMapping("/products/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "5") int size) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
 
         // get product exist
         Product existProduct = productService.getProductById(id);
@@ -144,8 +145,9 @@ public class ProductController {
     }
 
     @GetMapping("/products/change-newest/{id}")
-    public String changeNewest(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "5") int size) {
+    public String changeNewest(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
 
         // get product exist
         Product existProduct = productService.getProductById(id);
@@ -171,9 +173,9 @@ public class ProductController {
     /* Create Product */
     @PostMapping("/products/save-product")
     public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
-                              @ModelAttribute Product product, @RequestParam long quantity, HttpSession session,
-                              @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "5") int size) {
+            @ModelAttribute Product product, @RequestParam long quantity, HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
 
         try {
             product.setQuantity(quantity);
@@ -196,11 +198,12 @@ public class ProductController {
         return listProducts(model, session, page, size);
     }
 
-    /*Search product*/
+    /* Search product */
     @PostMapping("/products/search")
-    public String searchProduct(Model model, HttpSession session, @RequestParam("keywords") String keywords, @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "5") int size) {
-//        System.out.println(keywords);
+    public String searchProduct(Model model, HttpSession session, @RequestParam("keywords") String keywords,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        // System.out.println(keywords);
         homeController.isUserLogin(model, session);
 
         Page<Product> foundProducts = productService.findByNameContaining(keywords, PageRequest.of(page, size));
@@ -213,20 +216,19 @@ public class ProductController {
 
         session.setAttribute("keywords", keywords);
 
-//        System.out.println(foundProducts.toList().size());
+        // System.out.println(foundProducts.toList().size());
 
         return "searchingPage";
     }
 
     @GetMapping("/searchPaging")
     public String paginated(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "5") int size) {
         Page<Product> products = null;
 
         String keywords = (String) session.getAttribute("keywords");
 
         products = productService.findByNameContaining(keywords, PageRequest.of(page, size));
-
 
         model.addAttribute("products", products);
 

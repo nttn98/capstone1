@@ -9,7 +9,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Capstone1Application {
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(Capstone1Application.class, args);
-
 	}
-
 }

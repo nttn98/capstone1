@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import com.capstone1.model.*;
-import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
@@ -46,13 +46,13 @@ public class UserController {
 
     @GetMapping("/users")
     public String listUsers(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size) {
 
         String target = homeController.isLogin(model, session);
         if (target != null) {
             return target;
         }
-        Page<User> listUsers = userService.getAllUsers(PageRequest.of(page, size));
+        Page<User> listUsers = userService.getAllUsers(PageRequest.of(page, size, Sort.by("id").descending()));
 
         if (listUsers.isEmpty()) {
             User user = new User();
@@ -81,8 +81,8 @@ public class UserController {
 
     @PostMapping("/users/update-user")
     public String updateUser(Model model, @ModelAttribute User user, @RequestParam String mode,
-                             HttpSession session, @RequestParam("id") Long userId, @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "10") int size) {
+            HttpSession session, @RequestParam("id") Long userId, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(userId);
 
         existUser.setFullname(user.getFullname());
@@ -104,8 +104,9 @@ public class UserController {
     }
 
     @GetMapping("/users/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute User user, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "10") int size) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute User user, HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(id);
 
         if (existUser.getStatus() == 0) {
@@ -126,8 +127,8 @@ public class UserController {
 
     @PostMapping("/users/save-user")
     public String saveUser(Model model, @ModelAttribute User user, @RequestParam String mode,
-                           HttpSession session, @RequestParam(defaultValue = "0") int page,
-                           @RequestParam(defaultValue = "10") int size) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         user.setPassword(encoding.toSHA1(user.getPassword()));
         userService.saveUser(user);
@@ -151,9 +152,9 @@ public class UserController {
 
     @PostMapping("users/do-change-pass")
     public String changePasswod(@RequestParam Long id, Model model, @ModelAttribute User user,
-                                @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
-                                HttpSession session, @RequestParam String mode, @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "10") int size) {
+            @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
+            HttpSession session, @RequestParam String mode, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(id);
         String oldUserPass = existUser.getPassword();
 
@@ -178,7 +179,7 @@ public class UserController {
 
     }
 
-    /*check username is unique*/
+    /* check username is unique */
     @GetMapping("/checkUserUsernameAvailability")
     @ResponseBody // Ensure the returned boolean is serialized as a response body
     public ResponseEntity<Boolean> checkUserUsernameAvailability(@RequestParam("username") String username) {
@@ -195,12 +196,11 @@ public class UserController {
         }
     }
 
-
     /* login user */
     @PostMapping("/login-user")
     public String getLoginUser(Model model, @RequestParam String username,
-                               @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "10") int size) {
+            @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         // List<User> listUsers = userService.getAllUsers();
         String passEncoding = encoding.toSHA1(password);
         User user = userService.findByUsernameAndPassword(username, passEncoding);
@@ -259,9 +259,9 @@ public class UserController {
     /* order user */
     @GetMapping("/users/add-to-cart/{productId}")
     public String addToCart(Model model, @PathVariable long productId, HttpSession session,
-                            @RequestParam(defaultValue = "1") int quantity, @RequestParam("mode") String mode,
-                            @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "1") int quantity, @RequestParam("mode") String mode,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         Long userId = (Long) session.getAttribute("userId");
         Cart cart = (Cart) session.getAttribute("cart");
         Product temp = productService.getProductById(productId);
@@ -348,7 +348,7 @@ public class UserController {
 
     @GetMapping("/users/add-order")
     public String addOrder(Model model, HttpSession session, @RequestParam String name,
-                           @RequestParam String address, @RequestParam long numberphone) {
+            @RequestParam String address, @RequestParam long numberphone) {
         Long userId = (Long) session.getAttribute("userId");
         User userLogin = userService.getUserById(userId);
         Cart cart = (Cart) session.getAttribute("cart");
@@ -383,8 +383,9 @@ public class UserController {
 
     // get order by user id
     @GetMapping("/users/order-history/{userId}")
-    public String historyOrders(@PathVariable long userId, HttpSession session, Model model, @RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "5") int size) {
+    public String historyOrders(@PathVariable long userId, HttpSession session, Model model,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         HashMap<Integer, String> map = new HashMap<>();
         map.put(0, "Prepared");
         map.put(1, "Shipping");
@@ -392,7 +393,7 @@ public class UserController {
         map.put(3, "Canceled");
 
         homeController.isUserLogin(model, session);
-        Page<Order> orders = orderService.findByUserId(userId, PageRequest.of(page, size));
+        Page<Order> orders = orderService.findByUserId(userId, PageRequest.of(page, size, Sort.by("id").descending()));
         for (Order order : orders) {
             order.setShowStatus(map.get(order.getStatus()));
         }
@@ -400,11 +401,11 @@ public class UserController {
         return "users/order_history";
     }
 
-    /*Change Status */
+    /* Change Status */
     @GetMapping("/orders/user-change-status/{id}")
     public String userChangeOrderStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
-                                        HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "5") int size) {
+            HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
         System.out.println("testtttt");
 
         Order existOrder = orderService.getOrderById(id);

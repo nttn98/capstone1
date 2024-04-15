@@ -1,12 +1,8 @@
 package com.capstone1.controller;
 
-import java.util.*;
-
-import com.capstone1.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.capstone1.model.Category;
-import com.capstone1.model.Product;
 import com.capstone1.services.CategoryService;
 
 import jakarta.annotation.Resource;
@@ -31,13 +26,14 @@ public class CategoryController {
 
     @GetMapping("/categories")
     public String listCategories(@RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
+            @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
         String target = homeController.isLogin(model, session);
         if (target != null) {
             return target;
         }
 
-        Page<Category> listCategories = categoryService.getAllCategories(PageRequest.of(page, size));
+        Page<Category> listCategories = categoryService
+                .getAllCategories(PageRequest.of(page, size, Sort.by("id").descending()));
         if (listCategories.isEmpty()) {
             Category category = new Category();
             model.addAttribute("category", category);
@@ -58,8 +54,8 @@ public class CategoryController {
 
     @PostMapping("/categories/save-category")
     public String saveCategory(Model model, @ModelAttribute Category category,
-                               HttpSession session, @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "10") int size) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         System.out.println("Category added successfully");
         categoryService.saveCategory(category);
@@ -70,8 +66,8 @@ public class CategoryController {
 
     @GetMapping("/categories/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Category category,
-                               HttpSession session, @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "10") int size) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         // get product exist
         Category existCategory = categoryService.getCategoryById(id);
@@ -97,9 +93,9 @@ public class CategoryController {
 
     @PostMapping("/categories/update-category/{id}")
     public String updateCategory(@PathVariable Long id, Model model,
-                                 @ModelAttribute Category category,
-                                 HttpSession session, @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "10") int size) {
+            @ModelAttribute Category category,
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         // get Category exist
         Category existCategory = categoryService.getCategoryById(id);
 
@@ -117,7 +113,7 @@ public class CategoryController {
         return "redirect:/categories";
     }
 
-    /*check name is unique*/
+    /* check name is unique */
     @GetMapping("/checkCategoryNameAvailability")
     @ResponseBody // Ensure the returned boolean is serialized as a response body
     public ResponseEntity<Boolean> checkCategoryNameAvailability(@RequestParam("name") String name) {

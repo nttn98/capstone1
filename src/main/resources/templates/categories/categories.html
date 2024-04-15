@@ -42,8 +42,14 @@
                     <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th>Name of category</th>
+                                <th onclick="sortTable(0)">
+                                    <span>#</span>
+                                    <span class="arrow"></span>
+                                </th>
+                                <th onclick="sortTable(1)">
+                                    <span>Name of Category</span>
+                                    <span class="arrow"></span>
+                                </th>
                                 <th>Description</th>
                                 <th>Action</th>
                             </tr>

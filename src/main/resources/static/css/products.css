@@ -36,7 +36,7 @@ h1 a {
 
 /* 5 */
 .btn-5 {
-    width: 130px;
+    wid1: 130px;
     height: 40px;
     line-height: 42px;
     padding: 0;
@@ -475,4 +475,29 @@ div.dataTables_info p {
 [class^=circle-button],
 [class^=status-line] {
     transition: background-color 0.7s ease;
+}
+
+th {
+    position: relative;
+}
+
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
+    border: solid black;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+.arrow-up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.arrow-down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }

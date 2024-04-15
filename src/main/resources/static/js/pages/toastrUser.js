@@ -40,6 +40,15 @@ function alert_action ( alert_action )
                icon: 'success',
                hideAfter: 3500
           } );
+     } else if ( alert_action == 'sendContact' )
+     {
+          $.toast( {
+               heading: 'We will reply via your email!!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'success',
+               hideAfter: 3500
+          } );
      } else if ( alert_action == "logout" )
      {
           $.toast( {

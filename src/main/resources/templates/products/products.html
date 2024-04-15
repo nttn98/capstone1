@@ -49,13 +49,12 @@
 				<div class="navbar-container content">
 					<div class="collapse navbar-collapse" id="navbar-mobile">
 						<ul class="nav navbar-nav mr-auto float-left">
-
 							<a th:href="@{/products/create-product}">
 								<button class="custom-btn btn-13" th:if="${session.staff==null}">
 									<h7>+ product</h7>
 								</button>
 							</a>
-                            <h4 style="margin: auto;margin-left: 600px">List Products</h4>
+							<h4 style="margin: auto;margin-left: 600px">List Products</h4>
 						</ul>
 						<ul th:fragment="login-space" class="nav navbar-nav float-right" style="width: 80px;">
 							<li class="dropdown dropdown-user nav-item"><a
@@ -186,6 +185,8 @@
 							</li>
 							<li><a class="menu-item" th:href="@{/orders}">Orders</a>
 							</li>
+							<li><a class="menu-item" th:href="@{/contacts}">Contacts</a>
+							</li>
 						</ul>
 					</li>
 				</ul>
@@ -200,13 +201,34 @@
 					<table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
 						<thead>
 							<tr>
-								<th>#</th>
-								<th>Image</th>
-								<th>Name</th>
-								<th>Price (VND)</th>
-								<th>Quantity</th>
-								<th>Categories</th>
-								<th>Manufacturers</th>
+								<th onclick="sortTable(0)">
+									<span>#</span>
+									<span class="arrow"></span>
+								</th>
+								<th onclick="sortTable(1)">
+									<span>Image</span>
+									<span class="arrow"></span>
+								</th>
+								<th onclick="sortTable(2)">
+									<span>Name</span>
+									<span class="arrow"></span>
+								</th>
+								<th onclick="sortTable(3)">
+									<span>Price (VND)</span>
+									<span class="arrow"></span>
+								</th>
+								<th onclick="sortTable(4)">
+									<span>Quantity</span>
+									<span class="arrow"></span>
+								</th>
+								<th onclick="sortTable(5)">
+									<span>Categories</span>
+									<span class="arrow"></span>
+								</th>
+								<th onclick="sortTable(6)">
+									<span>Manufacturers</span>
+									<span class="arrow"></span>
+								</th>
 								<th>Description</th>
 								<th>Action</th>
 							</tr>

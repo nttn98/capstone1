@@ -11,6 +11,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,8 @@ public class HomeController {
     CartItemService cartItemService;
     @Resource
     AdminService adminService;
+    @Resource
+    ContactServices contactServices;
     @Autowired
     Encoding encoding;
     @Autowired
@@ -214,11 +217,10 @@ public class HomeController {
 
         String passEncoding = encoding.toSHA1(password);
         Staff checkStaff = staffService.findByUsernameAndPassword(username, passEncoding);
+        Admin checkAdmin = adminService.findByUsernameAndPassword(username, password);
 
-        if (username.equals("admin") && password.equals("admin")) {
-            Admin admin = adminService.findByUsernameAndPassword("admin", "admin");
-
-            session.setAttribute("admin", admin);
+        if (checkAdmin != null) {
+            session.setAttribute("admin", checkAdmin);
             model.addAttribute("alert", "success");
 
             return getDashBoardPage(model, session, page, size);
@@ -291,7 +293,7 @@ public class HomeController {
 
         isLogin(model, session);
 
-        Page<Order> orders = orderService.getAllOrders(PageRequest.of(page, size));
+        Page<Order> orders = orderService.getAllOrders(PageRequest.of(page, size, Sort.by("id").descending()));
         for (Order order : orders) {
             order.setShowStatus(map.get(order.getStatus()));
         }
@@ -338,6 +340,35 @@ public class HomeController {
         model.addAttribute("alert", "edit");
         orderService.changeStatusOrder(existOrder);
         return listOrders(model, session, page, size);
+    }
+
+    /* contact */
+    /* get all contact */
+    @GetMapping("/contacts")
+    public String listContacts(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
+        String target = isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
+        Page<Contact> listContacts = contactServices
+                .getAllContacts(PageRequest.of(page, size, Sort.by("id").descending()));
+        model.addAttribute("contacts", listContacts);
+        return "admin/contacts";
+    }
+
+    /* send contact of customer */
+    @PostMapping("/send-contact")
+    public String sendContact(Model model, @RequestParam("name") String name, @RequestParam("email") String email,
+            @RequestParam("numberphone") Long numberphone, @RequestParam("message") String message,
+            HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Contact contact = new Contact(name, email, numberphone, message);
+        contactServices.saveContact(contact);
+        autoReply(email, name);
+        model.addAttribute("alert", "sendContact");
+        return getHome(model, session, page, size);
     }
 
     /* Forgot password admin and staff */
@@ -495,6 +526,27 @@ public class HomeController {
                     + "<br>"
                     + "<p>Ignore this email if you do remember your password, "
                     + "or you have not made the request.</p>";
+
+            helper.setSubject(subject);
+            helper.setText(content, true);
+            mailSender.send(message);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /* auto reply email */
+    public void autoReply(String recipientEmail, String name) {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        try {
+            helper.setTo(recipientEmail);
+            helper.setFrom("contact@shopme.com", "NAP Support");
+
+            String subject = "Hello " + name;
+            String content = "<p>Hello,This is Automated reply </p>"
+                    + "<p>Thank you for trusting our service. We will reply to you as soon as possible.</p>";
 
             helper.setSubject(subject);
             helper.setText(content, true);

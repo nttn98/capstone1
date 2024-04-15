@@ -1,101 +1,121 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{products/products ::head}"></head>
-<script src="/js/pages/toastrUser.js"></script>
+    <head th:replace="~{products/products ::head}"></head>
+    <script src="/js/pages/toastrUser.js"></script>
 
 
-<body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
-<nav th:fragment="header-navbar"
-     class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
-    <div class="navbar-wrapper">
-        <div class="navbar-header">
-            <ul class="nav navbar-nav flex-row" style="padding: 10px;">
-                <div id="logo">
-                    <h1><a href="/">NAP</a></h1>
+    <body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
+        <nav th:fragment="header-navbar"
+            class="header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top navbar-semi-dark navbar-shadow">
+            <div class="navbar-wrapper">
+                <div class="navbar-header">
+                    <ul class="nav navbar-nav flex-row" style="padding: 10px;">
+                        <div id="logo">
+                            <h1><a href="/">NAP</a></h1>
+                        </div>
+                    </ul>
                 </div>
-            </ul>
-        </div>
-        <div class="navbar-container content">
-            <div class="collapse navbar-collapse" id="navbar-mobile">
-                <ul class="nav navbar-nav mr-auto float-left">
-                    <a th:href="@{/staffs/create-staff}">
-                        <button class="custom-btn btn-13">
-                            <h7>+ staff</h7>
-                        </button>
-                    </a>
-                    <h4 style="margin: auto;margin-left: 600px">List Staffs</h4>
+                <div class="navbar-container content">
+                    <div class="collapse navbar-collapse" id="navbar-mobile">
+                        <ul class="nav navbar-nav mr-auto float-left">
+                            <a th:href="@{/staffs/create-staff}">
+                                <button class="custom-btn btn-13">
+                                    <h7>+ staff</h7>
+                                </button>
+                            </a>
+                            <h4 style="margin: auto;margin-left: 600px">List Staffs</h4>
 
-                </ul>
-                <ul th:replace="~{products/products.html :: login-space}"></ul>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<div th:replace="~{products/products.html :: main-menu}"></div>
-
-<!-- BEGIN: Content-->
-<div class="app-content content">
-    <div class="content-wrapper">
-
-        <div class="content-body">
-            <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
-                <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Staff Full-name</th>
-                    <th>Username</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>DoB</th>
-                    <th>Idcard</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody th:each="staff, iterStat : ${staffs}" th:if="${iterStat.index < 10}">
-                <tr>
-                    <td th:text="${staff.id}"></td>
-                    <td th:text="${staff.fullname}"></td>
-                    <td th:text="${staff.username}"></td>
-                    <td th:text="${staff.email}"></td>
-                    <td th:text="${staff.numberphone}"></td>
-                    <td th:text="${staff.dob}"></td>
-                    <td th:text="${staff.idcard}"></td>
-                    <td>
-                        <a th:href="@{/staffs/change-status/{id}(id=${staff.id})}">
-                            <button class="custom-btn btn-5" th:if="${staff.status == 1}">Disable</button>
-                            <button class="custom-btn btn-6" th:if="${staff.status == 0}">Enable</button>
-                        </a>
-                        <br>
-                        <a th:href="@{/staffs/edit/{id}(id=${staff.id})}" th:if="${staff.status == 1}"
-                           style="text-decoration: none;">
-                            <button class="custom-btn btn-14">
-                                <h7>Edit</h7>
-                            </button>
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col-lg-6 col-md-5">
-                    <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
-                        <p>Showing
-                            1 to 10 of [(${staffs.getTotalElements()})] total</p>
+                        </ul>
+                        <ul th:replace="~{products/products.html :: login-space}"></ul>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-7">
-                    <div class="dataTables_paginate paging_simple_numbers"
-                         th:each=" item: ${staffs.getTotalPages()}">
-                        <ul class="pagination">
-                            <li
-                                    th:class="'paginate_button page-item previous ' + (${staffs.number == 0 ? 'disabled' : ''})">
-                                <a class="page-link"
-                                   th:href="@{'/staffs?page=' + ${staffs.number - 1}}">Previous</a>
-                            </li>
-                            <li class="paginate_button page-item active"
-                                th:each="page : ${#numbers.sequence(0, staffs.totalPages - 1)}">
+            </div>
+        </nav>
+
+        <div th:replace="~{products/products.html :: main-menu}"></div>
+
+        <!-- BEGIN: Content-->
+        <div class="app-content content">
+            <div class="content-wrapper">
+
+                <div class="content-body">
+                    <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable(0)">
+                                    <span>#</span>
+                                    <span class="arrow"></span>
+                                </th>
+                                <th onclick="sortTable(1)">
+                                    <span>Staff Full-name</span>
+                                    <span class="arrow"></span>
+                                </th>
+                                <th onclick="sortTable(2)">
+                                    <span>Username</span>
+                                    <span class="arrow"></span>
+                                </th>
+                                <th onclick="sortTable(3)">
+                                    <span>Email</span>
+                                    <span class="arrow"></span>
+                                </th>
+                                <th onclick="sortTable(4)">
+                                    <span>Phone</span>
+                                    <span class="arrow"></span>
+                                </th>
+                                <th onclick="sortTable(5)">
+                                    <span>DoB</span>
+                                    <span class="arrow"></span>
+                                </th>
+                                <th onclick="sortTable(6)">
+                                    <span>Idcard</span>
+                                    <span class="arrow"></span>
+                                </th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody th:each="staff, iterStat : ${staffs}" th:if="${iterStat.index < 10}">
+                            <tr>
+                                <td th:text="${staff.id}"></td>
+                                <td th:text="${staff.fullname}"></td>
+                                <td th:text="${staff.username}"></td>
+                                <td th:text="${staff.email}"></td>
+                                <td th:text="${staff.numberphone}"></td>
+                                <td th:text="${staff.dob}"></td>
+                                <td th:text="${staff.idcard}"></td>
+                                <td>
+                                    <a th:href="@{/staffs/change-status/{id}(id=${staff.id})}">
+                                        <button class="custom-btn btn-5" th:if="${staff.status == 1}">Disable</button>
+                                        <button class="custom-btn btn-6" th:if="${staff.status == 0}">Enable</button>
+                                    </a>
+                                    <br>
+                                    <a th:href="@{/staffs/edit/{id}(id=${staff.id})}" th:if="${staff.status == 1}"
+                                        style="text-decoration: none;">
+                                        <button class="custom-btn btn-14">
+                                            <h7>Edit</h7>
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-5">
+                            <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
+                                <p>Showing
+                                    1 to 10 of [(${staffs.getTotalElements()})] total</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-7">
+                            <div class="dataTables_paginate paging_simple_numbers"
+                                th:each=" item: ${staffs.getTotalPages()}">
+                                <ul class="pagination">
+                                    <li
+                                        th:class="'paginate_button page-item previous ' + (${staffs.number == 0 ? 'disabled' : ''})">
+                                        <a class="page-link"
+                                            th:href="@{'/staffs?page=' + ${staffs.number - 1}}">Previous</a>
+                                    </li>
+                                    <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, staffs.totalPages - 1)}">
                                 <a th:href="@{'/staffs?page=' + ${page}}"
                                    th:class="'page-link ' + (${staffs.number == page ? 'current-page' : ''})"
                                    th:text="${page + 1}"></a>
@@ -114,18 +134,20 @@
 <footer th:replace="~{products/products :: footer}"></footer>
 </body>
 <script th:inline="javascript">
-    function showChangePass() {
-        $('.changePass').addClass('w-25');
-        $('.profile').removeClass("w-25");
+    function showChangePass ()
+    {
+        $( '.changePass' ).addClass( 'w-25' );
+        $( '.profile' ).removeClass( "w-25" );
     }
 
-    function closeChangePass() {
-        $('.changePass').removeClass("w-25");
-        $('.closeMask').fadeOut();
+    function closeChangePass ()
+    {
+        $( '.changePass' ).removeClass( "w-25" );
+        $( '.closeMask' ).fadeOut();
 
     }
 
-    alert_action(/*[[${alert}]]*/)
+    alert_action(/*[[${alert}]]*/ )
 </script>
 
 </html>

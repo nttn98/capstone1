@@ -6,6 +6,7 @@ import com.capstone1.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
@@ -32,12 +33,12 @@ public class StaffController {
 
     @GetMapping("/staffs")
     public String listStaffs(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                             @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size) {
         String target = homeController.isLogin(model, session);
         if (target != null) {
             return target;
         }
-        Page<Staff> listStaffs = staffService.getAllStaffs(PageRequest.of(page, size));
+        Page<Staff> listStaffs = staffService.getAllStaffs(PageRequest.of(page, size, Sort.by("id").descending()));
 
         if (listStaffs.isEmpty()) {
             Staff staff = new Staff();
@@ -65,8 +66,8 @@ public class StaffController {
 
     @PostMapping("/staffs/update-staff")
     public String updateStaff(@RequestParam long id, Model model, @ModelAttribute Staff staff,
-                              HttpSession session, @RequestParam(defaultValue = "0") int page,
-                              @RequestParam(defaultValue = "10") int size) {
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         if (session == null) {
             return "loginAdmin_Staff";
@@ -88,8 +89,9 @@ public class StaffController {
     }
 
     @GetMapping("/staffs/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Staff staff, HttpSession session, @RequestParam(defaultValue = "0") int page,
-                               @RequestParam(defaultValue = "10") int size) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Staff staff, HttpSession session,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         Staff existStaff = staffService.getStaffById(id);
 
         if (existStaff.getStatus() == 0) {
@@ -113,9 +115,9 @@ public class StaffController {
 
     @PostMapping("/staffs/do-change-pass")
     public String changePassword(@RequestParam Long id, Model model, @ModelAttribute Staff staff,
-                                 @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
-                                 HttpSession session, @RequestParam(defaultValue = "0") int page,
-                                 @RequestParam(defaultValue = "10") int size) {
+            @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
+            HttpSession session, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
         Staff existStaff = staffService.getStaffById(id);
         String oldStaffPass = existStaff.getPassword();
@@ -143,8 +145,8 @@ public class StaffController {
 
     @PostMapping("/staffs/save-staff")
     public String saveStaff(Model model, @ModelAttribute Staff staff, HttpSession session,
-                            @RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
         staff.setPassword(encoding.toSHA1(staff.getPassword()));
         staffService.saveStaff(staff);
         System.out.println("Staff added successfully");
@@ -153,7 +155,7 @@ public class StaffController {
         return listStaffs(model, session, page, size);
     }
 
-    /*check name is unique*/
+    /* check name is unique */
     @GetMapping("/checkStaffUsernameAvailability")
     @ResponseBody // Ensure the returned boolean is serialized as a response body
     public ResponseEntity<Boolean> checkStaffUsernameAvailability(@RequestParam("name") String name) {
