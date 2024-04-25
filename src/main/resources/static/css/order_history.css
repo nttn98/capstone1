@@ -74,8 +74,8 @@ body {
     position: relative;
     display: inline-block;
     box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, .5),
-    7px 7px 20px 0px rgba(0, 0, 0, .1),
-    4px 4px 5px 0px rgba(0, 0, 0, .1);
+        7px 7px 20px 0px rgba(0, 0, 0, .1),
+        4px 4px 5px 0px rgba(0, 0, 0, .1);
     outline: none;
     margin-bottom: 10px;
 }
@@ -108,8 +108,8 @@ body {
     width: 0;
     background: #f0094a;
     box-shadow: -1px -1px 5px 0px #fff,
-    7px 7px 20px 0px #0003,
-    4px 4px 5px 0px #0002;
+        7px 7px 20px 0px #0003,
+        4px 4px 5px 0px #0002;
     transition: 400ms ease all;
 }
 
@@ -122,6 +122,51 @@ body {
 
 .btn-5:hover:before,
 .btn-5:hover:after {
+    width: 100%;
+    transition: 800ms ease all;
+}
+
+/* 6 */
+.btn-6 {
+    width: 130px;
+    height: 40px;
+    line-height: 42px;
+    padding: 0;
+    border: none;
+    background: rgb(2, 139, 40);
+    background: linear-gradient(0deg, rgb(2, 139, 40) 0%, rgb(2, 139, 40) 100%);
+}
+
+.btn-6:hover {
+    color: rgb(2, 139, 40);
+    background: transparent;
+    box-shadow: none;
+}
+
+.btn-6:before,
+.btn-6:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    background: rgb(2, 139, 40);
+    box-shadow: -1px -1px 5px 0px #fff,
+        7px 7px 20px 0px #0003,
+        4px 4px 5px 0px #0002;
+    transition: 400ms ease all;
+}
+
+.btn-6:after {
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
+}
+
+.btn-6:hover:before,
+.btn-6:hover:after {
     width: 100%;
     transition: 800ms ease all;
 }

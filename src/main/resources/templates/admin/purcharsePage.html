@@ -13,7 +13,7 @@
         </div>
 
         <div class="container formReceiver">
-            <form th:action="@{/users/add-order}" method="GET">
+            <form th:action="@{/users/add-order}" method="GET" id="orderForm">
                 <div class="row">
                     <div class="inCart col-lg-8">
                         <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">In Cart</h2>
@@ -44,9 +44,17 @@
                         <input type="text" th:value="${session.user.getAddress()}" name="address">
                         <p>Number-phone</p>
                         <input type="text" th:value="${session.user.getNumberphone()}" name="numberphone">
+                        <p>Payment Method</p>
+                        <select id="paymentMethod" name="payment_method"
+                            style="width: -webkit-fill-available; padding: 4px 1px;">
+                            <option value="cod">COD (Cash on Delivery)</option>
+                            <option value="credit_card">Credit Card</option>
+                        </select>
                     </div>
                     <h4 style="padding: 20px; left: 465px;">Total: <span th:text="${session.cart.getTotal()}"
                             class="formatPrice"></span></h4>
+                    <input type="hidden" name="amount" th:value="${session.cart.getTotal()}">
+                    <input type="hidden" name="orderInfo" th:value="'Thanh toan don hang ' + ${session.cart.getId()}">
                 </div>
                 <button type="submit" class="btn btn-info"
                     style="margin: 20px; display: block; margin-left: auto; margin-right: auto;"><i
@@ -63,6 +71,22 @@
     </body>
 
     <script th:inline="javascript">
+
+        var form = document.getElementById( 'orderForm' );
+        var paymentMethod = document.getElementById( 'paymentMethod' );
+
+        paymentMethod.addEventListener( 'change', function ()
+        {
+            if ( paymentMethod.value === 'credit_card' )
+            {
+                form.action = /*[[ @{/submitOrder} ]]*/
+                    form.method = "POST";
+            } else
+            {
+                form.action = /*[[ @{/users/add-order} ]]*/
+                    form.method = "GET";
+            }
+        } );
 
         $( document ).ready( function ()
         {

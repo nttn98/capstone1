@@ -1,7 +1,5 @@
 package com.capstone1.repository;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +17,5 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     void alterAutoIncrementValue();
 
     Page<Order> findByUserId(long userid, Pageable p);
-
-
 
 }

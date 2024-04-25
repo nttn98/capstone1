@@ -54,22 +54,38 @@ public class Productimpl implements ProductService {
 	}
 
 	@Override
-	public Page<Product> findByCategoryName(String name, Pageable p) {
-		return productRepository.findByCategoryName(name, p);
-	}
-
-	@Override
-	public Page<Product> findByManufacturerName(String name, Pageable p) {
-		return productRepository.findByManufacturerName(name, p);
+	public Page<Product> findByCategoryNameAndStatus(String name, int status, Pageable p) {
+		return productRepository.findByCategoryNameAndStatus(name, status, p);
 	}
 
 	@Override
 	public Page<Product> findByNameContaining(String keywords, Pageable p) {
-		return productRepository.findByNameContaining(keywords,p);
+		return productRepository.findByNameContaining(keywords, p);
+	}
+
+	public Page<Product> findByIsNewestAndStatus(int newest, int status, Pageable p) {
+		return productRepository.findByIsNewestAndStatus(newest, status, p);
+	}
+
+	@Override
+	public List<Product> getAll() {
+		return productRepository.findAll(Sort.by("id").descending());
+	}
+
+	@Override
+	public Page<Product> findByManufacturerNameAndQuantityGreaterThanAndStatus(String name, long quantity,
+			int status, Pageable pageable) {
+		return productRepository.findByManufacturerNameAndQuantityGreaterThanAndStatus(name, quantity, status,
+				pageable);
+	}
+
+	@Override
+	public Page<Product> findByStatus(Pageable p, int status) {
+		return productRepository.findByStatus(p, status);
 	}
 
 	public List<Product> getNewestProducts() {
-		return productRepository.findByIsNewest(1);
+		return productRepository.findByIsNewestAndStatus(1, 0);
 	}
 
 }

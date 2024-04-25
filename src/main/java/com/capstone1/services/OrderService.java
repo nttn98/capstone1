@@ -1,10 +1,9 @@
 package com.capstone1.services;
 
-import java.util.List;
-
-import com.capstone1.model.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import com.capstone1.model.Order;
 
 public interface OrderService {
 

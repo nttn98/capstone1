@@ -1,7 +1,5 @@
 package com.capstone1.services;
 
-import java.util.*;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,6 +22,8 @@ public interface UserService {
     User findByEmail(String email);
 
     User findByUsername(String username);
+
+    User findByGgID(String id);
 
     User findByUsernameAndPassword(String usename, String passsword);
 

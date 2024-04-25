@@ -11,6 +11,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUsername(String username);
 
+    User findByGgID(String ggId);
+
     @Modifying
     @Transactional
     @Query(value = "ALTER TABLE users AUTO_INCREMENT = 1001 ", nativeQuery = true)

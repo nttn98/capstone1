@@ -1,19 +1,32 @@
 package com.capstone1.controller;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
-import com.capstone1.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.*;
-import org.springframework.ui.*;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.capstone1.model.Cart;
+import com.capstone1.model.CartItem;
+import com.capstone1.model.Order;
+import com.capstone1.model.Order.PaymentType;
+import com.capstone1.model.User.LoginType;
+import com.capstone1.model.OrderDetail;
+import com.capstone1.model.Product;
+import com.capstone1.model.User;
 import com.capstone1.services.CartItemService;
 import com.capstone1.services.CartService;
 import com.capstone1.services.OrderDetailService;
@@ -22,6 +35,7 @@ import com.capstone1.services.ProductService;
 import com.capstone1.services.UserService;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -131,6 +145,7 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size) {
 
         user.setPassword(encoding.toSHA1(user.getPassword()));
+        user.setType(LoginType.LOCAL);
         userService.saveUser(user);
         System.out.println("User added successfully");
         model.addAttribute("alert", "successRegister");
@@ -201,9 +216,15 @@ public class UserController {
     public String getLoginUser(Model model, @RequestParam String username,
             @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        // List<User> listUsers = userService.getAllUsers();
-        String passEncoding = encoding.toSHA1(password);
-        User user = userService.findByUsernameAndPassword(username, passEncoding);
+        String typeLogin = (String) model.getAttribute("type");
+
+        User user = null;
+        if (typeLogin != null && typeLogin.equals("EMAIL")) {
+            user = userService.findByGgID((String) model.getAttribute("ggId"));
+        } else {
+            String passEncoding = encoding.toSHA1(password);
+            user = userService.findByUsernameAndPassword(username, passEncoding);
+        }
 
         if (user != null && user.getStatus() == 1) {
             session.setAttribute("userId", user.getId());
@@ -233,7 +254,6 @@ public class UserController {
             }
 
             session.setAttribute("cart", cart);
-
             return homeController.getHome(model, session, page, size);
         }
 
@@ -262,15 +282,18 @@ public class UserController {
             @RequestParam(defaultValue = "1") int quantity, @RequestParam("mode") String mode,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
+
         Long userId = (Long) session.getAttribute("userId");
         Cart cart = (Cart) session.getAttribute("cart");
         Product temp = productService.getProductById(productId);
+
         if (userId == null) {
             addToCartWithoutUser(session, cart, temp);
         } else {
             User user = userService.getUserById(userId);
             addToCartWithUser(session, cart, temp, user);
         }
+
         if (mode.equals("inList")) {
             return homeController.paginated(model, session, page, size);
         } else if (mode.equals("inHome")) {
@@ -284,8 +307,7 @@ public class UserController {
         if (cart == null) {
             cart = cartService.saveCart(new Cart(user));
         }
-
-        CartItem cartItem = cartItemService.findByProductId(product.getId());
+        CartItem cartItem = cartItemService.findByCartIdAndProductId(cart.getId(), product.getId());
 
         if (cartItem == null) {
             cartItem = cartItemService.save(new CartItem(cart, product, 1));
@@ -294,24 +316,17 @@ public class UserController {
             cartItemService.save(cartItem);
         }
 
-        cart.addCartItem(cartItem);
+        cart.addProduct(product, cart);
         session.setAttribute("cart", cart);
-
     }
 
     private void addToCartWithoutUser(HttpSession session, Cart cart, Product product) {
         if (cart == null) {
             cart = new Cart();
-            cart.addProduct(product, null);
-        } else {
-            CartItem cartItem = cart.checkProductExist(product.getId());
-            if (cartItem == null) {
-                cartItem = new CartItem(cart, product, 1);
-            }
-            cart.addCartItem(cartItem);
         }
-        session.setAttribute("oldCart", cart);
+        cart.addProduct(product, cart);
         session.setAttribute("cart", cart);
+
     }
 
     @PostMapping("/users/delete-product-in-cart")
@@ -346,15 +361,17 @@ public class UserController {
         return "admin/purcharsePage.html";
     }
 
+    /* user create order */
     @GetMapping("/users/add-order")
-    public String addOrder(Model model, HttpSession session, @RequestParam String name,
-            @RequestParam String address, @RequestParam long numberphone) {
+    public String addOrder(Model model, HttpSession session, HttpServletRequest request, @RequestParam String name,
+            @RequestParam String address, @RequestParam long numberphone, @RequestParam String payment_method) {
         Long userId = (Long) session.getAttribute("userId");
         User userLogin = userService.getUserById(userId);
         Cart cart = (Cart) session.getAttribute("cart");
         LocalDateTime now = LocalDateTime.now();
         Order order = null;
         double total = 0;
+        List<Product> products = productService.getAll();
 
         if (cart != null && userLogin != null) {
             order = orderService.saveOrder(new Order(0, userLogin, now));
@@ -366,12 +383,18 @@ public class UserController {
                                 cartItemService.findByProductId(product.getId()).getQuantity(), subtotal));
                 cartItemService.deleteByProductId(product.getId());
                 total += tempOrderDetail.getFinalPrice();
-
+                for (Product p : products) {
+                    if (p.getId() == product.getId()) {
+                        p.setQuantity(p.getQuantity() - product.getQuantity());
+                    }
+                }
             }
+
             order.setReceiverName(name);
             order.setReceiverAddress(address);
             order.setReceiverNumberphone(numberphone);
             order.setTotal(total);
+            order.setType(PaymentType.COD);
             cartService.deleteByUserId(userLogin.getId());
             cart.getListItem().clear();
 
@@ -406,7 +429,6 @@ public class UserController {
     public String userChangeOrderStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
             HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
-        System.out.println("testtttt");
 
         Order existOrder = orderService.getOrderById(id);
         if (existOrder.getStatus() != newStatus) {

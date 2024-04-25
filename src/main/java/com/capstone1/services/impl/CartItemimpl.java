@@ -29,4 +29,9 @@ public class CartItemimpl implements CartItemService {
         cartItemRepository.deleteByProductId(productId);
     }
 
+    @Override
+    public CartItem findByCartIdAndProductId(long cartId, long productId) {
+        return cartItemRepository.findByCartIdAndProductId(cartId, productId);
+    }
+
 }

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="~{homePage :: head}"></head>
+
+    <title>Payment failed</title>
+
+    <body>
+        <!-- back to top -->
+
+        <!-- start body -->
+        <div class="body py-5">
+            <div class="container">
+                <div class="w-50 m-auto">
+                    <!-- Thêm lớp "my-4" để tạo ra khoảng cách trên và dưới tiêu đề trang -->
+                    <h1 class="my-3 text-danger text-center">Payment failed</h1>
+                    <!-- Sử dụng lớp "alert" và "alert-danger" để tạo ra thông báo lỗi -->
+                    <h2 class="my-2">Order details</h2>
+                    <!-- Sử dụng lớp "table" và "table-bordered" để tạo ra bảng hiển thị thông tin chi tiết đơn hàng -->
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Order information:</td>
+                                <td><span th:text="${orderId}">[order ID]</span></td>
+                            </tr>
+                            <tr>
+                                <td>User Name:</td>
+                                <td><span th:text="${name}">[name]</span></td>
+                            </tr>
+                            <tr>
+                                <td>User Address:</td>
+                                <td><span th:text="${address}">[address]</span></td>
+                            </tr>
+                            <tr>
+                                <td>User Numberphone:</td>
+                                <td><span th:text="${numberphone}">[numberphone]</span></td>
+                            </tr>
+                            <tr>
+                                <td>Total amount:</td>
+                                <td><span th:text="${totalPrice}">[total price]</span></td>
+                            </tr>
+                            <tr>
+                                <td>Payment time:</td>
+                                <td><span th:text="${paymentTime}">[payment time]</span></td>
+                            </tr>
+                            <tr>
+                                <td>Transaction code:</td>
+                                <td><span th:text="${transactionId}">[transaction ID]</span></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <a href="/" class="btn btn-primary">Back to homepage</a>
+                </div>
+            </div>
+        </div>
+        <!-- end body -->
+        <!-- start footer -->
+
+</html>

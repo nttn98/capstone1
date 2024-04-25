@@ -37,9 +37,7 @@ public class Cart {
         cartItem.setCart(this);
     }
 
-    public boolean addProduct(Product product, Cart cart) {
-        boolean result = false;
-
+    public void addProduct(Product product, Cart cart) {
         CartItem temp = checkProductExist(product.getId());
 
         if (temp == null) {
@@ -48,8 +46,6 @@ public class Cart {
         } else {
             temp.changeQuantity(1);
         }
-
-        return result;
     }
 
     public CartItem checkProductExist(long productID) {

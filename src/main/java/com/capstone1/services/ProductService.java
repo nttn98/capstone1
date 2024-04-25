@@ -2,7 +2,8 @@ package com.capstone1.services;
 
 import java.util.List;
 
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.capstone1.model.Product;
 
@@ -10,7 +11,11 @@ public interface ProductService {
 
 	Page<Product> getAllProducts(Pageable p);
 
+	List<Product> getAll();
+
 	List<Product> getNewestProducts();
+
+	Page<Product> findByIsNewestAndStatus(int newest, int status, Pageable p);
 
 	Product saveProduct(Product product);
 
@@ -24,10 +29,13 @@ public interface ProductService {
 
 	Product findByName(String name);
 
-	Page<Product> findByCategoryName(String name, Pageable p);
+	Page<Product> findByStatus(Pageable p, int status);
 
-	Page<Product> findByManufacturerName(String name, Pageable p);
+	Page<Product> findByCategoryNameAndStatus(String name, int status, Pageable p);
 
-	Page<Product> findByNameContaining (String keywords, Pageable p);
+	Page<Product> findByManufacturerNameAndQuantityGreaterThanAndStatus(String name, long quantity, int status,
+			Pageable pageable);
+
+	Page<Product> findByNameContaining(String keywords, Pageable p);
 
 }

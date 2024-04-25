@@ -1,18 +1,26 @@
 package com.capstone1.controller;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capstone1.model.Category;
@@ -40,19 +48,12 @@ public class ProductController {
     HomeController homeController;
 
     @GetMapping("/products")
-    public String listProducts(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+    public String listProducts(Model model, HttpSession session) {
         String target = homeController.isLogin(model, session);
         if (target != null) {
             return target;
         }
-        Page<Product> listProducts = productService
-                .getAllProducts(PageRequest.of(page, size, Sort.by("id").descending()));
-        // List<Category> listCategories = categoryService.getAllCategories();
-        // List<Manufacturer> listManufacturers =
-        // manufacturerService.getAllManufacturers();
-        // model.addAttribute("categories", listCategories);
-        // model.addAttribute("manufacturers", listManufacturers);
+        List<Product> listProducts = productService.getAll();
 
         if (listProducts.isEmpty()) {
             Product product = new Product();
@@ -120,7 +121,7 @@ public class ProductController {
         // save updated
         productService.updateProduct(existProduct);
 
-        return listProducts(model, session, page, size);
+        return listProducts(model, session);
     }
 
     @GetMapping("/products/change-status/{id}")
@@ -141,7 +142,7 @@ public class ProductController {
         // save updated
         productService.updateProduct(existProduct);
 
-        return listProducts(model, session, page, size);
+        return listProducts(model, session);
     }
 
     @GetMapping("/products/change-newest/{id}")
@@ -161,7 +162,7 @@ public class ProductController {
         // save updated
         productService.updateProduct(existProduct);
 
-        return listProducts(model, session, page, size);
+        return listProducts(model, session);
     }
 
     @GetMapping("/products/delete-product/{id}")
@@ -195,7 +196,7 @@ public class ProductController {
             model.addAttribute("alert", "error");
 
         }
-        return listProducts(model, session, page, size);
+        return listProducts(model, session);
     }
 
     /* Search product */

@@ -40,36 +40,56 @@
             <div class="content-wrapper">
 
                 <div class="content-body">
-                    <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
+                    <table id="dataTable" class="table table-bordered table-hover dataTable dtr-inline">
                         <thead>
                             <tr>
-                                <th onclick="sortTable(0)">
+                                <th>
                                     <span>#</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(0)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(0)"></i>
+                                    <input type="text" id="searchInput_0" class="search-input" placeholder="Search by #"
+                                        onkeyup="searchTable(0)">
                                 </th>
-                                <th onclick="sortTable(1)">
+                                <th>
                                     <span>Staff Full-name</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(1)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(1)"></i>
+                                    <input type="text" id="searchInput_1" class="search-input"
+                                        placeholder="Search by full name" onkeyup="searchTable(1)">
                                 </th>
-                                <th onclick="sortTable(2)">
+                                <th>
                                     <span>Username</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(2)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(2)"></i>
+                                    <input type="text" id="searchInput_2" class="search-input"
+                                        placeholder="Search by username" onkeyup="searchTable(2)">
                                 </th>
-                                <th onclick="sortTable(3)">
+                                <th>
                                     <span>Email</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(3)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(3)"></i>
+                                    <input type="text" id="searchInput_3" class="search-input"
+                                        placeholder="Search by email" onkeyup="searchTable(3)">
                                 </th>
-                                <th onclick="sortTable(4)">
-                                    <span>Phone</span>
-                                    <span class="arrow"></span>
+                                <th>
+                                    <span>NumberPhone</span>
+                                    <span class="arrow" onclick="sortTable(4)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(4)"></i>
+                                    <input type="text" id="searchInput_4" class="search-input"
+                                        placeholder="Search by numberphone" onkeyup="searchTable(4)">
                                 </th>
-                                <th onclick="sortTable(5)">
+                                <th>
                                     <span>DoB</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(5)"></span>
                                 </th>
-                                <th onclick="sortTable(6)">
+                                <th>
                                     <span>Idcard</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(6)"></span>
                                 </th>
                                 <th>Action</th>
                             </tr>
@@ -101,7 +121,7 @@
                     </table>
                     <div class="row">
                         <div class="col-lg-6 col-md-5">
-                            <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
+                            <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
                                 <p>Showing
                                     1 to 10 of [(${staffs.getTotalElements()})] total</p>
                             </div>
@@ -133,6 +153,7 @@
 
 <footer th:replace="~{products/products :: footer}"></footer>
 </body>
+<script src="/js/searchSort.js"></script>
 <script th:inline="javascript">
     function showChangePass ()
     {

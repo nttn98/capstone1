@@ -501,3 +501,18 @@ th {
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
 }
+
+.search-icon {
+    cursor: pointer;
+    position: relative;
+}
+
+/* Style for the search input */
+.search-input {
+    display: none;
+    position: absolute;
+    top: 80%;
+    left: 42px;
+    width: calc(70%);
+    padding: 2px;
+}

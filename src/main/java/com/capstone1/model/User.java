@@ -19,6 +19,8 @@ public class User {
     private String email;
     private Date dob;
     private int status;
+    private String ggID;
+    private LoginType type;
 
     public User() {
     }
@@ -93,6 +95,26 @@ public class User {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getGgID() {
+        return ggID;
+    }
+
+    public void setGgID(String ggID) {
+        this.ggID = ggID;
+    }
+
+    public enum LoginType {
+        LOCAL, EMAIL
+    }
+
+    public LoginType getType() {
+        return type;
+    }
+
+    public void setType(LoginType type) {
+        this.type = type;
     }
 
 }

@@ -36,28 +36,50 @@
         <div class="app-content content">
             <div th:if="${orders!=null}" class="content-wrapper">
                 <div class="content-body">
-                    <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
+                    <table id="dataTable" class="table table-bordered table-hover dataTable dtr-inline">
                         <thead>
                             <tr>
-                                <th onclick="sortTable(0)">
+                                <th>
                                     <span>#</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(0)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(0)"></i>
+                                    <input type="text" id="searchInput_0" class="search-input" placeholder="Search by #"
+                                        onkeyup="searchTable(0)">
                                 </th>
-                                <th onclick="sortTable(1)">
+
+                                <th>
                                     <span>User Id</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(1)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(1)"></i>
+                                    <input type="text" id="searchInput_1" class="search-input"
+                                        placeholder="Search by user id" onkeyup="searchTable(1)">
                                 </th>
-                                <th onclick="sortTable(2)">
+
+                                <th>
                                     <span>Total</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(2)"></span>
                                 </th>
-                                <th onclick="sortTable(3)">
+                                <th>
                                     <span>Date</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(3)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(3)"></i>
+                                    <input type="text" id="searchInput_3" class="search-input"
+                                        placeholder="Search by Date" onkeyup="searchTable(3)">
                                 </th>
-                                <th onclick="sortTable(4)">
+                                <th>
                                     <span>Status</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(4)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(4)"></i>
+                                    <input type="text" id="searchInput_4" class="search-input"
+                                        placeholder="Search by Status" onkeyup="searchTable(4)">
+                                </th>
+                                <th>
+                                    <span>Payment</span>
+                                    <span class="arrow" onclick="sortTable(5)"></span>
                                 </th>
                                 <th>View-detail</th>
                                 <th>Action</th>
@@ -71,6 +93,7 @@
                                 <td th:text="${order.total}" class="formatPrice"></td>
                                 <td th:text="${order.getOrderDate()}"></td>
                                 <td>[(${order.getShowStatus()})]</td>
+                                <td th:text="${order.getType()}"></td>
                                 <td>
                                     <button id="viewOrderDetail" class="custom-btn btn-14" style="width: 100px;"
                                         th:onclick="'loadOrderDetail(\'' + ${order.id} + '\', ' + ${order.status} + ');'">
@@ -170,7 +193,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-6 col-md-5">
-                        <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
+                        <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
                             <div>
                                 <p>Showing
                                     1 to 10 of [(${orders.getTotalElements()})] total</p>
@@ -205,7 +228,8 @@
 </div>
 </body>
 
-<footer th:replace="~{products/products :: footer}"></footer>
+<footer th:replace="~{products/products :: footer}"></footer>   
+ <script src="/js/searchSort.js"></script>
 <script th:inline="javascript">
 
     $( document ).ready( function ()

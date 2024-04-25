@@ -64,4 +64,9 @@ public class Userimpl implements UserService {
         return userRepository.findByUsernameAndPassword(usename, passsword);
     }
 
+    @Override
+    public User findByGgID(String ggid) {
+        return userRepository.findByGgID(ggid);
+    }
+
 }

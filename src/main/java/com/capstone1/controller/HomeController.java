@@ -62,15 +62,17 @@ public class HomeController {
             @RequestParam(defaultValue = "10") int size) {
 
         int limit = 3;
-        Page<Product> newests = productService.getAllProducts(PageRequest.of(page, 1));
+        Page<Product> newests = productService.findByIsNewestAndStatus(1, 0, PageRequest.of(page, 1));
         List<Product> products = productService.getNewestProducts();
         products = products.subList(1, Math.min(size, products.size()));
 
-        Page<Product> productsByNVIDIA = productService.findByManufacturerName("nvidia",
-                PageRequest.of(page, limit));
+        Page<Product> productsByNVIDIA = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus(
+                "nvidia", 0,
+                0, PageRequest.of(page, limit));
 
-        Page<Product> productsByAMD = productService.findByManufacturerName("amd",
-                PageRequest.of(page, limit));
+        Page<Product> productsByAMD = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus("amd",
+                0,
+                0, PageRequest.of(page, limit));
 
         model.addAttribute("newests", newests);
         model.addAttribute("products", products);
@@ -89,18 +91,19 @@ public class HomeController {
         isUserLogin(model, session);
 
         String condition = (String) session.getAttribute("condition");
-        System.out.println(condition);
 
         if (condition.equals("all")) {
-            products = productService.getAllProducts(PageRequest.of(page, size));
+            products = productService.findByStatus(PageRequest.of(page, size), 0);
         } else if (condition.equals("category")) {
 
             String categoryName = (String) session.getAttribute("categoryName");
-            products = productService.findByCategoryName(categoryName, PageRequest.of(page, size));
+            products = productService.findByCategoryNameAndStatus(categoryName, 0, PageRequest.of(page, size));
 
         } else if (condition.equals("manufacturer")) {
             String manufacturerName = (String) session.getAttribute("manufacturerName");
-            products = productService.findByManufacturerName(manufacturerName, PageRequest.of(page, size));
+            products = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus(manufacturerName, 0,
+                    0,
+                    PageRequest.of(page, size));
         }
 
         model.addAttribute("products", products);
@@ -115,10 +118,11 @@ public class HomeController {
         return "listProducts";
     }
 
+    /* get list products for user */
     @GetMapping("/list-products")
     public String getProductsForUser(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
-        Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, size));
+        Page<Product> listProducts = productService.findByStatus(PageRequest.of(page, size), 0);
         List<Category> listCategories = categoryService.getAll();
         List<Manufacturer> listManufacturers = manufacturerService.getAll();
 
@@ -139,7 +143,8 @@ public class HomeController {
 
         isUserLogin(model, session);
         if (categoryName != null) {
-            Page<Product> products = productService.findByCategoryName(categoryName, PageRequest.of(page, size));
+            Page<Product> products = productService.findByCategoryNameAndStatus(categoryName, 0,
+                    PageRequest.of(page, size));
             model.addAttribute("products", products);
         }
 
@@ -162,8 +167,9 @@ public class HomeController {
             @RequestParam(defaultValue = "5") int size) {
         isUserLogin(model, session);
         if (manufacturerName != null) {
-            Page<Product> products = productService.findByManufacturerName(manufacturerName,
-                    PageRequest.of(page, size));
+            Page<Product> products = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus(
+                    manufacturerName, 0,
+                    0, PageRequest.of(page, size));
             model.addAttribute("products", products);
         }
 
@@ -253,9 +259,7 @@ public class HomeController {
 
     public String isLogin(Model model, HttpSession session) {
         boolean flag = checkLogin(model, session);
-        System.out.println(flag);
         if (!flag) {
-            System.out.println("here");
             return getLoginPage(model, session);
         }
         return null;

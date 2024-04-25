@@ -39,17 +39,25 @@
         <div class="app-content content">
             <div class="content-wrapper">
                 <div class="content-body">
-                    <table id="productTable" class="table table-bordered table-hover dataTable dtr-inline">
+                    <table id="dataTable" class="table table-bordered table-hover dataTable dtr-inline">
                         <thead>
                             <tr>
-                                <th onclick="sortTable(0)">
+                                <th>
                                     <span>#</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(0)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(0)"></i>
+                                    <input type="text" id="searchInput_0" class="search-input" placeholder="Search by #"
+                                        onkeyup="searchTable(0)">
                                 </th>
                                 <th>Image</th>
-                                <th onclick="sortTable(1)">
+                                <th>
                                     <span>Name of Manufacturer</span>
-                                    <span class="arrow"></span>
+                                    <span class="arrow" onclick="sortTable(1)"></span>
+                                    <i class="fa fa-search search-icon" aria-hidden="true"
+                                        onclick="toggleSearchInput(2)"></i>
+                                    <input type="text" id="searchInput_2" class="search-input"
+                                        placeholder="Search by name" onkeyup="searchTable(2)">
                                 </th>
                                 <th>Description</th>
                                 <th>Action</th>
@@ -82,7 +90,7 @@
                     </table>
                     <div class="row">
                         <div class="col-lg-6 col-md-5">
-                            <div class="dataTables_info" id="productTable_info" role="status" aria-live="polite">
+                            <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
                                 <p>Showing
                                     1 to 10 of [(${manufacturers.getTotalElements()})] total</p>
                             </div>
@@ -111,7 +119,8 @@
         </div>
 
         <footer th:replace="~{products/products :: footer}"></footer>
-    </body>
+    </body>    
+    <script src="/js/searchSort.js"></script>
     <script th:inline="javascript">
         function showChangePass ()
         {

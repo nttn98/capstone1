@@ -2,14 +2,20 @@ package com.capstone1.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-
-import org.hibernate.mapping.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "orders")
@@ -24,6 +30,7 @@ public class Order {
     private String receiverName;
     private String receiverAddress;
     private Long receiverNumberphone;
+    private PaymentType type;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,6 +53,18 @@ public class Order {
         this.user = user;
         this.orderDate = orDateTime;
 
+    }
+
+    public PaymentType getType() {
+        return type;
+    }
+
+    public void setType(PaymentType type) {
+        this.type = type;
+    }
+
+    public enum PaymentType {
+        COD, CREDIT
     }
 
     public String getShowStatus() {

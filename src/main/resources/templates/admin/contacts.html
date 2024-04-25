@@ -3,22 +3,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
     <head th:replace="~{products/products :: head}"></head>
-    <style>
-        .search-icon {
-            cursor: pointer;
-            position: relative;
-        }
 
-        /* Style for the search input */
-        .search-input {
-            display: none;
-            position: absolute;
-            top: 80%;
-            left: 42px;
-            width: calc(70%);
-            padding: 2px;
-        }
-    </style>
 
     <body class="vertical-layout vertical-menu-modern 2-columns fixed-navbar">
 
@@ -51,7 +36,7 @@
         <div class="app-content content">
             <div class="content-wrapper">
                 <div class="content-body">
-                    <table id="contactTable" class="table table-bordered table-hover dataTable dtr-inline">
+                    <table id="dataTable" class="table table-bordered table-hover dataTable dtr-inline">
                         <thead>
                             <tr>
                                 <th>
@@ -62,6 +47,7 @@
                                     <input type="text" id="searchInput_0" class="search-input" placeholder="Search by #"
                                         onkeyup="searchTable(0)">
                                 </th>
+
                                 <th>
                                     <span>Name</span>
                                     <span class="arrow" onclick="sortTable(1)"></span>
@@ -96,27 +82,12 @@
                                 <td th:text="${contact.email}"></td>
                                 <td th:text="${contact.numberphone}"></td>
                                 <td th:text="${contact.messages}" style="max-width: 600px; overflow: auto;"></td>
-                                <!-- <td>
-                                    <a th:href="@{/manufacturers/change-status/{id}(id=${manufacturer.id})}">
-                                        <button class="custom-btn btn-5"
-                                            th:if="${manufacturer.status == 1}">Disable</button>
-                                        <button class="custom-btn btn-6"
-                                            th:if="${manufacturer.status == 0}">Enable</button>
-                                    </a>
-
-                                    <a th:href="@{/manufacturers/edit/{id}(id=${manufacturer.id})}"
-                                        th:if="${manufacturer.status == 1}" style="text-decoration: none;">
-                                        <button class="custom-btn btn-14" th:if="${session.staff==null}">
-                                            <h7>Edit</h7>
-                                        </button>
-                                    </a>
-                                </td> -->
                             </tr>
                         </tbody>
                     </table>
                     <div class="row">
                         <div class="col-lg-6 col-md-5">
-                            <div class="dataTables_info" id="contactTable_info" role="status" aria-live="polite">
+                            <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
                                 <p>Showing
                                     1 to 10 of [(${contacts.getTotalElements()})] total</p>
                             </div>
@@ -146,6 +117,7 @@
 
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
+    <script src="/js/searchSort.js"></script>
     <script th:inline="javascript">
         function showChangePass ()
         {
@@ -175,107 +147,107 @@
                 $( 'button.close.close-mask' ).click();
         } );
 
-        function searchTable ( columnIndex )
-        {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById( "searchInput_" + columnIndex );
-            filter = input.value.toUpperCase();
-            table = document.getElementById( "contactTable" );
-            tr = table.getElementsByTagName( "tr" );
-            for ( i = 0; i < tr.length; i++ )
-            {
-                td = tr[ i ].getElementsByTagName( "td" )[ columnIndex ]; // Search by specified column index
-                if ( td )
-                {
-                    txtValue = td.textContent || td.innerText;
-                    if ( txtValue.toUpperCase().indexOf( filter ) > -1 )
-                    {
-                        tr[ i ].style.display = "";
-                    } else
-                    {
-                        tr[ i ].style.display = "none";
-                    }
-                }
-            }
-        }
-        // Function to toggle search input visibility
-        function toggleSearchInput ( index )
-        {
-            var input = document.getElementById( "searchInput_" + index );
-            if ( input.style.display === "none" || input.style.display === "" )
-            {
-                input.style.display = "inline-block";
-            } else
-            {
-                input.style.display = "none";
-            }
-        }
+        // function searchTable ( columnIndex )
+        // {
+        //     var input, filter, table, tr, td, i, txtValue;
+        //     input = document.getElementById( "searchInput_" + columnIndex );
+        //     filter = input.value.toUpperCase();
+        //     table = document.getElementById( "dataTable" );
+        //     tr = table.getElementsByTagName( "tr" );
+        //     for ( i = 0; i < tr.length; i++ )
+        //     {
+        //         td = tr[ i ].getElementsByTagName( "td" )[ columnIndex ]; // Search by specified column index
+        //         if ( td )
+        //         {
+        //             txtValue = td.textContent || td.innerText;
+        //             if ( txtValue.toUpperCase().indexOf( filter ) > -1 )
+        //             {
+        //                 tr[ i ].style.display = "";
+        //             } else
+        //             {
+        //                 tr[ i ].style.display = "none";
+        //             }
+        //         }
+        //     }
+        // }
+        // // Function to toggle search input visibility
+        // function toggleSearchInput ( index )
+        // {
+        //     var input = document.getElementById( "searchInput_" + index );
+        //     if ( input.style.display === "none" || input.style.display === "" )
+        //     {
+        //         input.style.display = "inline-block";
+        //     } else
+        //     {
+        //         input.style.display = "none";
+        //     }
+        // }
 
-        // Add event listeners to hide search input when mouse leaves
-        document.querySelectorAll( '.search-input' ).forEach( input =>
-        {
-            input.addEventListener( 'mouseleave', function ()
-            {
-                this.style.display = 'none';
-            } );
-        } );
+        // // Add event listeners to hide search input when mouse leaves
+        // document.querySelectorAll( '.search-input' ).forEach( input =>
+        // {
+        //     input.addEventListener( 'mouseleave', function ()
+        //     {
+        //         this.style.display = 'none';
+        //     } );
+        // } );
 
 
-        // Sort functionality
-        var currentSortColumn = null;
-        function sortTable ( n )
-        {
-            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-            table = document.getElementById( "contactTable" );
-            switching = true;
-            // Set the sorting direction to ascending if it's a new column, otherwise toggle direction:
-            dir = ( n === currentSortColumn && document.getElementsByClassName( "arrow" )[ n ].classList.contains( "arrow-up" ) ) ? "desc" : "asc";
-            // Remove arrow classes from all headers
-            document.querySelectorAll( '.arrow' ).forEach( arrow => arrow.classList.remove( 'arrow-up', 'arrow-down' ) );
-            // Set arrow class for the current header
-            document.getElementsByClassName( "arrow" )[ n ].classList.add( dir === "asc" ? "arrow-up" : "arrow-down" );
-            currentSortColumn = n;
+        // // Sort functionality
+        // var currentSortColumn = null;
+        // function sortTable ( n )
+        // {
+        //     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        //     table = document.getElementById( "dataTable" );
+        //     switching = true;
+        //     // Set the sorting direction to ascending if it's a new column, otherwise toggle direction:
+        //     dir = ( n === currentSortColumn && document.getElementsByClassName( "arrow" )[ n ].classList.contains( "arrow-up" ) ) ? "desc" : "asc";
+        //     // Remove arrow classes from all headers
+        //     document.querySelectorAll( '.arrow' ).forEach( arrow => arrow.classList.remove( 'arrow-up', 'arrow-down' ) );
+        //     // Set arrow class for the current header
+        //     document.getElementsByClassName( "arrow" )[ n ].classList.add( dir === "asc" ? "arrow-up" : "arrow-down" );
+        //     currentSortColumn = n;
 
-            while ( switching )
-            {
-                switching = false;
-                rows = table.rows;
-                for ( i = 1; i < ( rows.length - 1 ); i++ )
-                {
-                    shouldSwitch = false;
-                    x = rows[ i ].getElementsByTagName( "td" )[ n ];
-                    y = rows[ i + 1 ].getElementsByTagName( "td" )[ n ];
-                    if ( dir == "asc" )
-                    {
-                        if ( x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() )
-                        {
-                            shouldSwitch = true;
-                            break;
-                        }
-                    } else if ( dir == "desc" )
-                    {
-                        if ( x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase() )
-                        {
-                            shouldSwitch = true;
-                            break;
-                        }
-                    }
-                }
-                if ( shouldSwitch )
-                {
-                    rows[ i ].parentNode.insertBefore( rows[ i + 1 ], rows[ i ] );
-                    switching = true;
-                    switchcount++;
-                } else
-                {
-                    if ( switchcount == 0 && dir == "asc" )
-                    {
-                        dir = "desc";
-                        switching = true;
-                    }
-                }
-            }
-        }
+        //     while ( switching )
+        //     {
+        //         switching = false;
+        //         rows = table.rows;
+        //         for ( i = 1; i < ( rows.length - 1 ); i++ )
+        //         {
+        //             shouldSwitch = false;
+        //             x = rows[ i ].getElementsByTagName( "td" )[ n ];
+        //             y = rows[ i + 1 ].getElementsByTagName( "td" )[ n ];
+        //             if ( dir == "asc" )
+        //             {
+        //                 if ( x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() )
+        //                 {
+        //                     shouldSwitch = true;
+        //                     break;
+        //                 }
+        //             } else if ( dir == "desc" )
+        //             {
+        //                 if ( x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase() )
+        //                 {
+        //                     shouldSwitch = true;
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //         if ( shouldSwitch )
+        //         {
+        //             rows[ i ].parentNode.insertBefore( rows[ i + 1 ], rows[ i ] );
+        //             switching = true;
+        //             switchcount++;
+        //         } else
+        //         {
+        //             if ( switchcount == 0 && dir == "asc" )
+        //             {
+        //                 dir = "desc";
+        //                 switching = true;
+        //             }
+        //         }
+        //     }
+        // }
     </script>
 
 </html>

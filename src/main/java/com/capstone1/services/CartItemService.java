@@ -10,6 +10,8 @@ public interface CartItemService {
 
     public CartItem findByProductId(long productId);
 
+    public CartItem findByCartIdAndProductId(long cartId, long productId);
+
     @Transactional
     void deleteByProductId(long productId);
 

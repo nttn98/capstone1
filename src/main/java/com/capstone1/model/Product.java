@@ -37,6 +37,11 @@ public class Product {
 		super();
 	}
 
+	@Override
+	public String toString() {
+		return "Product [id=" + id + "]";
+	}
+
 	public long getId() {
 		return id;
 	}
