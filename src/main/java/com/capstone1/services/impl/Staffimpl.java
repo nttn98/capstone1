@@ -1,5 +1,7 @@
 package com.capstone1.services.impl;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -62,6 +64,11 @@ public class Staffimpl implements StaffService {
     @Override
     public Staff findByUsernameAndPassword(String usename, String passsword) {
         return staffRepository.findByUsernameAndPassword(usename, passsword);
+    }
+
+    @Override
+    public List<Staff> getAll() {
+        return staffRepository.findAll();
     }
 
 }

@@ -44,58 +44,31 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <span>#</span>
-                                    <span class="arrow" onclick="sortTable(0)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(0)"></i>
-                                    <input type="text" id="searchInput_0" class="search-input" placeholder="Search by #"
-                                        onkeyup="searchTable(0)">
+                                    #
                                 </th>
                                 <th>
-                                    <span>Staff Full-name</span>
-                                    <span class="arrow" onclick="sortTable(1)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(1)"></i>
-                                    <input type="text" id="searchInput_1" class="search-input"
-                                        placeholder="Search by full name" onkeyup="searchTable(1)">
+                                    Staff Full-name
                                 </th>
                                 <th>
-                                    <span>Username</span>
-                                    <span class="arrow" onclick="sortTable(2)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(2)"></i>
-                                    <input type="text" id="searchInput_2" class="search-input"
-                                        placeholder="Search by username" onkeyup="searchTable(2)">
+                                    Username
                                 </th>
                                 <th>
-                                    <span>Email</span>
-                                    <span class="arrow" onclick="sortTable(3)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(3)"></i>
-                                    <input type="text" id="searchInput_3" class="search-input"
-                                        placeholder="Search by email" onkeyup="searchTable(3)">
+                                    Email
                                 </th>
                                 <th>
-                                    <span>NumberPhone</span>
-                                    <span class="arrow" onclick="sortTable(4)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(4)"></i>
-                                    <input type="text" id="searchInput_4" class="search-input"
-                                        placeholder="Search by numberphone" onkeyup="searchTable(4)">
+                                    NumberPhone
                                 </th>
                                 <th>
-                                    <span>DoB</span>
-                                    <span class="arrow" onclick="sortTable(5)"></span>
+                                    DoB
                                 </th>
                                 <th>
-                                    <span>Idcard</span>
-                                    <span class="arrow" onclick="sortTable(6)"></span>
+                                    Idcard
                                 </th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody th:each="staff, iterStat : ${staffs}" th:if="${iterStat.index < 10}">
-                            <tr>
+                        <tbody>
+                            <tr th:each="staff : ${staffs}">
                                 <td th:text="${staff.id}"></td>
                                 <td th:text="${staff.fullname}"></td>
                                 <td th:text="${staff.username}"></td>
@@ -119,56 +92,34 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-5">
-                            <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
-                                <p>Showing
-                                    1 to 10 of [(${staffs.getTotalElements()})] total</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-7">
-                            <div class="dataTables_paginate paging_simple_numbers"
-                                th:each=" item: ${staffs.getTotalPages()}">
-                                <ul class="pagination">
-                                    <li
-                                        th:class="'paginate_button page-item previous ' + (${staffs.number == 0 ? 'disabled' : ''})">
-                                        <a class="page-link"
-                                            th:href="@{'/staffs?page=' + ${staffs.number - 1}}">Previous</a>
-                                    </li>
-                                    <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, staffs.totalPages - 1)}">
-                                <a th:href="@{'/staffs?page=' + ${page}}"
-                                   th:class="'page-link ' + (${staffs.number == page ? 'current-page' : ''})"
-                                   th:text="${page + 1}"></a>
-                            </li>
-                            <li th:class="'paginate_button page-item next ' + (${staffs.number == staffs.totalPages - 1 ? 'disabled' : ''})">
-                                <a class="page-link" th:href="@{'/staffs?page=' + ${staffs.number + 1}}">Next</a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+        </div>
+        </div>
 
-<footer th:replace="~{products/products :: footer}"></footer>
-</body>
-<script src="/js/searchSort.js"></script>
-<script th:inline="javascript">
-    function showChangePass ()
-    {
-        $( '.changePass' ).addClass( 'w-25' );
-        $( '.profile' ).removeClass( "w-25" );
-    }
+        <footer th:replace="~{products/products :: footer}"></footer>
+    </body>
+    <script th:inline="javascript">
+        function showChangePass ()
+        {
+            $( '.changePass' ).addClass( 'w-25' );
+            $( '.profile' ).removeClass( "w-25" );
+        }
 
-    function closeChangePass ()
-    {
-        $( '.changePass' ).removeClass( "w-25" );
-        $( '.closeMask' ).fadeOut();
+        function closeChangePass ()
+        {
+            $( '.changePass' ).removeClass( "w-25" );
+            $( '.closeMask' ).fadeOut();
 
-    }
-
-    alert_action(/*[[${alert}]]*/ )
-</script>
+        }
+        new DataTable( '#dataTable', {
+            "order": [ [ 0, "dec" ] ],
+            "columnDefs": [
+                { "orderable": false, "targets": [ 5, 7 ] }
+            ]
+        } );
+        alert_action(/*[[${alert}]]*/ )
+    </script>
 
 </html>

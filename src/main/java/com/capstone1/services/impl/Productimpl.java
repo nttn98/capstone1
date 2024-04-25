@@ -69,7 +69,7 @@ public class Productimpl implements ProductService {
 
 	@Override
 	public List<Product> getAll() {
-		return productRepository.findAll(Sort.by("id").descending());
+		return productRepository.findAll();
 	}
 
 	@Override

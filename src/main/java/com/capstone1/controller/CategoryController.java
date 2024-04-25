@@ -1,5 +1,7 @@
 package com.capstone1.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +34,7 @@ public class CategoryController {
             return target;
         }
 
-        Page<Category> listCategories = categoryService
-                .getAllCategories(PageRequest.of(page, size, Sort.by("id").descending()));
+        List<Category> listCategories = categoryService.getAll();
         if (listCategories.isEmpty()) {
             Category category = new Category();
             model.addAttribute("category", category);

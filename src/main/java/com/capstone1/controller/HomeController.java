@@ -297,7 +297,7 @@ public class HomeController {
 
         isLogin(model, session);
 
-        Page<Order> orders = orderService.getAllOrders(PageRequest.of(page, size, Sort.by("id").descending()));
+        List<Order> orders = orderService.getAll();
         for (Order order : orders) {
             order.setShowStatus(map.get(order.getStatus()));
         }

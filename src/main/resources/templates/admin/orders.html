@@ -40,54 +40,31 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <span>#</span>
-                                    <span class="arrow" onclick="sortTable(0)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(0)"></i>
-                                    <input type="text" id="searchInput_0" class="search-input" placeholder="Search by #"
-                                        onkeyup="searchTable(0)">
+                                    #
                                 </th>
 
                                 <th>
-                                    <span>User Id</span>
-                                    <span class="arrow" onclick="sortTable(1)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(1)"></i>
-                                    <input type="text" id="searchInput_1" class="search-input"
-                                        placeholder="Search by user id" onkeyup="searchTable(1)">
+                                    User Id
                                 </th>
 
                                 <th>
-                                    <span>Total</span>
-                                    <span class="arrow" onclick="sortTable(2)"></span>
+                                    Total
                                 </th>
                                 <th>
-                                    <span>Date</span>
-                                    <span class="arrow" onclick="sortTable(3)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(3)"></i>
-                                    <input type="text" id="searchInput_3" class="search-input"
-                                        placeholder="Search by Date" onkeyup="searchTable(3)">
+                                    Date
                                 </th>
                                 <th>
-                                    <span>Status</span>
-                                    <span class="arrow" onclick="sortTable(4)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(4)"></i>
-                                    <input type="text" id="searchInput_4" class="search-input"
-                                        placeholder="Search by Status" onkeyup="searchTable(4)">
+                                    Status
                                 </th>
                                 <th>
-                                    <span>Payment</span>
-                                    <span class="arrow" onclick="sortTable(5)"></span>
+                                    Payment
                                 </th>
                                 <th>View-detail</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="order, iterStat : ${orders}"
-                                th:if="${iterStat.index < 10 && orders.getTotalPages() > 0}">
+                            <tr th:each="order : ${orders}">
                                 <td th:text="${order.id}"></td>
                                 <td th:text="${order.user.id}"></td>
                                 <td th:text="${order.total}" class="formatPrice"></td>
@@ -191,157 +168,133 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-6 col-md-5">
-                        <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
-                            <div>
-                                <p>Showing
-                                    1 to 10 of [(${orders.getTotalElements()})] total</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-7">
-                        <div class="dataTables_paginate paging_simple_numbers"
-                            th:each=" item: ${orders.getTotalPages()}">
-                            <ul class="pagination">
-                                <li
-                                    th:class="'paginate_button page-item previous ' + (${orders.number == 0 ? 'disabled' : ''})">
-                                    <a class="page-link"
-                                        th:href="@{'/orders?page=' + ${orders.number - 1}}">Previous</a>
-                                </li>
-                                <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, orders.totalPages - 1)}">
-                            <a th:href="@{'/orders?page=' + ${page}}"
-                               th:class="'page-link ' + (${orders.number == page ? 'current-page' : ''})"
-                               th:text="${page + 1}"></a>
-                        </li>
-                        <li th:class="'paginate_button page-item next ' + (${orders.number == orders.totalPages - 1 ? 'disabled' : ''})">
-                            <a class="page-link" th:href="@{'/orders?page=' + ${orders.number + 1}}">Next</a>
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
-    </div>
-    <div th:if="${orders==null}" class="content-wrapper">
-        <h2 class="m-auto"> There are no orders now.</h2>
-    </div>
-</div>
-</body>
+        </div>
+        <div th:if="${orders==null}" class="content-wrapper">
+            <h2 class="m-auto"> There are no orders now.</h2>
+        </div>
+        </div>
+    </body>
 
-<footer th:replace="~{products/products :: footer}"></footer>   
- <script src="/js/searchSort.js"></script>
-<script th:inline="javascript">
+    <footer th:replace="~{products/products :: footer}"></footer>
+     <script th:inline="javascript">
 
-    $( document ).ready( function ()
-    {
-        $( '.formatPrice' ).each( ( i, e ) =>
+        $( document ).ready( function ()
         {
-            let val = +( $( e ).text() );
-            $( e ).text( formatMoney( val ) );
+            $( '.formatPrice' ).each( ( i, e ) =>
+            {
+                let val = +( $( e ).text() );
+                $( e ).text( formatMoney( val ) );
+            } );
+
+            function formatMoney ( number )
+            {
+                return number.toLocaleString( 'vi-VN', {
+                    style: 'currency', currency: 'VND'
+                } );
+            }
         } );
 
-        function formatMoney ( number )
+        function selectStatus ( id, status )
         {
-            return number.toLocaleString( 'vi-VN', {
-                style: 'currency', currency: 'VND'
-            } );
-        }
-    } );
+            const icons = document.querySelectorAll( `[class^="circle-button"].status-${ id }` );
+            const lines = document.querySelectorAll( `[class^="status-line"].status-${ id }` );
 
-    function selectStatus ( id, status )
-    {
-        const icons = document.querySelectorAll( `[class^="circle-button"].status-${ id }` );
-        const lines = document.querySelectorAll( `[class^="status-line"].status-${ id }` );
+            icons.forEach( icon => icon.classList.remove( 'selected' ) );
+            lines.forEach( line => line.classList.remove( 'selected' ) );
 
-        icons.forEach( icon => icon.classList.remove( 'selected' ) );
-        lines.forEach( line => line.classList.remove( 'selected' ) );
-
-        for ( let i = 1; i <= status; i++ )
-        {
-            icons[ i - 1 ].classList.add( 'selected' );
-            if ( i < status )
+            for ( let i = 1; i <= status; i++ )
             {
-                lines[ i - 1 ].classList.add( 'selected' );
-            }
-        }
-        if ( status === 4 )
-        {
-            icons.forEach( icon => icon.classList.add( 'cancel' ) );
-            lines.forEach( line => line.classList.add( 'cancel' ) );
-            document.querySelectorAll( `.tracking.status-${ id } a` ).forEach( function ( a )
-            {
-                a.onclick = function ( event )
+                icons[ i - 1 ].classList.add( 'selected' );
+                if ( i < status )
                 {
-                    event.preventDefault(); // Prevent default action of the <a> tag
-                    return false;
-                };
-            } );
-        }
-    }
-
-    function loadOrderDetail ( id, s )
-    {
-        $( '.orderDetail' ).each( ( i, e ) =>
-        {
-
-            if ( $( e ).is( ':visible' ) && !$( e ).hasClass( id ) )
+                    lines[ i - 1 ].classList.add( 'selected' );
+                }
+            }
+            if ( status === 4 )
             {
-                $( e ).fadeOut();
+                icons.forEach( icon => icon.classList.add( 'cancel' ) );
+                lines.forEach( line => line.classList.add( 'cancel' ) );
+                document.querySelectorAll( `.tracking.status-${ id } a` ).forEach( function ( a )
+                {
+                    a.onclick = function ( event )
+                    {
+                        event.preventDefault(); // Prevent default action of the <a> tag
+                        return false;
+                    };
+                } );
+            }
+        }
+
+        function loadOrderDetail ( id, s )
+        {
+            $( '.orderDetail' ).each( ( i, e ) =>
+            {
+
+                if ( $( e ).is( ':visible' ) && !$( e ).hasClass( id ) )
+                {
+                    $( e ).fadeOut();
+                }
+            } );
+
+            $( '.orderDetail.' + id ).fadeToggle();
+            $( '.closeMask' ).fadeIn();
+
+            var status = parseInt( s ) + 1;
+            selectStatus( id, status )
+
+        }
+
+        function closeOrderDetail ( e )
+        {
+            $( e ).parent().fadeOut();
+            $( '.closeMask' ).fadeOut();
+        }
+
+        function showChangePass ()
+        {
+            $( '.changePass' ).addClass( 'w-25' );
+            $( '.profile' ).removeClass( "w-25" );
+        }
+
+        function closeChangePass ()
+        {
+            $( '.changePass' ).removeClass( "w-25" );
+            $( '.closeMask' ).fadeOut();
+
+        }
+
+        function showProfile ()
+        {
+            $( '.profile' ).addClass( "w-25" );
+            $( '.changePass' ).removeClass( "w-25" );
+            $( '.closeMask' ).fadeIn();
+        }
+
+        function closeProfile ()
+        {
+            $( '.profile' ).removeClass( "w-25" );
+            $( '.closeMask' ).fadeOut();
+        }
+
+        $( '.closeMask' ).click( ( e ) =>
+        {
+            if ( e.target.classList.contains( 'closeMask' ) )
+            {
+                $( 'button.close.close-mask' ).click();
+                $( '.orderDetail' ).fadeOut(); // Hide all order details
             }
         } );
+        new DataTable( '#dataTable', {
+            "order": [ [ 0, "dec" ] ],
+            "columnDefs": [
+                { "orderable": false, "targets": [ 6, 7 ] } // Non-sortable columns 7 and 8 (indices 6 and 7)
+            ]
+        } );
+        alert_action(/*[[${alert}]]*/ )
 
-        $( '.orderDetail.' + id ).fadeToggle();
-        $( '.closeMask' ).fadeIn();
-
-        var status = parseInt( s ) + 1;
-        selectStatus( id, status )
-
-    }
-
-    function closeOrderDetail ( e )
-    {
-        $( e ).parent().fadeOut();
-        $( '.closeMask' ).fadeOut();
-    }
-
-    function showChangePass ()
-    {
-        $( '.changePass' ).addClass( 'w-25' );
-        $( '.profile' ).removeClass( "w-25" );
-    }
-
-    function closeChangePass ()
-    {
-        $( '.changePass' ).removeClass( "w-25" );
-        $( '.closeMask' ).fadeOut();
-
-    }
-
-    function showProfile ()
-    {
-        $( '.profile' ).addClass( "w-25" );
-        $( '.changePass' ).removeClass( "w-25" );
-        $( '.closeMask' ).fadeIn();
-    }
-
-    function closeProfile ()
-    {
-        $( '.profile' ).removeClass( "w-25" );
-        $( '.closeMask' ).fadeOut();
-    }
-
-    $( '.closeMask' ).click( ( e ) =>
-    {
-        if ( e.target.classList.contains( 'closeMask' ) )
-        {
-            $( 'button.close.close-mask' ).click();
-            $( '.orderDetail' ).fadeOut(); // Hide all order details
-        }
-    } );
-
-    alert_action(/*[[${alert}]]*/ )
-
-</script>
+    </script>
 
 
 </html>

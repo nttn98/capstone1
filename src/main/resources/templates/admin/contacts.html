@@ -40,84 +40,36 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <span>#</span>
-                                    <span class="arrow" onclick="sortTable(0)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(0)"></i>
-                                    <input type="text" id="searchInput_0" class="search-input" placeholder="Search by #"
-                                        onkeyup="searchTable(0)">
-                                </th>
-
-                                <th>
-                                    <span>Name</span>
-                                    <span class="arrow" onclick="sortTable(1)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(1)"></i>
-                                    <input type="text" id="searchInput_1" class="search-input"
-                                        placeholder="Search by Name" onkeyup="searchTable(1)">
+                                    #
                                 </th>
                                 <th>
-                                    <span>Email</span>
-                                    <span class="arrow" onclick="sortTable(2)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(2)"></i>
-                                    <input type="text" id="searchInput_2" class="search-input"
-                                        placeholder="Search by Email" onkeyup="searchTable(2)">
+                                    Name
                                 </th>
                                 <th>
-                                    <span>Number-phone</span>
-                                    <span class="arrow" onclick="sortTable(3)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(3)"></i>
-                                    <input type="text" id="searchInput_3" class="search-input"
-                                        placeholder="Search by Number-phone" onkeyup="searchTable(3)">
+                                    Email
+                                </th>
+                                <th>
+                                    Number-phone
                                 </th>
                                 <th style="width: 600px;">Messages</th>
                             </tr>
                         </thead>
-                        <tbody th:each="contact, iterStat : ${contacts}" th:if="${iterStat.index < 10}">
-                            <tr>
+                        <tbody>
+                            <tr th:each="contact : ${contacts}">
                                 <td th:text="${contact.id}"></td>
-                                <td th:text="${contact.name}"></td>
+                                <td th:text="${contact.name}" style="width: 230px !important; "></td>
                                 <td th:text="${contact.email}"></td>
                                 <td th:text="${contact.numberphone}"></td>
                                 <td th:text="${contact.messages}" style="max-width: 600px; overflow: auto;"></td>
                             </tr>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-5">
-                            <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
-                                <p>Showing
-                                    1 to 10 of [(${contacts.getTotalElements()})] total</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-7">
-                            <div class="dataTables_paginate paging_simple_numbers"
-                                th:each=" item: ${contacts.getTotalPages()}">
-                                <ul class="pagination">
-                                    <li
-                                        th:class="'paginate_button page-item previous ' + (${contacts.number == 0 ? 'disabled' : ''})">
-                                        <a class="page-link"
-                                            th:href="@{'/contacts?page=' + ${contacts.number - 1}}">Previous</a>
-                                    </li>
-                                    <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, contacts.totalPages - 1)}">
-                                        <a th:href="@{'/contacts?page=' + ${page}}" th:class="'page-link ' + (${contacts.number == page ? 'current-page' : ''})" th:text="${page + 1}"></a>
-                                    </li>
-                                    <li th:class="'paginate_button page-item next ' + (${contacts.number == contacts.totalPages - 1 ? 'disabled' : ''})">
-                                        <a class="page-link" th:href="@{'/contacts?page=' + ${contacts.number + 1}}">Next</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
 
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
-    <script src="/js/searchSort.js"></script>
     <script th:inline="javascript">
         function showChangePass ()
         {
@@ -147,107 +99,12 @@
                 $( 'button.close.close-mask' ).click();
         } );
 
-        // function searchTable ( columnIndex )
-        // {
-        //     var input, filter, table, tr, td, i, txtValue;
-        //     input = document.getElementById( "searchInput_" + columnIndex );
-        //     filter = input.value.toUpperCase();
-        //     table = document.getElementById( "dataTable" );
-        //     tr = table.getElementsByTagName( "tr" );
-        //     for ( i = 0; i < tr.length; i++ )
-        //     {
-        //         td = tr[ i ].getElementsByTagName( "td" )[ columnIndex ]; // Search by specified column index
-        //         if ( td )
-        //         {
-        //             txtValue = td.textContent || td.innerText;
-        //             if ( txtValue.toUpperCase().indexOf( filter ) > -1 )
-        //             {
-        //                 tr[ i ].style.display = "";
-        //             } else
-        //             {
-        //                 tr[ i ].style.display = "none";
-        //             }
-        //         }
-        //     }
-        // }
-        // // Function to toggle search input visibility
-        // function toggleSearchInput ( index )
-        // {
-        //     var input = document.getElementById( "searchInput_" + index );
-        //     if ( input.style.display === "none" || input.style.display === "" )
-        //     {
-        //         input.style.display = "inline-block";
-        //     } else
-        //     {
-        //         input.style.display = "none";
-        //     }
-        // }
-
-        // // Add event listeners to hide search input when mouse leaves
-        // document.querySelectorAll( '.search-input' ).forEach( input =>
-        // {
-        //     input.addEventListener( 'mouseleave', function ()
-        //     {
-        //         this.style.display = 'none';
-        //     } );
-        // } );
-
-
-        // // Sort functionality
-        // var currentSortColumn = null;
-        // function sortTable ( n )
-        // {
-        //     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-        //     table = document.getElementById( "dataTable" );
-        //     switching = true;
-        //     // Set the sorting direction to ascending if it's a new column, otherwise toggle direction:
-        //     dir = ( n === currentSortColumn && document.getElementsByClassName( "arrow" )[ n ].classList.contains( "arrow-up" ) ) ? "desc" : "asc";
-        //     // Remove arrow classes from all headers
-        //     document.querySelectorAll( '.arrow' ).forEach( arrow => arrow.classList.remove( 'arrow-up', 'arrow-down' ) );
-        //     // Set arrow class for the current header
-        //     document.getElementsByClassName( "arrow" )[ n ].classList.add( dir === "asc" ? "arrow-up" : "arrow-down" );
-        //     currentSortColumn = n;
-
-        //     while ( switching )
-        //     {
-        //         switching = false;
-        //         rows = table.rows;
-        //         for ( i = 1; i < ( rows.length - 1 ); i++ )
-        //         {
-        //             shouldSwitch = false;
-        //             x = rows[ i ].getElementsByTagName( "td" )[ n ];
-        //             y = rows[ i + 1 ].getElementsByTagName( "td" )[ n ];
-        //             if ( dir == "asc" )
-        //             {
-        //                 if ( x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() )
-        //                 {
-        //                     shouldSwitch = true;
-        //                     break;
-        //                 }
-        //             } else if ( dir == "desc" )
-        //             {
-        //                 if ( x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase() )
-        //                 {
-        //                     shouldSwitch = true;
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //         if ( shouldSwitch )
-        //         {
-        //             rows[ i ].parentNode.insertBefore( rows[ i + 1 ], rows[ i ] );
-        //             switching = true;
-        //             switchcount++;
-        //         } else
-        //         {
-        //             if ( switchcount == 0 && dir == "asc" )
-        //             {
-        //                 dir = "desc";
-        //                 switching = true;
-        //             }
-        //         }
-        //     }
-        // }
+        new DataTable( '#dataTable', {
+            "order": [ [ 0, "dec" ] ],
+            "columnDefs": [
+                { "orderable": false, "targets": [ 4 ] } // Non-sortable columns 7 and 8 (indices 6 and 7)
+            ]
+        } );
     </script>
 
 </html>

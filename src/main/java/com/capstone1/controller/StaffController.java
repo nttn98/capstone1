@@ -1,5 +1,7 @@
 package com.capstone1.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +41,7 @@ public class StaffController {
         if (target != null) {
             return target;
         }
-        Page<Staff> listStaffs = staffService.getAllStaffs(PageRequest.of(page, size, Sort.by("id").descending()));
+        List<Staff> listStaffs = staffService.getAll();
 
         if (listStaffs.isEmpty()) {
             Staff staff = new Staff();

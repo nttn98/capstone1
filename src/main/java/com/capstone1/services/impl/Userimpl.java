@@ -1,5 +1,7 @@
 package com.capstone1.services.impl;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.*;
@@ -67,6 +69,11 @@ public class Userimpl implements UserService {
     @Override
     public User findByGgID(String ggid) {
         return userRepository.findByGgID(ggid);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
     }
 
 }

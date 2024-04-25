@@ -1,5 +1,7 @@
 package com.capstone1.services.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +46,11 @@ public class OrderImpl implements OrderService {
     @Override
     public Page<Order> findByUserId(long userId, Pageable p) {
         return orderRepository.findByUserId(userId, p);
+    }
+
+    @Override
+    public List<Order> getAll() {
+        return orderRepository.findAll();
     }
 
 }

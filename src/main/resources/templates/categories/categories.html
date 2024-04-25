@@ -43,27 +43,17 @@
                         <thead>
                             <tr>
                                 <th>
-                                    <span>#</span>
-                                    <span class="arrow" onclick="sortTable(0)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(0)"></i>
-                                    <input type="text" id="searchInput_0" class="search-input" placeholder="Search by #"
-                                        onkeyup="searchTable(0)">
+                                    #
                                 </th>
                                 <th>
-                                    <span>Name of Category</span>
-                                    <span class="arrow" onclick="sortTable(1)"></span>
-                                    <i class="fa fa-search search-icon" aria-hidden="true"
-                                        onclick="toggleSearchInput(1)"></i>
-                                    <input type="text" id="searchInput_1" class="search-input"
-                                        placeholder="Search by name" onkeyup="searchTable(1)">
+                                    Name of Category
                                 </th>
                                 <th>Description</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody th:each="category, iterStat : ${categories}" th:if="${iterStat.index < 10}">
-                            <tr>
+                        <tbody>
+                            <tr th:each="category : ${categories}">
                                 <td th:text="${category.id}"></td>
                                 <td th:text="${category.name}"></td>
                                 <td th:text="${category.description}"></td>
@@ -83,38 +73,11 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-5">
-                            <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite">
-                                <p>Showing
-                                    1 to 10 of [(${categories.getTotalElements()})] total</p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-7">
-                            <div class="dataTables_paginate paging_simple_numbers"
-                                th:each=" item: ${categories.getTotalPages()}">
-                                <ul class="pagination">
-                                    <li
-                                        th:class="'paginate_button page-item previous ' + (${categories.number == 0 ? 'disabled' : ''})">
-                                        <a class="page-link"
-                                            th:href="@{'/categories?page=' + ${categories.number - 1}}">Previous</a>
-                                    </li>
-                                    <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, categories.totalPages - 1)}">
-                                        <a th:href="@{'/categories?page=' + ${page}}" th:class="'page-link ' + (${categories.number == page ? 'current-page' : ''})" th:text="${page + 1}"></a>
-                                    </li>
-                                    <li th:class="'paginate_button page-item next ' + (${categories.number == categories.totalPages - 1 ? 'disabled' : ''})">
-                                        <a class="page-link" th:href="@{'/categories?page=' + ${categories.number + 1}}">Next</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-            <footer th:replace="~{products/products :: footer}"></footer>
+        <footer th:replace="~{products/products :: footer}"></footer>
     </body>
-    <script src="/js/searchSort.js"></script>
     <script th:inline="javascript">
         function showChangePass ()
         {
@@ -142,6 +105,12 @@
         {
             if ( e.target.classList.contains( 'closeMask' ) )
                 $( 'button.close.close-mask' ).click();
+        } );
+        new DataTable( '#dataTable', {
+            "order": [ [ 0, "dec" ] ],
+            "columnDefs": [
+                { "orderable": false, "targets": [ 2, 3 ] } // Non-sortable columns 7 and 8 (indices 6 and 7)
+            ]
         } );
         alert_action(/*[[${alert}]]*/ )
     </script>

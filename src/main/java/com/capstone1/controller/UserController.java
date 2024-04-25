@@ -66,7 +66,7 @@ public class UserController {
         if (target != null) {
             return target;
         }
-        Page<User> listUsers = userService.getAllUsers(PageRequest.of(page, size, Sort.by("id").descending()));
+        List<User> listUsers = userService.getAll();
 
         if (listUsers.isEmpty()) {
             User user = new User();
