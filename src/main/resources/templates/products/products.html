@@ -22,6 +22,7 @@
 		<script src="/js/pages/toastr.js"></script>
 		<script src="/js/pages/jquery.toast.js"></script>
 		<script src='/js/product.js'></script>
+		<script src='/js/dashboard/onToggle.js' defer></script>
 		<!-- <script src='/js/jquery_dataTables_min.js'></script> -->
 		<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
 		<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap4.js"></script>
@@ -60,24 +61,21 @@
 							</a>
 							<h4 style="margin: auto;margin-left: 600px">List Products</h4>
 						</ul>
-						<ul th:fragment="login-space" class="nav navbar-nav float-right" style="width: 80px;">
-							<li class="dropdown dropdown-user nav-item"><a
-									class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-									<!-- <div class="avatar avatar-online">
-										<img src="/img/admin.jpg" alt="avatar"><i></i>
-									</div> -->
-									<span class="user-name" style="width: auto;">
-										<p th:if="${session.staff!=null}" th:text="${session.staff.getUsername()}"></p>
-										<p th:if="${session.admin!=null}" th:text="${session.admin.getUsername()}"></p>
-									</span>
-								</a>
-								<div class="dropdown-menu dropdown-menu" style="margin-left: -55px;">
-									<a class="dropdown-item" href="#" onclick="showProfile()"
-										th:if="${session.admin==null}">
-										<i class="feather icon-user"></i> Edit Profile</a>
-									<a class="dropdown-item" th:href="@{/logout}">
-										<i class="feather icon-power"></i> Logout</a>
+						<ul th:fragment="login-space" class="nav navbar-nav float-right"
+							style="width: 85px; overflow: hidden;">
+							<li>
+								<button th:if="${session.admin!=null}" id="toggleButton" onclick="toggleButtons()"
+									class="option"><span th:text="${session.admin.getUsername()}"></span></button>
+
+								<button th:if="${session.staff!=null}" id="toggleButton" onclick="toggleButtons()"
+									class="option"><span th:text="${session.staff.getUsername()}"></span></button>
+
+								<div id="buttonContainer">
+									<a href="#" onclick="showProfile()" th:if="${session.admin==null}" class="option"
+										style="margin-right: 10px;">Edit Profile</a>
+									<a th:href="@{/logout}" class="option">Logout</a>
 								</div>
+
 								<div th:fragment="profile" class="profile position-fixed">
 									<h2>User profile</h2>
 									<button onclick="closeProfile()" type="button" class="close close-mask"
@@ -280,51 +278,8 @@
 			<div class="closeMask"></div>
 		</footer>
 	</body>
+
 	<script th:inline="javascript">
-		function showChangePass ()
-		{
-			$( '.changePass' ).addClass( 'w-25' );
-			$( '.profile' ).removeClass( "w-25" );
-		}
-		function closeChangePass ()
-		{
-			$( '.changePass' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeOut();
-
-		}
-		function showProfile ()
-		{
-			$( '.profile' ).addClass( "w-25" );
-			$( '.changePass' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeIn();
-		}
-		function closeProfile ()
-		{
-			$( '.profile' ).removeClass( "w-25" );
-			$( '.closeMask' ).fadeOut();
-		}
-		$( '.closeMask' ).click( ( e ) =>
-		{
-			if ( e.target.classList.contains( 'closeMask' ) )
-				$( 'button.close.close-mask' ).click();
-		} );
-
-		$( document ).ready( () =>
-		{
-			$( '.formatPrice' ).each( ( i, e ) =>
-			{
-				let val = +( $( e ).text() );
-				$( e ).text( formatMoney( val ) );
-			} );
-
-			function formatMoney ( number )
-			{
-				return number.toLocaleString( 'vi-VN', {
-					style: 'currency', currency: 'VND'
-				} );
-			}
-		} );
-
 		new DataTable( '#dataTable', {
 			"order": [ [ 0, "dec" ] ],
 			"columnDefs": [

@@ -993,12 +993,13 @@ li.cart-empty-title h5 {
 }
 
 .btn {
-    background-color: #ff6a00;
+    /* background-color: #ff6a00; */
     border-radius: 3px
 }
 
 .btn:hover {
-    background-color: #008bff
+    background-color: #138496;
+    border-color: #117a8b;
 }
 
 .login-form-container {

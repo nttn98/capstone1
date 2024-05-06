@@ -19,6 +19,7 @@
         <script src="/js/pages/jquery.toast.js"></script>
         <script src="/js/pages/toastr.js"></script>
         <script src="/js/pages/toastrUser.js"></script>
+        <script src="/js/onChange.js" defer></script>
 
 
         <link rel="stylesheet" href="/css/pages/jquery.toast.css" />
@@ -57,7 +58,7 @@
                                 <a class="nav-link" href="/list-products">Products</a>
                             </li>
                             <li class="nav-item" style="margin: 0 20px 0 17px;">
-                                <a class="nav-link" href="/about">About</a>
+                                <a class="nav-link" href="/#aboutUs">About</a>
                             </li>
                         </ul>
                         <form id="searchForm" action="/products/search" method="post">
@@ -217,18 +218,18 @@
                         </div>
                     </div>
                     <hr th:if="${session.cart != null}">
-                    <div class="purchase-space" th:if="${session.cart != null}">
-                        <div class=" total-purchase">
+                    <div class="checkout-space" th:if="${session.cart != null}">
+                        <div class=" total-checkout">
                             <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span>
                             </h4>
                         </div>
                         <br>
-                        <a th:href="@{/users/purchase-page}" th:if="${session.user != null}">
-                            <button class="btn-purchase">Purchase
+                        <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
+                            <button class="btn-checkout">Checkout
                             </button>
                         </a>
                         <a onclick="showLogin()" th:if="${session.user == null}">
-                            <button class="btn-purchase">Login
+                            <button class="btn-checkout">Login
                             </button>
                         </a>
                     </div>
@@ -256,7 +257,7 @@
                                                 <input type="password" class="form-control" id="password"
                                                     name="password" placeholder="Enter password" required>
                                             </div>
-                                            <button type="submit" class="btn-login">Submit</button>
+                                            <button type="submit" class="btn-login">Login</button>
                                             <br>
                                         </form><a
                                             href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:80/login-google&response_type=code&client_id=737514218091-4d9nc8u2milj8vpqr5i4o1a57sm2jpme.apps.googleusercontent.com&approval_prompt=force"
@@ -319,33 +320,33 @@
                                         <div class="form-group">
                                             <p>Username: </p>
                                             <input type="text" class="form-control" id="usernameInput" name="username"
-                                                onfocusout="checkUserUsername()">
+                                                onfocusout="checkUserUsername()" required>
                                             <span id="usernameError" style="color: red;"></span>
 
                                         </div>
                                         <div class="form-group">
                                             <p>Password: </p>
-                                            <input type="password" class="form-control" name="password">
+                                            <input type="password" class="form-control" name="password" required>
                                         </div>
                                         <div class="form-group">
                                             <p>Full-name: </p>
-                                            <input type="text" class="form-control" name="fullname">
+                                            <input type="text" class="form-control" name="fullname" required>
                                         </div>
                                         <div class="form-group">
                                             <p>Numberphone: </p>
-                                            <input type="text" class="form-control" name="numberphone">
+                                            <input type="text" class="form-control" name="numberphone" required>
                                         </div>
                                         <div class="form-group">
                                             <p>Address: </p>
-                                            <input type="text" class="form-control" name="address">
+                                            <input type="text" class="form-control" name="address" required>
                                         </div>
                                         <div class="form-group">
                                             <p>Email: </p>
-                                            <input type="email" class="form-control" name="email">
+                                            <input type="email" class="form-control" name="email" required>
                                         </div>
                                         <div class="form-group">
                                             <p>Date of birth</p>
-                                            <input type="date" class="form-control" name="dob">
+                                            <input type="date" class="form-control" name="dob" required>
                                         </div>
                                         <button type="submit" class="btn btn-info" id="submitRegister"><i
                                                 class="fa fa-check"></i>
@@ -377,7 +378,7 @@
                                         <h1 class="banner_taital" th:text="${item.name}"></h1>
                                         <p class="banner_text" th:text="${item.description}"></p>
                                         <div class="btn_main">
-                                            <div class="read_bt"><a href="/list-products">See all</a></div>
+                                            <div class="read_bt"><a href="/list-products">See More</a></div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -394,7 +395,7 @@
                                         <h1 class="banner_taital" th:text="${product.name}"></h1>
                                         <p class="banner_text" th:text="${product.description}"></p>
                                         <div class="btn_main">
-                                            <div class="read_bt"><a href="/list-products">See all</a></div>
+                                            <div class="read_bt"><a href="/list-products">See more</a></div>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
@@ -417,120 +418,178 @@
             </div>
         </div>
 
-        <div class="blog_section layout_padding">
-            <div class="container">
-                <h1 class="blog_taital">What We Do</h1>
-                <p class="blog_text">There are many variations of passages of Lorem Ipsum available, but the majority
-                    have
-                    suffered alteration in some </p>
-                <div class="blog_section_2" th:each="item, iterStat : ${manufacturers}">
-                    <div class="row" th:if="${iterStat.index % 2 == 0}">
-                        <div class="col-md-6">
-                            <div class="image_4"><img th:src="${item.getImages()}" width="400px"></div>
-                        </div>
-                        <div class="col-md-6">
-                            <h4 class="laptop_text" th:text="${item.getName()}"></h4>
-                            <p class="ipsum_text" th:text="${item.getDescription()}"></p>
-                            <div class="read_bt_2"><a href="#">Read More</a></div>
-                        </div>
-                    </div>
-                    <div class="row" th:if="${iterStat.index % 2 != 0}">
-                        <div class="col-md-6">
-                            <h4 class="laptop_text" th:text="${item.getName()}"></h4>
-                            <p class="ipsum_text" th:text="${item.getDescription()}"></p>
-                            <div class="read_bt_2"><a href="#">Read More</a></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="image_5" href="#"><img th:src="${item.getImages()}" width="400px"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="blog_section layout_padding" id="aboutUs">
+            <h1 class="blog_taital">What We Do</h1>
 
-        <div class="repair_section layout_padding">
             <div class="container">
-                <h1 class="repair_taital">The lastest graphics</h1>
-                <p class="repair_text"
-                    style="margin-top: 10px; margin-bottom: 10px; font-size: 20px; font-weight: 600;">NVIDIA</p>
-                <div class="row">
-                    <div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" item : ${productsByNVIDIA}">
-                        <div class="card-botBody text-white">
-                            <img th:src="${item.getImages()}">
-                            <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}">
-                                <figcaption>
-                                    <div class="box-1">
-                                        <div class="btn btn-one">
-                                            <span>
-                                                Add to Cart
-                                            </span>
-                                        </div>
+                <div data-action="true" class="ladi-element">
+                    <div class="ladi-group d-flex ">
+                        <div>
+                            <div id="HEADLINE112" class="ladi-element">
+                                <h3 class="ladi-headline ladi-transition">Website for electronic commerce NAP&nbsp;
+                                </h3>
+                            </div>
+                            <div class="ladi-line ladi-transition"></div>
+                            <div id="HEADLINE114" class="ladi-element">
+                                <h3 class="ladi-headline ladi-transition">NAP is a commercial electronics brand
+                                    with thousands of products including Storage, PC, Laptop, and Networking
+                                    Systems....<br>
+                                </h3>
+                            </div>
+                            <a href="/list-products" id="BUTTON115" class="ladi-element">
+                                <div class="ladi-button ladi-transition">
+                                    <div class="ladi-button-background">
+                                        <p>Shopping now</p>
                                     </div>
-                                </figcaption>
+                                </div>
                             </a>
                         </div>
-                        <h5><a th:text=" ${item.getName()}"></a></h5>
-                        <p th:text="${item.getPrice()}" class="formatPrice"></p>
-                    </div>
-                </div>
-            </div>
-            <p class="repair_text" style="margin-top: 10px; margin-bottom: 10px; font-size: 20px; font-weight: 600;">AMD
-            </p>
-            <div class="container">
-                <div class="row">
-                    <div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" item : ${productsByAMD}">
-                        <div class="card-botBody text-white">
-                            <img th:src="${item.getImages()}">
-                            <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}">
-                                <figcaption>
-                                    <div class="box-1">
-                                        <div class="btn btn-one">
-                                            <span>
-                                                Add to Cart
-                                            </span>
-                                        </div>
-                                    </div>
-                                </figcaption>
-                            </a>
-                        </div>
-                        <h5><a th:text=" ${item.getName()}"></a></h5>
-                        <p th:text="${item.getPrice()}" class="formatPrice"></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-        <!--  repair section end -->
-        <!-- contact section start -->
-        <div class="contact_section layout_padding">
-            <div class="container-fluid">
-                <h1 class="contact_taital">Contact Us</h1>
-                <p class="contact_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                    incididunt
-                </p>
-                <div class="contact_section_2">
-                    <div class="row">
-                        <div class="col-md-6" style="text-align: center;">
-                            <div class="map_main">
-                                <div class="map-responsive">
-                                    <iframe
-                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.807998174833!2d106.66359397573807!3d11.053017354029551!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d1d7df763eaf%3A0xf4323e44f2867057!2zxJDhuqFpIGjhu41jIFF14buRYyB04bq_IE1p4buBbiDEkMO0bmc!5e0!3m2!1svi!2s!4v1710043748798!5m2!1svi!2s"
-                                        width="600" height="550" frameborder="0" loading="lazy"
-                                        style="border:0; width: 100%;" allowfullscreen=""></iframe>
+                        <div id="IMAGE117" class="ladi-element">
+                            <div class="ladi-image ladi-transition">
+                                <div class="ladi-image-background">
+                                    <img src="img/about1.png" alt="about1">
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mail_section_1">
-                                <form action="/send-contact" method="post">
-                                    <input type="text" class="mail_text" placeholder="Name" name="name">
-                                    <input type="text" class="mail_text" placeholder="Email" name="email">
-                                    <input type="text" class="mail_text" placeholder="Phone Number" name="numberphone">
-                                    <textarea class="massage-bt" placeholder="Massage" rows="5" id="comment"
-                                        name="message"></textarea>
-                                    <div class="send_bt"><input type="Submit"></div>
-                                </form>
+                    </div>
+                    <br />
+                    <div class="d-flex">
+                        <div class="ladi-group d-flex align-items-center">
+                            <div style="width: 60%;">
+                                <div id="HEADLINE112" class="ladi-element">
+                                    <h3 class="ladi-headline ladi-transition">Enterprise
+                                        <br />
+                                        solutions
+                                    </h3>
+                                </div>
+                                <div class="ladi-line ladi-transition"></div>
+                                <div id="HEADLINE114" class="ladi-element">
+                                    <h3 class="ladi-headline ladi-transition">Providing products and solutions for
+                                        businesses.<br>
+                                    </h3>
+                                </div>
                             </div>
+                            <div id="IMAGE117" class="ladi-element">
+                                <div class="ladi-image ladi-transition">
+                                    <div class="ladi-image-background">
+                                        <img src="img/about2.png" alt="about2">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#contactUs">
+                            <div class="ladi-group cs d-flex align-items-center">
+                                <div style="width: 60%; height: 200px;">
+                                    <div id="HEADLINE112" class="ladi-element">
+                                        <h3 class="ladi-headline ladi-transition">Customer
+                                            <br>support
+                                        </h3>
+                                    </div>
+                                    <div class="ladi-line ladi-transition"></div>
+                                    <div id="HEADLINE114" class="ladi-element">
+                                        <h3 class="ladi-headline ladi-transition">
+                                            You can contact us via the "Contact" section.
+                                        </h3>
+                                    </div>
+                                </div>
+                                <div id="IMAGE117" class="ladi-element" style="width: 40%;">
+                                    <div class="ladi-image ladi-transition">
+                                        <div class="ladi-image-background">
+                                            <img src="img/about3.png" alt="about3">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="repair_section layout_padding">
+                <div class="container">
+                    <h1 class="repair_taital">The lastest graphics</h1>
+                    <p class="repair_text"
+                        style="margin-top: 10px; margin-bottom: 10px; font-size: 20px; font-weight: 600;">NVIDIA</p>
+                    <div class="row">
+                        <div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" item : ${productsByNVIDIA}">
+                            <div class="card-botBody text-white">
+                                <img th:src="${item.getImages()}">
+                                <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}">
+                                    <figcaption>
+                                        <div class="box-1">
+                                            <div class="btn btn-one">
+                                                <span>
+                                                    Add to Cart
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </a>
+                            </div>
+                            <h5><a th:text=" ${item.getName()}"></a></h5>
+                            <p th:text="${item.getPrice()}" class="formatPrice"></p>
+                        </div>
+                    </div>
+                </div>
+                <p class="repair_text"
+                    style="margin-top: 10px; margin-bottom: 10px; font-size: 20px; font-weight: 600;">AMD
+                </p>
+                <div class="container">
+                    <div class="row">
+                        <div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" item : ${productsByAMD}">
+                            <div class="card-botBody text-white">
+                                <img th:src="${item.getImages()}">
+                                <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}">
+                                    <figcaption>
+                                        <div class="box-1">
+                                            <div class="btn btn-one">
+                                                <span>
+                                                    Add to Cart
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </figcaption>
+                                </a>
+                            </div>
+                            <h5><a th:text=" ${item.getName()}"></a></h5>
+                            <p th:text="${item.getPrice()}" class="formatPrice"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  repair section end -->
+        <!-- contact section start -->
+        <div class="contact_section layout_padding" id="contactUs">
+            <div class="container">
+                <h1 class="contact_taital">Contact Us</h1>
+                <p class="contact_text" style="margin-bottom: 20px;">Dear valued customer, You have the option to either
+                    visit the store or send us
+                    an email.
+                </p>
+                <div class="row">
+                    <div class="col-lg-6" style="text-align: center;">
+                        <div class="map_main">
+                            <div class="map-responsive">
+                                <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3915.807998174833!2d106.66359397573807!3d11.053017354029551!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3174d1d7df763eaf%3A0xf4323e44f2867057!2zxJDhuqFpIGjhu41jIFF14buRYyB04bq_IE1p4buBbiDEkMO0bmc!5e0!3m2!1svi!2s!4v1710043748798!5m2!1svi!2s"
+                                    frameborder="0" loading="lazy" style="border:0; width: 570px;height: 500px;"
+                                    allowfullscreen=""></iframe>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="mail_section">
+                            <form action="/send-contact" method="post">
+                                <input type="text" class="mail_text" placeholder="Name" name="name" required>
+                                <input type="text" class="mail_text" placeholder="Email" name="email" required>
+                                <input type="text" class="mail_text" placeholder="Phone Number" name="numberphone"
+                                    required>
+                                <textarea class="massage-bt" placeholder="Message" rows="5" id="comment" name="message"
+                                    required></textarea>
+                                <div class="send_bt"><input type="Submit" value="Send"></div>
+                            </form>
+                            <img src="img/contact.png" class="contact-png">
                         </div>
                     </div>
                 </div>
@@ -542,13 +601,17 @@
             <div class="container">
                 <div class="footer_location_text">
                     <ul>
-                        <li><img src="images/map-icon.png"><span class="padding_left_10"><a href="#">NAP hosting
-                                    web</a></span></li>
-                        <li><img src="images/call-icon.png"><span class="padding_left_10"><a href="#">Call :
+                        <li><i class="fa fa-globe" aria-hidden="true"></i>
+                            <span class="padding_left_10"><a href="#">NAP hosting
+                                    web</a></span>
+                        </li>
+                        <li><i class="fa fa-phone" aria-hidden="true"></i>
+                            <span class="padding_left_10"><a href="#">Call :
                                     +964503530</a></span>
                         </li>
-                        <li><img src="images/mail-icon.png"><span class="padding_left_10"><a
-                                    href="#">s2tore@gmail.com</a></span></li>
+                        <li><i class="fa fa-envelope-o" aria-hidden="true"></i>
+                            <span class="padding_left_10"><a href="#">s2tore@gmail.com</a></span>
+                        </li>
                     </ul>
                 </div>
                 <div class="row">
@@ -557,29 +620,56 @@
                         <div class="footer_menu">
                             <ul>
                                 <li><a href="/">Home</a></li>
-                                <li><a href="#">About</a></li>
+                                <li><a href="#aboutUs">About</a></li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-3 col-sm-6">
-                        <h2 class="useful_text">Repair</h2>
-                        <p class="lorem_text">Lorem ipsum dolor sit amet, consectetur adipiscinaliqua Loreadipiscing
+                        <h2 class="useful_text">Address</h2>
+                        <p class="lorem_text">3M38+6F3, Nam Kỳ Khởi Nghĩa, Định Hoà, Thủ Dầu Một, Bình Dương
                         </p>
                     </div>
                     <div class="col-lg-3 col-sm-6">
                         <h2 class="useful_text">social media</h2>
                         <div class="social_icon">
                             <ul>
-                                <li><a href="#"><img src="images/fb-icon.png"></a></li>
-                                <li><a href="#"><img src="images/twitter-icon.png"></a></li>
-                                <li><a href="#"><img src="images/linkedin-icon.png"></a></li>
-                                <li><a href="#"><img src="images/youtube-icon.png"></a></li>
+                                <li>
+                                    <a href="#">
+                                        <svg aria-hidden="true" focusable="false" role="presentation"
+                                            class="icon icon-facebook" viewBox="0 0 18 18">
+                                            <path
+                                                d="M16.42.61c.27 0 .5.1.69.28.19.2.28.42.28.7v15.44c0 .27-.1.5-.28.69a.94.94 0 01-.7.28h-4.39v-6.7h2.25l.31-2.65h-2.56v-1.7c0-.4.1-.72.28-.93.18-.2.5-.32 1-.32h1.37V3.35c-.6-.06-1.27-.1-2.01-.1-1.01 0-1.83.3-2.45.9-.62.6-.93 1.44-.93 2.53v1.97H7.04v2.65h2.24V18H.98c-.28 0-.5-.1-.7-.28a.94.94 0 01-.28-.7V1.59c0-.27.1-.5.28-.69a.94.94 0 01.7-.28h15.44z">
+                                            </path>
+                                        </svg>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <svg aria-hidden="true" focusable="false" role="presentation"
+                                            class="icon icon-twitter" viewBox="0 0 18 15">
+                                            <path
+                                                d="M17.64 2.6a7.33 7.33 0 01-1.75 1.82c0 .05 0 .13.02.23l.02.23a9.97 9.97 0 01-1.69 5.54c-.57.85-1.24 1.62-2.02 2.28a9.09 9.09 0 01-2.82 1.6 10.23 10.23 0 01-8.9-.98c.34.02.61.04.83.04 1.64 0 3.1-.5 4.38-1.5a3.6 3.6 0 01-3.3-2.45A2.91 2.91 0 004 9.35a3.47 3.47 0 01-2.02-1.21 3.37 3.37 0 01-.8-2.22v-.03c.46.24.98.37 1.58.4a3.45 3.45 0 01-1.54-2.9c0-.61.14-1.2.45-1.79a9.68 9.68 0 003.2 2.6 10 10 0 004.08 1.07 3 3 0 01-.13-.8c0-.97.34-1.8 1.03-2.48A3.45 3.45 0 0112.4.96a3.49 3.49 0 012.54 1.1c.8-.15 1.54-.44 2.23-.85a3.4 3.4 0 01-1.54 1.94c.74-.1 1.4-.28 2.01-.54z">
+                                            </path>
+                                        </svg>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <svg aria-hidden="true" focusable="false" role="presentation"
+                                            class="icon icon-youtube" viewBox="0 0 100 70">
+                                            <path
+                                                d="M98 11c2 7.7 2 24 2 24s0 16.3-2 24a12.5 12.5 0 01-9 9c-7.7 2-39 2-39 2s-31.3 0-39-2a12.5 12.5 0 01-9-9c-2-7.7-2-24-2-24s0-16.3 2-24c1.2-4.4 4.6-7.8 9-9 7.7-2 39-2 39-2s31.3 0 39 2c4.4 1.2 7.8 4.6 9 9zM40 50l26-15-26-15v30z">
+                                            </path>
+                                        </svg>
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-sm-6 col-lg-3">
-                        <h1 class="useful_text">Our Repair center</h1>
-                        <p class="footer_text">Lorem ipsum dolor sit amet, consectetur adipiscinaliquaLoreadipiscing
+                        <h1 class="useful_text">Our Web center</h1>
+                        <p class="footer_text">NAP is an e-commerce website specializing in selling all computer
+                            components.
                         </p>
                     </div>
                 </div>
@@ -620,182 +710,6 @@
                     errorSpan.textContent = 'Error fetching user data';
                 } );
         }
-
-
-        $( document ).ready( function ()
-        {
-            $( '.formatPrice' ).each( ( i, e ) =>
-            {
-                let val = +( $( e ).text() );
-                $( e ).text( formatMoney( val ) );
-            } );
-
-            function formatMoney ( number )
-            {
-                return number.toLocaleString( 'vi-VN', {
-                    style: 'currency', currency: 'VND'
-                } );
-            }
-        } );
-
-        function showPass ()
-        {
-            var p = document.getElementById( "password" );
-            if ( p.type === "password" )
-            {
-                p.type = "text";
-            } else
-            {
-                p.type = "password";
-            }
-        }
-
-        function showNewPass ()
-        {
-            var p = document.getElementById( "newPassword" );
-            if ( p.type === "password" )
-            {
-                p.type = "text";
-            } else
-            {
-                p.type = "password";
-            }
-        }
-
-        function showConfirmPassword ()
-        {
-            var p = document.getElementById( "confirmPassword" );
-            if ( p.type === "password" )
-            {
-                p.type = "text";
-            } else
-            {
-                p.type = "password";
-            }
-        }
-
-        function onChange ()
-        {
-            var password = document.querySelector( 'input[id=newPassword]' );
-            var confirm = document.querySelector( 'input[id=confirmPassword]' );
-            if ( confirm.value === password.value )
-            {
-                confirm.setCustomValidity( '' );
-            } else
-            {
-                confirm.setCustomValidity( 'Passwords do not match' );
-            }
-        }
-
-        function showChangePassword ()
-        {
-            $( "#changePassword" ).removeClass( "d-none" );
-            $( "#profileForm" ).addClass( "d-none" );
-
-        }
-
-        function closeChangePassword ()
-        {
-            $( "#changePassword" ).addClass( "d-none" );
-            $( "#profileForm" ).removeClass( "d-none" );
-
-        }
-
-        function showRecoverPassword ()
-        {
-            $( "#CustomerLoginForm" ).addClass( "d-none" )
-            $( "#RecoverPasswordForm" ).removeClass( "d-none" );
-        }
-
-        function closeRecoverPassword ()
-        {
-            $( "#RecoverPasswordForm" ).addClass( "d-none" );
-            $( "#CustomerLoginForm" ).removeClass( "d-none" )
-            $( "#register" ).addClass( "d-none" );
-
-        }
-
-        function showRegister ()
-        {
-            $( "#register" ).removeClass( "d-none" );
-            $( "#CustomerLoginForm" ).addClass( "d-none" );
-        }
-
-        function closeRegister ()
-        {
-            $( "#register" ).addClass( "d-none" );
-            $( "#CustomerLoginForm" ).removeClass( "d-none" );
-
-        }
-
-        $( '.closeMask' ).click( ( e ) =>
-        {
-            if ( e.target.classList.contains( 'closeMask' ) )
-                $( 'button.close.close-mask' ).click();
-            closeRecoverPassword();
-        } );
-
-        $( document ).ready( function ()
-        {
-            $( window ).scroll( function ()
-            {
-                if ( $( this ).scrollTop() > 100 )
-                {
-                    $( '#topButton' ).fadeIn();
-                } else
-                {
-                    $( '#topButton' ).fadeOut();
-                }
-            } );
-
-            $( '#topButton' ).click( function ()
-            {
-                $( 'html, body' ).animate( { scrollTop: 0 }, 400 );
-                return false;
-            } );
-        } );
-
-        function showUserProfile ()
-        {
-            $( '.userProfile' ).addClass( "w-25" );
-            $( '.closeLogin' ).fadeIn();
-            $( '.closeMask' ).fadeIn();
-        }
-
-        function closeUserProfile ()
-        {
-            $( '.userProfile' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-        }
-
-        function showLogin ()
-        {
-            $( '.login' ).addClass( "w-25" );
-            closecart();
-            $( '.closeLogin' ).fadeIn();
-            $( '.closeMask' ).fadeIn();
-        }
-
-        function closeLogin ()
-        {
-            $( '.login' ).removeClass( "w-25" )
-            $( '.closeLogin' ).fadeOut();
-            $( '.closeMask' ).fadeOut();
-        }
-
-        function showcart ()
-        {
-            $( '.cart' ).addClass( "w-32" )
-            $( '.closeLogin' ).fadeIn();
-            $( '.closeMask' ).fadeIn();
-        }
-
-        function closecart ()
-        {
-            $( '.cart' ).removeClass( "w-32" )
-            $( '.closeMask' ).fadeOut();
-        }
-
         alert_action(/*[[${ alert }]]*/ )
 
     </script>

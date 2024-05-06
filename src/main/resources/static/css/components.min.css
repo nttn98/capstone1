@@ -71,6 +71,7 @@ html body .content.app-content .content-overlay {
 html body .content .content-wrapper {
     padding: 1rem;
     margin-bottom: 30px;
+    padding-top: 15px;
 }
 
 html body .content .content-wrapper .content-header-title {

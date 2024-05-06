@@ -2,7 +2,7 @@
 
 /*--------------------------------------------------------------------- import Fonts ---------------------------------------------------------------------*/
 
-@import url('https://fonts.googleapis.com/css?family=Rajdhani:300,400,500,600,700');
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
 
 @font-face {
@@ -35,7 +35,7 @@ html {
 body {
     color: #666666;
     font-size: 16px;
-    font-family: Poppins;
+    font-family: 'Montserrat', sans-serif;
     line-height: 1.80857;
     font-weight: normal;
     overflow-x: hidden;
@@ -44,6 +44,10 @@ body {
 
 .w-32 {
     width: 32% !important;
+}
+
+.w-40 {
+    width: 40% !important;
 }
 
 .w-25 {
@@ -155,6 +159,7 @@ a,
 img {
     max-width: 95%;
     height: auto;
+    padding: 10px;
 }
 
 :focus {
@@ -212,7 +217,7 @@ button {
 }
 
 .layout_padding {
-    padding-top: 90px;
+    padding-top: 50px;
     padding-bottom: 0px;
 }
 
@@ -281,7 +286,7 @@ button {
 }
 
 .navbar {
-    padding: .5rem 0px;
+    padding: 1.5rem 0px;
 }
 
 .image_1 {
@@ -299,7 +304,7 @@ button {
     padding-left: 15px;
     color: #191616;
     font-size: 18px;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
 }
 
 .navbar-light .navbar-nav .nav-link:focus,
@@ -314,14 +319,16 @@ button {
     width: 100%;
     float: left;
     padding-bottom: 20px;
+    height: 550px;
 }
 
 .banner_taital {
     width: 100%;
     float: left;
-    font-size: 50px;
+    font-size: 40px;
     color: #191616;
     font-weight: bold;
+    overflow: hidden;
 }
 
 .banner_text {
@@ -352,7 +359,7 @@ button {
     background-color: #191616;
     padding: 8px 5px;
     text-align: center;
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
 }
 
 .read_bt a:hover {
@@ -389,13 +396,13 @@ button {
 #main_slider a.carousel-control-next {
     position: absolute;
     right: 130px;
-    top: 98%;
+    top: 109%;
 }
 
 #main_slider a.carousel-control-prev {
     position: absolute;
     left: 1105px;
-    top: 98%;
+    top: 109%;
 }
 
 #main_slider .carousel-control-prev,
@@ -497,7 +504,7 @@ button {
     height: auto;
     background-size: cover;
     background-repeat: no-repeat;
-    padding-bottom: 100px;
+    /* padding-bottom: 100px; */
 }
 
 .blog_taital_main {
@@ -508,7 +515,7 @@ button {
 
 .blog_taital {
     width: 100%;
-    float: left;
+    /* float: left; */
     font-size: 40px;
     color: #191616;
     text-align: center;
@@ -646,6 +653,14 @@ button {
 .contact_section {
     width: 100%;
     float: left;
+    margin-bottom: 30px;
+}
+
+.contact_section .contact-png {
+    position: absolute;
+    bottom: 0;
+    max-width: 250px;
+    max-height: 250px;
 }
 
 .contact_taital {
@@ -673,11 +688,11 @@ button {
     padding-top: 90px;
 }
 
-.mail_section_1 {
+.mail_section {
     width: 70%;
     margin: 0 auto;
     text-align: center;
-    padding-top: 40px;
+    padding-top: 15px;
 }
 
 .mail_text {
@@ -722,6 +737,7 @@ button {
 
 .send_bt input:hover {
     background-color: #e4e219;
+    border: 1px solid #e4e219;
     color: #ffffff;
 }
 
@@ -735,7 +751,7 @@ button {
     float: left;
     background-color: #171717;
     height: auto;
-    padding: 90px 0px;
+    padding: 70px 0px;
 }
 
 
@@ -924,12 +940,12 @@ button {
 }
 
 
-.purchase-space {
+.checkout-space {
     text-align: right;
     padding-right: 40px;
 }
 
-.purchase-space button.btn-purchase {
+.checkout-space button.btn-checkout {
     padding: 10px 30px 10px 30px;
     border-radius: 10px;
     border: 3px solid black;
@@ -1018,15 +1034,17 @@ button {
     border-radius: 50%;
     height: 18px;
     width: 18px;
-    top: 20px;
-    right: 150px;
+    top: 37px;
+    right: 165px;
 }
 
 .nav-item p {
     font-size: 14px;
     margin: 0px;
-    font-weight: normal;
+    font-weight: 600;
     line-height: normal;
+    display: flex;
+    justify-content: center;
 }
 
 
@@ -1094,7 +1112,7 @@ button {
 div[class*=box] {
     height: 33.33%;
     width: 100%;
-    display: flex;
+    display: ruby;
     justify-content: center;
     align-items: center;
 }
@@ -1121,7 +1139,8 @@ div[class*=box] {
 
 .btn-one span {
     transition: all 0.3s;
-    color: lightgrey;
+    color: beige;
+    font-size: 20px;
 }
 
 .btn-one::before {
@@ -1306,8 +1325,6 @@ div[class*=box] {
 }
 
 .map_main {
-    width: 750px;
-    height: 600px;
     margin: auto;
 }
 
@@ -1417,4 +1434,87 @@ div[class*=box] {
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
     background-color: #001d35;
     opacity: 8%;
+}
+
+svg.icon {
+    height: 30px;
+    width: 38px;
+    fill: white;
+}
+
+.ladi-group {
+    border-width: 2px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: rgb(0, 0, 0);
+    filter: drop-shadow(rgb(180, 180, 180) 4px 4px 6px);
+    padding: 50px;
+    background-color: whitesmoke;
+}
+
+#HEADLINE112 .ladi-headline {
+    font-family: UZOLUdpbHJveSBSZWdbGFyLmZg;
+    font-weight: bold;
+    line-height: 1.2;
+    color: rgb(0, 0, 0);
+    text-align: left;
+}
+
+#HEADLINE114>.ladi-headline {
+    font-family: UZOLUdpbHJveSBSZWdbGFyLmZg;
+    font-weight: bold;
+    line-height: 1.6;
+    color: rgb(0, 0, 0);
+    text-align: left;
+    font-size: 18px;
+}
+
+.ladi-line {
+    background-color: rgb(0, 0, 0);
+    height: 5px;
+    width: 70%;
+    margin-bottom: 30px;
+}
+
+.ladi-image-background img {
+    max-width: 168.17px;
+    max-height: 210.582px;
+}
+
+.d-flex {
+    gap: 35px;
+}
+
+.ladi-button {
+    position: absolute;
+    width: 30%;
+    height: 18%;
+    overflow: hidden;
+    border-radius: 5px;
+    align-content: center;
+    margin-top: 10px;
+}
+
+.ladi-button>.ladi-button-background {
+    background-color: black;
+    height: 100%;
+    width: 100%;
+    pointer-events: none;
+    transition: inherit;
+    padding-top: 15px;
+}
+
+.ladi-button>.ladi-button-background p {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.6;
+    color: rgb(255, 255, 255);
+    text-align: center;
+}
+
+.ladi-group.cs:hover,
+.ladi-button:hover {
+    box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.5);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
 }

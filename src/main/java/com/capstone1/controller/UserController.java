@@ -231,8 +231,7 @@ public class UserController {
             session.setAttribute("user", user);
             model.addAttribute("alert", "success");
 
-            Cart oldCart = (Cart) session.getAttribute("oldCart");
-
+            Cart oldCart = (Cart) session.getAttribute("cart");
             Cart cart = cartService.findByUserId(user.getId());
 
             if (cart == null) {
@@ -334,9 +333,12 @@ public class UserController {
         Cart cart = (Cart) session.getAttribute("cart");
         Long userId = (Long) session.getAttribute("userId");
 
-        if (userId == null) { // withLogin
+        if (userId == null) { // without login
             cart.deleteByProductId(productId);
-        } else { // without login
+            if (cart.getTotal() == 0) {
+                cart = null;
+            }
+        } else { // with login
             cartItemService.deleteByProductId(productId);
             cart.removeItem(productId);
             if (cart.getListItem().size() == 0) {
@@ -344,13 +346,14 @@ public class UserController {
                 cart = null;
             }
         }
+
         session.setAttribute("cart", cart);
         return "redirect:/home-page";
 
     }
 
-    @GetMapping("/users/purchase-page")
-    public String purchasePage(Model model, HttpSession session) {
+    @GetMapping("/users/checkout-page")
+    public String checkOut(Model model, HttpSession session) {
         Long userId = (Long) session.getAttribute("userId");
         User userLogin = userService.getUserById(userId);
         session.setAttribute("user", userLogin);
@@ -358,7 +361,7 @@ public class UserController {
 
         homeController.isUserLogin(model, session);
         model.addAttribute("cart", cart);
-        return "admin/purcharsePage.html";
+        return "admin/checkout.html";
     }
 
     /* user create order */

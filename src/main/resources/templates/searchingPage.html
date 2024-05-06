@@ -1,115 +1,121 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{homePage :: head}"></head>
-<link rel="styleSheet" href="/css/listProducts.css">
-<link rel="stylesheet" href="/css/theme-custom.css"/>
+    <head th:replace="~{homePage :: head}"></head>
+    <link rel="styleSheet" href="/css/listProducts.css">
+    <link rel="stylesheet" href="/css/theme-custom.css" />
 
-<title>List products</title>
+    <title>List products</title>
 
-<body>
-<div class="header_section" style="background-repeat: repeat;">
-    <div th:replace="~{homePage :: header_section}"></div>
-    <div>
-        <h2 style="text-align: center; margin-top: 20px; margin-bottom: -25px;">Searching: [(${session.keywords})]</h2>
-    </div>
-    <div class="breadcrumb-wrapper">
-        <div class="breadcrumb-area breadcrumbs overlay-bg">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="breadcrumb-content text-center">
-                            <nav class role="navigation" aria-label="breadcrumbs">
-                                <ul class="breadcrumb-list">
-                                    <li>
-                                        <a href="/" title="Back to the home page">Home</a>
-                                    </li>
-                                    <li>
-                                        <span>Products</span>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
+    <body>
+        <div class="header_section" style="background-repeat: repeat;">
+            <div th:replace="~{homePage :: header_section}"></div>
+            <div>
+                <h2 style="text-align: center; margin-top: 20px; margin-bottom: -25px;">Searching:
+                    [(${session.keywords})]</h2>
             </div>
-        </div>
-    </div>
-    <!-- BREADCRUMBS SETCTION END -->
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-2">
-                <a href="/list-products">
-                    <p style="font-size: 18px;">All products</p>
-                </a>
-                <ul style="margin-bottom: 10px; font-size: 18px"> Catogies
-                    <a th:each="category: ${categories}"
-                       th:href="@{/products-by-category(categoryName=${category.getName()})}">
-                        <li th:text="${category.getName()}" th:if="${category.getProducts().size()}"
-                            style="margin-left: 10px; list-style: inside;"></li>
-                    </a>
-                </ul>
-                <ul style="margin-bottom: 10px; font-size: 18px;"> Manufacturers
-                    <a th:each="manufacturer: ${manufacturers}"
-                       th:href="@{/products-by-manufacturer(manufacturerName=${manufacturer.getName()})}">
-                        <li th:text="${manufacturer.getName()}" th:if="${manufacturer.getProducts().size()}"
-                            style="margin-left: 10px; list-style: inside;">
-                        </li>
-                    </a>
-                </ul>
-            </div>
-            <div class="col-lg-10">
-                <div th:if="${products.toList().size() == 0}"><h2 style="text-align: center">There are no products</h2>
-                </div>
-                <div class="item" th:each=" item: ${products}">
-                    <div class="card mb-3">
-                        <div class="row no-gutters" style="align-items: center;">
-                            <div class="col-lg-3">
-                                <img th:src="${item.getImages()}">
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="card-body">
-                                    <h5 class="card-title" th:text="${item.getName()}"></h5>
-                                    <p class="card-text" th:text="${item.getDescription()}"></p>
-
-                                    <p class="card-text" style="font-weight: 600;">Category: <span
-                                            th:text="${item.getCategory().getName()}"
-                                            style="font-weight: normal;"></span></p>
-
-                                    <p class="card-text" style="font-weight: 600;">Manufacturer: <span
-                                            th:text="${item.getManufacturer().getName()}"
-                                            style="font-weight: normal;"></span>
-                                    </p>
-                                    <p class="card-text" style="font-weight: 600;">Price: <span
-                                            th:text="${item.getPrice()}" style="font-weight: normal;"
-                                            class="formatPrice"></span>
-                                    </p>
+            <div class="breadcrumb-wrapper">
+                <div class="breadcrumb-area breadcrumbs overlay-bg">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="breadcrumb-content text-center">
+                                    <nav class role="navigation" aria-label="breadcrumbs">
+                                        <ul class="breadcrumb-list">
+                                            <li>
+                                                <a href="/" title="Back to the home page">Home</a>
+                                            </li>
+                                            <li>
+                                                <span>Products</span>
+                                            </li>
+                                        </ul>
+                                    </nav>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
-                                <!-- <a th:href="@{/users/add-to-cart/{producId}(producId=${item.id},mode=${user})}"> -->
-                                <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}">
-                                    <button class="button-89" role="button"
-                                            style="margin-top: 60px; margin-left: 90px;">Add to
-                                        cart
-                                    </button>
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div style="margin-left: 520px;" th:if="${products.getNumberOfElements() != 0}">
-                <div class="dataTables_paginate paging_simple_numbers"
-                     th:each=" item: ${products.getTotalPages()}">
-                    <ul class="pagination">
-                        <li
-                                th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
-                            <a class="page-link"
-                               th:href="@{'/searchPaging?page=' + ${products.number - 1}}">Previous</a>
-                        </li>
-                        <li class="paginate_button page-item active"
-                            th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
+            <!-- BREADCRUMBS SETCTION END -->
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <a href="/list-products">
+                            <p style="font-size: 18px;">All products</p>
+                        </a>
+                        <ul>
+                            <p style="margin-bottom: 10px; font-size: 18px">Categories</p>
+                            <li th:each="category: ${categories}" th:if="${category.getProducts().size() > 0}">
+                                <!-- th:href="@{/products-by-category(categoryName=${category.getName()})}" -->
+                                <a th:href="@{/products-by-category(categoryName=${category.getName()})}">
+                                    <div class="checkbox-wrapper">
+                                        <div class="cbx">
+                                            <input th:id="'cbx-' + ${category.getId()}" type="checkbox" disabled />
+                                            <label th:for="'cbx-' + ${category.getId()}"></label>
+                                            <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
+                                                <path d="M2 8.36364L6.23077 12L13 2"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <span th:text="${category.getName()}"></span>
+                                </a>
+                                <span th:text="' (' + ${category.getProducts().size()} + ')'"
+                                    style="position: absolute; right: 0;"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-10">
+                        <div th:if="${products.toList().size() == 0}">
+                            <h2 style="text-align: center">There are no products</h2>
+                        </div>
+                        <div class="item" th:each=" item: ${products}">
+                            <div class="card mb-3">
+                                <div class="row no-gutters" style="align-items: center;">
+                                    <div class="col-lg-3">
+                                        <img th:src="${item.getImages()}">
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="card-body">
+                                            <h5 class="card-title" th:text="${item.getName()}"></h5>
+                                            <p class="card-text" th:text="${item.getDescription()}"></p>
+
+                                            <p class="card-text" style="font-weight: 600;">Category: <span
+                                                    th:text="${item.getCategory().getName()}"
+                                                    style="font-weight: normal;"></span></p>
+
+                                            <p class="card-text" style="font-weight: 600;">Manufacturer: <span
+                                                    th:text="${item.getManufacturer().getName()}"
+                                                    style="font-weight: normal;"></span>
+                                            </p>
+                                            <p class="card-text" style="font-weight: 600;">Price: <span
+                                                    th:text="${item.getPrice()}" style="font-weight: normal;"
+                                                    class="formatPrice"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+                                        <!-- <a th:href="@{/users/add-to-cart/{producId}(producId=${item.id},mode=${user})}"> -->
+                                        <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}">
+                                            <button class="button-89" role="button"
+                                                style="margin-top: 60px; margin-left: 90px;">Add to
+                                                cart
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-left: 520px;" th:if="${products.getNumberOfElements() != 0}">
+                        <div class="dataTables_paginate paging_simple_numbers"
+                            th:each=" item: ${products.getTotalPages()}">
+                            <ul class="pagination">
+                                <li
+                                    th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
+                                    <a class="page-link"
+                                        th:href="@{'/searchPaging?page=' + ${products.number - 1}}">Previous</a>
+                                </li>
+                                <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
                             <a th:href="@{'/searchPaging?page=' + ${page}}"
                                th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})"
                                th:text="${page + 1}"></a>
@@ -130,158 +136,193 @@
 
 </body>
 <script th:inline="javascript">
-    $(document).ready(function () {
-        $('.formatPrice').each((i, e) => {
-            let val = +($(e).text());
-            $(e).text(formatMoney(val));
-        });
+    $( document ).ready( function ()
+    {
+        $( '.formatPrice' ).each( ( i, e ) =>
+        {
+            let val = +( $( e ).text() );
+            $( e ).text( formatMoney( val ) );
+        } );
 
-        function formatMoney(number) {
-            return number.toLocaleString('vi-VN', {
+        function formatMoney ( number )
+        {
+            return number.toLocaleString( 'vi-VN', {
                 style: 'currency', currency: 'VND'
-            });
+            } );
         }
-    });
+    } );
 
-    function showPass() {
-        var p = document.getElementById("password");
-        if (p.type === "password") {
+    function showPass ()
+    {
+        var p = document.getElementById( "password" );
+        if ( p.type === "password" )
+        {
             p.type = "text";
-        } else {
+        } else
+        {
             p.type = "password";
         }
     }
 
-    function showNewPass() {
-        var p = document.getElementById("newPassword");
-        if (p.type === "password") {
+    function showNewPass ()
+    {
+        var p = document.getElementById( "newPassword" );
+        if ( p.type === "password" )
+        {
             p.type = "text";
-        } else {
+        } else
+        {
             p.type = "password";
         }
     }
 
-    function showConfirmPassword() {
-        var p = document.getElementById("confirmPassword");
-        if (p.type === "password") {
+    function showConfirmPassword ()
+    {
+        var p = document.getElementById( "confirmPassword" );
+        if ( p.type === "password" )
+        {
             p.type = "text";
-        } else {
+        } else
+        {
             p.type = "password";
         }
     }
 
-    function onChange() {
-        var password = document.querySelector('input[id=newPassword]');
-        var confirm = document.querySelector('input[id=confirmPassword]');
-        if (confirm.value === password.value) {
-            confirm.setCustomValidity('');
-        } else {
-            confirm.setCustomValidity('Passwords do not match');
+    function onChange ()
+    {
+        var password = document.querySelector( 'input[id=newPassword]' );
+        var confirm = document.querySelector( 'input[id=confirmPassword]' );
+        if ( confirm.value === password.value )
+        {
+            confirm.setCustomValidity( '' );
+        } else
+        {
+            confirm.setCustomValidity( 'Passwords do not match' );
         }
     }
 
-    function showChangePassword() {
-        $("#changePassword").removeClass("d-none");
-        $("#profileForm").addClass("d-none");
+    function showChangePassword ()
+    {
+        $( "#changePassword" ).removeClass( "d-none" );
+        $( "#profileForm" ).addClass( "d-none" );
 
     }
 
-    function closeChangePassword() {
-        $("#changePassword").addClass("d-none");
-        $("#profileForm").removeClass("d-none");
+    function closeChangePassword ()
+    {
+        $( "#changePassword" ).addClass( "d-none" );
+        $( "#profileForm" ).removeClass( "d-none" );
 
     }
 
-    function showRecoverPassword() {
-        $("#CustomerLoginForm").addClass("d-none")
-        $("#RecoverPasswordForm").removeClass("d-none");
+    function showRecoverPassword ()
+    {
+        $( "#CustomerLoginForm" ).addClass( "d-none" )
+        $( "#RecoverPasswordForm" ).removeClass( "d-none" );
     }
 
-    function closeRecoverPassword() {
-        $("#RecoverPasswordForm").addClass("d-none");
-        $("#CustomerLoginForm").removeClass("d-none")
-        $("#register").addClass("d-none");
-
-    }
-
-    function showRegister() {
-        $("#register").removeClass("d-none");
-        $("#CustomerLoginForm").addClass("d-none");
-    }
-
-    function closeRegister() {
-        $("#register").addClass("d-none");
-        $("#CustomerLoginForm").removeClass("d-none");
+    function closeRecoverPassword ()
+    {
+        $( "#RecoverPasswordForm" ).addClass( "d-none" );
+        $( "#CustomerLoginForm" ).removeClass( "d-none" )
+        $( "#register" ).addClass( "d-none" );
 
     }
 
-    $('.closeMask').click((e) => {
-        if (e.target.classList.contains('closeMask'))
-            $('button.close.close-mask').click();
+    function showRegister ()
+    {
+        $( "#register" ).removeClass( "d-none" );
+        $( "#CustomerLoginForm" ).addClass( "d-none" );
+    }
+
+    function closeRegister ()
+    {
+        $( "#register" ).addClass( "d-none" );
+        $( "#CustomerLoginForm" ).removeClass( "d-none" );
+
+    }
+
+    $( '.closeMask' ).click( ( e ) =>
+    {
+        if ( e.target.classList.contains( 'closeMask' ) )
+            $( 'button.close.close-mask' ).click();
         closeRecoverPassword();
-    });
+    } );
 
-    $(document).ready(function () {
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 100) {
-                $('#topButton').fadeIn();
-            } else {
-                $('#topButton').fadeOut();
+    $( document ).ready( function ()
+    {
+        $( window ).scroll( function ()
+        {
+            if ( $( this ).scrollTop() > 100 )
+            {
+                $( '#topButton' ).fadeIn();
+            } else
+            {
+                $( '#topButton' ).fadeOut();
             }
-        });
+        } );
 
-        $('#topButton').click(function () {
-            $('html, body').animate({scrollTop: 0}, 400);
+        $( '#topButton' ).click( function ()
+        {
+            $( 'html, body' ).animate( { scrollTop: 0 }, 400 );
             return false;
-        });
-    });
+        } );
+    } );
 
-    function showUserProfile() {
-        $('.userProfile').addClass("w-25");
-        $('.closeLogin').fadeIn();
-        $('.closeMask').fadeIn();
+    function showUserProfile ()
+    {
+        $( '.userProfile' ).addClass( "w-25" );
+        $( '.closeLogin' ).fadeIn();
+        $( '.closeMask' ).fadeIn();
     }
 
-    function closeUserProfile() {
-        $('.userProfile').removeClass("w-25");
-        $('.closeMask').fadeOut();
+    function closeUserProfile ()
+    {
+        $( '.userProfile' ).removeClass( "w-25" );
+        $( '.closeMask' ).fadeOut();
     }
 
-    function showLogin() {
-        $('.login').addClass("w-25");
+    function showLogin ()
+    {
+        $( '.login' ).addClass( "w-25" );
         closecart();
-        $('.closeLogin').fadeIn();
-        $('.closeMask').fadeIn();
+        $( '.closeLogin' ).fadeIn();
+        $( '.closeMask' ).fadeIn();
     }
 
-    function closeLogin() {
-        $('.login').removeClass("w-25")
-        $('.closeLogin').fadeOut();
-        $('.closeMask').fadeOut();
+    function closeLogin ()
+    {
+        $( '.login' ).removeClass( "w-25" )
+        $( '.closeLogin' ).fadeOut();
+        $( '.closeMask' ).fadeOut();
     }
 
-    function showcart() {
-        $('.cart').addClass("w-32")
-        $('.closeLogin').fadeIn();
-        $('.closeMask').fadeIn();
+    function showcart ()
+    {
+        $( '.cart' ).addClass( "w-40" )
+        $( '.closeLogin' ).fadeIn();
+        $( '.closeMask' ).fadeIn();
     }
 
-    function closecart() {
-        $('.cart').removeClass("w-32")
-        $('.closeMask').fadeOut();
+    function closecart ()
+    {
+        $( '.cart' ).removeClass( "w-40" )
+        $( '.closeMask' ).fadeOut();
     }
 
-    function quantityPlus(e) {
-        let quantity = $(e).closest('div').find('input');
-        quantity.val(+quantity.val() + 1);
+    function quantityPlus ( e )
+    {
+        let quantity = $( e ).closest( 'div' ).find( 'input' );
+        quantity.val( +quantity.val() + 1 );
     }
 
-    function quantityMinus(e) {
-        let quantity = $(e).closest('div').find('input');
-        quantity.val(+quantity.val() - 1);
+    function quantityMinus ( e )
+    {
+        let quantity = $( e ).closest( 'div' ).find( 'input' );
+        quantity.val( +quantity.val() - 1 );
     }
 
-    alert_action(/*[[${ alert }]]*/)
+    alert_action(/*[[${ alert }]]*/ )
 </script>
 
 

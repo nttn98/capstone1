@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head th:replace="~{homePage :: head}"></head>
+    <link rel="stylesheet" href="/css/checkout/checkout.css">
+    <link rel="stylesheet" href="/css/theme-custom.css" />
+
+
+    <title>Check-out Page</title>
+
+    <body class="header_section">
+        <div th:replace="~{homePage :: header_section}"></div>
+
+        <div class="closeMask"></div>
+        </div>
+        <div>
+            <h2 style="text-align: center; margin-top: 20px; margin-bottom: -25px;">Checkout</h2>
+        </div>
+        <div class="breadcrumb-wrapper">
+            <div class="breadcrumb-area breadcrumbs overlay-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="breadcrumb-content text-center">
+                                <nav class role="navigation" aria-label="breadcrumbs">
+                                    <ul class="breadcrumb-list">
+                                        <li>
+                                            <a href="/" title="Back to the home page">Home</a>
+                                        </li>
+                                        <li>
+                                            <span>Checkout</span>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container content-wrapper">
+            <div class="row main-row">
+                <main id="primary" class="site-main no-sidebar checkout-layout5">
+                    <article id="post-15" class="post-15 page type-page status-publish hentry">
+                        <div class="entry-content">
+                            <div class="woocommerce">
+                                <div class="woocommerce-notices-wrapper"></div>
+                                <div class="botiga-sc botiga-sc-layout5">
+                                    <div class="woocommerce-notices-wrapper"></div>
+                                    <form name="checkout" class="botiga-sc-form checkout woocommerce-checkout"
+                                        th:action="@{/users/add-order}" method="GET" id="orderForm">
+                                        <div class="botiga-sc-order-review">
+                                            <div class="botiga-sc-contents">
+                                                <div class="botiga-sc-content-item active"
+                                                    data-content-id="information">
+                                                    <div class="botiga-sc-content-item-block">
+                                                        <h3 class="botiga-sc-heading">Contact Information</h3>
+                                                        <div class="botiga-sc-fields">
+                                                            <div class="botiga-sc-contact-information">
+                                                                <div class="botiga-sc-account-info">
+                                                                    <input type="hidden" name="billing_email"
+                                                                        id="billing_email" value="s2tore@gmail.com"
+                                                                        class="botiga-sc-field-email">
+                                                                    Welcome,
+                                                                    <strong th:text="${session.user.fullname}"></strong>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="botiga-sc-content-item-block">
+                                                        <h3 class="botiga-sc-heading">
+                                                            Billing Address </h3>
+                                                        <div class="botiga-sc-fields">
+                                                            <div class="row">
+                                                                <p class="form-row form-row-wide address-field col-md-12 validate-required"
+                                                                    id="billing_address_1_field" data-priority="30">
+                                                                    <label for="billing_address_1"
+                                                                        class="billing-address">Full
+                                                                        Name&nbsp;<abbr class="required"
+                                                                            title="required">*</abbr></label><span
+                                                                        class="woocommerce-input-wrapper"><input
+                                                                            type="text"
+                                                                            class="input-text botiga-sc-field-address_1"
+                                                                            placeholder="House number and street name"
+                                                                            autocomplete="address-line1"
+                                                                            required="required"
+                                                                            th:value="${session.user.getFullname()}"
+                                                                            name="name"></span>
+                                                                </p>
+                                                                <p class="form-row form-row-wide address-field col-md-12 validate-required"
+                                                                    id="billing_address_1_field" data-priority="30">
+                                                                    <label for="billing_address_1"
+                                                                        class="billing-address">Street
+                                                                        address&nbsp;<abbr class="required"
+                                                                            title="required">*</abbr></label><span
+                                                                        class="woocommerce-input-wrapper"><input
+                                                                            type="text"
+                                                                            class="input-text botiga-sc-field-address_1"
+                                                                            placeholder="House number and street name"
+                                                                            autocomplete="address-line1"
+                                                                            required="required"
+                                                                            th:value="${session.user.getAddress()}"
+                                                                            name="address"></span>
+                                                                </p>
+                                                                <p class="form-row form-row-wide col-md-12 validate-required validate-phone"
+                                                                    id="billing_phone_field" data-priority="100"><label
+                                                                        for="billing_phone"
+                                                                        class="billing-address">Phone&nbsp;<abbr
+                                                                            class="required"
+                                                                            title="required">*</abbr></label><span
+                                                                        class="woocommerce-input-wrapper">
+                                                                        <input type="tel"
+                                                                            class="input-text botiga-sc-field-phone"
+                                                                            placeholder="" autocomplete="tel"
+                                                                            required="required"
+                                                                            th:value="${session.user.getNumberphone()}"
+                                                                            name="numberphone"></span>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="botiga-sc-cart-summary" th:if="${session.cart!=null}">
+                                            <input type="hidden" name="amount" th:value="${session.cart.getTotal()}">
+                                            <input type="hidden" name="orderInfo"
+                                                th:value="'Thanh toan don hang ' + ${session.cart.getId()}">
+
+                                            <div class="botiga-sc-cart-summary-item">
+                                                <div class="botiga-sc-cart-products"
+                                                    th:each=" item : ${session.cart.getListItem()}">
+                                                    <div class="botiga-sc-product">
+                                                        <div class="botiga-sc-product-thumbnail">
+                                                            <figure><img width="150" height="150"
+                                                                    th:src="${item.getProduct().getImages()}"
+                                                                    class="attachment-thumbnail size-thumbnail" alt=""
+                                                                    loading="lazy"></figure> <span
+                                                                class="botiga-sc-product-quantity"
+                                                                th:text="${item.getQuantity()}"></span>
+                                                        </div>
+                                                        <div class="botiga-sc-product-info">
+                                                            <div class="botiga-sc-product-name">
+                                                                <span th:text="${item.getProduct.getName()}">
+                                                                </span>
+                                                                <dl class="variation">
+                                                                    <dt class="variation-Vendor">Vendor:</dt>
+                                                                    <dd class="variation-Vendor"
+                                                                        style="margin-bottom: -15px;">
+                                                                        <p
+                                                                            th:text="${item.getProduct().getManufacturer().getName()}">
+                                                                        </p>
+                                                                    </dd>
+                                                                </dl>
+                                                            </div>
+                                                            <div class="botiga-sc-product-subtotal">
+                                                                <span class="woocommerce-Price-amount amount"><bdi
+                                                                        class="formatPrice"
+                                                                        th:text="${item.getSubtotal()}"></bdi></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="botiga-sc-cart-summary-item">
+                                                <div class="botiga-sc-cart-total">
+                                                    <table class="woocommerce-checkout-review-order-table">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>Subtotal</td>
+                                                                <td><span class="woocommerce-Price-amount amount"><bdi
+                                                                            th:text="${session.cart.getTotal()}"
+                                                                            class="formatPrice"></bdi></span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td>Total</td>
+                                                                <td><strong>
+                                                                        <span
+                                                                            class="woocommerce-Price-amount amount"><bdi
+                                                                                th:text="${session.cart.getTotal()}"
+                                                                                class="formatPrice"></bdi></span></strong>
+                                                                </td>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="botiga-sc-cart-summary-item">
+                                                <h3 class="botiga-sc-heading">Payment Method
+                                                </h3>
+                                                <h5 class="botiga-sc-heading-sub">All transactions are secure and
+                                                    encrypted.</h5>
+                                                <div class="receiver col-lg-4">
+                                                    <select id="paymentMethod" class="paymentMethod"
+                                                        name="payment_method">
+                                                        <option value="cod">COD (Cash on Delivery)</option>
+                                                        <option value="credit_card">Credit Card</option>
+                                                    </select>
+                                                </div>
+                                                <button type="submit"
+                                                    class="button botiga-sc-submit-button botiga-sc-submit-button-desktop"
+                                                    name="woocommerce_checkout_place_order" id="place_order"
+                                                    value="Place order" data-value="Place order">Place order</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </main>
+            </div><!-- .entry-content -->
+
+
+            <!-- #post-15 -->
+            <!-- #main -->
+
+
+        </div>
+        <footer th:replace=" ~{homePage.html :: footer_section}">
+        </footer>
+
+        <button id="topButton"><i class="fa fa-arrow-up"></i></button>
+    </body>
+
+    <script th:inline="javascript">
+
+        paymentMethod.addEventListener( 'change', function ()
+        {
+            var form = document.getElementById( 'orderForm' );
+            var paymentMethod = document.getElementById( 'paymentMethod' );
+
+            if ( paymentMethod.value === 'credit_card' )
+            {
+                form.action = /*[[ @{/submitOrder} ]]*/
+                    form.method = "POST";
+            } else
+            {
+                form.action = /*[[ @{/users/add-order} ]]*/
+                    form.method = "GET";
+            }
+        } );
+
+        alert_action(/*[[${alert}]]*/ )
+
+    </script>
+
+</html>

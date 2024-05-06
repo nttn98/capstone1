@@ -117,4 +117,24 @@ public class User {
         this.type = type;
     }
 
+    public String getFirstName() {
+        if (this.fullname != null && !this.fullname.isEmpty()) {
+            String[] parts = this.fullname.split("\\s+");
+            return parts[0];
+        }
+        return null;
+    }
+
+    public String getLastName() {
+        if (this.fullname != null && !this.fullname.isEmpty()) {
+            String[] parts = this.fullname.split("\\s+");
+            if (parts.length > 1) {
+                return parts[parts.length - 1];
+            } else {
+                return parts[0];
+            }
+        }
+        return null;
+    }
+
 }

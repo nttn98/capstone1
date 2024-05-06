@@ -46,33 +46,33 @@ public class GoogleLoginController {
     private UserController userController;
 
     @GetMapping("/login-google")
-    public String loginGoogle(@RequestParam("code") String code, Model model, HttpSession session,
+    public String loginGoogle(@RequestParam(name = "code", required = false) String code, Model model,
+            HttpSession session,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, HttpServletRequest request) throws IOException {
+            @RequestParam(defaultValue = "10") int size, HttpServletRequest request,
+            @RequestParam(name = "error", required = false) String error) throws IOException {
 
-        if (code == null || code.isEmpty()) {
-            return "homePage";
-        } else {
-            String accessToken = getToken(code);
-            GooglePojo googlePojo = getUserInfo(accessToken);
-
-            User u = userService.findByGgID(googlePojo.getId());
-            String[] fullname = googlePojo.getEmail().split("@");
-            if (u == null) {
-                User user = new User();
-                user.setGgID(googlePojo.getId());
-                user.setEmail(googlePojo.getEmail());
-                user.setUsername(fullname[0]);
-                user.setType(LoginType.EMAIL);
-                user.setStatus(1);
-                userService.saveUser(user);
-            }
-            model.addAttribute("type", "EMAIL");
-            model.addAttribute("ggId", googlePojo.getId());
-            userController.getLoginUser(model, fullname[0], " ", session, page, size);
-
-            return "homePage";
+        if ("access_denied".equals(error) || code == null || code.isEmpty()) {
+            return userController.getLoginUser(model, " ", " ", session, page, size);
         }
+
+        String accessToken = getToken(code);
+        GooglePojo googlePojo = getUserInfo(accessToken);
+
+        User u = userService.findByGgID(googlePojo.getId());
+        String[] fullname = googlePojo.getEmail().split("@");
+        if (u == null) {
+            User user = new User();
+            user.setGgID(googlePojo.getId());
+            user.setEmail(googlePojo.getEmail());
+            user.setUsername(fullname[0]);
+            user.setType(LoginType.EMAIL);
+            user.setStatus(1);
+            userService.saveUser(user);
+        }
+        model.addAttribute("type", "EMAIL");
+        model.addAttribute("ggId", googlePojo.getId());
+        return userController.getLoginUser(model, fullname[0], " ", session, page, size);
     }
 
     private String getToken(String code) throws ClientProtocolException, IOException {

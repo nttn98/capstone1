@@ -130,7 +130,7 @@ h1 a {
     background-image: linear-gradient(315deg, #89d8d3 0%, #03c8a8 74%);
     border: none;
     z-index: 1;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .btn-13:after {
@@ -282,7 +282,7 @@ div.staff a {
 
 div.staff p {
     padding-left: 20px;
-    margin-bottom: 0;
+    /* margin-bottom: 0; */
 }
 
 div.staff input {
@@ -295,10 +295,8 @@ div.staff button {
     display: block;
     margin-right: auto;
     margin-left: auto;
-    margin-top: 50px;
+    margin-top: 30px;
     width: 150px;
-    padding-left: 20px;
-    padding-right: 30px;
 }
 
 
@@ -515,4 +513,63 @@ th {
     left: 42px;
     width: calc(70%);
     padding: 2px;
+}
+
+#buttonContainer {
+    display: none;
+    position: absolute;
+    top: 0;
+    margin-right: 10px;
+    right: 170px;
+    top: 15px;
+}
+
+a.option {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+button.option {
+    margin: 5px;
+    padding: 10px 19px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    width: 150px;
+    padding-top: 10px;
+    overflow: hidden;
+}
+
+button.option span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+button.option span:after {
+    content: '\00ab';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: -130px;
+    transition: 0.5s;
+}
+
+button.option:hover span:after {
+    opacity: 1;
+    right: 0;
+}
+
+a.option {
+    background-color: #0056b3;
 }

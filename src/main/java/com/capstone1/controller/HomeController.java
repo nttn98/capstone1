@@ -1,12 +1,10 @@
 package com.capstone1.controller;
 
-import com.capstone1.model.*;
-import com.capstone1.services.*;
-import jakarta.annotation.Resource;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,12 +14,43 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
+import com.capstone1.model.Admin;
+import com.capstone1.model.Category;
+import com.capstone1.model.Contact;
+import com.capstone1.model.Manufacturer;
+import com.capstone1.model.Order;
+import com.capstone1.model.OrderDetail;
+import com.capstone1.model.Product;
+import com.capstone1.model.Staff;
+import com.capstone1.model.TokenAdmin;
+import com.capstone1.model.TokenUser;
+import com.capstone1.model.User;
+import com.capstone1.services.AdminService;
+import com.capstone1.services.CartItemService;
+import com.capstone1.services.CartService;
+import com.capstone1.services.CategoryService;
+import com.capstone1.services.ContactServices;
+import com.capstone1.services.ManufacturerService;
+import com.capstone1.services.OrderDetailService;
+import com.capstone1.services.OrderService;
+import com.capstone1.services.ProductService;
+import com.capstone1.services.StaffService;
+import com.capstone1.services.TokenAdminService;
+import com.capstone1.services.TokenUserService;
+import com.capstone1.services.UserService;
+
+import jakarta.annotation.Resource;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
@@ -145,6 +174,9 @@ public class HomeController {
         if (categoryName != null) {
             Page<Product> products = productService.findByCategoryNameAndStatus(categoryName, 0,
                     PageRequest.of(page, size));
+            Category category = categoryService.findByName(categoryName);
+            long idCategory = category.getId();
+            model.addAttribute("idCategory", idCategory);
             model.addAttribute("products", products);
         }
 
@@ -189,26 +221,21 @@ public class HomeController {
     @GetMapping("/dashBoard")
     public String getDashBoardPage(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        isLogin(model, session);
+        String target = isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
+        List<Product> listProducts = productService.getAll();
 
-        Page<Product> listProducts = productService.getAllProducts(PageRequest.of(page, 5));
-        Page<Category> listCategories = categoryService.getAllCategories(PageRequest.of(page, size));
-        Page<Manufacturer> listManufacturers = manufacturerService.getAllManufacturers(PageRequest.of(page, size));
-        Page<User> listUsers = userService.getAllUsers(PageRequest.of(page, size));
-        Page<Staff> listStaffs = staffService.getAllStaffs(PageRequest.of(page, size));
+        if (listProducts.isEmpty()) {
+            Product product = new Product();
 
-        model.addAttribute("products", listProducts);
-        model.addAttribute("categories", listCategories);
-        model.addAttribute("manufacturers", listManufacturers);
-        model.addAttribute("users", listUsers);
-        model.addAttribute("staffs", listStaffs);
+            model.addAttribute("product", product);
 
-        Staff staff = (Staff) session.getAttribute("staff");
-        if (staff != null) {
-            model.addAttribute("staff", staff);
+        } else {
+            model.addAttribute("products", listProducts);
         }
         return "admin/dashBoard";
-
     }
 
     @GetMapping("/login-admin")
@@ -549,7 +576,7 @@ public class HomeController {
             helper.setFrom("contact@shopme.com", "NAP Support");
 
             String subject = "Hello " + name;
-            String content = "<p>Hello,This is Automated reply </p>"
+            String content = "<p>Hello,This is automated reply </p>"
                     + "<p>Thank you for trusting our service. We will reply to you as soon as possible.</p>";
 
             helper.setSubject(subject);
