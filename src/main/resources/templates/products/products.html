@@ -23,11 +23,13 @@
 		<script src="/js/pages/jquery.toast.js"></script>
 		<script src='/js/product.js'></script>
 		<script src='/js/dashboard/onToggle.js' defer></script>
-		<!-- <script src='/js/jquery_dataTables_min.js'></script> -->
-		<script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
-		<script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap4.js"></script>
+		<script type="text/javascript" src="/richtexteditor/rte.js"></script>
+		<script type="text/javascript" src='/richtexteditor/plugins/all_plugins.js'></script>
 
-		<link rel='stylesheet' href='https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap4.css'>
+		<script src="/js/dataTables.js"></script>
+		<script src="/js/dataTables.bootstrap4.js"></script>
+
+		<link rel="stylesheet" href="/richtexteditor/rte_theme_default.css" />
 		<link rel='stylesheet' href='/css/font-awesome.min.css'>
 		<link rel="stylesheet" href="/css/bootstrap.min.css">
 		<link rel="stylesheet" href="/css/bootstrap-extended.min.css">
@@ -36,6 +38,7 @@
 		<link rel="stylesheet" href="/css/drop.css">
 		<link rel="stylesheet" href="/css/products.css" />
 		<link rel="stylesheet" href="/css/pages/jquery.toast.css" />
+		<link rel='stylesheet' href="/css/dataTables.bootstrap4.css">
 
 		<title>Admin page</title>
 	</head>
@@ -237,7 +240,7 @@
 								<td th:text="${product.quantity}"></td>
 								<td th:text="${product.category.name}"></td>
 								<td th:text="${product.manufacturer.name}"></td>
-								<td th:text="${product.description}"></td>
+								<td>[(${product.description})]</td>
 								<td>
 									<a th:href="@{/products/change-newest/{id}(id=${product.id})}"
 										th:if="${product.status == 0}">

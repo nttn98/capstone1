@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.capstone1.VNPay.Config.VNPayService;
 import com.capstone1.model.Cart;
+import com.capstone1.model.CartItem;
 import com.capstone1.model.Order;
 import com.capstone1.model.Order.PaymentType;
 import com.capstone1.model.OrderDetail;
@@ -87,7 +88,6 @@ public class VNPayController {
             LocalDateTime now = LocalDateTime.now();
             Order order = null;
             double total = 0;
-            List<Product> products = productService.getAll();
 
             if (cart != null && userLogin != null) {
                 order = orderService.saveOrder(new Order(0, userLogin, now));
@@ -97,13 +97,15 @@ public class VNPayController {
                     OrderDetail tempOrderDetail = orderDetailService
                             .saveOrderDetail(new OrderDetail(order, product,
                                     cartItemService.findByProductId(product.getId()).getQuantity(), subtotal));
+
+                    CartItem temp = cartItemService.findByProductId(product.getId());
+
+                    // change quantity after order
+                    Product productAfter = productService.getProductById(product.getId());
+                    productAfter.setQuantity(productAfter.getQuantity() - temp.getQuantity());
+
                     cartItemService.deleteByProductId(product.getId());
                     total += tempOrderDetail.getFinalPrice();
-                    for (Product p : products) {
-                        if (p.getId() == product.getId()) {
-                            p.setQuantity(p.getQuantity() - product.getQuantity());
-                        }
-                    }
                 }
                 order.setReceiverName(name);
                 order.setReceiverAddress(address);

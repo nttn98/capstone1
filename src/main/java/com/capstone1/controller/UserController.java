@@ -95,9 +95,21 @@ public class UserController {
 
     @PostMapping("/users/update-user")
     public String updateUser(Model model, @ModelAttribute User user, @RequestParam String mode,
+            @RequestParam String email,
             HttpSession session, @RequestParam("id") Long userId, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(userId);
+
+        List<String> emails = userService.getAllEmails();
+        if (!email.equals(existUser.getEmail())) {
+            for (String e : emails) {
+                if (email.equals(e)) {
+                    model.addAttribute("alert", "errorEdit");
+                    break;
+                }
+            }
+            return homeController.getHome(model, session, page, size);
+        }
 
         existUser.setFullname(user.getFullname());
         existUser.setNumberphone(user.getNumberphone());
@@ -200,6 +212,22 @@ public class UserController {
     public ResponseEntity<Boolean> checkUserUsernameAvailability(@RequestParam("username") String username) {
         try {
             User existingUser = userService.findByUsername(username);
+            if (existingUser == null) {
+                return ResponseEntity.ok(true); // Username is available
+            } else {
+                return ResponseEntity.ok(false); // Username is not available
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+
+    @GetMapping("/checkUserEmailAvailability")
+    @ResponseBody // Ensure the returned boolean is serialized as a response body
+    public ResponseEntity<Boolean> checkUserEmailAvailability(@RequestParam("email") String email) {
+        try {
+            User existingUser = userService.findByEmail(email);
             if (existingUser == null) {
                 return ResponseEntity.ok(true); // Username is available
             } else {
@@ -374,23 +402,26 @@ public class UserController {
         LocalDateTime now = LocalDateTime.now();
         Order order = null;
         double total = 0;
-        List<Product> products = productService.getAll();
 
         if (cart != null && userLogin != null) {
             order = orderService.saveOrder(new Order(0, userLogin, now));
             for (int i = 0; i < cart.getListItem().size(); i++) {
                 Product product = cart.getListItem().get(i).getProduct();
                 double subtotal = product.getPrice();
+
                 OrderDetail tempOrderDetail = orderDetailService
                         .saveOrderDetail(new OrderDetail(order, product,
                                 cartItemService.findByProductId(product.getId()).getQuantity(), subtotal));
+
+                CartItem temp = cartItemService.findByProductId(product.getId());
+
+                // change quantity after order
+                Product productAfter = productService.getProductById(product.getId());
+                productAfter.setQuantity(productAfter.getQuantity() - temp.getQuantity());
+
                 cartItemService.deleteByProductId(product.getId());
                 total += tempOrderDetail.getFinalPrice();
-                for (Product p : products) {
-                    if (p.getId() == product.getId()) {
-                        p.setQuantity(p.getQuantity() - product.getQuantity());
-                    }
-                }
+
             }
 
             order.setReceiverName(name);

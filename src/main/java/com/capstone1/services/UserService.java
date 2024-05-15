@@ -31,4 +31,5 @@ public interface UserService {
 
     User findByUsernameAndPassword(String usename, String passsword);
 
+    List<String> getAllEmails();
 }

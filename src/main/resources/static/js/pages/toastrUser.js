@@ -67,7 +67,17 @@ function alert_action ( alert_action )
                icon: 'success',
                hideAfter: 3500
           } );
-     } else if ( alert_action == "recoverPass" )
+     } else if ( alert_action == "errorEdit" )
+     {
+          $.toast( {
+               heading: 'Email already used !!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'error',
+               hideAfter: 3500
+          } );
+     }
+     else if ( alert_action == "recoverPass" )
      {
           $.toast( {
                heading: ' You recovered your password successfull !!',

@@ -89,6 +89,10 @@
                                                     th:text="${item.getPrice()}" style="font-weight: normal;"
                                                     class="formatPrice"></span>
                                             </p>
+                                            <p class="card-text" style="font-weight: 600; color: green;">Available in
+                                                stock: <span th:text="${item.getQuantity()}"
+                                                    style="font-weight: normal;"></span>
+                                            </p>
                                         </div>
                                     </div>
                                     <div class="col-lg-3" th:if="${item.getQuantity()!=0}">

@@ -76,4 +76,9 @@ public class Userimpl implements UserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public List<String> getAllEmails() {
+        return userRepository.findAllEmails();
+    }
+
 }

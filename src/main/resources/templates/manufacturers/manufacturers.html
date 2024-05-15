@@ -59,7 +59,7 @@
                                 <td><img th:src="${manufacturer.images}" alt="manufacturer Image" style="width: 120px;">
                                 </td>
                                 <td th:text="${manufacturer.name}"></td>
-                                <td th:text="${manufacturer.description}"></td>
+                                <td>[(${manufacturer.description})]</td>
                                 <td>
                                     <a th:href="@{/manufacturers/change-status/{id}(id=${manufacturer.id})}">
                                         <button class="custom-btn btn-5"

@@ -44,13 +44,11 @@
 
                     <div class="col-12">
                         <div class="white-box">
-                            <div class="form-group">
-                                <label for="description" class="col-sm-12 p-0">
-                                    <h5>Description</h5>
-                                </label>
-                                <textarea th:field="*{description}" id="description"></textarea>
-                            </div>
-                            <div class="form-actions">
+                            <h5>Description</h5>
+
+                            <textarea id="div_editor1" th:field="*{description}">
+                            </textarea>
+                            <div class="form-actions" style="height: 100px;">
                                 <button type="submit" class="btn btn-info"> <i class="fa fa-check"></i>
                                     Edit</button>
                                 <button type="button" onclick="location.href='/categories'"
@@ -65,7 +63,8 @@
         <footer th:replace="~{products/products.html :: footer}"></footer>
     </body>
 
-    <script>
+    <script th:inline="javascript">
+        var editor1 = new RichTextEditor( "#div_editor1" );
         $( '.dropify-wrapper' ).height( $( 'form > div > div:nth-child(2)' ).height() - 60 + 'px' )
 
         $( "#input-file-now" ).change( function ( event )
