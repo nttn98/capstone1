@@ -81,6 +81,22 @@ public class ProductController {
 
     }
 
+    @GetMapping("/products/get-product-infor/{id}")
+    public String getProductInfor(@PathVariable Long id, Model model, HttpSession session) {
+        List<Category> listCategories = categoryService.getAll();
+        Product product = productService.getProductById(id);
+        List<Manufacturer> listManufacturers = manufacturerService.getAll();
+        Category category = product.getCategory();
+        long idCategory = category.getId();
+        model.addAttribute("idCategory", idCategory);
+        model.addAttribute("product", product);
+        model.addAttribute("categories", listCategories);
+        model.addAttribute("manufacturers", listManufacturers);
+        homeController.isUserLogin(model, session);
+
+        return "productDetail";
+    }
+
     @GetMapping("/products/edit/{id}")
     public String editProductForm(@PathVariable Long id, Model model) {
         model.addAttribute("manufacturers", manufacturerService.getAll());
@@ -272,6 +288,22 @@ public class ProductController {
         try {
             Product productExist = productService.findByName(name);
             if (productExist == null) {
+                return ResponseEntity.ok(true); // name is available
+            } else {
+                return ResponseEntity.ok(false); // name is not available
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
+    }
+
+    @GetMapping("/checkQuantity")
+    @ResponseBody
+    public ResponseEntity<Boolean> checkQuantity(@RequestParam("quantityInCart") int quantityIncart, long id) {
+        try {
+            Product productExist = productService.getProductById(id);
+            if (quantityIncart <= productExist.getQuantity()) {
                 return ResponseEntity.ok(true); // name is available
             } else {
                 return ResponseEntity.ok(false); // name is not available

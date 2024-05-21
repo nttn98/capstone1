@@ -29,4 +29,8 @@ public interface StaffService {
 
     Staff findByUsernameAndPassword(String usename, String passsword);
 
+    boolean checkEmail(String email, String originalEmail);
+
+    boolean checkUsername(String username);
+
 }

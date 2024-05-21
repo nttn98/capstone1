@@ -1,7 +1,6 @@
 package com.capstone1.VNPay.Controller;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -104,7 +103,7 @@ public class VNPayController {
                     Product productAfter = productService.getProductById(product.getId());
                     productAfter.setQuantity(productAfter.getQuantity() - temp.getQuantity());
 
-                    cartItemService.deleteByProductId(product.getId());
+                    cartItemService.deleteByProductIdAndCartId(product.getId(), cart.getId());
                     total += tempOrderDetail.getFinalPrice();
                 }
                 order.setReceiverName(name);

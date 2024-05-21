@@ -37,11 +37,11 @@
                             </tr>
                             <tr>
                                 <td>Total amount:</td>
-                                <td><span th:text="${totalPrice}">[total price]</span></td>
+                                <td><span th:text="${totalPrice}" class="priceFormat">[total price]</span></td>
                             </tr>
                             <tr>
                                 <td>Payment time:</td>
-                                <td><span th:text="${paymentTime}">[payment time]</span></td>
+                                <td><span th:text="${paymentTime}" id="paymentTime">[payment time]</span></td>
                             </tr>
                             <tr>
                                 <td>Transaction code:</td>
@@ -63,5 +63,57 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
     </body>
+    <script>
+        $( document ).ready( function ()
+        {
+            $( '.priceFormat' ).each( ( i, e ) =>
+            {
+                let val = + $( e ).text();
+                $( e ).text( formatMoney( val ) );
+            } );
+
+            function formatMoney ( n )
+            {
+                var number = n / 100;
+                return number.toLocaleString( 'vi-VN', {
+                    style: 'currency', currency: 'VND'
+                } );
+            }
+        } );
+
+        function convertPaymentTime ( paymentTime )
+        {
+            const year = parseInt( paymentTime.substring( 0, 4 ) );
+            const month = parseInt( paymentTime.substring( 4, 6 ) );
+            const day = parseInt( paymentTime.substring( 6, 8 ) );
+            const hour = parseInt( paymentTime.substring( 8, 10 ) );
+            const minute = parseInt( paymentTime.substring( 10, 12 ) );
+            const second = parseInt( paymentTime.substring( 12, 14 ) );
+
+            const date = new Date( year, month, day, hour, minute, second );
+            const formattedDate = `${ day.toString().padStart( 2, '0' ) }/${ month.toString().padStart( 2, '0' ) }/${ year }, ${ date.toLocaleTimeString( 'en-US' ) }`;
+
+            return formattedDate;
+        }
+
+        function displayFormattedPaymentTime ()
+        {
+            const paymentTimeElement = document.getElementById( 'paymentTime' );
+            const paymentTime = paymentTimeElement ? paymentTimeElement.innerText : '';
+
+            if ( paymentTime )
+            {
+                const formattedDate = convertPaymentTime( paymentTime );
+
+                paymentTimeElement.innerText = formattedDate;
+            } else
+            {
+                paymentTimeElement.innerText = 'Invalid payment time';
+            }
+        }
+
+        window.onload = displayFormattedPaymentTime;
+
+    </script>
 
 </html>

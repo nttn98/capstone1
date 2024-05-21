@@ -1,6 +1,9 @@
 package com.capstone1.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,4 +23,9 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     @Query(value = "ALTER TABLE staffs AUTO_INCREMENT = 1001", nativeQuery = true)
     void alterAutoIncrementValue();
 
+    @Query("SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END FROM Staff s WHERE s.email = :email AND s.email <> :originalEmail")
+    boolean existsByEmail(@Param("email") String email, @Param("originalEmail") String originalEmail);
+
+    @Query("SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END FROM Staff s WHERE s.username = :username")
+    boolean existsByUsername(@Param("username") String username);
 }

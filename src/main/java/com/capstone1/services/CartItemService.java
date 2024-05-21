@@ -13,6 +13,6 @@ public interface CartItemService {
     public CartItem findByCartIdAndProductId(long cartId, long productId);
 
     @Transactional
-    void deleteByProductId(long productId);
+    void deleteByProductIdAndCartId(long productId, long cartId);
 
 }

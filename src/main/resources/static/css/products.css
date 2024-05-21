@@ -244,6 +244,7 @@ button.close {
     transition: 0.6s;
     overflow: hidden;
     color: black;
+    top: 0;
 }
 
 .profile .close {
@@ -315,6 +316,7 @@ div.staff button {
     transition: 0.6s;
     overflow: hidden;
     color: black;
+    top: 0;
 }
 
 .changePass .close {

@@ -10,7 +10,79 @@
 
     <body class="header_section">
         <div th:replace="~{homePage :: header_section}"></div>
-
+        <div class="cart position-fixed">
+            <h2>Shopping Cart</h2>
+            <button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 th:if="${session.cart==null}" style="margin-left: 20px;">There are no items</h3>
+            <!-- shopping cart -->
+            <div class="cart position-fixed">
+                <h2>Shopping Cart</h2>
+                <button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 th:if="${session.cart==null}" style="margin-left: 20px;">There are no items</h3>
+                <!-- product -->
+                <div class="product" th:if="${session.cart!=null}">
+                    <div class="container">
+                        <div class="row" th:each=" item : ${session.cart.getListItem()}" style="margin-bottom: 10px;">
+                            <div class="col-2">
+                                <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
+                            </div>
+                            <div id="productName" class="col-4" th:text="${item.getProduct().getName()}">
+                            </div>
+                            <div>
+                                <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
+                                    style="width: 50px; height: 50px; padding: 0; text-align: center;" readonly>
+                            </div>
+                            <div class="col-2 formatPrice" style="padding-left: 30px; padding-top: 10px;"
+                                th:text="${item.getSubtotal()}">
+                            </div>
+                            <div class="col-2">
+                                <!-- <button type="submit" class="close">x</button> -->
+                                <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inCheckout')}"
+                                    class="close"><span>x</span></a>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <hr th:if="${session.cart != null}">
+                <div class="checkout-space" th:if="${session.cart != null}">
+                    <div class=" total-checkout">
+                        <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span>
+                        </h4>
+                    </div>
+                    <br>
+                    <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
+                        <button class="btn-checkout" id="checkoutBtn">Checkout
+                        </button>
+                    </a>
+                    <a onclick="showLogin()" th:if="${session.user == null}">
+                        <button class="btn-checkout">Login
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!-- end shopping cart -->
+            <hr th:if="${session.cart != null}">
+            <div class="checkout-space" th:if="${session.cart != null}">
+                <div class=" total-checkout">
+                    <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span>
+                    </h4>
+                </div>
+                <br>
+                <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
+                    <button class="btn-checkout">Checkout
+                    </button>
+                </a>
+                <a onclick="showLogin()" th:if="${session.user == null}">
+                    <button class="btn-checkout">Login
+                    </button>
+                </a>
+            </div>
+        </div>
         <div class="closeMask"></div>
         </div>
         <div>
@@ -59,7 +131,8 @@
                                                             <div class="botiga-sc-contact-information">
                                                                 <div class="botiga-sc-account-info">
                                                                     <input type="hidden" name="billing_email"
-                                                                        id="billing_email" value="s2tore@gmail.com"
+                                                                        id="billing_email"
+                                                                        th:value="${session.user.getEmail()}"
                                                                         class="botiga-sc-field-email">
                                                                     Welcome,
                                                                     <strong th:text="${session.user.fullname}"></strong>
@@ -71,7 +144,7 @@
                                                         <h3 class="botiga-sc-heading">
                                                             Billing Address </h3>
                                                         <div class="botiga-sc-fields">
-                                                            <div class="row">
+                                                            <div class="row" th:object="${session.user}">
                                                                 <p class="form-row form-row-wide address-field col-md-12 validate-required"
                                                                     id="billing_address_1_field" data-priority="30">
                                                                     <label for="billing_address_1"
@@ -84,7 +157,7 @@
                                                                             placeholder="House number and street name"
                                                                             autocomplete="address-line1"
                                                                             required="required"
-                                                                            th:value="${session.user.getFullname()}"
+                                                                            th:value="${user.getFullname()}"
                                                                             name="name"></span>
                                                                 </p>
                                                                 <p class="form-row form-row-wide address-field col-md-12 validate-required"
@@ -99,7 +172,7 @@
                                                                             placeholder="House number and street name"
                                                                             autocomplete="address-line1"
                                                                             required="required"
-                                                                            th:value="${session.user.getAddress()}"
+                                                                            th:value="${user.getAddress()}"
                                                                             name="address"></span>
                                                                 </p>
                                                                 <p class="form-row form-row-wide col-md-12 validate-required validate-phone"
@@ -113,7 +186,7 @@
                                                                             class="input-text botiga-sc-field-phone"
                                                                             placeholder="" autocomplete="tel"
                                                                             required="required"
-                                                                            th:value="${session.user.getNumberphone()}"
+                                                                            th:value="${user.getNumberphone()}"
                                                                             name="numberphone"></span>
                                                                 </p>
                                                             </div>
@@ -121,6 +194,11 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div class="botiga-sc-cart-summary" th:if="${session.cart == null}">
+                                            <script th:inline="javascript">
+                                                window.location.href = "/";
+                                            </script>
                                         </div>
                                         <div class="botiga-sc-cart-summary" th:if="${session.cart!=null}">
                                             <input type="hidden" name="amount" th:value="${session.cart.getTotal()}">
@@ -132,12 +210,15 @@
                                                     th:each=" item : ${session.cart.getListItem()}">
                                                     <div class="botiga-sc-product">
                                                         <div class="botiga-sc-product-thumbnail">
-                                                            <figure><img width="150" height="150"
+                                                            <figure>
+                                                                <img width="150" height="150"
                                                                     th:src="${item.getProduct().getImages()}"
                                                                     class="attachment-thumbnail size-thumbnail" alt=""
-                                                                    loading="lazy"></figure> <span
-                                                                class="botiga-sc-product-quantity"
-                                                                th:text="${item.getQuantity()}"></span>
+                                                                    loading="lazy">
+                                                            </figure>
+                                                            <span class="botiga-sc-product-quantity"
+                                                                th:text="${item.getQuantity()}"
+                                                                id="quantityIncart"></span>
                                                         </div>
                                                         <div class="botiga-sc-product-info">
                                                             <div class="botiga-sc-product-name">
@@ -158,6 +239,13 @@
                                                                         class="formatPrice"
                                                                         th:text="${item.getSubtotal()}"></bdi></span>
                                                             </div>
+                                                            <div class="botiga-sc-product-exist">
+                                                                <span style="color: green; font-weight: 600;">Available
+                                                                    in stock:
+                                                                </span>
+                                                                <span th:text="${item.getProduct().getQuantity()}">
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -177,11 +265,13 @@
                                                         <tfoot>
                                                             <tr>
                                                                 <td>Total</td>
-                                                                <td><strong>
-                                                                        <span
-                                                                            class="woocommerce-Price-amount amount"><bdi
-                                                                                th:text="${session.cart.getTotal()}"
-                                                                                class="formatPrice"></bdi></span></strong>
+                                                                <td>
+                                                                    <strong>
+                                                                        <span class="woocommerce-Price-amount amount">
+                                                                            <bdi th:text="${session.cart.getTotal()}"
+                                                                                class="formatPrice"></bdi>
+                                                                        </span>
+                                                                    </strong>
                                                                 </td>
                                                             </tr>
                                                         </tfoot>
@@ -211,14 +301,8 @@
                             </div>
                         </div>
                     </article>
-                </main>
+                </main> <!-- #main -->
             </div><!-- .entry-content -->
-
-
-            <!-- #post-15 -->
-            <!-- #main -->
-
-
         </div>
         <footer th:replace=" ~{homePage.html :: footer_section}">
         </footer>

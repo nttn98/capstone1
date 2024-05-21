@@ -5,18 +5,15 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.capstone1.model.Cart;
+import com.capstone1.model.BlogLogin;
+import java.util.List;
 
-public interface CartRepository extends JpaRepository<Cart, Long> {
+public interface BlogLoginRepository extends JpaRepository<BlogLogin, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "ALTER TABLE carts AUTO_INCREMENT = 1001", nativeQuery = true)
+    @Query(value = "ALTER TABLE blog_login AUTO_INCREMENT = 1001", nativeQuery = true)
     void alterAutoIncrementValue();
 
-    Cart findByUserId(long userId);
-
-    @Transactional
-    void deleteByUserId(long userId);
-
+    List<BlogLogin> findById(long id);
 }

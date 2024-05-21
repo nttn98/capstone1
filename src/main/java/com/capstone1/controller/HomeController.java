@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.eclipse.angus.mail.handlers.image_gif;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.capstone1.model.Admin;
+import com.capstone1.model.BlogLogin;
 import com.capstone1.model.Category;
 import com.capstone1.model.Contact;
 import com.capstone1.model.Manufacturer;
@@ -32,7 +34,9 @@ import com.capstone1.model.Staff;
 import com.capstone1.model.TokenAdmin;
 import com.capstone1.model.TokenUser;
 import com.capstone1.model.User;
+import com.capstone1.model.BlogLogin.LoginStatus;
 import com.capstone1.services.AdminService;
+import com.capstone1.services.BlogLoginService;
 import com.capstone1.services.CartItemService;
 import com.capstone1.services.CartService;
 import com.capstone1.services.CategoryService;
@@ -81,6 +85,9 @@ public class HomeController {
     AdminService adminService;
     @Resource
     ContactServices contactServices;
+    @Resource
+    BlogLoginService blogLoginService;
+
     @Autowired
     Encoding encoding;
     @Autowired
@@ -115,7 +122,7 @@ public class HomeController {
 
     @GetMapping("/paging")
     public String paginated(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "8") int size) {
         Page<Product> products = null;
         isUserLogin(model, session);
 
@@ -150,7 +157,7 @@ public class HomeController {
     /* get list products for user */
     @GetMapping("/list-products")
     public String getProductsForUser(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "8") int size) {
         Page<Product> listProducts = productService.findByStatus(PageRequest.of(page, size), 0);
         List<Category> listCategories = categoryService.getAll();
         List<Manufacturer> listManufacturers = manufacturerService.getAll();
@@ -225,22 +232,30 @@ public class HomeController {
         if (target != null) {
             return target;
         }
-        List<Product> listProducts = productService.getAll();
-
-        if (listProducts.isEmpty()) {
-            Product product = new Product();
-
-            model.addAttribute("product", product);
-
-        } else {
-            model.addAttribute("products", listProducts);
-        }
+        List<BlogLogin> listBlogs = blogLoginService.getAllBlogLogins();
+        model.addAttribute("blogs", listBlogs);
         return "admin/dashBoard";
     }
 
     @GetMapping("/login-admin")
     public String getLoginPage(Model model, HttpSession session) {
+        session.removeAttribute("staff");
+        session.removeAttribute("admin");
+
         return "loginAdmin_Staff";
+
+    }
+
+    private void saveBlogLogin(long id, boolean status) {
+        LocalDateTime now = LocalDateTime.now();
+        Staff staff = staffService.getStaffById(id);
+        BlogLogin blogLogin = new BlogLogin();
+        if (status == true) {
+            blogLogin = new BlogLogin(staff, now, LoginStatus.LOGIN);
+        } else {
+            blogLogin = new BlogLogin(staff, now, LoginStatus.LOGOUT);
+        }
+        blogLoginService.saveBlogLogin(blogLogin);
     }
 
     @PostMapping("/login-admin")
@@ -255,12 +270,12 @@ public class HomeController {
         if (checkAdmin != null) {
             session.setAttribute("admin", checkAdmin);
             model.addAttribute("alert", "success");
-
             return getDashBoardPage(model, session, page, size);
         } else if (checkStaff != null && checkStaff.getStatus() == 1) {
             // model.addAttribute("mode", mode);
             session.setAttribute("staff", checkStaff);
             model.addAttribute("alert", "success");
+            saveBlogLogin(checkStaff.getId(), true);
             return getDashBoardPage(model, session, page, size);
         } else {
             model.addAttribute("alert", "error");
@@ -272,7 +287,6 @@ public class HomeController {
     public boolean checkLogin(Model model, HttpSession session) {
         Staff staff = (Staff) session.getAttribute("staff");
         Admin admin = (Admin) session.getAttribute("admin");
-        System.out.println(admin);
         if (admin != null) {
             model.addAttribute("admin", admin);
             return true;
@@ -301,7 +315,10 @@ public class HomeController {
 
     @GetMapping("/logout")
     public String getLogout(Model model, HttpSession session) {
-
+        Staff s = (Staff) session.getAttribute("staff");
+        if (s != null) {
+            saveBlogLogin(s.getId(), false);
+        }
         session.removeAttribute("admin");
         session.removeAttribute("staff");
 

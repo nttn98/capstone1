@@ -11,7 +11,9 @@
         <script src="/js/bootstrap.bundle.min.js"></script>
         <script src="/js/jquery-3.0.0.min.js"></script>
         <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
-        <script src="/js/validation/user.js"></script>
+        <script src="/js/validation/checkExist.js"></script>
+        <script src="/js/validation/checkQuantity.js"></script>
+
         <!-- <script src="/js/custom.js"></script> -->
         <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -120,7 +122,12 @@
                                     </div>
                                     <div class="form-group">
                                         <p>Email: </p>
-                                        <input type="email" th:field="*{email}" class="form-control" name="email">
+                                        <input id="originalEmail" name="originalEmail" th:value="${user.getEmail()}"
+                                            hidden>
+                                        <input type="email" th:field="*{email}" class="form-control" name="email"
+                                            required onfocusout="checkExistEmail()" id="emailInput">
+                                        <span id="emailError" style="color: red;"></span>
+
                                     </div>
                                     <div class="form-group">
                                         <p>Date of birth</p>
@@ -183,59 +190,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="cart position-fixed">
-                    <h2>Shopping Cart</h2>
-                    <button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h3 th:if="${session.cart==null}" style="margin-left: 20px;">There are no items</h3>
-                    <!-- product -->
-                    <div class="product" th:if="${session.cart!=null}">
-                        <div class="container">
-                            <form th:action="@{/users/delete-product-in-cart}" method="POST">
-                                <div class="row" th:each=" item : ${session.cart.getListItem()}"
-                                    style="margin-bottom: 10px;">
-                                    <div class="col-2">
-                                        <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
-                                    </div>
-                                    <div class="col-4" th:text="${item.getProduct().getName()}">
-                                    </div>
-                                    <input type="hidden" th:value="${item.getProduct().getId()}" name="productId">
-                                    <div>
-                                        <input type="text" id="quantity" name="quantity"
-                                            th:value="${item.getQuantity()}"
-                                            style="width: 50px; height: 50px; padding: 0; text-align: center;" readonly>
-                                    </div>
-                                    <div class="col-2 formatPrice" style="padding-left: 30px; padding-top: 10px;"
-                                        th:text="${item.getSubtotal()}">
-                                    </div>
-
-                                    <div class="col-2">
-                                        <button type="submit" class="close">x</button>
-                                    </div>
-                                </div>
-                            </form>
-                            <br>
-                        </div>
-                    </div>
-                    <hr th:if="${session.cart != null}">
-                    <div class="checkout-space" th:if="${session.cart != null}">
-                        <div class=" total-checkout">
-                            <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span>
-                            </h4>
-                        </div>
-                        <br>
-                        <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
-                            <button class="btn-checkout">Checkout
-                            </button>
-                        </a>
-                        <a onclick="showLogin()" th:if="${session.user == null}">
-                            <button class="btn-checkout">Login
-                            </button>
-                        </a>
-                    </div>
-                </div>
-
                 <div class="login position-fixed" th:fragment="login">
                     <div class="container">
                         <div class="row justify-content-center">
@@ -290,7 +244,6 @@
                                                     Sign in
                                                 </div>
                                             </button></a>
-
                                         <a href="#" id="RecoverPassword" onclick="showRecoverPassword()">Forgot your
                                             password?</a>
                                         <a href="#" onclick="showRegister()" style="padding-left: 5px;">Register</a>
@@ -321,7 +274,7 @@
                                         <div class="form-group">
                                             <p>Username: </p>
                                             <input type="text" class="form-control" id="usernameInput" name="username"
-                                                onfocusout="checkUserUsername()" required>
+                                                onfocusout="checkUsername()" required>
                                             <span id="usernameError" style="color: red;"></span>
 
                                         </div>
@@ -343,8 +296,9 @@
                                         </div>
                                         <div class="form-group">
                                             <p>Email: </p>
+                                            <input id="originalEmail" name="originalEmail" value="" hidden>
                                             <input type="email" class="form-control" name="email" id="emailInput"
-                                                onfocusout="checkUserEmail()" required>
+                                                onfocusout="checkExistEmail()" required>
                                             <span id="emailError" style="color: red;"></span>
 
                                         </div>
@@ -367,10 +321,61 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-
-                <div class="closeMask"></div>
             </div>
+            <!-- shopping cart -->
+            <div class="cart position-fixed">
+                <h2>Shopping Cart</h2>
+                <button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 th:if="${session.cart==null}" style="margin-left: 20px;">There are no items</h3>
+                <!-- product -->
+                <div class="product" th:if="${session.cart!=null}">
+                    <div class="container">
+                        <div class="row" th:each=" item : ${session.cart.getListItem()}" style="margin-bottom: 10px;">
+                            <div class="col-2">
+                                <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
+                            </div>
+                            <div id="productName" class="col-4" th:text="${item.getProduct().getName()}">
+                            </div>
+                            <div>
+                                <input name="productQuantity" id="productQuantity"
+                                    th:value="${item.getProduct().getQuantity()}" hidden>
+                                <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
+                                    style="width: 50px; height: 50px; padding: 0; text-align: center;" readonly>
+                            </div>
+                            <div class="col-2 formatPrice" style="padding-left: 30px; padding-top: 10px;"
+                                th:text="${item.getSubtotal()}">
+                            </div>
+                            <div class="col-2">
+                                <!-- <button type="submit" class="close">x</button> -->
+                                <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inHome')}"
+                                    class="close"><span>x</span></a>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <hr th:if="${session.cart != null}">
+                <div class="checkout-space" th:if="${session.cart != null}">
+                    <div class=" total-checkout">
+                        <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span>
+                        </h4>
+                    </div>
+                    <br>
+                    <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
+                        <button class="btn-checkout" id="checkoutBtn">Checkout
+                        </button>
+                    </a>
+                    <a onclick="showLogin()" th:if="${session.user == null}">
+                        <button class="btn-checkout">Login
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!-- end shopping cart -->
 
+            <div class="closeMask"></div>
             <!-- banner section start -->
             <div class="banner_section layout_padding">
                 <div id="main_slider" class="carousel slide" data-ride="carousel">
@@ -451,7 +456,7 @@
                         <div id="IMAGE117" class="ladi-element">
                             <div class="ladi-image ladi-transition">
                                 <div class="ladi-image-background">
-                                    <img src="img/about1.png" alt="about1">
+                                    <img src="/img/about1.png" alt="about1">
                                 </div>
                             </div>
                         </div>
@@ -476,7 +481,7 @@
                             <div id="IMAGE117" class="ladi-element">
                                 <div class="ladi-image ladi-transition">
                                     <div class="ladi-image-background">
-                                        <img src="img/about2.png" alt="about2">
+                                        <img src="/img/about2.png" alt="about2">
                                     </div>
                                 </div>
                             </div>
@@ -499,7 +504,7 @@
                                 <div id="IMAGE117" class="ladi-element" style="width: 40%;">
                                     <div class="ladi-image ladi-transition">
                                         <div class="ladi-image-background">
-                                            <img src="img/about3.png" alt="about3">
+                                            <img src="/img/about3.png" alt="about3">
                                         </div>
                                     </div>
                                 </div>
@@ -530,7 +535,9 @@
                                     </figcaption>
                                 </a>
                             </div>
-                            <h5><a th:text=" ${item.getName()}"></a></h5>
+                            <h5><a class="product-name" th:text="${item.getName()}"
+                                    th:href="@{'/products/get-product-infor/' + ${item.id}}"></a>
+                            </h5>
                             <p th:text="${item.getPrice()}" class="formatPrice"></p>
                         </div>
                     </div>
@@ -555,7 +562,8 @@
                                     </figcaption>
                                 </a>
                             </div>
-                            <h5><a th:text=" ${item.getName()}"></a></h5>
+                            <h5><a class="product-name" th:text="${item.getName()}"
+                                    th:href="@{'/products/get-product-infor/' + ${item.id}}"></a></h5>
                             <p th:text="${item.getPrice()}" class="formatPrice"></p>
                         </div>
                     </div>
@@ -593,7 +601,7 @@
                                     required></textarea>
                                 <div class="send_bt"><input type="Submit" value="Send"></div>
                             </form>
-                            <img src="img/contact.png" class="contact-png">
+                            <img src="/img/contact.png" class="contact-png">
                         </div>
                     </div>
                 </div>

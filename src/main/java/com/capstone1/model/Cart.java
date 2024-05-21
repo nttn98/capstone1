@@ -37,14 +37,17 @@ public class Cart {
         cartItem.setCart(this);
     }
 
-    public void addProduct(Product product, Cart cart) {
+    public void addProduct(Product product, Cart cart, int quantityInput) {
         CartItem temp = checkProductExist(product.getId());
-
-        if (temp == null) {
-            CartItem newItem = new CartItem(cart, product, 1);
-            this.listItem.add(newItem);
+        if (quantityInput == 0) {
+            quantityInput = 1;
         } else {
-            temp.changeQuantity(1);
+            if (temp == null) {
+                CartItem newItem = new CartItem(cart, product, quantityInput);
+                this.listItem.add(newItem);
+            } else {
+                temp.changeQuantity(quantityInput);
+            }
         }
     }
 

@@ -19,11 +19,13 @@
         <script src='/js/jquery.min.js'></script>
         <script src='/js/bootstrap.min.js'></script>
         <script src="/js/pages/toastr.js"></script>
+        <script src="/js/pages/toastrUser.js"></script>
         <script src="/js/pages/jquery.toast.js"></script>
         <script src='/js/product.js'></script>
         <script src='/js/dashboard/onToggle.js' defer></script>
         <script src="https://cdn.datatables.net/2.0.5/js/dataTables.js"></script>
         <script src="https://cdn.datatables.net/2.0.5/js/dataTables.bootstrap4.js"></script>
+        <script src="/js/validation/checkExist.js"></script>
 
         <link rel='stylesheet' href='https://cdn.datatables.net/2.0.5/css/dataTables.bootstrap4.css'>
         <link rel='stylesheet' href='/css/font-awesome.min.css'>
@@ -37,7 +39,6 @@
 
 
         <title>Admin page</title>
-
 
     </head>
 
@@ -56,11 +57,11 @@
                     <div class="collapse navbar-collapse" id="navbar-mobile">
                         <ul class="nav navbar-nav mr-auto float-left">
                             <a th:href="@{/products/create-product}">
-                                <button class="custom-btn btn-13" th:if="${session.staff==null}">
+                                <!-- <button class="custom-btn btn-13" th:if="${session.staff==null}">
                                     <h7>+ product</h7>
-                                </button>
+                                </button> -->
                             </a>
-                            <h4 style="margin: auto;margin-left: 600px"></h4>
+                            <h4 style="margin: auto;margin-left: 600px; padding-top: 10px;">Dashboard</h4>
                         </ul>
                         <ul th:fragment="login-space" class="nav navbar-nav float-right"
                             style="width: 85px; overflow: hidden;">
@@ -78,7 +79,7 @@
                                 </div>
 
                                 <div th:fragment="profile" class="profile position-fixed">
-                                    <h2>User profile</h2>
+                                    <h2>Staff profile</h2>
                                     <button onclick="closeProfile()" type="button" class="close close-mask"
                                         aria-label="Close">
                                         <span aria-hidden="true" style="font-size: 25px;">&times;</span>
@@ -100,7 +101,12 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <p>Email: </p>
-                                                        <input type="email" class="form-control" th:field="*{email}">
+                                                        <input id="originalEmail" name="originalEmail"
+                                                            th:value="${staff.getEmail()}" hidden>
+                                                        <input id="emailInput" th:field="*{email}" type="email"
+                                                            class="form-control" onfocusout="checkExistEmail()">
+                                                        <span id="emailError"
+                                                            style="color: red;padding-left: 18px;"></span>
                                                     </div>
                                                     <div class="form-group">
                                                         <p>Dob: </p>
@@ -111,7 +117,7 @@
                                                         <input type="text" class="form-control" th:field="*{idcard}">
                                                     </div>
 
-                                                    <button type="submit" class="btn btn-info">
+                                                    <button type="submit" id="submitRegister" class="btn btn-info">
                                                         <i class="fa fa-check"></i>
                                                         Save
                                                     </button>
@@ -208,57 +214,26 @@
                                     #
                                 </th>
                                 <th>
-                                    Image
+                                    Login account ID
                                 </th>
                                 <th>
-                                    Name
+                                    Full-name
                                 </th>
                                 <th>
-                                    Price (VND)
+                                    Time
                                 </th>
                                 <th>
-                                    Quantity
+                                    Status
                                 </th>
-                                <th>
-                                    Categories
-                                </th>
-                                <th>
-                                    Manufacturers
-                                </th>
-                                <th>Description</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="product : ${products}">
-                                <td th:text="${product.id}"></td>
-                                <td><img th:src="${product.images}" alt="Product Image" style="width: 120px;"></td>
-                                <td th:text="${product.name}"></td>
-                                <td th:text="${product.price}" class="formatPrice"></td>
-                                <td th:text="${product.quantity}"></td>
-                                <td th:text="${product.category.name}"></td>
-                                <td th:text="${product.manufacturer.name}"></td>
-                                <td th:text="${product.description}"></td>
-                                <td>
-                                    <a th:href="@{/products/change-newest/{id}(id=${product.id})}"
-                                        th:if="${product.status == 0}">
-                                        <button id="starButton" class="star-button" th:if="${product.isNewest == 0}">
-                                            <i class="fas fa-star"></i>
-                                        </button>
-                                        <button id="starButton" class="star-button selected fas"
-                                            th:if="${product.isNewest == 1}">
-                                            <i class="fas fa-star"></i>
-                                        </button>
-                                    </a>
-                                    <a th:href="@{/products/change-status/{id}(id=${product.id})}">
-                                        <button class="custom-btn btn-5" th:if="${product.status == 0}">Disable</button>
-                                        <button class="custom-btn btn-6" th:if="${product.status == 1}">Enable</button>
-                                    </a>
-                                    <a th:href="@{/products/edit/{id}(id=${product.id})}"
-                                        th:if="${product.status == 0}">
-                                        <button class="custom-btn btn-14" th:if="${session.staff==null}">Edit</button>
-                                    </a>
-                                </td>
+                            <tr th:each="blog : ${blogs}">
+                                <td th:text="${blog.id}"></td>
+                                <td th:text="${blog.staff.getId()}"></td>
+                                <td th:text="${blog.staff.getFullname()}"></td>
+                                <td th:text="${blog.getLoginTime}"></td>
+                                <td th:text="${blog.getLoginStatus()}"></td>
                             </tr>
                         </tbody>
                     </table>
@@ -281,10 +256,7 @@
     </body>
     <script th:inline="javascript">
         new DataTable( '#dataTable', {
-            "order": [ [ 0, "dec" ] ],
-            "columnDefs": [
-                { "orderable": false, "targets": [ 1, 7, 8 ] }
-            ]
+            "order": [ [ 3, "dec" ] ]
         } );
         alert_action(/*[[${ alert }]]*/ )
     </script>

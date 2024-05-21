@@ -28,6 +28,8 @@
                             <div id="productName" class="col-4" th:text="${item.getProduct().getName()}">
                             </div>
                             <div>
+                                <input name="productQuantity" id="productQuantity"
+                                    th:value="${item.getProduct().getQuantity()}" hidden>
                                 <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
                                     style="width: 50px; height: 50px; padding: 0; text-align: center;" readonly>
                             </div>
@@ -36,7 +38,7 @@
                             </div>
                             <div class="col-2">
                                 <!-- <button type="submit" class="close">x</button> -->
-                                <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inList')}"
+                                <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inProductDetail')}"
                                     class="close"><span>x</span></a>
                             </div>
                         </div>
@@ -61,7 +63,6 @@
                 </div>
             </div>
             <!-- end shopping cart -->
-
             <div class="closeMask"></div>
 
             <div>
@@ -79,7 +80,10 @@
                                                 <a href="/" title="Back to the home page">Home</a>
                                             </li>
                                             <li>
-                                                <span>Products</span>
+                                                <a href="/list-products">Products</a>
+                                            </li>
+                                            <li>
+                                                <span th:text="${product.getName()}"></span>
                                             </li>
                                         </ul>
                                     </nav>
@@ -118,57 +122,59 @@
                         </ul>
                     </div>
                     <div class="col-lg-10">
-                        <hr style="width: 600px;">
-                        <div class="container m-2">
-                            <div class="row">
-                                <div class="col-3" th:each=" item: ${products}">
-                                    <div class="product-info">
-                                        <div class="product-img">
-                                            <img th:src="${item.getImages()}" style="height: 180px;">
-                                            <div class="loop-button-wrap">
-                                                <a th:title="|Select options for '${item.getName()}'|"
-                                                    th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}"
-                                                    class="button">Add to cart</a>
+                        <div class="row mt-4">
+                            <div class="col-lg-7">
+                                <div class="product-detail-img">
+                                    <img th:src="${product.getImages()}" style="max-width: 350px; height: auto;">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="product-detail-infor">
+                                    <p class="product-detail-infor-name">Name:</p>
+                                    <span th:text="${product.getName()}"></span>
+
+                                    <p class="product-detail-infor-category">Category:</p>
+                                    <span th:text="${product.getCategory().getName()}"></span>
+
+                                    <p class="product-detail-infor-manufacturer">Manufacturer:</p>
+                                    <span th:text="${product.getManufacturer().getName()}"></span>
+
+                                    <p class="product-detail-infor-price">Price:</p>
+                                    <span th:text="${product.getPrice()}" class="formatPrice"></span>
+
+                                    <p class="product-detail-infor-exist">Available:</p>
+
+                                    <p style="color: green; font-weight: 600; font-size: 15px;"><span
+                                            th:text="${product.getQuantity()}"></span> in stock</p>
+
+                                    <form th:action="@{/users/add-to-cart/{productId}(productId=${product.getId()})}"
+                                        method="GET">
+                                        <input name="mode" value="inProductDetail" hidden>
+                                        <!-- Change the `data-field` of buttons and `name` of input field's for multiple plus minus buttons-->
+                                        <div class="input-group plus-minus-input">
+                                            <div class="input-group-button">
+                                                <button type="button" class="button hollow circle" data-quantity="minus"
+                                                    data-field="quantityInput">
+                                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                            <input class="input-group-field" type="number" name="quantityInput"
+                                                value="1" onkeyup="checkQuantity(this)" readonly>
+                                            <div class="input-group-button">
+                                                <button type="button" class="button hollow circle" data-quantity="plus"
+                                                    data-field="quantityInput">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                </button>
                                             </div>
                                         </div>
-                                        <div class="product-details">
-                                            <div class="product-name">
-                                                <a class="product-name" th:text="${item.getName()}"
-                                                    th:href="@{'/products/get-product-infor/' + ${item.id}}"></a>
-                                            </div>
-                                            <div class="product-price">
-                                                <p class="product-price formatPrice" th:text="${item.getPrice()}"></p>
-                                            </div>
-                                            <div class="product-exist">
-                                                <p class="product-exist">Available:
-                                                    <span th:text="${item.getQuantity()}"></span>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                                        <button type="submit" class="button" style="margin-top: 10px;">Add to
+                                            cart</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div style="margin-left: 520px; padding-bottom: 15px;"
-                        th:if="${products.getNumberOfElements() != 0}">
-                        <div class="dataTables_paginate paging_simple_numbers"
-                            th:each=" item: ${products.getTotalPages()}">
-                            <ul class="pagination">
-                                <li
-                                    th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
-                                    <a class="page-link"
-                                        th:href="@{'/paging?page=' + ${products.number - 1}}">Previous</a>
-                                </li>
-                                <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
-                                <a th:href="@{'/paging?page=' + ${page}}"
-                               th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})"
-                               th:text="${page + 1}"></a>
-                                </li>
-                                <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
-                                    <a class="page-link" th:href="@{'/paging?page=' + ${products.number + 1}}">Next</a>
-                                </li>
-                            </ul>
+                        <div class="col-lg-12 mt-3">
+                            <p th:text="${product.getDescription()}"></p>
                         </div>
                     </div>
                 </div>
@@ -181,7 +187,65 @@
     <button id="topButton"><i class="fa fa-arrow-up"></i></button>
 
     <script th:inline="javascript">
-        var idCategory = /*[[${idCategory}]]*/ null; // Retrieve idCategory from Thymeleaf
+        const max = /*[[${product.quantity}]]*/ 0;
+        function checkQuantity ( e )
+        {
+            let currentValue = $( e ).val()
+            if ( currentValue < 0 )
+            {
+                $( e ).val( 0 );
+            }
+            if ( currentValue > max )
+            {
+                $( e ).val( max );
+            }
+        }
+        jQuery( document ).ready( function ()
+        {
+            // This button will increment the value
+            $( '[data-quantity="plus"]' ).click( function ( e )
+            {
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                fieldName = $( this ).attr( 'data-field' );
+                // Get its current value
+                var currentVal = parseInt( $( 'input[name=' + fieldName + ']' ).val() );
+                // If is not undefined
+                if ( !isNaN( currentVal ) && currentVal < max )
+                {
+                    // Increment
+                    $( 'input[name=' + fieldName + ']' ).val( currentVal + 1 );
+                } else
+                {
+                    // Otherwise put a 0 there
+                    $( 'input[name=' + fieldName + ']' ).val( currentVal );
+                }
+            } );
+            // This button will decrement the value till 0
+            $( '[data-quantity="minus"]' ).click( function ( e )
+            {
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                fieldName = $( this ).attr( 'data-field' );
+                // Get its current value
+                var currentVal = parseInt( $( 'input[name=' + fieldName + ']' ).val() );
+                // If it isn't undefined or its greater than 0
+                if ( !isNaN( currentVal ) && currentVal > 0 )
+                {
+                    // Decrement one
+                    $( 'input[name=' + fieldName + ']' ).val( currentVal - 1 );
+                } else
+                {
+                    // Otherwise put a 0 there
+                    $( 'input[name=' + fieldName + ']' ).val( 0 );
+                }
+            } );
+        } );
+
+
+        var idCategory = /*[[${idCategory}]]*/ null;
         if ( idCategory )
         {
             var checkboxes = document.querySelectorAll( '.cbx input[type="checkbox"]' );

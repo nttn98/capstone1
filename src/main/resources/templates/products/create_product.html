@@ -36,7 +36,7 @@
         <div th:replace="~{products/products.html :: main-menu}"></div>
         <!-- END: Main Menu-->
 
-        <div class="container mt-4">
+        <div class="container mt-4" style="height: 900px;">
             <h2 class="page-title">Add Product</h2>
             <form th:action="@{/products/save-product}" th:object="${product}" method="POST"
                 enctype="multipart/form-data">
@@ -146,37 +146,6 @@
 
     <script th:inline="javascript">
         var editor1 = new RichTextEditor( "#div_editor1" );
-
-        function checkName ()
-        {
-            var name = document.getElementById( "name" ).value.trim();
-            var errorSpan = document.getElementById( 'nameError' );
-            var submitButton = document.getElementById( 'submitForm' );
-
-            fetch( '/checkProductNameAvailability?name=' + encodeURIComponent( name ) )
-                .then( response => response.json() )
-                .then( isAvailable =>
-                {
-                    if ( isAvailable )
-                    {
-                        errorSpan.textContent = '';
-                        submitButton.disabled = false; // Enable the submit button
-                        submitButton.classList.remove( 'btn-danger' ); // Remove red color class
-                        submitButton.classList.add( 'btn-info' ); // Add default color class
-                    } else
-                    {
-                        errorSpan.textContent = 'Name already taken';
-                        submitButton.disabled = true; // Disable the submit button
-                        submitButton.classList.remove( 'btn-info' ); // Remove default color class
-                        submitButton.classList.add( 'btn-danger' ); // Add red color class
-                    }
-                } )
-                .catch( error =>
-                {
-                    console.error( 'Error:', error );
-                    errorSpan.textContent = 'Error fetching user data';
-                } );
-        }
 
         $( '.dropify-wrapper' ).height( $( 'form > div > div:nth-child(2)' ).height() - 60 + 'px' )
 

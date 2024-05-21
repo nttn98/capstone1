@@ -3,15 +3,92 @@
 
     <head th:replace="~{homePage :: head}"></head>
     <link rel="stylesheet" href="/css/order_history.css">
+    <link rel="styleSheet" href="/css/theme-custom.css">
+
     <title>Order History</title>
 
 
     <body class="header_section">
-        <div th:replace="~{homePage :: header_section}"></div>
+        <div th:replace="~{homePage :: header_section}"></div> <!-- shopping cart -->
+        <div class="cart position-fixed">
+            <h2>Shopping Cart</h2>
+            <button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 th:if="${session.cart==null}" style="margin-left: 20px;">There are no items</h3>
+            <!-- product -->
+            <div class="product" th:if="${session.cart!=null}">
+                <div class="container">
+                    <form th:action="@{/users/delete-product-in-cart}" method="POST">
+                        <input name="mode" value="productDetail" hidden>
+                        <div class="row" th:each=" item : ${session.cart.getListItem()}" style="margin-bottom: 10px;">
+                            <div class="col-2">
+                                <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
+                            </div>
+                            <div class="col-4" th:text="${item.getProduct().getName()}">
+                            </div>
+                            <input type="hidden" th:value="${item.getProduct().getId()}" name="productId">
+                            <div>
+                                <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
+                                    style="width: 50px; height: 50px; padding: 0; text-align: center;" readonly>
+                            </div>
+                            <div class="col-2 formatPrice" style="padding-left: 30px; padding-top: 10px;"
+                                th:text="${item.getSubtotal()}">
+                            </div>
+
+                            <div class="col-2">
+                                <button type="submit" class="close">x</button>
+                            </div>
+                        </div>
+                    </form>
+                    <br>
+                </div>
+            </div>
+            <hr th:if="${session.cart != null}">
+            <div class="checkout-space" th:if="${session.cart != null}">
+                <div class=" total-checkout">
+                    <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span>
+                    </h4>
+                </div>
+                <br>
+                <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
+                    <button class="btn-checkout">Checkout
+                    </button>
+                </a>
+                <a onclick="showLogin()" th:if="${session.user == null}">
+                    <button class="btn-checkout">Login
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div class="closeMask"></div>
 
         <div>
             <h2 style="text-align: center; margin-top: 20px; margin-bottom: 20px;">Orders history</h2>
         </div>
+        <div class="breadcrumb-wrapper">
+            <div class="breadcrumb-area breadcrumbs overlay-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="breadcrumb-content text-center">
+                                <nav class role="navigation" aria-label="breadcrumbs">
+                                    <ul class="breadcrumb-list" style="margin-top: 0px;">
+                                        <li>
+                                            <a href="/" title="Back to the home page">Home</a>
+                                        </li>
+                                        <li>
+                                            <span>orders history</span>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- BREADCRUMBS SETCTION END -->
         <div class="m-auto text-center" th:if="${orders.getTotalPages()==0}">
             <h2 style="margin-bottom: 151px">There are no orders now</h2>
         </div>
@@ -69,7 +146,10 @@
                                     <img th:src="${item.product.getImages()}" style="width: 120px;">
                                 </div>
                                 <div class="col-lg-4">
-                                    <h7 th:text="${item.product.getName()}"></h7>
+                                    <h7>
+                                        <a class="product-name" th:text="${item.product.getName()}"
+                                            th:href="@{'/products/get-product-infor/' + ${item.product.getId()}}"></a>
+                                    </h7>
                                 </div>
                                 <div class="col-lg-1">
                                     <p th:text="${item.quantity}">1</p>

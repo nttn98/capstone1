@@ -3,8 +3,6 @@ package com.capstone1.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.capstone1.model.Staff;
 import com.capstone1.services.StaffService;
@@ -67,12 +64,12 @@ public class StaffController {
     @PostMapping("/staffs/update-staff")
     public String updateStaff(@RequestParam long id, Model model, @ModelAttribute Staff staff,
             HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size, @RequestParam String email,
+            @RequestParam("mode") String mode) {
 
         if (session == null) {
             return "loginAdmin_Staff";
         }
-
         Staff existStaff = staffService.getStaffById(id);
 
         existStaff.setFullname(staff.getFullname());
@@ -82,9 +79,14 @@ public class StaffController {
         existStaff.setDob(staff.getDob());
 
         staffService.updateStaff(existStaff);
+
         System.out.println("Staff edited successfully");
         model.addAttribute("alert", "edit");
 
+        if (mode.equals("staff")) {
+            session.setAttribute("staff", existStaff);
+            return homeController.getDashBoardPage(model, session, page, size);
+        }
         return listStaffs(model, session, page, size);
     }
 
@@ -154,22 +156,4 @@ public class StaffController {
 
         return listStaffs(model, session, page, size);
     }
-
-    /* check name is unique */
-    @GetMapping("/checkStaffUsernameAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
-    public ResponseEntity<Boolean> checkStaffUsernameAvailability(@RequestParam("name") String name) {
-        try {
-            Staff staffExist = staffService.findByUserName(name);
-            if (staffExist == null) {
-                return ResponseEntity.ok(true); // name is available
-            } else {
-                return ResponseEntity.ok(false); // name is not available
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-        }
-    }
-
 }

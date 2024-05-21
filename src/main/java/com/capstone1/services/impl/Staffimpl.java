@@ -71,4 +71,15 @@ public class Staffimpl implements StaffService {
         return staffRepository.findAll();
     }
 
+    @Override
+    public boolean checkEmail(String email, String originalEmail) {
+        return staffRepository.existsByEmail(email, originalEmail);
+
+    }
+
+    @Override
+    public boolean checkUsername(String username) {
+        return staffRepository.existsByUsername(username);
+    }
+
 }

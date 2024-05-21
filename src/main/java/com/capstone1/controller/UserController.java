@@ -23,15 +23,16 @@ import com.capstone1.model.Cart;
 import com.capstone1.model.CartItem;
 import com.capstone1.model.Order;
 import com.capstone1.model.Order.PaymentType;
-import com.capstone1.model.User.LoginType;
 import com.capstone1.model.OrderDetail;
 import com.capstone1.model.Product;
 import com.capstone1.model.User;
+import com.capstone1.model.User.LoginType;
 import com.capstone1.services.CartItemService;
 import com.capstone1.services.CartService;
 import com.capstone1.services.OrderDetailService;
 import com.capstone1.services.OrderService;
 import com.capstone1.services.ProductService;
+import com.capstone1.services.StaffService;
 import com.capstone1.services.UserService;
 
 import jakarta.annotation.Resource;
@@ -53,8 +54,12 @@ public class UserController {
     CartItemService cartItemService;
     @Resource
     ProductService productService;
+    @Resource
+    StaffService staffService;
     @Autowired
     HomeController homeController;
+    @Autowired
+    ProductController productController;
     @Autowired
     private Encoding encoding;
 
@@ -100,32 +105,19 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size) {
         User existUser = userService.getUserById(userId);
 
-        List<String> emails = userService.getAllEmails();
-        if (!email.equals(existUser.getEmail())) {
-            for (String e : emails) {
-                if (email.equals(e)) {
-                    model.addAttribute("alert", "errorEdit");
-                    break;
-                }
-            }
-            return homeController.getHome(model, session, page, size);
-        }
-
+        model.addAttribute("alert", "edit");
         existUser.setFullname(user.getFullname());
         existUser.setNumberphone(user.getNumberphone());
         existUser.setAddress(user.getAddress());
         existUser.setEmail(user.getEmail());
         existUser.setDob(user.getDob());
-
         userService.updateUser(existUser);
         System.out.println("User edited successfully");
-        model.addAttribute("alert", "edit");
 
-        if (mode.equals("user")) {
-            session.setAttribute("user", existUser);
-            return homeController.getHome(model, session, page, size);
-        } else {
+        if (mode.equals("adminEdit")) {
             return listUsers(model, session, page, size);
+        } else {
+            return homeController.getHome(model, session, page, size);
         }
     }
 
@@ -158,6 +150,7 @@ public class UserController {
 
         user.setPassword(encoding.toSHA1(user.getPassword()));
         user.setType(LoginType.LOCAL);
+        user.setStatus(1);
         userService.saveUser(user);
         System.out.println("User added successfully");
         model.addAttribute("alert", "successRegister");
@@ -207,12 +200,11 @@ public class UserController {
     }
 
     /* check username is unique */
-    @GetMapping("/checkUserUsernameAvailability")
+    @GetMapping("/checkUsernameAvailability")
     @ResponseBody // Ensure the returned boolean is serialized as a response body
-    public ResponseEntity<Boolean> checkUserUsernameAvailability(@RequestParam("username") String username) {
+    public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam("username") String username) {
         try {
-            User existingUser = userService.findByUsername(username);
-            if (existingUser == null) {
+            if (!userService.checkUsername(username) && !staffService.checkUsername(username)) {
                 return ResponseEntity.ok(true); // Username is available
             } else {
                 return ResponseEntity.ok(false); // Username is not available
@@ -223,15 +215,16 @@ public class UserController {
         }
     }
 
-    @GetMapping("/checkUserEmailAvailability")
+    @GetMapping("/checkEmailAvailability")
     @ResponseBody // Ensure the returned boolean is serialized as a response body
-    public ResponseEntity<Boolean> checkUserEmailAvailability(@RequestParam("email") String email) {
+    public ResponseEntity<Boolean> checkEmailAvailability(@RequestParam("email") String email,
+            @RequestParam("originalEmail") String originalEmail) {
+
         try {
-            User existingUser = userService.findByEmail(email);
-            if (existingUser == null) {
-                return ResponseEntity.ok(true); // Username is available
+            if (!userService.checkEmail(email, originalEmail) && !staffService.checkEmail(email, originalEmail)) {
+                return ResponseEntity.ok(true); // Email is available
             } else {
-                return ResponseEntity.ok(false); // Username is not available
+                return ResponseEntity.ok(false); // Email is not available
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -265,11 +258,11 @@ public class UserController {
             if (cart == null) {
                 cart = cartService.saveCart(new Cart(user));
             }
-
+            session.removeAttribute("cart");
             if (oldCart != null) {
                 for (CartItem item : oldCart.getListItem()) {
                     Product product = item.getProduct();
-                    CartItem cartItem = cartItemService.findByProductId(product.getId());
+                    CartItem cartItem = cartItemService.findByCartIdAndProductId(cart.getId(), product.getId());
                     if (cartItem == null) {
                         cartItem = new CartItem(cart, product, item.getQuantity());
                     } else {
@@ -306,58 +299,64 @@ public class UserController {
     /* order user */
     @GetMapping("/users/add-to-cart/{productId}")
     public String addToCart(Model model, @PathVariable long productId, HttpSession session,
-            @RequestParam(defaultValue = "1") int quantity, @RequestParam("mode") String mode,
+            @RequestParam(defaultValue = "1") int quantityInput, @RequestParam("mode") String mode,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "8") int size) {
 
         Long userId = (Long) session.getAttribute("userId");
         Cart cart = (Cart) session.getAttribute("cart");
         Product temp = productService.getProductById(productId);
 
         if (userId == null) {
-            addToCartWithoutUser(session, cart, temp);
+            addToCartWithoutUser(session, cart, temp, quantityInput);
         } else {
             User user = userService.getUserById(userId);
-            addToCartWithUser(session, cart, temp, user);
+            addToCartWithUser(session, cart, temp, user, quantityInput);
         }
 
         if (mode.equals("inList")) {
             return homeController.paginated(model, session, page, size);
         } else if (mode.equals("inHome")) {
             return "redirect:/home-page";
+        } else if (mode.equals("inProductDetail")) {
+            return productController.getProductInfor(productId, model, session);
         } else {
             return "redirect:/home-page";
+
         }
     }
 
-    private void addToCartWithUser(HttpSession session, Cart cart, Product product, User user) {
+    private void addToCartWithUser(HttpSession session, Cart cart, Product product, User user, int quantityInput) {
         if (cart == null) {
             cart = cartService.saveCart(new Cart(user));
         }
         CartItem cartItem = cartItemService.findByCartIdAndProductId(cart.getId(), product.getId());
 
         if (cartItem == null) {
-            cartItem = cartItemService.save(new CartItem(cart, product, 1));
+            cartItem = cartItemService.save(new CartItem(cart, product, quantityInput));
         } else {
-            cartItem.setQuantity(cartItem.getQuantity() + 1);
+            cartItem.setQuantity(cartItem.getQuantity() + quantityInput);
             cartItemService.save(cartItem);
         }
 
-        cart.addProduct(product, cart);
+        cart.addProduct(product, cart, quantityInput);
         session.setAttribute("cart", cart);
     }
 
-    private void addToCartWithoutUser(HttpSession session, Cart cart, Product product) {
+    private void addToCartWithoutUser(HttpSession session, Cart cart, Product product, int quantityInput) {
         if (cart == null) {
             cart = new Cart();
         }
-        cart.addProduct(product, cart);
+        cart.addProduct(product, cart, quantityInput);
         session.setAttribute("cart", cart);
 
     }
 
-    @PostMapping("/users/delete-product-in-cart")
-    public String deleteToCart(Model model, @RequestParam long productId, HttpSession session) {
+    @GetMapping("/users/delete-product-in-cart")
+    public String deleteToCart(Model model, @RequestParam("productId") long productId, HttpSession session,
+            @RequestParam("mode") String mode, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
         Cart cart = (Cart) session.getAttribute("cart");
         Long userId = (Long) session.getAttribute("userId");
 
@@ -365,14 +364,23 @@ public class UserController {
             cart.deleteByProductId(productId);
             if (cart.getTotal() == 0) {
                 cart = null;
+                session.removeAttribute("cart");
             }
         } else { // with login
-            cartItemService.deleteByProductId(productId);
+            cartItemService.deleteByProductIdAndCartId(productId, cart.getId());
             cart.removeItem(productId);
             if (cart.getListItem().size() == 0) {
                 cartService.deleteByUserId(userId);
                 cart = null;
+                session.removeAttribute("cart");
             }
+        }
+        if (mode.equals("inList")) {
+            return homeController.paginated(model, session, page, size);
+        } else if (mode.equals("inCheckout")) {
+            return checkOut(model, session);
+        } else if (mode.equals("inProductDetail")) {
+            return productController.getProductInfor(productId, model, session);
         }
 
         session.setAttribute("cart", cart);
@@ -407,19 +415,18 @@ public class UserController {
             order = orderService.saveOrder(new Order(0, userLogin, now));
             for (int i = 0; i < cart.getListItem().size(); i++) {
                 Product product = cart.getListItem().get(i).getProduct();
+                Product productInDb = productService.getProductById(product.getId());
+
                 double subtotal = product.getPrice();
+                CartItem tempProduct = cartItemService.findByCartIdAndProductId(cart.getId(), product.getId());
 
                 OrderDetail tempOrderDetail = orderDetailService
-                        .saveOrderDetail(new OrderDetail(order, product,
-                                cartItemService.findByProductId(product.getId()).getQuantity(), subtotal));
-
-                CartItem temp = cartItemService.findByProductId(product.getId());
+                        .saveOrderDetail(new OrderDetail(order, product, tempProduct.getQuantity(), subtotal));
 
                 // change quantity after order
-                Product productAfter = productService.getProductById(product.getId());
-                productAfter.setQuantity(productAfter.getQuantity() - temp.getQuantity());
+                productInDb.setQuantity(productInDb.getQuantity() - tempProduct.getQuantity());
 
-                cartItemService.deleteByProductId(product.getId());
+                cartItemService.deleteByProductIdAndCartId(product.getId(), cart.getId());
                 total += tempOrderDetail.getFinalPrice();
 
             }

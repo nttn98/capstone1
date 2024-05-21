@@ -77,8 +77,13 @@ public class Userimpl implements UserService {
     }
 
     @Override
-    public List<String> getAllEmails() {
-        return userRepository.findAllEmails();
+    public boolean checkEmail(String email, String originalEmail) {
+        return userRepository.existsByEmail(email, originalEmail);
+    }
+
+    @Override
+    public boolean checkUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
 }

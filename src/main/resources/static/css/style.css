@@ -1518,3 +1518,11 @@ svg.icon {
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
 }
+
+a.close>span {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    top: 25%;
+    font-size: 19px;
+}
