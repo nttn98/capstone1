@@ -162,13 +162,13 @@ function closeLogin ()
 
 function showcart ()
 {
-    $( '.cart' ).addClass( "w-40" )
+    $( '.cart' ).addClass( "w-43" )
     $( '.closeLogin' ).fadeIn();
     $( '.closeMask' ).fadeIn();
 }
 
 function closecart ()
 {
-    $( '.cart' ).removeClass( "w-40" )
+    $( '.cart' ).removeClass( "w-43" )
     $( '.closeMask' ).fadeOut();
 }

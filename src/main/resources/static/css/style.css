@@ -50,6 +50,10 @@ body {
     width: 40% !important;
 }
 
+.w-43 {
+    width: 43% !important;
+}
+
 .w-25 {
     width: 25% !important;
 }
@@ -1525,4 +1529,9 @@ a.close>span {
     position: relative;
     top: 25%;
     font-size: 19px;
+}
+
+.button.dec, .button.ins {
+    border-radius: 50%;
+    padding: 0.25em 0.8em;
 }

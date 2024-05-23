@@ -34,4 +34,9 @@ public class CartItemimpl implements CartItemService {
         return cartItemRepository.findByCartIdAndProductId(cartId, productId);
     }
 
+    @Override
+    public CartItem updateQuantityInCart(CartItem cartItem) {
+        return cartItemRepository.save(cartItem);
+    }
+
 }

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.model.Cart;
 import com.capstone1.model.CartItem;
@@ -352,6 +354,44 @@ public class UserController {
 
     }
 
+    @GetMapping("/users/total")
+    @ResponseBody
+    public int getTotalCartValue(@RequestParam("cartId") Long cartId) {
+        Cart cart = cartService.findById(cartId);
+        int total = cart.getTotal();
+        return total;
+    }
+
+    @GetMapping("/users/update-quantity-in-cart")
+    public String updateQuantityInCart(@RequestParam("productId") long productId,
+            @RequestParam("quantity") int quantity,
+            @RequestParam("cartId") long cartId, Model model, HttpSession session,
+            @RequestParam("mode") String mode) {
+        quantity = 1;
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            CartItem cartItem = cartItemService.findByCartIdAndProductId(cartId,
+                    productId);
+            if (mode.equals("minus")) {
+                cartItem.setQuantity(cartItem.getQuantity() - quantity);
+            } else if (mode.equals("plus")) {
+                cartItem.setQuantity(cartItem.getQuantity() + quantity);
+
+            }
+            cartItemService.updateQuantityInCart(cartItem);
+            if (cartItem.getQuantity() == 0) {
+                cartItemService.deleteByProductIdAndCartId(productId, cartId);
+            }
+            session.setAttribute("cart", cartService.findByUserId(user.getId()));
+        }
+        // if (user == null) {
+        // Cart cart = (Cart) session.getAttribute("cart");
+        // List<CartItem> iCartItem = cart.getListItem();
+        // }
+
+        return homeController.getHome(model, session, 0, 10);
+    }
+
     @GetMapping("/users/delete-product-in-cart")
     public String deleteToCart(Model model, @RequestParam("productId") long productId, HttpSession session,
             @RequestParam("mode") String mode, @RequestParam(defaultValue = "0") int page,
@@ -489,4 +529,5 @@ public class UserController {
         model.addAttribute("orderDetails", orderDetails);
         return orderDetails;
     }
+
 }

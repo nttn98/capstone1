@@ -10,6 +10,8 @@ public interface CartService {
 
     Cart saveCart(Cart cart);
 
+    Cart findById(long cartId);
+
     @Transactional
     void deleteByUserId(long userId);
 }

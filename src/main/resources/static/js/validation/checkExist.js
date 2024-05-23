@@ -1,7 +1,7 @@
 function checkUsername ()
 {
-    var username = document.getElementById( "usernameInput" ).value.trim();
-    var errorSpan = document.getElementById( 'usernameError' );
+    var username = document.getElementById( 'usernameInput' ).value.trim();
+    var usernameError = document.getElementById( 'usernameError' );
     var submitButton = document.getElementById( 'submitRegister' );
 
     fetch( '/checkUsernameAvailability?username=' + encodeURIComponent( username ) )
@@ -10,13 +10,20 @@ function checkUsername ()
         {
             if ( isAvailable )
             {
-                errorSpan.textContent = '';
+                usernameError.textContent = '';
                 submitButton.disabled = false; // Enable the submit button
                 submitButton.classList.remove( 'btn-danger' ); // Remove red color class
                 submitButton.classList.add( 'btn-info' ); // Add default color class
             } else
             {
-                errorSpan.textContent = 'Username already taken';
+                usernameError.textContent = 'Username already taken';
+                submitButton.disabled = true; // Disable the submit button
+                submitButton.classList.remove( 'btn-info' ); // Remove default color class
+                submitButton.classList.add( 'btn-danger' ); // Add red color class
+            }
+            var emailError = document.getElementById( 'emailError' );
+            if ( usernameError.textContent.length == 0 && emailError.textContent.length != 0 )
+            {
                 submitButton.disabled = true; // Disable the submit button
                 submitButton.classList.remove( 'btn-info' ); // Remove default color class
                 submitButton.classList.add( 'btn-danger' ); // Add red color class
@@ -25,7 +32,7 @@ function checkUsername ()
         .catch( error =>
         {
             console.error( 'Error:', error );
-            errorSpan.textContent = 'Error fetching user data';
+            usernameError.textContent = 'Error fetching user data';
         } );
 }
 
@@ -50,6 +57,13 @@ function checkExistEmail ()
             } else
             {
                 errorSpan.textContent = 'Email already taken';
+                submitButton.disabled = true; // Disable the submit button
+                submitButton.classList.remove( 'btn-info' ); // Remove default color class
+                submitButton.classList.add( 'btn-danger' ); // Add red color class
+            }
+            var usernameError = document.getElementById( 'usernameError' );
+            if ( usernameError.textContent.length != 0 && errorSpan.textContent.length == 0 )
+            {
                 submitButton.disabled = true; // Disable the submit button
                 submitButton.classList.remove( 'btn-info' ); // Remove default color class
                 submitButton.classList.add( 'btn-danger' ); // Add red color class

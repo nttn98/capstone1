@@ -12,6 +12,8 @@ public interface CartItemService {
 
     public CartItem findByCartIdAndProductId(long cartId, long productId);
 
+    public CartItem updateQuantityInCart(CartItem cartItem);
+
     @Transactional
     void deleteByProductIdAndCartId(long productId, long cartId);
 
