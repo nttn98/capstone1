@@ -8,6 +8,7 @@ document.addEventListener( "DOMContentLoaded", function ()
     var cartIdElement = document.getElementById( 'cartId' );
     var cartId = cartIdElement ? cartIdElement.value : null;
     var mode = '';
+
     // Iterate over each row
     cartRows.forEach( function ( row )
     {
@@ -56,6 +57,17 @@ document.addEventListener( "DOMContentLoaded", function ()
 
                     mode = 'plus';
                     updateQuantity( quantityValue, row, productQuantityValue, productIdValue, mode );
+                } else
+                {
+                    var error = Error( `Quantity cannot exceed available stock. Available: ${ productQuantityValue }` );
+                    $.toast( {
+                        heading: error.message,
+                        position: 'top-right',
+                        loaderBg: '#ff6849',
+                        icon: 'error',
+                        hideAfter: 2500,
+                        stack: 6,
+                    } );
                 }
             } );
 
@@ -64,17 +76,18 @@ document.addEventListener( "DOMContentLoaded", function ()
             {
                 console.log( 'Insufficient stock for product:', row.querySelector( '#productName' ).innerText );
                 row.classList.add( 'insufficient-stock' );
-                insufficientStock = true;
+                // insufficientStock = true;
             }
         }
     } );
 
+    checkCartStockStatus();
 
     // Disable checkout button if there's insufficient stock
-    if ( insufficientStock )
-    {
-        checkoutButton.disabled = true;
-    }
+    // if ( insufficientStock )
+    // {
+    //     checkoutButton.disabled = true;
+    // }
 
     async function updateQuantity ( quantityValue, row, productQuantityValue, productIdValue, mode )
     {
@@ -106,6 +119,16 @@ document.addEventListener( "DOMContentLoaded", function ()
                 document.getElementById( "total" ).textContent = formatMoney( totalInDbValue );
             }
 
+            $.toast( {
+                heading: 'Update quantity successfully !',
+                position: 'top-right',
+                loaderBg: '#ff6849',
+                icon: 'success',
+                hideAfter: 1500,
+                stack: 6,
+            } );
+
+
             if ( quantityValue == 0 )
             {
                 window.location.href = "/";
@@ -115,7 +138,35 @@ document.addEventListener( "DOMContentLoaded", function ()
             {
                 location.reload();
             }
+            checkCartStockStatus();
         }
+    }
+    function checkCartStockStatus ()
+    {
+        var insufficientStock = false;
+
+        cartRows.forEach( function ( row )
+        {
+            var productQuantity = row.querySelector( '#productQuantity' );
+            var quantity = row.querySelector( '#quantity' );
+
+            if ( productQuantity && quantity )
+            {
+                var productQuantityValue = parseInt( productQuantity.value, 10 );
+                var quantityValue = parseInt( quantity.value, 10 );
+
+                if ( quantityValue > productQuantityValue )
+                {
+                    row.classList.add( 'insufficient-stock' );
+                    insufficientStock = true;
+                } else
+                {
+                    row.classList.remove( 'insufficient-stock' );
+                }
+            }
+        } );
+
+        checkoutButton.disabled = insufficientStock;
     }
 } );
 
