@@ -141,9 +141,12 @@
                                         <div class="product-img">
                                             <img th:src="${item.getImages()}" style="height: 180px;">
                                             <div class="loop-button-wrap">
-                                                <a th:title="|Select options for '${item.getName()}'|"
+                                                <a th:title="|Select '${item.getName()}'|"
                                                     th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}"
-                                                    class="button">Add to cart</a>
+                                                    class="button" th:if="${item.getQuantity()>0}">Add to cart</a>
+                                                <a class="button" th:if="${item.getQuantity()<=0}" disable
+                                                    style="background-color: rgba(134, 4, 4, 0.97); border: red;">Out of
+                                                    stock</a>
                                             </div>
                                         </div>
                                         <div class="product-details">
@@ -155,8 +158,13 @@
                                                 <p class="product-price formatPrice" th:text="${item.getPrice()}"></p>
                                             </div>
                                             <div class="product-exist">
-                                                <p class="product-exist">Available:
+                                                <p class="product-exist" th:if="${item.getQuantity()>0}">
+                                                    Available:
                                                     <span th:text="${item.getQuantity()}"></span>
+                                                </p>
+                                                <p class="product-exist" th:if="${item.getQuantity()<=0}"
+                                                    style="color: red;">
+                                                    Out of stock
                                                 </p>
                                             </div>
                                         </div>

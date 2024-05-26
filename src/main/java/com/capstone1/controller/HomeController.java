@@ -592,7 +592,7 @@ public class HomeController {
             helper.setFrom("contact@shopme.com", "NAP Support");
 
             String subject = "Hello " + name;
-            String content = "<p>Hello,This is automated reply </p>"
+            String content = "<p>Hello my valued customer,this is automated reply </p>"
                     + "<p>Thank you for trusting our service. We will reply to you as soon as possible.</p>";
 
             helper.setSubject(subject);

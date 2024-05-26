@@ -155,9 +155,15 @@
                                     <p class="product-detail-infor-price">Price:</p>
                                     <span th:text="${product.getPrice()}" class="formatPrice"></span>
 
-                                    <p class="product-detail-infor-exist">Available:</p>
+                                    <p class="product-detail-infor-exist" th:if="${product.getQuantity()>0}">Available:
+                                    </p>
 
-                                    <p style="color: green; font-weight: 600; font-size: 15px;"><span
+                                    <p
+                                        style="color: rgb(153, 10, 10); font-weight: 600; font-size: 18px; margin-top: 5px;">
+                                        <span th:if="${product.getQuantity()<=0}"></span>Out of stock</p>
+
+                                    <p style="color: green; font-weight: 600; font-size: 15px;"
+                                        th:if="${product.getQuantity()>0}"><span
                                             th:text="${product.getQuantity()}"></span> in stock</p>
 
                                     <form th:action="@{/users/add-to-cart/{productId}(productId=${product.getId()})}"
@@ -180,8 +186,12 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <button type="submit" class="button" style="margin-top: 10px;">Add to
+                                        <button type="submit" class="button" style="margin-top: 10px;"
+                                            th:if="${product.getQuantity()>0}">Add to
                                             cart</button>
+                                        <button type="submit" class="button"
+                                            style="margin-top: 10px;background-color: rgba(134, 4, 4, 0.97); border: red;"
+                                            thif="${product.getQuantity()<=0}" disabled>Out of stock</button>
                                     </form>
                                 </div>
                             </div>
