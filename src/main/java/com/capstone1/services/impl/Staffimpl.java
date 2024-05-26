@@ -82,4 +82,9 @@ public class Staffimpl implements StaffService {
         return staffRepository.existsByUsername(username);
     }
 
+    @Override
+    public boolean checkIdcard(long idcard) {
+        return staffRepository.existsByIdcard(idcard);
+    }
+
 }

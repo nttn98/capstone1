@@ -7,7 +7,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
 
-		<link rel="shortcut icon" href="logo.png" type="image/png">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
 
 		<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -92,6 +91,10 @@
 												<form action="/staffs/update-staff" method="POST" th:object="${staff}">
 													<input type="hidden" name="id" th:field="*{id}">
 													<input type="hidden" name="mode" value="staff">
+													<input type="hidden" name="mode" value="staff"><input
+														id="usernameInput" th:field="*{username}" type="text"
+														class="form-control" hidden>
+													<span id="usernameError" style="color: red;"></span>
 													<div class="form-group">
 														<p>Full-name: </p>
 														<input type="text" class="form-control" th:field="*{fullname}">
@@ -116,7 +119,8 @@
 													</div>
 													<div class="form-group">
 														<p>Id card: </p>
-														<input type="text" class="form-control" th:field="*{idcard}">
+														<input type="text" class="form-control" th:field="*{idcard}"
+															readonly>
 													</div>
 
 													<button type="submit" id="submitRegister" class="btn btn-info">
@@ -249,7 +253,7 @@
 								<td>[(${product.description})]</td>
 								<td>
 									<a th:href="@{/products/change-newest/{id}(id=${product.id})}"
-										th:if="${product.status == 0}">
+										th:if="${product.status == 1}">
 										<button id="starButton" class="star-button" th:if="${product.isNewest == 0}">
 											<i class="fas fa-star"></i>
 										</button>
@@ -259,11 +263,11 @@
 										</button>
 									</a>
 									<a th:href="@{/products/change-status/{id}(id=${product.id})}">
-										<button class="custom-btn btn-5" th:if="${product.status == 0}">Disable</button>
-										<button class="custom-btn btn-6" th:if="${product.status == 1}">Enable</button>
+										<button class="custom-btn btn-5" th:if="${product.status == 1}">Disable</button>
+										<button class="custom-btn btn-6" th:if="${product.status == 0}">Enable</button>
 									</a>
 									<a th:href="@{/products/edit/{id}(id=${product.id})}"
-										th:if="${product.status == 0}">
+										th:if="${product.status == 1}">
 										<button class="custom-btn btn-14" th:if="${session.staff==null}">Edit</button>
 									</a>
 								</td>

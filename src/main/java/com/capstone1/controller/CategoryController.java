@@ -59,7 +59,7 @@ public class CategoryController {
     public String saveCategory(Model model, @ModelAttribute Category category,
             HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+        category.setStatus(1);
         System.out.println("Category added successfully");
         categoryService.saveCategory(category);
         model.addAttribute("alert", "success");

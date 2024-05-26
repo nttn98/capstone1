@@ -29,12 +29,14 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label for="staffName" class="col-md-12">
+								<label for="usernameInput" class="col-md-12">
 									<h5>User-name</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="staffName" th:field="*{username}" type="text" class="form-control"
+									<input id="usernameInput" th:field="*{username}" type="text" class="form-control"
 										readonly>
+									<span id="usernameError" style="color: red;"></span>
+
 								</div>
 							</div>
 							<div class="form-group">
@@ -62,7 +64,7 @@
 								</label>
 								<div class="col-md-12">
 									<input id="idCard" th:field="*{idcard}" type="text" class="form-control"
-										onkeydown="return onlyNumbers(event)">
+										onkeydown="return onlyNumbers(event)" readonly>
 								</div>
 							</div>
 							<div class="form-group">

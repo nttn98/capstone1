@@ -105,3 +105,41 @@ function checkName ()
             errorSpan.textContent = 'Error fetching user data';
         } );
 }
+function checkIdcard ()
+{
+    var idcard = document.getElementById( "idcard" ).value.trim();
+    var errorSpan = document.getElementById( 'idcardError' );
+    var submitButton = document.getElementById( 'submitRegister' );
+
+    fetch( '/checkIdcardAvailability?idcard=' + encodeURIComponent( idcard ) )
+        .then( response => response.json() )
+        .then( isAvailable =>
+        {
+            if ( isAvailable )
+            {
+                errorSpan.textContent = '';
+                submitButton.disabled = false; // Enable the submit button
+                submitButton.classList.remove( 'btn-danger' ); // Remove red color class
+                submitButton.classList.add( 'btn-info' ); // Add default color class
+            } else
+            {
+                errorSpan.textContent = 'Idcard already taken';
+                submitButton.disabled = true; // Disable the submit button
+                submitButton.classList.remove( 'btn-info' ); // Remove default color class
+                submitButton.classList.add( 'btn-danger' ); // Add red color class
+            }
+            var usernameError = document.getElementById( 'usernameError' );
+            var emailError = document.getElementById( 'emailError' );
+            if ( emailError.textContent.length != 0 || usernameError.textContent.length != 0 && errorSpan.textContent.length == 0 )
+            {
+                submitButton.disabled = true; // Disable the submit button
+                submitButton.classList.remove( 'btn-info' ); // Remove default color class
+                submitButton.classList.add( 'btn-danger' ); // Add red color class
+            }
+        } )
+        .catch( error =>
+        {
+            console.error( 'Error:', error );
+            errorSpan.textContent = 'Error fetching user data';
+        } );
+}

@@ -50,6 +50,10 @@
                                                 <form action="/staffs/update-staff" method="POST" th:object="${staff}">
                                                     <input type="hidden" name="id" th:field="*{id}">
                                                     <input type="hidden" name="mode" value="staff">
+                                                    <input type="hidden" name="mode" value="staff"><input
+                                                        id="usernameInput" th:field="*{username}" type="text"
+                                                        class="form-control" hidden>
+                                                    <span id="usernameError" style="color: red;"></span>
                                                     <div class="form-group">
                                                         <p>Full-name: </p>
                                                         <input type="text" class="form-control" th:field="*{fullname}">
@@ -74,7 +78,8 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <p>Id card: </p>
-                                                        <input type="text" class="form-control" th:field="*{idcard}">
+                                                        <input type="text" class="form-control" th:field="*{idcard}"
+                                                            readonly>
                                                     </div>
 
                                                     <button type="submit" id="submitRegister" class="btn btn-info">
@@ -345,7 +350,7 @@
             }
         } );
         new DataTable( '#dataTable', {
-            "order": [ [ 0, "dec" ] ],
+            "order": [ [ 3, "dec" ] ],
             "columnDefs": [
                 { "orderable": false, "targets": [ 6, 7 ] } // Non-sortable columns 7 and 8 (indices 6 and 7)
             ]

@@ -105,6 +105,7 @@ public class ManufacturerController {
             String uploadDir = "manufacturer-upload/";
 
             manufacturer.setImages("/manufacturer-upload/" + fileName);
+            manufacturer.setStatus(1);
             manufacturerService.saveManufacturer(manufacturer);
 
             saveFile(uploadDir, fileName, file);

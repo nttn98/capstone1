@@ -1,5 +1,6 @@
 document.addEventListener( "DOMContentLoaded", function ()
 {
+    var page = document.getElementById( 'page' ).value;
     // Select all rows in the cart
     var cartRows = document.querySelectorAll( '.row' );
     var checkoutButton = document.getElementById( 'checkoutBtn' );
@@ -7,7 +8,6 @@ document.addEventListener( "DOMContentLoaded", function ()
     var cartIdElement = document.getElementById( 'cartId' );
     var cartId = cartIdElement ? cartIdElement.value : null;
     var mode = '';
-
     // Iterate over each row
     cartRows.forEach( function ( row )
     {
@@ -69,6 +69,7 @@ document.addEventListener( "DOMContentLoaded", function ()
         }
     } );
 
+
     // Disable checkout button if there's insufficient stock
     if ( insufficientStock )
     {
@@ -109,6 +110,10 @@ document.addEventListener( "DOMContentLoaded", function ()
             {
                 window.location.href = "/";
 
+            }
+            if ( page === 'checkout' )
+            {
+                location.reload();
             }
         }
     }

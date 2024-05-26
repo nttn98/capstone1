@@ -28,4 +28,7 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
 
     @Query("SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END FROM Staff s WHERE s.username = :username")
     boolean existsByUsername(@Param("username") String username);
+
+    @Query("SELECT CASE WHEN COUNT(s) > 0 THEN true ELSE false END FROM Staff s WHERE s.idcard = :idcard")
+    boolean existsByIdcard(@Param("idcard") long idcard);
 }

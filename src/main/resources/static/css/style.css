@@ -1531,7 +1531,12 @@ a.close>span {
     font-size: 19px;
 }
 
-.button.dec, .button.ins {
+.increaseBtn, .decreaseBtn {
     border-radius: 50%;
     padding: 0.25em 0.8em;
+}
+
+.insufficient-stock {
+    color: red;
+    font-weight: 600;
 }

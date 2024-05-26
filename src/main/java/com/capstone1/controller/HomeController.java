@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.eclipse.angus.mail.handlers.image_gif;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.capstone1.model.Admin;
 import com.capstone1.model.BlogLogin;
+import com.capstone1.model.BlogLogin.LoginStatus;
 import com.capstone1.model.Category;
 import com.capstone1.model.Contact;
 import com.capstone1.model.Manufacturer;
@@ -34,7 +34,6 @@ import com.capstone1.model.Staff;
 import com.capstone1.model.TokenAdmin;
 import com.capstone1.model.TokenUser;
 import com.capstone1.model.User;
-import com.capstone1.model.BlogLogin.LoginStatus;
 import com.capstone1.services.AdminService;
 import com.capstone1.services.BlogLoginService;
 import com.capstone1.services.CartItemService;
@@ -98,17 +97,17 @@ public class HomeController {
             @RequestParam(defaultValue = "10") int size) {
 
         int limit = 3;
-        Page<Product> newests = productService.findByIsNewestAndStatus(1, 0, PageRequest.of(page, 1));
+        Page<Product> newests = productService.findByIsNewestAndStatus(1, 1, PageRequest.of(page, 1));
         List<Product> products = productService.getNewestProducts();
         products = products.subList(1, Math.min(size, products.size()));
 
         Page<Product> productsByNVIDIA = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus(
                 "nvidia", 0,
-                0, PageRequest.of(page, limit));
+                1, PageRequest.of(page, limit));
 
         Page<Product> productsByAMD = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus("amd",
                 0,
-                0, PageRequest.of(page, limit));
+                1, PageRequest.of(page, limit));
 
         model.addAttribute("newests", newests);
         model.addAttribute("products", products);
@@ -129,16 +128,16 @@ public class HomeController {
         String condition = (String) session.getAttribute("condition");
 
         if (condition.equals("all")) {
-            products = productService.findByStatus(PageRequest.of(page, size), 0);
+            products = productService.findByStatus(PageRequest.of(page, size), 1);
         } else if (condition.equals("category")) {
 
             String categoryName = (String) session.getAttribute("categoryName");
-            products = productService.findByCategoryNameAndStatus(categoryName, 0, PageRequest.of(page, size));
+            products = productService.findByCategoryNameAndStatus(categoryName, 1, PageRequest.of(page, size));
 
         } else if (condition.equals("manufacturer")) {
             String manufacturerName = (String) session.getAttribute("manufacturerName");
             products = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus(manufacturerName, 0,
-                    0,
+                    1,
                     PageRequest.of(page, size));
         }
 
@@ -158,7 +157,7 @@ public class HomeController {
     @GetMapping("/list-products")
     public String getProductsForUser(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size) {
-        Page<Product> listProducts = productService.findByStatus(PageRequest.of(page, size), 0);
+        Page<Product> listProducts = productService.findByStatus(PageRequest.of(page, size), 1);
         List<Category> listCategories = categoryService.getAll();
         List<Manufacturer> listManufacturers = manufacturerService.getAll();
 
@@ -179,7 +178,7 @@ public class HomeController {
 
         isUserLogin(model, session);
         if (categoryName != null) {
-            Page<Product> products = productService.findByCategoryNameAndStatus(categoryName, 0,
+            Page<Product> products = productService.findByCategoryNameAndStatus(categoryName, 1,
                     PageRequest.of(page, size));
             Category category = categoryService.findByName(categoryName);
             long idCategory = category.getId();
@@ -208,7 +207,7 @@ public class HomeController {
         if (manufacturerName != null) {
             Page<Product> products = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus(
                     manufacturerName, 0,
-                    0, PageRequest.of(page, size));
+                    1, PageRequest.of(page, size));
             model.addAttribute("products", products);
         }
 

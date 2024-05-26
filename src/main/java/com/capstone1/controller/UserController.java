@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.model.Cart;
 import com.capstone1.model.CartItem;
@@ -119,6 +117,7 @@ public class UserController {
         if (mode.equals("adminEdit")) {
             return listUsers(model, session, page, size);
         } else {
+            session.setAttribute("user", existUser);
             return homeController.getHome(model, session, page, size);
         }
     }
@@ -194,6 +193,7 @@ public class UserController {
         }
 
         if (mode.equals("user")) {
+            session.removeAttribute("user");
             return homeController.getHome(model, session, page, size);
         } else {
             return "redirect:/users";
@@ -478,7 +478,6 @@ public class UserController {
             order.setType(PaymentType.COD);
             cartService.deleteByUserId(userLogin.getId());
             cart.getListItem().clear();
-
         }
         session.removeAttribute("cart");
         orderService.saveOrder(order);

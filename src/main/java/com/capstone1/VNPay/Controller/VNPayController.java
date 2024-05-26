@@ -92,28 +92,28 @@ public class VNPayController {
                 order = orderService.saveOrder(new Order(0, userLogin, now));
                 for (int i = 0; i < cart.getListItem().size(); i++) {
                     Product product = cart.getListItem().get(i).getProduct();
-                    double subtotal = product.getPrice();
-                    OrderDetail tempOrderDetail = orderDetailService
-                            .saveOrderDetail(new OrderDetail(order, product,
-                                    cartItemService.findByProductId(product.getId()).getQuantity(), subtotal));
+                    Product productInDb = productService.getProductById(product.getId());
 
-                    CartItem temp = cartItemService.findByProductId(product.getId());
+                    double subtotal = product.getPrice();
+                    CartItem tempProduct = cartItemService.findByCartIdAndProductId(cart.getId(), product.getId());
+
+                    OrderDetail tempOrderDetail = orderDetailService
+                            .saveOrderDetail(new OrderDetail(order, product, tempProduct.getQuantity(), subtotal));
 
                     // change quantity after order
-                    Product productAfter = productService.getProductById(product.getId());
-                    productAfter.setQuantity(productAfter.getQuantity() - temp.getQuantity());
+                    productInDb.setQuantity(productInDb.getQuantity() - tempProduct.getQuantity());
 
                     cartItemService.deleteByProductIdAndCartId(product.getId(), cart.getId());
                     total += tempOrderDetail.getFinalPrice();
                 }
+
                 order.setReceiverName(name);
                 order.setReceiverAddress(address);
                 order.setReceiverNumberphone(numberphone);
-                order.setType(PaymentType.CREDIT);
                 order.setTotal(total);
+                order.setType(PaymentType.CREDIT);
                 cartService.deleteByUserId(userLogin.getId());
                 cart.getListItem().clear();
-
             }
             session.removeAttribute("cart");
             orderService.saveOrder(order);

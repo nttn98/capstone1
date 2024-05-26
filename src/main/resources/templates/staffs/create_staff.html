@@ -28,7 +28,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="staffName" class="col-md-12">
+                                <label for="usernameInput" class="col-md-12">
                                     <h5>Staff-Username</h5>
                                 </label>
                                 <div class="col-md-12">
@@ -58,14 +58,6 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="idCard" class="col-md-12">
-                                    <h5>Id-card</h5>
-                                </label>
-                                <div class="col-md-12">
-                                    <input id="idCard" th:field="*{idcard}" type="text" class="form-control" required>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label for="email" class="col-md-12">
                                     <h5>Email</h5>
                                 </label>
@@ -74,6 +66,16 @@
                                     <input id="emailInput" th:field="*{email}" type="email" class="form-control"
                                         onfocusout="checkExistEmail()">
                                     <span id="emailError" style="color: red;"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="idCard" class="col-md-12">
+                                    <h5>Id-card</h5>
+                                </label>
+                                <div class="col-md-12">
+                                    <input id="idcard" th:field="*{idcard}" type="text" class="form-control" required
+                                        onfocusout="checkIdcard()">
+                                    <span id="idcardError" style="color: red;"></span>
                                 </div>
                             </div>
                             <div class="form-group">

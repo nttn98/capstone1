@@ -21,24 +21,39 @@
                 <!-- product -->
                 <div class="product" th:if="${session.cart!=null}">
                     <div class="container">
+                        <input id="cartId" name="cartId" th:value="${session.cart.getId()}" hidden>
                         <div class="row" th:each=" item : ${session.cart.getListItem()}" style="margin-bottom: 10px;">
                             <div class="col-2">
                                 <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
                             </div>
-                            <div id="productName" class="col-4" th:text="${item.getProduct().getName()}">
+                            <div id="productName" class="col-4" style="max-width: 30%;"
+                                th:text="${item.getProduct().getName()}">
                             </div>
+
                             <div>
+                                <input id="page" name="page" value="products" hidden>
+                                <input id="productId" name="productId" th:value="${item.getProduct().getId()}" hidden>
+                                <input id="productPrice" name="productPrice" th:value="${item.getProduct().getPrice()}"
+                                    hidden>
+                                <button id="decreaseBtn" class="decreaseBtn">-</button>
+
+                                <input name="productQuantity" id="productQuantity"
+                                    th:value="${item.getProduct().getQuantity()}" hidden>
                                 <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
                                     style="width: 50px; height: 50px; padding: 0; text-align: center;" readonly>
+
+                                <button id="increaseBtn" class="increaseBtn">+</button>
                             </div>
-                            <div class="col-2 formatPrice" style="padding-left: 30px; padding-top: 10px;"
+
+                            <div class="col-2 formatPrice" style="padding-left: 30px; padding-top: 10px;" id="subtotal"
                                 th:text="${item.getSubtotal()}">
                             </div>
                             <div class="col-2">
                                 <!-- <button type="submit" class="close">x</button> -->
-                                <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inList')}"
+                                <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inHome')}"
                                     class="close"><span>x</span></a>
                             </div>
+                            <br>
                         </div>
                         <br>
                     </div>
@@ -46,7 +61,7 @@
                 <hr th:if="${session.cart != null}">
                 <div class="checkout-space" th:if="${session.cart != null}">
                     <div class=" total-checkout">
-                        <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice"></span>
+                        <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice" id="total"></span>
                         </h4>
                     </div>
                     <br>

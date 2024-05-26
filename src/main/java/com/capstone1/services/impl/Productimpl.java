@@ -85,7 +85,7 @@ public class Productimpl implements ProductService {
 	}
 
 	public List<Product> getNewestProducts() {
-		return productRepository.findByIsNewestAndStatus(1, 0);
+		return productRepository.findByIsNewestAndStatus(1, 1);
 	}
 
 }

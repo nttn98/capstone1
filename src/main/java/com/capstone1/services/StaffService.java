@@ -33,4 +33,6 @@ public interface StaffService {
 
     boolean checkUsername(String username);
 
+    boolean checkIdcard(long idcard);
+
 }

@@ -12,7 +12,7 @@
         <script src="/js/jquery-3.0.0.min.js"></script>
         <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
         <script src="/js/validation/checkExist.js"></script>
-        <script src="/js/validation/checkQuantity.js" th:inline="javascript"></script>
+        <script src="/js/validation/checkQuantity.js"></script>
 
         <!-- <script src="/js/custom.js"></script> -->
         <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
@@ -323,14 +323,8 @@
                     </button>
                 </div>
             </div>
-            <!-- shopping cart -->
-            <style>
-                .insufficient-stock {
-                    color: red;
-                    font-weight: 600;
-                }
-            </style>
 
+            <!-- shopping cart -->
             <div class="cart position-fixed">
                 <h2>Shopping Cart</h2>
                 <button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
@@ -350,17 +344,18 @@
                             </div>
 
                             <div>
+                                <input id="page" name="page" value="home" hidden>
                                 <input id="productId" name="productId" th:value="${item.getProduct().getId()}" hidden>
                                 <input id="productPrice" name="productPrice" th:value="${item.getProduct().getPrice()}"
                                     hidden>
-                                <button id="decreaseBtn" class="button dec">-</button>
+                                <button id="decreaseBtn" class="decreaseBtn">-</button>
 
                                 <input name="productQuantity" id="productQuantity"
                                     th:value="${item.getProduct().getQuantity()}" hidden>
                                 <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
                                     style="width: 50px; height: 50px; padding: 0; text-align: center;" readonly>
 
-                                <button id="increaseBtn" class="button ins">+</button>
+                                <button id="increaseBtn" class="increaseBtn">+</button>
                             </div>
 
                             <div class="col-2 formatPrice" style="padding-left: 30px; padding-top: 10px;" id="subtotal"
