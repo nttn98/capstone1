@@ -11,8 +11,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capstone1.model.Category;
@@ -279,38 +276,6 @@ public class ProductController {
             } catch (IOException ioe) {
                 throw new IOException("Could not save image file: " + fileName, ioe);
             }
-        }
-    }
-
-    @GetMapping("/checkProductNameAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
-    public ResponseEntity<Boolean> checkProductNameAvailability(@RequestParam("name") String name) {
-        try {
-            Product productExist = productService.findByName(name);
-            if (productExist == null) {
-                return ResponseEntity.ok(true); // name is available
-            } else {
-                return ResponseEntity.ok(false); // name is not available
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-        }
-    }
-
-    @GetMapping("/checkQuantity")
-    @ResponseBody
-    public ResponseEntity<Boolean> checkQuantity(@RequestParam("quantityInCart") int quantityIncart, long id) {
-        try {
-            Product productExist = productService.getProductById(id);
-            if (quantityIncart <= productExist.getQuantity()) {
-                return ResponseEntity.ok(true); // name is available
-            } else {
-                return ResponseEntity.ok(false); // name is not available
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
 }

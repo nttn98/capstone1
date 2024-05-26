@@ -3,8 +3,6 @@ package com.capstone1.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.capstone1.model.Category;
 import com.capstone1.services.CategoryService;
@@ -114,23 +111,6 @@ public class CategoryController {
     public String deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
         return "redirect:/categories";
-    }
-
-    /* check name is unique */
-    @GetMapping("/checkCategoryNameAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
-    public ResponseEntity<Boolean> checkCategoryNameAvailability(@RequestParam("name") String name) {
-        try {
-            Category categoryExist = categoryService.findByName(name);
-            if (categoryExist == null) {
-                return ResponseEntity.ok(true); // name is available
-            } else {
-                return ResponseEntity.ok(false); // name is not available
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-        }
     }
 
 }

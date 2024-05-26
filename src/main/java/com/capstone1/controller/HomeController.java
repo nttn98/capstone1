@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.capstone1.model.Admin;
 import com.capstone1.model.BlogLogin;
@@ -28,7 +27,6 @@ import com.capstone1.model.Category;
 import com.capstone1.model.Contact;
 import com.capstone1.model.Manufacturer;
 import com.capstone1.model.Order;
-import com.capstone1.model.OrderDetail;
 import com.capstone1.model.Product;
 import com.capstone1.model.Staff;
 import com.capstone1.model.TokenAdmin;
@@ -352,14 +350,6 @@ public class HomeController {
         // model.addAttribute("mode", "staff");
 
         return "admin/orders";
-    }
-
-    @GetMapping("/orders/get-order-detail/{orderId}")
-    @ResponseBody
-    public List<OrderDetail> getOrderDetails(@PathVariable Long orderId, Model model) {
-        List<OrderDetail> listOrderDetails = orderDetailService.findByOrderId(orderId);
-        model.addAttribute("orderDetails", listOrderDetails);
-        return listOrderDetails;
     }
 
     @GetMapping("/orders/delete/{orderId}")

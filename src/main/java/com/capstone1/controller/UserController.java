@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.capstone1.model.Cart;
 import com.capstone1.model.CartItem;
@@ -201,39 +198,6 @@ public class UserController {
 
     }
 
-    /* check username is unique */
-    @GetMapping("/checkUsernameAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
-    public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam("username") String username) {
-        try {
-            if (!userService.checkUsername(username) && !staffService.checkUsername(username)) {
-                return ResponseEntity.ok(true); // Username is available
-            } else {
-                return ResponseEntity.ok(false); // Username is not available
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-        }
-    }
-
-    @GetMapping("/checkEmailAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
-    public ResponseEntity<Boolean> checkEmailAvailability(@RequestParam("email") String email,
-            @RequestParam("originalEmail") String originalEmail) {
-
-        try {
-            if (!userService.checkEmail(email, originalEmail) && !staffService.checkEmail(email, originalEmail)) {
-                return ResponseEntity.ok(true); // Email is available
-            } else {
-                return ResponseEntity.ok(false); // Email is not available
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
-        }
-    }
-
     /* login user */
     @PostMapping("/login-user")
     public String getLoginUser(Model model, @RequestParam String username,
@@ -352,14 +316,6 @@ public class UserController {
         cart.addProduct(product, cart, quantityInput);
         session.setAttribute("cart", cart);
 
-    }
-
-    @GetMapping("/users/total")
-    @ResponseBody
-    public int getTotalCartValue(@RequestParam("cartId") Long cartId) {
-        Cart cart = cartService.findById(cartId);
-        int total = cart.getTotal();
-        return total;
     }
 
     @GetMapping("/users/update-quantity-in-cart")
@@ -519,14 +475,6 @@ public class UserController {
         orderService.changeStatusOrder(existOrder);
         return historyOrders(user.getId(), session, model, page, size);
 
-    }
-
-    @GetMapping("/users/order-detail/{orderId}")
-    @ResponseBody
-    public List<OrderDetail> orderDetail(@PathVariable long orderId, Model model) {
-        List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderId);
-        model.addAttribute("orderDetails", orderDetails);
-        return orderDetails;
     }
 
 }
