@@ -64,7 +64,7 @@
                                                     <div class="form-group">
                                                         <p>Numberphone: </p>
                                                         <input type="text" class="form-control"
-                                                            th:field="*{numberphone}" maxlength="10" required>
+                                                            th:field="*{numberphone}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <p>Email: </p>
@@ -125,7 +125,10 @@
                                                         Save
                                                     </button>
                                                     <br>
-                                                    <a href="#" onclick="closeChangePass()">Cancel</a>
+                                                    <a href="#" class="btn btn-danger" onclick="closeChangePass()">
+                                                        <i class="fa fa-check"></i>
+                                                        Cancel
+                                                    </a>
                                                 </form>
                                             </div>
                                         </div>
@@ -174,13 +177,13 @@
                         </thead>
                         <tbody>
                             <tr th:each="staff : ${staffs}">
-                                <td th:text="${staff.id}"></td>
-                                <td th:text="${staff.fullname}"></td>
-                                <td th:text="${staff.username}"></td>
-                                <td th:text="${staff.email}"></td>
-                                <td th:text="${staff.numberphone}"></td>
-                                <td th:text="${staff.dob}"></td>
-                                <td th:text="${staff.idcard}"></td>
+                                <td class="text-dashboard" th:text="${staff.id}"></td>
+                                <td class="text-dashboard" th:text="${staff.fullname}"></td>
+                                <td class="text-dashboard" th:text="${staff.username}"></td>
+                                <td class="text-dashboard" th:text="${staff.email}"></td>
+                                <td class="text-dashboard" th:text="${staff.numberphone}"></td>
+                                <td class="text-dashboard" th:text="${staff.dob}"></td>
+                                <td class="text-dashboard" th:text="${staff.idcard}"></td>
                                 <td>
                                     <a th:href="@{/staffs/change-status/{id}(id=${staff.id})}">
                                         <button class="custom-btn btn-5" th:if="${staff.status == 1}">Disable</button>

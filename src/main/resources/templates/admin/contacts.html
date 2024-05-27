@@ -61,7 +61,7 @@
                                                     <div class="form-group">
                                                         <p>Numberphone: </p>
                                                         <input type="text" class="form-control"
-                                                            th:field="*{numberphone}" maxlength="10" required>
+                                                            th:field="*{numberphone}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <p>Email: </p>
@@ -122,7 +122,10 @@
                                                         Save
                                                     </button>
                                                     <br>
-                                                    <a href="#" onclick="closeChangePass()">Cancel</a>
+                                                    <a href="#" class="btn btn-danger" onclick="closeChangePass()">
+                                                        <i class="fa fa-check"></i>
+                                                        Cancel
+                                                    </a>
                                                 </form>
                                             </div>
                                         </div>
@@ -160,11 +163,14 @@
                         </thead>
                         <tbody>
                             <tr th:each="contact : ${contacts}">
-                                <td th:text="${contact.id}"></td>
-                                <td th:text="${contact.name}" style="width: 230px !important; "></td>
-                                <td th:text="${contact.email}"></td>
-                                <td th:text="${contact.numberphone}"></td>
-                                <td th:text="${contact.messages}" style="max-width: 600px; overflow: auto;"></td>
+                                <td class="text-dashboard" th:text="${contact.id}"></td>
+                                <td class="text-dashboard" th:text="${contact.name}" style="width: 230px !important; ">
+                                </td>
+                                <td class="text-dashboard" th:text="${contact.email}"></td>
+                                <td class="text-dashboard" th:text="${contact.numberphone}"></td>
+                                <td class="text-dashboard" th:text="${contact.messages}"
+                                    style="max-width: 600px; overflow: auto;">
+                                </td>
                             </tr>
                         </tbody>
                     </table>

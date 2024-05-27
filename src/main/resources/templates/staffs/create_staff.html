@@ -24,7 +24,8 @@
                                     <h5>Staff full-name</h5>
                                 </label>
                                 <div class="col-md-12">
-                                    <input id="full-name" th:field="*{fullname}" type="text" class="form-control">
+                                    <input id="full-name" th:field="*{fullname}" type="text" class="form-control"
+                                        required>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -33,7 +34,7 @@
                                 </label>
                                 <div class="col-md-12">
                                     <input id="usernameInput" th:field="*{username}" type="text" class="form-control"
-                                        required onfocusout="checkUsername()">
+                                        onfocusout="checkUsername()" required>
                                     <span id="usernameError" style="color: red;"></span>
                                 </div>
                             </div>
@@ -53,8 +54,8 @@
                                     <h5>Phone-number</h5>
                                 </label>
                                 <div class="col-md-12">
-                                    <input id="phoneNumber" th:field="*{numberphone}" maxlength="10" required
-                                        type="text" class="form-control" >
+                                    <input id="phoneNumber" th:field="*{numberphone}" type="text" class="form-control"
+                                        required>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -64,7 +65,7 @@
                                 <div class="col-md-12">
                                     <input id="originalEmail" name="originalEmail" value="" hidden>
                                     <input id="emailInput" th:field="*{email}" type="email" class="form-control"
-                                        onfocusout="checkExistEmail()">
+                                        onfocusout="checkExistEmail()" required>
                                     <span id="emailError" style="color: red;"></span>
                                 </div>
                             </div>
@@ -73,8 +74,8 @@
                                     <h5>Id-card</h5>
                                 </label>
                                 <div class="col-md-12">
-                                    <input id="idcard" th:field="*{idcard}" type="text" class="form-control" required
-                                        onfocusout="checkIdcard()">
+                                    <input id="idcard" th:field="*{idcard}" type="text" class="form-control"
+                                        onfocusout="checkIdcard()" required>
                                     <span id="idcardError" style="color: red;"></span>
                                 </div>
                             </div>
@@ -83,7 +84,7 @@
                                     <h5>Date of birth</h5>
                                 </label>
                                 <div class="col-md-12" style="margin-bottom: 35px;">
-                                    <input id="dob" th:field="*{dob}" type="date" class="form-control">
+                                    <input id="dob" th:field="*{dob}" type="date" class="form-control" required>
                                 </div>
                             </div>
                         </div>

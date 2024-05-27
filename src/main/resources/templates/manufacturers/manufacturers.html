@@ -64,7 +64,7 @@
                                                     <div class="form-group">
                                                         <p>Numberphone: </p>
                                                         <input type="text" class="form-control"
-                                                            th:field="*{numberphone}" maxlength="10" required>
+                                                            th:field="*{numberphone}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <p>Email: </p>
@@ -125,7 +125,10 @@
                                                         Save
                                                     </button>
                                                     <br>
-                                                    <a href="#" onclick="closeChangePass()">Cancel</a>
+                                                    <a href="#" class="btn btn-danger" onclick="closeChangePass()">
+                                                        <i class="fa fa-check"></i>
+                                                        Cancel
+                                                    </a>
                                                 </form>
                                             </div>
                                         </div>
@@ -153,17 +156,15 @@
                                 <th>
                                     Name of Manufacturer
                                 </th>
-                                <th>Description</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr th:each="manufacturer : ${manufacturers}">
-                                <td th:text="${manufacturer.id}"></td>
+                                <td class="text-dashboard" th:text="${manufacturer.id}"></td>
                                 <td><img th:src="${manufacturer.images}" alt="manufacturer Image" style="width: 120px;">
                                 </td>
-                                <td th:text="${manufacturer.name}"></td>
-                                <td>[(${manufacturer.description})]</td>
+                                <td class="text-dashboard" th:text="${manufacturer.name}"></td>
                                 <td>
                                     <a th:href="@{/manufacturers/change-status/{id}(id=${manufacturer.id})}">
                                         <button class="custom-btn btn-5"
@@ -171,7 +172,7 @@
                                         <button class="custom-btn btn-6"
                                             th:if="${manufacturer.status == 0}">Enable</button>
                                     </a>
-
+                                    <br>
                                     <a th:href="@{/manufacturers/edit/{id}(id=${manufacturer.id})}"
                                         th:if="${manufacturer.status == 1}" style="text-decoration: none;">
                                         <button class="custom-btn btn-14" th:if="${session.staff==null}">
@@ -189,37 +190,10 @@
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
     <script th:inline="javascript">
-        function showChangePass ()
-        {
-            $( '.changePass' ).addClass( 'w-25' );
-            $( '.profile' ).removeClass( "w-25" );
-        }
-        function closeChangePass ()
-        {
-            $( '.changePass' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-
-        }
-        function showProfile ()
-        {
-            $( '.profile' ).addClass( "w-25" );
-            $( '.changePass' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeIn();
-        }
-        function closeProfile ()
-        {
-            $( '.profile' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-        }
-        $( '.closeMask' ).click( ( e ) =>
-        {
-            if ( e.target.classList.contains( 'closeMask' ) )
-                $( 'button.close.close-mask' ).click();
-        } );
         new DataTable( '#dataTable', {
             "order": [ [ 0, "dec" ] ],
             "columnDefs": [
-                { "orderable": false, "targets": [ 1, 3, 4 ] } // Non-sortable columns 7 and 8 (indices 6 and 7)
+                { "orderable": false, "targets": [ 1, 3 ] }
             ]
         } );
         alert_action(/*[[${alert}]]*/ )

@@ -349,7 +349,11 @@ div.staff button {
 }
 
 div.changePass a {
-    margin-left: 125px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    width: 150px;
+    border-radius: 5px;
     text-decoration: none;
 }
 
@@ -575,4 +579,9 @@ button.option:hover span:after {
 
 a.option {
     background-color: #0056b3;
+}
+
+td.text-dashboard {
+    vertical-align: middle;
+    line-height: normal;
 }
