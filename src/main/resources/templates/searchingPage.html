@@ -9,7 +9,73 @@
 
     <body>
         <div class="header_section" style="background-repeat: repeat;">
-            <div th:replace="~{homePage :: header_section}"></div>
+            <div th:replace="~{homePage :: header_section}"></div><!-- shopping cart -->
+            <div class="cart position-fixed">
+                <h2>Shopping Cart</h2>
+                <button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 th:if="${session.cart==null}" style="margin-left: 20px;">There are no items</h3>
+                <!-- product -->
+                <div class="product" th:if="${session.cart!=null}">
+                    <div class="container">
+                        <input id="cartId" name="cartId" th:value="${session.cart.getId()}" hidden>
+                        <div class="row" th:each=" item : ${session.cart.getListItem()}" style="margin-bottom: 10px;">
+                            <div class="col-2">
+                                <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
+                            </div>
+                            <div id="productName" class="col-4" style="max-width: 30%;"
+                                th:text="${item.getProduct().getName()}">
+                            </div>
+
+                            <div>
+                                <input id="page" name="page" value="products" hidden>
+                                <input id="productId" name="productId" th:value="${item.getProduct().getId()}" hidden>
+                                <input id="productPrice" name="productPrice" th:value="${item.getProduct().getPrice()}"
+                                    hidden>
+                                <button id="decreaseBtn" class="decreaseBtn">-</button>
+
+                                <input name="productQuantity" id="productQuantity"
+                                    th:value="${item.getProduct().getQuantity()}" hidden>
+                                <input type="text" id="quantity" name="quantity" th:value="${item.getQuantity()}"
+                                    style="width: 50px; height: 50px; padding: 0; text-align: center;" readonly>
+
+                                <button id="increaseBtn" class="increaseBtn">+</button>
+                            </div>
+
+                            <div class="col-2 formatPrice" style="padding-left: 30px; padding-top: 10px;" id="subtotal"
+                                th:text="${item.getSubtotal()}">
+                            </div>
+                            <div class="col-2">
+                                <!-- <button type="submit" class="close">x</button> -->
+                                <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inHome')}"
+                                    class="close"><span>x</span></a>
+                            </div>
+                            <br>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <hr th:if="${session.cart != null}">
+                <div class="checkout-space" th:if="${session.cart != null}">
+                    <div class=" total-checkout">
+                        <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice" id="total"></span>
+                        </h4>
+                    </div>
+                    <br>
+                    <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
+                        <button class="btn-checkout" id="checkoutBtn">Checkout
+                        </button>
+                    </a>
+                    <a onclick="showLogin()" th:if="${session.user == null}">
+                        <button class="btn-checkout">Login
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!-- end shopping cart -->
+            <div class="closeMask"></div>
+
             <div>
                 <h2 style="text-align: center; margin-top: 20px; margin-bottom: -25px;">Searching:
                     [(${session.keywords})]</h2>
@@ -65,65 +131,67 @@
                         </ul>
                     </div>
                     <div class="col-lg-10">
-                        <div th:if="${products.toList().size() == 0}">
-                            <h2 style="text-align: center">There are no products</h2>
-                        </div>
-                        <div class="item" th:each=" item: ${products}">
-                            <div class="card mb-3">
-                                <div class="row no-gutters" style="align-items: center;">
-                                    <div class="col-lg-3">
-                                        <img th:src="${item.getImages()}">
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="card-body">
-                                            <h5 class="card-title" th:text="${item.getName()}"></h5>
-                                            <p class="card-text" th:text="${item.getDescription()}"></p>
-
-                                            <p class="card-text" style="font-weight: 600;">Category: <span
-                                                    th:text="${item.getCategory().getName()}"
-                                                    style="font-weight: normal;"></span></p>
-
-                                            <p class="card-text" style="font-weight: 600;">Manufacturer: <span
-                                                    th:text="${item.getManufacturer().getName()}"
-                                                    style="font-weight: normal;"></span>
-                                            </p>
-                                            <p class="card-text" style="font-weight: 600;">Price: <span
-                                                    th:text="${item.getPrice()}" style="font-weight: normal;"
-                                                    class="formatPrice"></span>
-                                            </p>
+                        <hr style="width: 600px;">
+                        <div class="container m-2">
+                            <div class="row">
+                                <div class="col-3" th:each=" item: ${products}">
+                                    <div class="product-info">
+                                        <div class="product-img">
+                                            <img th:src="${item.getImages()}" style="height: 180px;">
+                                            <div class="loop-button-wrap">
+                                                <a th:title="|Select '${item.getName()}'|"
+                                                    th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}"
+                                                    class="button" th:if="${item.getQuantity()>0}">Add to cart</a>
+                                                <a class="button" th:if="${item.getQuantity()<=0}" disable
+                                                    style="background-color: rgba(134, 4, 4, 0.97); border: red;">Out of
+                                                    stock</a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <!-- <a th:href="@{/users/add-to-cart/{producId}(producId=${item.id},mode=${user})}"> -->
-                                        <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}">
-                                            <button class="button-89" role="button"
-                                                style="margin-top: 60px; margin-left: 90px;">Add to
-                                                cart
-                                            </button>
-                                        </a>
+                                        <div class="product-details">
+                                            <div class="product-name">
+                                                <a class="product-name" th:text="${item.getName()}"
+                                                    th:href="@{'/products/get-product-infor/' + ${item.id}}"></a>
+                                            </div>
+                                            <div class="product-price">
+                                                <p class="product-price formatPrice" th:text="${item.getPrice()}"></p>
+                                            </div>
+                                            <div class="product-exist">
+                                                <p class="product-exist" th:if="${item.getQuantity()>0}">
+                                                    Available:
+                                                    <span th:text="${item.getQuantity()}"></span>
+                                                </p>
+                                                <p class="product-exist" th:if="${item.getQuantity()<=0}"
+                                                    style="color: red;">
+                                                    Out of stock
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div style="margin-left: 520px;" th:if="${products.getNumberOfElements() != 0}">
+                    <div style="margin-left: 520px; padding-bottom: 15px;"
+                        th:if="${products.getNumberOfElements() != 0}">
                         <div class="dataTables_paginate paging_simple_numbers"
                             th:each=" item: ${products.getTotalPages()}">
                             <ul class="pagination">
                                 <li
                                     th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
                                     <a class="page-link"
-                                        th:href="@{'/searchPaging?page=' + ${products.number - 1}}">Previous</a>
+                                        th:href="@{'/paging?page=' + ${products.number - 1}}">Previous</a>
                                 </li>
                                 <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
-                            <a th:href="@{'/searchPaging?page=' + ${page}}"
+                                <a th:href="@{'/paging?page=' + ${page}}"
                                th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})"
                                th:text="${page + 1}"></a>
-                        </li>
-                        <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
-                            <a class="page-link" th:href="@{'/searchPaging?page=' + ${products.number + 1}}">Next</a>
-                        </li>
-                    </ul>
+                                </li>
+                                <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
+                                    <a class="page-link" th:href="@{'/paging?page=' + ${products.number + 1}}">Next</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -135,193 +203,9 @@
 <button id="topButton"><i class="fa fa-arrow-up"></i></button>
 
 </body>
+
+
 <script th:inline="javascript">
-    $( document ).ready( function ()
-    {
-        $( '.formatPrice' ).each( ( i, e ) =>
-        {
-            let val = +( $( e ).text() );
-            $( e ).text( formatMoney( val ) );
-        } );
-
-        function formatMoney ( number )
-        {
-            return number.toLocaleString( 'vi-VN', {
-                style: 'currency', currency: 'VND'
-            } );
-        }
-    } );
-
-    function showPass ()
-    {
-        var p = document.getElementById( "password" );
-        if ( p.type === "password" )
-        {
-            p.type = "text";
-        } else
-        {
-            p.type = "password";
-        }
-    }
-
-    function showNewPass ()
-    {
-        var p = document.getElementById( "newPassword" );
-        if ( p.type === "password" )
-        {
-            p.type = "text";
-        } else
-        {
-            p.type = "password";
-        }
-    }
-
-    function showConfirmPassword ()
-    {
-        var p = document.getElementById( "confirmPassword" );
-        if ( p.type === "password" )
-        {
-            p.type = "text";
-        } else
-        {
-            p.type = "password";
-        }
-    }
-
-    function onChange ()
-    {
-        var password = document.querySelector( 'input[id=newPassword]' );
-        var confirm = document.querySelector( 'input[id=confirmPassword]' );
-        if ( confirm.value === password.value )
-        {
-            confirm.setCustomValidity( '' );
-        } else
-        {
-            confirm.setCustomValidity( 'Passwords do not match' );
-        }
-    }
-
-    function showChangePassword ()
-    {
-        $( "#changePassword" ).removeClass( "d-none" );
-        $( "#profileForm" ).addClass( "d-none" );
-
-    }
-
-    function closeChangePassword ()
-    {
-        $( "#changePassword" ).addClass( "d-none" );
-        $( "#profileForm" ).removeClass( "d-none" );
-
-    }
-
-    function showRecoverPassword ()
-    {
-        $( "#CustomerLoginForm" ).addClass( "d-none" )
-        $( "#RecoverPasswordForm" ).removeClass( "d-none" );
-    }
-
-    function closeRecoverPassword ()
-    {
-        $( "#RecoverPasswordForm" ).addClass( "d-none" );
-        $( "#CustomerLoginForm" ).removeClass( "d-none" )
-        $( "#register" ).addClass( "d-none" );
-
-    }
-
-    function showRegister ()
-    {
-        $( "#register" ).removeClass( "d-none" );
-        $( "#CustomerLoginForm" ).addClass( "d-none" );
-    }
-
-    function closeRegister ()
-    {
-        $( "#register" ).addClass( "d-none" );
-        $( "#CustomerLoginForm" ).removeClass( "d-none" );
-
-    }
-
-    $( '.closeMask' ).click( ( e ) =>
-    {
-        if ( e.target.classList.contains( 'closeMask' ) )
-            $( 'button.close.close-mask' ).click();
-        closeRecoverPassword();
-    } );
-
-    $( document ).ready( function ()
-    {
-        $( window ).scroll( function ()
-        {
-            if ( $( this ).scrollTop() > 100 )
-            {
-                $( '#topButton' ).fadeIn();
-            } else
-            {
-                $( '#topButton' ).fadeOut();
-            }
-        } );
-
-        $( '#topButton' ).click( function ()
-        {
-            $( 'html, body' ).animate( { scrollTop: 0 }, 400 );
-            return false;
-        } );
-    } );
-
-    function showUserProfile ()
-    {
-        $( '.userProfile' ).addClass( "w-25" );
-        $( '.closeLogin' ).fadeIn();
-        $( '.closeMask' ).fadeIn();
-    }
-
-    function closeUserProfile ()
-    {
-        $( '.userProfile' ).removeClass( "w-25" );
-        $( '.closeMask' ).fadeOut();
-    }
-
-    function showLogin ()
-    {
-        $( '.login' ).addClass( "w-25" );
-        closecart();
-        $( '.closeLogin' ).fadeIn();
-        $( '.closeMask' ).fadeIn();
-    }
-
-    function closeLogin ()
-    {
-        $( '.login' ).removeClass( "w-25" )
-        $( '.closeLogin' ).fadeOut();
-        $( '.closeMask' ).fadeOut();
-    }
-
-    function showcart ()
-    {
-        $( '.cart' ).addClass( "w-43" )
-        $( '.closeLogin' ).fadeIn();
-        $( '.closeMask' ).fadeIn();
-    }
-
-    function closecart ()
-    {
-        $( '.cart' ).removeClass( "w-43" )
-        $( '.closeMask' ).fadeOut();
-    }
-
-    function quantityPlus ( e )
-    {
-        let quantity = $( e ).closest( 'div' ).find( 'input' );
-        quantity.val( +quantity.val() + 1 );
-    }
-
-    function quantityMinus ( e )
-    {
-        let quantity = $( e ).closest( 'div' ).find( 'input' );
-        quantity.val( +quantity.val() - 1 );
-    }
-
     alert_action(/*[[${ alert }]]*/ )
 </script>
 

@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.model.Cart;
+import com.capstone1.model.CartItem;
 import com.capstone1.model.Category;
 import com.capstone1.model.Manufacturer;
 import com.capstone1.model.OrderDetail;
 import com.capstone1.model.Product;
+import com.capstone1.model.User;
+import com.capstone1.services.CartItemService;
 import com.capstone1.services.CartService;
 import com.capstone1.services.CategoryService;
 import com.capstone1.services.ManufacturerService;
@@ -25,6 +28,7 @@ import com.capstone1.services.StaffService;
 import com.capstone1.services.UserService;
 
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class ApiController {
@@ -47,11 +51,13 @@ public class ApiController {
     ProductService productService;
 
     @Resource
+    CartItemService cartItemService;
+
+    @Resource
     ManufacturerService manufacturerService;
 
     /* check username is unique */
     @GetMapping("/checkUsernameAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
     public ResponseEntity<Boolean> checkUsernameAvailability(@RequestParam("username") String username) {
         try {
             if (!userService.checkUsername(username) && !staffService.checkUsername(username)) {
@@ -66,7 +72,6 @@ public class ApiController {
     }
 
     @GetMapping("/checkEmailAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
     public ResponseEntity<Boolean> checkEmailAvailability(@RequestParam("email") String email,
             @RequestParam("originalEmail") String originalEmail) {
 
@@ -83,15 +88,19 @@ public class ApiController {
     }
 
     @GetMapping("/users/total")
-    @ResponseBody
-    public int getTotalCartValue(@RequestParam("cartId") Long cartId) {
-        Cart cart = cartService.findById(cartId);
+    public int getTotalCartValue(@RequestParam("cartId") Long cartId, HttpSession session) {
+        Cart cart = null;
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            cart = (Cart) session.getAttribute("cart");
+        } else {
+            cart = cartService.findById(cartId);
+        }
         int total = cart.getTotal();
         return total;
     }
 
     @GetMapping("/users/order-detail/{orderId}")
-    @ResponseBody
     public List<OrderDetail> orderDetail(@PathVariable long orderId, Model model) {
         List<OrderDetail> orderDetails = orderDetailService.findByOrderId(orderId);
         model.addAttribute("orderDetails", orderDetails);
@@ -100,7 +109,6 @@ public class ApiController {
 
     /* check name is unique */
     @GetMapping("/checkCategoryNameAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
     public ResponseEntity<Boolean> checkCategoryNameAvailability(@RequestParam("name") String name) {
         try {
             Category categoryExist = categoryService.findByName(name);
@@ -116,7 +124,6 @@ public class ApiController {
     }
 
     @GetMapping("/orders/get-order-detail/{orderId}")
-    @ResponseBody
     public List<OrderDetail> getOrderDetails(@PathVariable Long orderId, Model model) {
         List<OrderDetail> listOrderDetails = orderDetailService.findByOrderId(orderId);
         model.addAttribute("orderDetails", listOrderDetails);
@@ -124,7 +131,6 @@ public class ApiController {
     }
 
     @GetMapping("/checkManuFactureNameAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
     public ResponseEntity<Boolean> checkManuFactureNameAvailability(@RequestParam("name") String name) {
         try {
             Manufacturer manufacturerExist = manufacturerService.findByName(name);
@@ -140,7 +146,6 @@ public class ApiController {
     }
 
     @GetMapping("/checkProductNameAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
     public ResponseEntity<Boolean> checkProductNameAvailability(@RequestParam("name") String name) {
         try {
             Product productExist = productService.findByName(name);
@@ -156,7 +161,6 @@ public class ApiController {
     }
 
     @GetMapping("/checkQuantity")
-    @ResponseBody
     public ResponseEntity<Boolean> checkQuantity(@RequestParam("quantityInCart") int quantityIncart, long id) {
         try {
             Product productExist = productService.getProductById(id);
@@ -172,7 +176,6 @@ public class ApiController {
     }
 
     @GetMapping("/checkIdcardAvailability")
-    @ResponseBody // Ensure the returned boolean is serialized as a response body
     public ResponseEntity<Boolean> checkIdcardAvailability(@RequestParam("idcard") long idcard) {
         try {
             if (!staffService.checkIdcard(idcard)) {
@@ -184,5 +187,47 @@ public class ApiController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
+    }
+
+    @GetMapping("/users/update-quantity-in-cart")
+    public ResponseEntity<?> updateQuantityInCart(@RequestParam("productId") long productId,
+            @RequestParam("quantity") int quantity,
+            @RequestParam("cartId") long cartId, Model model, HttpSession session,
+            @RequestParam("mode") String mode) {
+        quantity = 1;
+        User user = (User) session.getAttribute("user");
+        if (user != null) {
+            CartItem cartItem = cartItemService.findByCartIdAndProductId(cartId,
+                    productId);
+            if (mode.equals("minus")) {
+                cartItem.setQuantity(cartItem.getQuantity() - quantity);
+            } else if (mode.equals("plus")) {
+                cartItem.setQuantity(cartItem.getQuantity() + quantity);
+            }
+            cartItemService.updateQuantityInCart(cartItem);
+            if (cartItem.getQuantity() == 0) {
+                cartItemService.deleteByProductIdAndCartId(productId, cartId);
+            }
+            session.setAttribute("cart", cartService.findByUserId(user.getId()));
+        }
+        if (user == null) {
+            Cart cart = (Cart) session.getAttribute("cart");
+            List<CartItem> iCartItem = cart.getListItem();
+            for (CartItem cartItem : iCartItem) {
+                if (cartItem.getProduct().getId() == productId) {
+                    if (mode.equals("minus")) {
+                        cartItem.setQuantity(cartItem.getQuantity() - quantity);
+                    } else if (mode.equals("plus")) {
+                        cartItem.setQuantity(cartItem.getQuantity() + quantity);
+                    }
+                    if (cartItem.getQuantity() == 0) {
+                        cart.getListItem().remove(cartItem);
+                        break;
+                    }
+                }
+            }
+            session.setAttribute("cart", cart);
+        }
+        return ResponseEntity.ok(true);
     }
 }

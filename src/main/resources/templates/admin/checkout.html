@@ -121,13 +121,15 @@
                                                         <h3 class="botiga-sc-heading">Contact Information</h3>
                                                         <div class="botiga-sc-fields">
                                                             <div class="botiga-sc-contact-information">
-                                                                <div class="botiga-sc-account-info">
+                                                                <div class="botiga-sc-account-info"
+                                                                    th:object="${session.user}">
                                                                     <input type="hidden" name="billing_email"
                                                                         id="billing_email"
                                                                         th:value="${session.user.getEmail()}"
                                                                         class="botiga-sc-field-email">
                                                                     Welcome,
-                                                                    <strong th:text="${session.user.fullname}"></strong>
+                                                                    <strong
+                                                                        th:text="${user.getFullname() != null ? user.getFullname() : user.getEmail()}"></strong>
                                                                 </div>
                                                             </div>
                                                         </div>

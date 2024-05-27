@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.capstone1.model.Cart;
 import com.capstone1.model.CartItem;
@@ -316,36 +318,6 @@ public class UserController {
         cart.addProduct(product, cart, quantityInput);
         session.setAttribute("cart", cart);
 
-    }
-
-    @GetMapping("/users/update-quantity-in-cart")
-    public String updateQuantityInCart(@RequestParam("productId") long productId,
-            @RequestParam("quantity") int quantity,
-            @RequestParam("cartId") long cartId, Model model, HttpSession session,
-            @RequestParam("mode") String mode) {
-        quantity = 1;
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            CartItem cartItem = cartItemService.findByCartIdAndProductId(cartId,
-                    productId);
-            if (mode.equals("minus")) {
-                cartItem.setQuantity(cartItem.getQuantity() - quantity);
-            } else if (mode.equals("plus")) {
-                cartItem.setQuantity(cartItem.getQuantity() + quantity);
-
-            }
-            cartItemService.updateQuantityInCart(cartItem);
-            if (cartItem.getQuantity() == 0) {
-                cartItemService.deleteByProductIdAndCartId(productId, cartId);
-            }
-            session.setAttribute("cart", cartService.findByUserId(user.getId()));
-        }
-        // if (user == null) {
-        // Cart cart = (Cart) session.getAttribute("cart");
-        // List<CartItem> iCartItem = cart.getListItem();
-        // }
-
-        return homeController.getHome(model, session, 0, 10);
     }
 
     @GetMapping("/users/delete-product-in-cart")

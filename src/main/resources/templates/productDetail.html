@@ -158,9 +158,10 @@
                                     <p class="product-detail-infor-exist" th:if="${product.getQuantity()>0}">Available:
                                     </p>
 
-                                    <p
-                                        style="color: rgb(153, 10, 10); font-weight: 600; font-size: 18px; margin-top: 5px;">
-                                        <span th:if="${product.getQuantity()<=0}"></span>Out of stock</p>
+                                    <p style="color: rgb(153, 10, 10); font-weight: 600; font-size: 18px; margin-top: 5px;"
+                                        th:if="${product.getQuantity()<=0}">
+                                        Out of stock
+                                    </p>
 
                                     <p style="color: green; font-weight: 600; font-size: 15px;"
                                         th:if="${product.getQuantity()>0}"><span
@@ -177,8 +178,10 @@
                                                     <i class="fa fa-minus" aria-hidden="true"></i>
                                                 </button>
                                             </div>
+
                                             <input class="input-group-field" type="number" name="quantityInput"
                                                 value="1" onkeyup="checkQuantity(this)" readonly>
+
                                             <div class="input-group-button">
                                                 <button type="button" class="button hollow circle" data-quantity="plus"
                                                     data-field="quantityInput">
@@ -191,7 +194,7 @@
                                             cart</button>
                                         <button type="submit" class="button"
                                             style="margin-top: 10px;background-color: rgba(134, 4, 4, 0.97); border: red;"
-                                            thif="${product.getQuantity()<=0}" disabled>Out of stock</button>
+                                            th:if="${product.getQuantity()<=0}" disabled>Out of stock</button>
                                     </form>
                                 </div>
                             </div>
@@ -214,9 +217,9 @@
         function checkQuantity ( e )
         {
             let currentValue = $( e ).val()
-            if ( currentValue < 0 )
+            if ( currentValue <= 0 )
             {
-                $( e ).val( 0 );
+                $( e ).val( 1 );
             }
             if ( currentValue > max )
             {
@@ -255,14 +258,14 @@
                 // Get its current value
                 var currentVal = parseInt( $( 'input[name=' + fieldName + ']' ).val() );
                 // If it isn't undefined or its greater than 0
-                if ( !isNaN( currentVal ) && currentVal > 0 )
+                if ( !isNaN( currentVal ) && currentVal > 1 )
                 {
                     // Decrement one
                     $( 'input[name=' + fieldName + ']' ).val( currentVal - 1 );
-                } else
+                } else 
                 {
                     // Otherwise put a 0 there
-                    $( 'input[name=' + fieldName + ']' ).val( 0 );
+                    $( 'input[name=' + fieldName + ']' ).val( 1 );
                 }
             } );
         } );
