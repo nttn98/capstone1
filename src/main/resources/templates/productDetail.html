@@ -70,7 +70,7 @@
                         </button>
                     </a>
                     <a onclick="showLogin()" th:if="${session.user == null}">
-                        <button class="btn-checkout">Login
+                        <button class="btn-checkout">Checkout
                         </button>
                     </a>
                 </div>
@@ -168,7 +168,8 @@
                                             th:text="${product.getQuantity()}"></span> in stock</p>
 
                                     <form th:action="@{/users/add-to-cart/{productId}(productId=${product.getId()})}"
-                                        method="GET">
+                                        method="GET" onsubmit="return check(this)">
+
                                         <input name="mode" value="inProductDetail" hidden>
                                         <!-- Change the `data-field` of buttons and `name` of input field's for multiple plus minus buttons-->
                                         <div class="input-group plus-minus-input">
@@ -283,8 +284,30 @@
                 }
             } );
         }
+        function check ( e )
+        {
+            let max = +$( "#productQuantity" ).val();
+            let add = +$( "input[name='quantityInput']" ).val();
+            let current = +$( "#quantity" ).val();
+
+            if ( max >= current + add )
+            {
+                return true;
+            } else
+            {
+                $.toast( {
+                    heading: 'Error',
+                    text: `Quantity cannot exceed available stock. Available: ${ max }`,
+                    position: 'top-right',
+                    loaderBg: '#ff6849',
+                    icon: 'error',
+                    hideAfter: 2500,
+                    stack: 6,
+                } );
+                return false;
+            }
+        }
         alert_action(/*[[${ alert }]]*/ )
     </script>
-
 
 </html>

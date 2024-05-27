@@ -44,8 +44,8 @@
 									<h5>Phone-number</h5>
 								</label>
 								<div class="col-md-12">
-									<input id="numberPhone" th:field="*{numberphone}" type="text"
-										onkeydown="return onlyNumbers(event)" class="form-control" required>
+									<input id="numberPhone" th:field="*{numberphone}" maxlength="10" 
+										type="text" onkeydown="return onlyNumbers(event)" class="form-control" required>
 								</div>
 							</div>
 							<div class="form-group">

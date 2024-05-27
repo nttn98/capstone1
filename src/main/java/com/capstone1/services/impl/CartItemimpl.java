@@ -7,6 +7,8 @@ import com.capstone1.model.CartItem;
 import com.capstone1.repository.CartItemRepository;
 import com.capstone1.services.CartItemService;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CartItemimpl implements CartItemService {
 
@@ -36,6 +38,9 @@ public class CartItemimpl implements CartItemService {
 
     @Override
     public CartItem updateQuantityInCart(CartItem cartItem) {
+        if (cartItem.quantity == 0) {
+            cartItemRepository.deleteById(cartItem.getId());
+        }
         return cartItemRepository.save(cartItem);
     }
 

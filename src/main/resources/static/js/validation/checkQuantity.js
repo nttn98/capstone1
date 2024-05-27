@@ -280,7 +280,7 @@ document.addEventListener( "DOMContentLoaded", function ()
                 method: 'GET'
             } );
 
-            if ( !res.ok )
+            if ( res.status !== 200 )
             {
                 throw new Error( 'Failed to update quantity.' );
             }

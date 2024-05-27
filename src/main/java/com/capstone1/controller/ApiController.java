@@ -2,13 +2,13 @@ package com.capstone1.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.model.Cart;
@@ -96,7 +96,7 @@ public class ApiController {
         } else {
             cart = cartService.findById(cartId);
         }
-        int total = cart.getTotal();
+        int total = cart != null ? cart.getTotal() : 0;
         return total;
     }
 
@@ -189,45 +189,5 @@ public class ApiController {
         }
     }
 
-    @GetMapping("/users/update-quantity-in-cart")
-    public ResponseEntity<?> updateQuantityInCart(@RequestParam("productId") long productId,
-            @RequestParam("quantity") int quantity,
-            @RequestParam("cartId") long cartId, Model model, HttpSession session,
-            @RequestParam("mode") String mode) {
-        quantity = 1;
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            CartItem cartItem = cartItemService.findByCartIdAndProductId(cartId,
-                    productId);
-            if (mode.equals("minus")) {
-                cartItem.setQuantity(cartItem.getQuantity() - quantity);
-            } else if (mode.equals("plus")) {
-                cartItem.setQuantity(cartItem.getQuantity() + quantity);
-            }
-            cartItemService.updateQuantityInCart(cartItem);
-            if (cartItem.getQuantity() == 0) {
-                cartItemService.deleteByProductIdAndCartId(productId, cartId);
-            }
-            session.setAttribute("cart", cartService.findByUserId(user.getId()));
-        }
-        if (user == null) {
-            Cart cart = (Cart) session.getAttribute("cart");
-            List<CartItem> iCartItem = cart.getListItem();
-            for (CartItem cartItem : iCartItem) {
-                if (cartItem.getProduct().getId() == productId) {
-                    if (mode.equals("minus")) {
-                        cartItem.setQuantity(cartItem.getQuantity() - quantity);
-                    } else if (mode.equals("plus")) {
-                        cartItem.setQuantity(cartItem.getQuantity() + quantity);
-                    }
-                    if (cartItem.getQuantity() == 0) {
-                        cart.getListItem().remove(cartItem);
-                        break;
-                    }
-                }
-            }
-            session.setAttribute("cart", cart);
-        }
-        return ResponseEntity.ok(true);
-    }
+    
 }
