@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-2">
                             <!-- <button type="submit" class="close">x</button> -->
-                            <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inHome')}"
+                            <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inCheckout')}"
                                 class="close"><span>x</span></a>
                         </div>
                         <br>
@@ -200,7 +200,7 @@
                                                 th:value="'Thanh toan don hang ' + ${session.cart.getId()}">
 
                                             <div class="botiga-sc-cart-summary-item">
-                                                <div class="botiga-sc-cart-products"
+                                                <!-- <div class="botiga-sc-cart-products"
                                                     th:each=" item : ${session.cart.getListItem()}">
                                                     <div class="botiga-sc-product">
                                                         <div class="botiga-sc-product-thumbnail">
@@ -242,8 +242,57 @@
                                                             </div>
                                                         </div>
                                                     </div>
+                                                </div> -->
+                                                <div class="botiga-sc-cart-products"
+                                                    th:each="item, iterStat : ${session.cart.getListItem()}">
+                                                    <div class="botiga-sc-product"
+                                                        th:classappend="${iterStat.index > 2} ? 'hidden-item' : ''">
+                                                        <div class="botiga-sc-product-thumbnail">
+                                                            <figure>
+                                                                <img width="150" height="150"
+                                                                    th:src="${item.getProduct().getImages()}"
+                                                                    class="attachment-thumbnail size-thumbnail" alt=""
+                                                                    loading="lazy">
+                                                            </figure>
+                                                            <span class="botiga-sc-product-quantity"
+                                                                th:text="${item.getQuantity()}"
+                                                                id="quantityIncart"></span>
+                                                        </div>
+                                                        <div class="botiga-sc-product-info">
+                                                            <div class="botiga-sc-product-name">
+                                                                <span th:text="${item.getProduct.getName()}">
+                                                                </span>
+                                                                <dl class="variation">
+                                                                    <dt class="variation-Vendor">Vendor:</dt>
+                                                                    <dd class="variation-Vendor"
+                                                                        style="margin-bottom: -15px;">
+                                                                        <p
+                                                                            th:text="${item.getProduct().getManufacturer().getName()}">
+                                                                        </p>
+                                                                    </dd>
+                                                                </dl>
+                                                            </div>
+                                                            <div class="botiga-sc-product-subtotal">
+                                                                <span class="woocommerce-Price-amount amount">
+                                                                    <bdi class="formatPrice"
+                                                                        th:text="${item.getSubtotal()}"></bdi>
+                                                                </span>
+                                                            </div>
+                                                            <div class="botiga-sc-product-exist">
+                                                                <span style="color: green; font-weight: 600;">
+                                                                    Available in stock:
+                                                                </span>
+                                                                <span th:text="${item.getProduct().getQuantity()}">
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
+                                            <p id="show-more-btn" th:if="${session.cart.getListItem().size() > 3}">
+                                                Show More
+                                            </p>
+                                            <br>
                                             <div class="botiga-sc-cart-summary-item">
                                                 <div class="botiga-sc-cart-total">
                                                     <table class="woocommerce-checkout-review-order-table">
@@ -272,6 +321,7 @@
                                                     </table>
                                                 </div>
                                             </div>
+                                            <br>
                                             <div class="botiga-sc-cart-summary-item">
                                                 <h3 class="botiga-sc-heading">Payment Method
                                                 </h3>
@@ -305,25 +355,67 @@
     </body>
 
     <script th:inline="javascript">
-
-        paymentMethod.addEventListener( 'change', function ()
+        const showMoreBtn = document.getElementById( 'show-more-btn' );
+        if ( showMoreBtn )
         {
-            var form = document.getElementById( 'orderForm' );
-            var paymentMethod = document.getElementById( 'paymentMethod' );
+            showMoreBtn.addEventListener( 'click', () =>
+            {
+                const hiddenItems = document.querySelectorAll( '.hidden-item' );
+                hiddenItems.forEach( item =>
+                {
+                    item.classList.remove( 'hidden-item' );
+                } );
+                showMoreBtn.style.display = 'none';
+            } );
+        }
 
-            if ( paymentMethod.value === 'credit_card' )
+        const paymentMethod = document.getElementById( 'paymentMethod' );
+        if ( paymentMethod )
+        {
+            paymentMethod.addEventListener( 'change', function ()
             {
-                form.action = /*[[ @{/submitOrder} ]]*/
-                    form.method = "POST";
-            } else
-            {
-                form.action = /*[[ @{/users/add-order} ]]*/
-                    form.method = "GET";
-            }
-        } );
+                var form = document.getElementById( 'orderForm' );
+
+                if ( paymentMethod.value === 'credit_card' )
+                {
+                    form.action = /*[[ @{/submitOrder} ]]*/ '';
+                    form.method = 'POST';
+                } else
+                {
+                    form.action = /*[[ @{/users/add-order} ]]*/ '';
+                    form.method = 'GET';
+                }
+            } );
+        }
 
         alert_action(/*[[${alert}]]*/ )
 
     </script>
+    <style>
+        #show-more-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            font-size: 16px;
+            color: black;
+            background-color: #a1ed88;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
+
+        #show-more-btn:hover {
+            background-color: #469027;
+            color: whitesmoke;
+        }
+
+        .hidden-item {
+            display: none;
+        }
+    </style>
 
 </html>

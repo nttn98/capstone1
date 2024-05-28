@@ -286,6 +286,9 @@ public class UserController {
             return "redirect:/home-page";
         } else if (mode.equals("inProductDetail")) {
             return productController.getProductInfor(productId, model, session);
+        } else if (mode.equals("inSearchingPage")) {
+            String keyword = (String) session.getAttribute("keywords");
+            return productController.searchProduct(model, session, keyword, page, size);
         } else {
             return "redirect:/home-page";
         }
@@ -359,7 +362,7 @@ public class UserController {
     @GetMapping("/users/delete-product-in-cart")
     public String deleteToCart(Model model, @RequestParam("productId") long productId, HttpSession session,
             @RequestParam("mode") String mode, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size) {
+            @RequestParam(defaultValue = "8") int size, @RequestParam(defaultValue = "0") long currentProductId) {
 
         Cart cart = (Cart) session.getAttribute("cart");
         Long userId = (Long) session.getAttribute("userId");
@@ -379,17 +382,23 @@ public class UserController {
                 session.removeAttribute("cart");
             }
         }
+        // inOrderHistory, inSearchingPage
         if (mode.equals("inList")) {
             return homeController.paginated(model, session, page, size);
         } else if (mode.equals("inCheckout")) {
             return checkOut(model, session);
         } else if (mode.equals("inProductDetail")) {
-            return productController.getProductInfor(productId, model, session);
+            return productController.getProductInfor(currentProductId, model, session);
+        } else if (mode.equals("inOrderHistory")) {
+            if (userId != null)
+                return historyOrders(userId, session, model, page, size);
+        } else if (mode.equals("inSearchingPage")) {
+            String keyword = (String) session.getAttribute("keywords");
+            return productController.searchProduct(model, session, keyword, page, size);
         }
 
         session.setAttribute("cart", cart);
         return "redirect:/home-page";
-
     }
 
     @GetMapping("/users/checkout-page")

@@ -2,7 +2,6 @@ package com.capstone1.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capstone1.model.Cart;
-import com.capstone1.model.CartItem;
 import com.capstone1.model.Category;
 import com.capstone1.model.Manufacturer;
 import com.capstone1.model.OrderDetail;
@@ -188,6 +186,4 @@ public class ApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
-
-    
 }

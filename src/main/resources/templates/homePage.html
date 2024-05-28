@@ -13,6 +13,7 @@
         <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
         <script src="/js/validation/checkExist.js"></script>
         <script src="/js/validation/checkQuantity.js"></script>
+        <script src="/js/validation/checkAddToCart.js"></script>
 
         <!-- <script src="/js/custom.js"></script> -->
         <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
@@ -183,8 +184,7 @@
                                     <button type="submit" class="btn btn-info"><i class="fa fa-check"></i>
                                         Save
                                     </button>
-                                    <a href="#" onclick="closeChangePassword()"
-                                        style="text-align: center; display: block; margin-top: 10px;">
+                                    <a href="#" onclick="closeChangePassword()" class="btn btn-danger">
                                         Cancel</a>
                                 </form>
 
@@ -264,8 +264,8 @@
                                             </div>
                                             <button type="submit" class="btn-login">Submit</button>
                                             <br>
-                                            <a href="#" id="HideRecoverPasswordLink"
-                                                onclick="closeRecoverPassword()">Cancel</a>
+                                            <a href="#" id="HideRecoverPasswordLink" class="btn btn-danger"
+                                                style="width: 110px;" onclick="closeRecoverPassword()">Cancel</a>
                                         </form>
                                     </div>
                                 </div>
@@ -312,7 +312,8 @@
                                                 class="fa fa-check"></i>
                                             Register
                                         </button>
-                                        <a href="#" onclick="closeRegister()">Cancel</a>
+                                        <a href="#" onclick="closeRegister()" class="btn btn-danger"
+                                            style="display: inline-block;">Cancel</a>
                                     </form>
                                 </div>
                             </div>
@@ -384,7 +385,7 @@
                         </button>
                     </a>
                     <a onclick="showLogin()" th:if="${session.user == null}">
-                        <button class="btn-checkout">Checkout
+                        <button class="btn-checkout" id="checkoutBtn">Checkout
                         </button>
                     </a>
                 </div>
@@ -401,7 +402,7 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <h1 class="banner_taital" th:text="${item.name}"></h1>
-                                        <p class="banner_text" th:text="${item.description}"></p>
+                                        <!-- <p class="banner_text" th:text="${item.description}"></p> -->
                                         <div class="btn_main">
                                             <div class="read_bt"><a href="/list-products">See More</a></div>
                                         </div>
@@ -418,7 +419,7 @@
                                 <div class="row">
                                     <div class="col-lg-6">
                                         <h1 class="banner_taital" th:text="${product.name}"></h1>
-                                        <p class="banner_text" th:text="${product.description}"></p>
+                                        <!-- <p class="banner_text" th:text="${product.description}"></p> -->
                                         <div class="btn_main">
                                             <div class="read_bt"><a href="/list-products">See more</a></div>
                                         </div>
@@ -539,7 +540,12 @@
                         <div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" item : ${productsByNVIDIA}">
                             <div class="card-botBody text-white">
                                 <img th:src="${item.getImages()}">
-                                <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}">
+
+                                <p id="curProductId" th:text="${item.getId()}" hidden></p>
+                                <p id="productAvailable" th:text="${item.getQuantity()}" hidden></p>
+
+                                <a id="add-to-cart-link "
+                                    th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}">
                                     <figcaption>
                                         <div class="box-1">
                                             <div class="btn btn-one">
@@ -566,7 +572,12 @@
                         <div class="card-product col-lg-4 col-sm-12 col-md-12" th:each=" item : ${productsByAMD}">
                             <div class="card-botBody text-white">
                                 <img th:src="${item.getImages()}">
-                                <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}">
+
+                                <p id="curProductId" th:text="${item.getId()}" hidden></p>
+                                <p id="productAvailable" th:text="${item.getQuantity()}" hidden></p>
+
+                                <a id="add-to-cart-link "
+                                    th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}">
                                     <figcaption>
                                         <div class="box-1">
                                             <div class="btn btn-one">
@@ -635,7 +646,7 @@
                         </li>
                         <li><i class="fa fa-phone" aria-hidden="true"></i>
                             <span class="padding_left_10"><a href="#">Call :
-                                    +964503530</a></span>
+                                    0964503530</a></span>
                         </li>
                         <li><i class="fa fa-envelope-o" aria-hidden="true"></i>
                             <span class="padding_left_10"><a href="#">s2tore@gmail.com</a></span>
@@ -708,9 +719,7 @@
 
     </body>
     <script th:inline="javascript">
-
         alert_action(/*[[${ alert }]]*/ )
-
     </script>
 
 </html>

@@ -48,7 +48,7 @@
                             </div>
                             <div class="col-2">
                                 <!-- <button type="submit" class="close">x</button> -->
-                                <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inHome')}"
+                                <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inSearchingPage')}"
                                     class="close"><span>x</span></a>
                             </div>
                             <br>
@@ -68,7 +68,7 @@
                         </button>
                     </a>
                     <a onclick="showLogin()" th:if="${session.user == null}">
-                        <button class="btn-checkout">Checkout
+                        <button class="btn-checkout" id="checkoutBtn">Checkout
                         </button>
                     </a>
                 </div>
@@ -139,8 +139,8 @@
                                         <div class="product-img">
                                             <img th:src="${item.getImages()}" style="height: 180px;">
                                             <div class="loop-button-wrap">
-                                                <a th:title="|Select '${item.getName()}'|"
-                                                    th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}"
+                                                <a id="add-to-cart-link" th:title="|Select '${item.getName()}'|"
+                                                    th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inSearchingPage}"
                                                     class="button" th:if="${item.getQuantity()>0}">Add to cart</a>
                                                 <a class="button" th:if="${item.getQuantity()<=0}" disable
                                                     style="background-color: rgba(134, 4, 4, 0.97); border: red;">Out of
@@ -158,7 +158,7 @@
                                             <div class="product-exist">
                                                 <p class="product-exist" th:if="${item.getQuantity()>0}">
                                                     Available:
-                                                    <span th:text="${item.getQuantity()}"></span>
+                                                    <span id="productAvailable" th:text="${item.getQuantity()}"></span>
                                                 </p>
                                                 <p class="product-exist" th:if="${item.getQuantity()<=0}"
                                                     style="color: red;">

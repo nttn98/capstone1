@@ -282,8 +282,9 @@ button {
     background-image: url(../img/banner-bg.png);
     height: auto;
     background-size: 100%;
-    background-repeat: no-repeat;
+    /* background-repeat: no-repeat; */
 }
+
 
 .bg-light {
     background-color: transparent !important;
@@ -947,6 +948,7 @@ button {
 .checkout-space {
     text-align: right;
     padding-right: 40px;
+    padding-bottom: 30px;
 }
 
 .checkout-space button.btn-checkout {
@@ -1541,3 +1543,10 @@ a.close>span {
     font-weight: 600;
 }
 
+a.btn-danger {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}

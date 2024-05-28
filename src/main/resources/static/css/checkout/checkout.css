@@ -76,8 +76,8 @@
 }
 
 .botiga-sc-cart-summary-item {
-    margin-bottom: 30px;
-    padding-bottom: 30px;
+    /* margin-bottom: 30px;
+    padding-bottom: 30px; */
     border-bottom: 1px solid var(--bt-color-forms-dividers, #ddd)
 }
 
