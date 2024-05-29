@@ -560,7 +560,7 @@ public class HomeController {
                     + "<p>You have requested to reset your password.</p>"
                     + "<p>Click the link below to reset your password:</p>"
                     + "<p><a href=\"" + link + "\">" + link + "</a></p>"
-                    + "<br>"
+                    + "<br/>"
                     + "<p>Ignore this email if you do remember your password, "
                     + "or you have not made the request.</p>";
 

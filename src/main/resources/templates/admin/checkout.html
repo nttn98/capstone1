@@ -52,9 +52,9 @@
                             <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inCheckout')}"
                                 class="close"><span>x</span></a>
                         </div>
-                        <br>
+                        <br />
                     </div>
-                    <br>
+                    <br />
                 </div>
             </div>
             <hr th:if="${session.cart != null}">
@@ -63,7 +63,7 @@
                     <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice" id="total"></span>
                     </h4>
                 </div>
-                <br>
+                <br />
                 <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
                     <button class="btn-checkout" id="checkoutBtn">Checkout
                     </button>
@@ -292,7 +292,7 @@
                                             <p id="show-more-btn" th:if="${session.cart.getListItem().size() > 3}">
                                                 Show More
                                             </p>
-                                            <br>
+                                            <br />
                                             <div class="botiga-sc-cart-summary-item">
                                                 <div class="botiga-sc-cart-total">
                                                     <table class="woocommerce-checkout-review-order-table">
@@ -321,7 +321,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <br>
+                                            <br />
                                             <div class="botiga-sc-cart-summary-item">
                                                 <h3 class="botiga-sc-heading">Payment Method
                                                 </h3>

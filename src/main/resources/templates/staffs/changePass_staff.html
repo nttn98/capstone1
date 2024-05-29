@@ -9,7 +9,7 @@
 
         <div class="container mt-4">
             <h2 class="page-title">Change password of staff : <span th:text="${staff.staffFullname}"></span></h2>
-            <br>
+            <br />
             <form th:action="@{/staffs/doChangePass/{id}(id=${staff.staffId})}" th:object="${staff}" method="POST">
                 <div class="row">
                     <div class="col-sm-6 ol-md-6 col-xs-12">
@@ -24,7 +24,7 @@
 
                                     <input type="checkbox" onclick="showPass()"> Show password
                                 </div>
-                                <br>
+                                <br />
                                 <label for="password" class="col-md-12">
                                     <h5> New Password</h5>
                                 </label>
@@ -34,7 +34,7 @@
 
                                     <input type="checkbox" onclick="showPass()"> Show password
                                 </div>
-                                <br>
+                                <br />
                                 <label for="password" class="col-md-12">
                                     <h5> Comfirm Password</h5>
                                 </label>

@@ -1,7 +1,6 @@
-function check ()
+function check ( event, curProductId )
 {
-    debugger
-    var curProductId = +$( "#curProductId" ).text();
+    curProductId = +curProductId;
     let max = +$( "#productAvailable" ).text();
     let add = 1;
     let current = +$( "#quantity" ).val();
@@ -29,6 +28,7 @@ function check ()
     }
     else
     {
+        event.preventDefault();
         $.toast( {
             heading: 'Error',
             text: `Quantity cannot exceed available stock. Available: ${ max }`,
@@ -41,13 +41,3 @@ function check ()
         return false;
     }
 };
-$( document ).ready( function ()
-{
-    $( "#add-to-cart-link" ).click( function ( event )
-    {
-        if ( !check() )
-        {
-            event.preventDefault();
-        }
-    } );
-} );

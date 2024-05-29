@@ -52,9 +52,9 @@
                             <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inOrderHistory')}"
                                 class="close"><span>x</span></a>
                         </div>
-                        <br>
+                        <br/>
                     </div>
-                    <br>
+                    <br/>
                 </div>
             </div>
             <hr th:if="${session.cart != null}">
@@ -63,7 +63,7 @@
                     <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice" id="total"></span>
                     </h4>
                 </div>
-                <br>
+                <br/>
                 <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
                     <button class="btn-checkout" id="checkoutBtn">Checkout
                     </button>
@@ -125,7 +125,7 @@
                     <div class="cell">[(${order.getId()})]</div>
                     <div class="cell">[(${order.getOrderDate()})]</div>
                     <div class="cell">[(${order.getReceiverName()})]</div>
-                    <div class="cell">[(${order.getReceiverAddress()})]</div>
+                    <div style="white-space: nowrap;" class="cell">[(${order.getReceiverAddress()})]</div>
                     <div class="cell">[(${order.getReceiverNumberphone()})]</div>
                     <div class="cell">
                         <p class="formatPrice" style="padding-top: 10px">[(${order.getTotal()})]</p>
@@ -136,7 +136,7 @@
                             th:if="${order.getType().toString().equals('CREDIT')}">Paid</button>
                         <a th:href="@{'/orders/user-change-status/' + ${order.id} + '?status=3'}">
                             <button class="custom-btn btn-5"
-                                th:if="${order.getStatus() != 3 && order.getType().toString().equals('COD')}">Cancel</button>
+                                th:if="${order.getStatus() != 3 && order.getStatus() != 1 && order.getType().toString().equals('COD')}">Cancel</button>
                         </a>
                     </div>
                     <div class="cell details">

@@ -12,7 +12,7 @@
 		<div class="container mt-3">
 			<h4>Edit staff id = <span th:text="${staff.id}"></span>
 			</h4>
-			<br>
+			<br />
 			<form action="/staffs/update-staff" th:object="${staff}" method="POST">
 				<input name="mode" value="adminEdit" hidden>
 				<div class="row">

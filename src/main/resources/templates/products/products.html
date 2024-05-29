@@ -162,7 +162,7 @@
 														<i class="fa fa-check"></i>
 														Save
 													</button>
-													<br>
+													<br />
 													<a href="#" class="btn btn-danger" onclick="closeChangePass()">
 														<i class="fa fa-check"></i>
 														Cancel
@@ -264,12 +264,12 @@
 											<i class="fas fa-star"></i>
 										</button>
 									</a>
-									<br>
+									<br />
 									<a th:href="@{/products/change-status/{id}(id=${product.id})}">
 										<button class="custom-btn btn-5" th:if="${product.status == 1}">Disable</button>
 										<button class="custom-btn btn-6" th:if="${product.status == 0}">Enable</button>
 									</a>
-									<br>
+									<br />
 									<a th:href="@{/products/edit/{id}(id=${product.id})}"
 										th:if="${product.status == 1}">
 										<button class="custom-btn btn-14" th:if="${session.staff==null}">Edit</button>

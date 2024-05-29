@@ -401,11 +401,11 @@ function RTE_Plugin_InsertCode ()
     dp.sh.Highlighter.prototype.AddBit = function ( str, css )
     {
         if ( str == null || str.length == 0 )
-            return; var span = this.CreateElement( 'SPAN' ); str = str.replace( / /g, '&nbsp;' ); str = str.replace( /</g, '&lt;' ); str = str.replace( /\n/gm, '&nbsp;<br>' ); if ( css != null )
+            return; var span = this.CreateElement( 'SPAN' ); str = str.replace( / /g, '&nbsp;' ); str = str.replace( /</g, '&lt;' ); str = str.replace( /\n/gm, '&nbsp;<br/>' ); if ( css != null )
         {
             if ( ( /br/gi ).test( str ) )
             {
-                var lines = str.split( '&nbsp;<br>' ); for ( var i = 0; i < lines.length; i++ )
+                var lines = str.split( '&nbsp;<br/>' ); for ( var i = 0; i < lines.length; i++ )
                 {
                     span = this.CreateElement( 'SPAN' ); span.className = css; span.innerHTML = lines[ i ]; this.div.appendChild( span ); if ( i + 1 < lines.length )
                         this.div.appendChild( this.CreateElement( 'BR' ) );

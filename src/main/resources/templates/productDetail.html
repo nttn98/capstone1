@@ -53,9 +53,9 @@
                                 <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inProductDetail', currentProductId=${product.getId()})}"
                                     class="close"><span>x</span></a>
                             </div>
-                            <br>
+                            <br />
                         </div>
-                        <br>
+                        <br />
                     </div>
                 </div>
                 <hr th:if="${session.cart != null}">
@@ -64,7 +64,7 @@
                         <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice" id="total"></span>
                         </h4>
                     </div>
-                    <br>
+                    <br />
                     <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
                         <button class="btn-checkout" id="checkoutBtn">Checkout
                         </button>
@@ -168,8 +168,7 @@
                                             th:text="${product.getQuantity()}"></span> in stock</p>
 
                                     <form th:action="@{/users/add-to-cart/{productId}(productId=${product.getId()})}"
-                                        method="GET" onsubmit="return check(this)">
-                                        <p id="curProductId" th:text="${product.getId()}" hidden></p>
+                                        method="GET">
                                         <input name="mode" value="inProductDetail" hidden>
                                         <!-- Change the `data-field` of buttons and `name` of input field's for multiple plus minus buttons-->
                                         <div class="input-group plus-minus-input">
@@ -191,7 +190,8 @@
                                             </div>
                                         </div>
                                         <button type="submit" class="button" style="margin-top: 10px;"
-                                            th:if="${product.getQuantity()>0}">Add to
+                                            th:if="${product.getQuantity()>0}"
+                                            th:onclick="'check(event,' + ${product.getId()} + ')'">Add to
                                             cart</button>
                                         <button type="submit" class="button"
                                             style="margin-top: 10px;background-color: rgba(134, 4, 4, 0.97); border: red;"
@@ -200,7 +200,7 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
+                        <br />
                         <div class="col-lg-12 mt-3">
                             [(${product.getDescription()})]
                         </div>
@@ -271,48 +271,47 @@
             } );
         }
 
-        function check ( e )
-        {
-            debugger
-            var curProductId = +$( "#curProductId" ).text();
-            var current = 0;
-            let max = +$( "#productAvailable" ).text();
-            let add = +$( "input[name='quantityInput']" ).val();
+        // function check ( e )
+        // {
+        //     var curProductId = +$( "#curProductId" ).text();
+        //     var current = 0;
+        //     let max = +$( "#productAvailable" ).text();
+        //     let add = +$( "input[name='quantityInput']" ).val();
 
-            var productIds = document.querySelectorAll( "input[id='productId']" );
-            var quantities = document.querySelectorAll( "input[id='quantity']" );
+        //     var productIds = document.querySelectorAll( "input[id='productId']" );
+        //     var quantities = document.querySelectorAll( "input[id='quantity']" );
 
-            for ( let i = 0; i < productIds.length; i++ )
-            {
-                let productIdElement = productIds[ i ];
-                if ( curProductId !== +productIdElement.value )
-                {
-                    current = 0;
-                } else
-                {
-                    let quantityElement = quantities[ i ];
-                    current = +quantityElement.value;
-                    break;
-                }
-            }
-            if ( max >= current + add )
-            {
-                return true;
-            }
-            else
-            {
-                $.toast( {
-                    heading: 'Error',
-                    text: `Quantity cannot exceed available stock. Available: ${ max }`,
-                    position: 'top-right',
-                    loaderBg: '#ff6849',
-                    icon: 'error',
-                    hideAfter: 2500,
-                    stack: 6,
-                } );
-                return false;
-            }
-        };
+        //     for ( let i = 0; i < productIds.length; i++ )
+        //     {
+        //         let productIdElement = productIds[ i ];
+        //         if ( curProductId !== +productIdElement.value )
+        //         {
+        //             current = 0;
+        //         } else
+        //         {
+        //             let quantityElement = quantities[ i ];
+        //             current = +quantityElement.value;
+        //             break;
+        //         }
+        //     }
+        //     if ( max >= current + add )
+        //     {
+        //         return true;
+        //     }
+        //     else
+        //     {
+        //         $.toast( {
+        //             heading: 'Error',
+        //             text: `Quantity cannot exceed available stock. Available: ${ max }`,
+        //             position: 'top-right',
+        //             loaderBg: '#ff6849',
+        //             icon: 'error',
+        //             hideAfter: 2500,
+        //             stack: 6,
+        //         } );
+        //         return false;
+        //     }
+        // };
         alert_action(/*[[${ alert }]]*/ )
     </script>
 

@@ -124,7 +124,7 @@
                                                         <i class="fa fa-check"></i>
                                                         Save
                                                     </button>
-                                                    <br>
+                                                    <br />
                                                     <a href="#" class="btn btn-danger" onclick="closeChangePass()">
                                                         <i class="fa fa-check"></i>
                                                         Cancel
@@ -172,7 +172,7 @@
                                         <button class="custom-btn btn-6"
                                             th:if="${manufacturer.status == 0}">Enable</button>
                                     </a>
-                                    <br>
+                                    <br />
                                     <a th:href="@{/manufacturers/edit/{id}(id=${manufacturer.id})}"
                                         th:if="${manufacturer.status == 1}" style="text-decoration: none;">
                                         <button class="custom-btn btn-14" th:if="${session.staff==null}">

@@ -215,7 +215,7 @@
                                                     name="password" placeholder="Enter password" required>
                                             </div>
                                             <button type="submit" class="btn-login">Login</button>
-                                            <br>
+                                            <br />
                                         </form><a
                                             href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:80/login-google&response_type=code&client_id=737514218091-4d9nc8u2milj8vpqr5i4o1a57sm2jpme.apps.googleusercontent.com&approval_prompt=force"
                                             class="gsi-material-button-contents">
@@ -263,7 +263,7 @@
                                                     autocorrect="off" autocapitalize="off">
                                             </div>
                                             <button type="submit" class="btn-login">Submit</button>
-                                            <br>
+                                            <br />
                                             <a href="#" id="HideRecoverPasswordLink" class="btn btn-danger"
                                                 style="width: 110px;" onclick="closeRecoverPassword()">Cancel</a>
                                         </form>
@@ -368,9 +368,9 @@
                                 <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inHome')}"
                                     class="close"><span>x</span></a>
                             </div>
-                            <br>
+                            <br />
                         </div>
-                        <br>
+                        <br />
                     </div>
                 </div>
                 <hr th:if="${session.cart != null}">
@@ -379,7 +379,7 @@
                         <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice" id="total"></span>
                         </h4>
                     </div>
-                    <br>
+                    <br />
                     <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
                         <button class="btn-checkout" id="checkoutBtn">Checkout
                         </button>
@@ -459,7 +459,7 @@
                             <div id="HEADLINE114" class="ladi-element">
                                 <h3 class="ladi-headline ladi-transition">NAP is a commercial electronics brand
                                     with thousands of products including Storage, PC, Laptop, and Networking
-                                    Systems....<br>
+                                    Systems....<br />
                                 </h3>
                             </div>
                             <a href="/list-products" id="BUTTON115" class="ladi-element">
@@ -491,7 +491,7 @@
                                 <div class="ladi-line ladi-transition"></div>
                                 <div id="HEADLINE114" class="ladi-element">
                                     <h3 class="ladi-headline ladi-transition">Providing products and solutions for
-                                        businesses.<br>
+                                        businesses.<br />
                                     </h3>
                                 </div>
                             </div>
@@ -508,7 +508,7 @@
                                 <div style="width: 60%; height: 200px;">
                                     <div id="HEADLINE112" class="ladi-element">
                                         <h3 class="ladi-headline ladi-transition">Customer
-                                            <br>support
+                                            <br />support
                                         </h3>
                                     </div>
                                     <div class="ladi-line ladi-transition"></div>
@@ -541,11 +541,10 @@
                             <div class="card-botBody text-white">
                                 <img th:src="${item.getImages()}">
 
-                                <p id="curProductId" th:text="${item.getId()}" hidden></p>
                                 <p id="productAvailable" th:text="${item.getQuantity()}" hidden></p>
 
-                                <a id="add-to-cart-link "
-                                    th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}">
+                                <a th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inHome}"
+                                    th:onclick="'check(event,' + ${item.id} + ')'">
                                     <figcaption>
                                         <div class="box-1">
                                             <div class="btn btn-one">

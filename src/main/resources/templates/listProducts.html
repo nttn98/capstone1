@@ -53,9 +53,9 @@
                                 <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inList')}"
                                     class="close"><span>x</span></a>
                             </div>
-                            <br>
+                            <br />
                         </div>
-                        <br>
+                        <br />
                     </div>
                 </div>
                 <hr th:if="${session.cart != null}">
@@ -64,7 +64,7 @@
                         <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice" id="total"></span>
                         </h4>
                     </div>
-                    <br>
+                    <br />
                     <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
                         <button class="btn-checkout" id="checkoutBtn">Checkout
                         </button>
@@ -141,10 +141,11 @@
                                         <div class="product-img">
                                             <img th:src="${item.getImages()}" style="height: 180px;">
                                             <div class="loop-button-wrap">
-                                                <p id="curProductId" th:text="${item.getId()}" hidden></p>
-                                                <a id="add-to-cart-link" th:title="|Select '${item.getName()}'|"
+                                                <a th:title="|Select '${item.getName()}'|"
                                                     th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}"
-                                                    class="button" th:if="${item.getQuantity()>0}">Add to cart</a>
+                                                    class="button" th:if="${item.getQuantity()>0}"
+                                                    th:onclick="'check(event,' + ${item.id} + ')'">Add
+                                                    to cart</a>
                                                 <a class="button" th:if="${item.getQuantity()<=0}" disable
                                                     style="background-color: rgba(134, 4, 4, 0.97); border: red;">Out of
                                                     stock</a>
