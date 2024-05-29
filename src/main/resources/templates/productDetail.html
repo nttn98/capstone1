@@ -26,8 +26,9 @@
                             <div class="col-2">
                                 <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
                             </div>
-                            <div id="productName" class="col-4" style="max-width: 30%;"
-                                th:text="${item.getProduct().getName()}">
+                            <div class="col-4" style="max-width: 30%;">
+                                <a class="productName" th:text="${item.getProduct().getName()}"
+                                    th:href="@{'/products/get-product-infor/' + ${item.getProduct().getId()}}"></a>
                             </div>
 
                             <div>
@@ -168,7 +169,8 @@
                                             th:text="${product.getQuantity()}"></span> in stock</p>
 
                                     <form th:action="@{/users/add-to-cart/{productId}(productId=${product.getId()})}"
-                                        method="GET">
+                                        method="GET" onsubmit="return check(this)">
+                                        <p id="curProductId" th:text="${product.getId()}" hidden></p>
                                         <input name="mode" value="inProductDetail" hidden>
                                         <!-- Change the `data-field` of buttons and `name` of input field's for multiple plus minus buttons-->
                                         <div class="input-group plus-minus-input">
@@ -190,8 +192,7 @@
                                             </div>
                                         </div>
                                         <button type="submit" class="button" style="margin-top: 10px;"
-                                            th:if="${product.getQuantity()>0}"
-                                            th:onclick="'check(event,' + ${product.getId()} + ')'">Add to
+                                            th:if="${product.getQuantity()>0}">Add to
                                             cart</button>
                                         <button type="submit" class="button"
                                             style="margin-top: 10px;background-color: rgba(134, 4, 4, 0.97); border: red;"
@@ -271,47 +272,47 @@
             } );
         }
 
-        // function check ( e )
-        // {
-        //     var curProductId = +$( "#curProductId" ).text();
-        //     var current = 0;
-        //     let max = +$( "#productAvailable" ).text();
-        //     let add = +$( "input[name='quantityInput']" ).val();
+        function check ( e )
+        {
+            var curProductId = +$( "#curProductId" ).text();
+            var current = 0;
+            let max = +$( "#productAvailable" ).text();
+            let add = +$( "input[name='quantityInput']" ).val();
 
-        //     var productIds = document.querySelectorAll( "input[id='productId']" );
-        //     var quantities = document.querySelectorAll( "input[id='quantity']" );
+            var productIds = document.querySelectorAll( "input[id='productId']" );
+            var quantities = document.querySelectorAll( "input[id='quantity']" );
 
-        //     for ( let i = 0; i < productIds.length; i++ )
-        //     {
-        //         let productIdElement = productIds[ i ];
-        //         if ( curProductId !== +productIdElement.value )
-        //         {
-        //             current = 0;
-        //         } else
-        //         {
-        //             let quantityElement = quantities[ i ];
-        //             current = +quantityElement.value;
-        //             break;
-        //         }
-        //     }
-        //     if ( max >= current + add )
-        //     {
-        //         return true;
-        //     }
-        //     else
-        //     {
-        //         $.toast( {
-        //             heading: 'Error',
-        //             text: `Quantity cannot exceed available stock. Available: ${ max }`,
-        //             position: 'top-right',
-        //             loaderBg: '#ff6849',
-        //             icon: 'error',
-        //             hideAfter: 2500,
-        //             stack: 6,
-        //         } );
-        //         return false;
-        //     }
-        // };
+            for ( let i = 0; i < productIds.length; i++ )
+            {
+                let productIdElement = productIds[ i ];
+                if ( curProductId !== +productIdElement.value )
+                {
+                    current = 0;
+                } else
+                {
+                    let quantityElement = quantities[ i ];
+                    current = +quantityElement.value;
+                    break;
+                }
+            }
+            if ( max >= current + add )
+            {
+                return true;
+            }
+            else
+            {
+                $.toast( {
+                    heading: 'Error',
+                    text: `Quantity cannot exceed available stock. Available: ${ max }`,
+                    position: 'top-right',
+                    loaderBg: '#ff6849',
+                    icon: 'error',
+                    hideAfter: 2500,
+                    stack: 6,
+                } );
+                return false;
+            }
+        };
         alert_action(/*[[${ alert }]]*/ )
     </script>
 

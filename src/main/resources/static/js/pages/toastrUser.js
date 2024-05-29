@@ -105,6 +105,16 @@ function alert_action ( alert_action )
                hideAfter: 3500
           } );
      }
+     else if ( alert_action == "paymentSuccess" )
+     {
+          $.toast( {
+               heading: ' Order Success !!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'success',
+               hideAfter: 3500
+          } );
+     }
      localStorage.removeItem( 'alert-action' );
 }
 

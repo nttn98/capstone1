@@ -454,7 +454,9 @@ public class UserController {
         }
         session.removeAttribute("cart");
         orderService.saveOrder(order);
-        return "redirect:/home-page";
+        model.addAttribute("alert", "paymentSuccess");
+        // return "redirect:/home-page";
+        return homeController.getHome(model, session, 0, 10);
     }
 
     // get order by user id

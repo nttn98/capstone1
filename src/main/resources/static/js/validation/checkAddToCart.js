@@ -1,7 +1,9 @@
-function check ( event, curProductId )
+function check ( event, curProductId, max )
 {
+    debugger
     curProductId = +curProductId;
-    let max = +$( "#productAvailable" ).text();
+    // let max = +$( "#productAvailable" ).text();
+    max = +max;
     let add = 1;
     let current = +$( "#quantity" ).val();
     current = isNaN( current ) ? 0 : current;

@@ -24,8 +24,9 @@
                             <div class="col-2">
                                 <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
                             </div>
-                            <div id="productName" class="col-4" style="max-width: 30%;"
-                                th:text="${item.getProduct().getName()}">
+                            <div class="col-4" style="max-width: 30%;">
+                                <a class="productName" th:text="${item.getProduct().getName()}"
+                                    th:href="@{'/products/get-product-infor/' + ${item.getProduct().getId()}}"></a>
                             </div>
 
                             <div>

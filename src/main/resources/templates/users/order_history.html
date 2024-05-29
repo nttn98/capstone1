@@ -25,8 +25,9 @@
                         <div class="col-2">
                             <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
                         </div>
-                        <div id="productName" class="col-4" style="max-width: 30%;"
-                            th:text="${item.getProduct().getName()}">
+                        <div class="col-4" style="max-width: 30%;">
+                            <a class="productName" th:text="${item.getProduct().getName()}"
+                                th:href="@{'/products/get-product-infor/' + ${item.getProduct().getId()}}"></a>
                         </div>
 
                         <div>
@@ -52,9 +53,9 @@
                             <a th:href="@{/users/delete-product-in-cart(productId=${item.getProduct().getId()}, mode='inOrderHistory')}"
                                 class="close"><span>x</span></a>
                         </div>
-                        <br/>
+                        <br />
                     </div>
-                    <br/>
+                    <br />
                 </div>
             </div>
             <hr th:if="${session.cart != null}">
@@ -63,7 +64,7 @@
                     <h4>Total: <span th:text="${session.cart.getTotal()}" class="formatPrice" id="total"></span>
                     </h4>
                 </div>
-                <br/>
+                <br />
                 <a th:href="@{/users/checkout-page}" th:if="${session.user != null}">
                     <button class="btn-checkout" id="checkoutBtn">Checkout
                     </button>

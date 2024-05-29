@@ -26,8 +26,9 @@
                             <div class="col-2">
                                 <img th:src="${item.getProduct().getImages()}" style="width: 100%;">
                             </div>
-                            <div id="productName" class="col-4" style="max-width: 30%;"
-                                th:text="${item.getProduct().getName()}">
+                            <div class="col-4" style="max-width: 30%;">
+                                <a class="productName" th:text="${item.getProduct().getName()}"
+                                    th:href="@{'/products/get-product-infor/' + ${item.getProduct().getId()}}"></a>
                             </div>
 
                             <div>
@@ -144,7 +145,8 @@
                                                 <a th:title="|Select '${item.getName()}'|"
                                                     th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}"
                                                     class="button" th:if="${item.getQuantity()>0}"
-                                                    th:onclick="'check(event,' + ${item.id} + ')'">Add
+                                                    th:onclick="'check(event,' + ${item.id} + ',' + ${item.getQuantity()} + ')'">
+                                                    Add
                                                     to cart</a>
                                                 <a class="button" th:if="${item.getQuantity()<=0}" disable
                                                     style="background-color: rgba(134, 4, 4, 0.97); border: red;">Out of
