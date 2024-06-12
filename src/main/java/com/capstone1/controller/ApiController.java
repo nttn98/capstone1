@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.capstone1.model.Cart;
 import com.capstone1.model.Category;
 import com.capstone1.model.Manufacturer;
+import com.capstone1.model.Notification;
 import com.capstone1.model.OrderDetail;
 import com.capstone1.model.Product;
 import com.capstone1.model.User;
@@ -20,6 +21,7 @@ import com.capstone1.services.CartItemService;
 import com.capstone1.services.CartService;
 import com.capstone1.services.CategoryService;
 import com.capstone1.services.ManufacturerService;
+import com.capstone1.services.NotificationService;
 import com.capstone1.services.OrderDetailService;
 import com.capstone1.services.ProductService;
 import com.capstone1.services.StaffService;
@@ -50,6 +52,9 @@ public class ApiController {
 
     @Resource
     CartItemService cartItemService;
+
+    @Resource
+    NotificationService notificationService;
 
     @Resource
     ManufacturerService manufacturerService;
@@ -186,4 +191,20 @@ public class ApiController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
+
+    @GetMapping("/readNotifications")
+    public ResponseEntity<String> readNotifications(@RequestParam long userId, HttpSession session) {
+        User user = userService.getUserById(userId);
+        List<Notification> notifications = notificationService.findByUserIdOrderByIdDesc(user.getId());
+        for (Notification notification : notifications) {
+            notification.setRead(true);
+            notificationService.markNotificationAsRead(notification.getId(), userId);
+        }
+        user.setNotifications(notifications);
+        userService.saveUser(user);
+
+        session.setAttribute("user", user);
+        return ResponseEntity.ok("Notifications marked as read");
+    }
+
 }

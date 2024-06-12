@@ -26,6 +26,7 @@ import com.capstone1.model.BlogLogin.LoginStatus;
 import com.capstone1.model.Category;
 import com.capstone1.model.Contact;
 import com.capstone1.model.Manufacturer;
+import com.capstone1.model.Notification;
 import com.capstone1.model.Order;
 import com.capstone1.model.Product;
 import com.capstone1.model.Staff;
@@ -39,6 +40,7 @@ import com.capstone1.services.CartService;
 import com.capstone1.services.CategoryService;
 import com.capstone1.services.ContactServices;
 import com.capstone1.services.ManufacturerService;
+import com.capstone1.services.NotificationService;
 import com.capstone1.services.OrderDetailService;
 import com.capstone1.services.OrderService;
 import com.capstone1.services.ProductService;
@@ -84,6 +86,8 @@ public class HomeController {
     ContactServices contactServices;
     @Resource
     BlogLoginService blogLoginService;
+    @Resource
+    NotificationService notificationService;
 
     @Autowired
     Encoding encoding;
@@ -370,8 +374,19 @@ public class HomeController {
             @RequestParam(defaultValue = "5") int size) {
         Order existOrder = orderService.getOrderById(id);
 
+        HashMap<Integer, String> map = new HashMap<>();
+        map.put(0, "Prepared");
+        map.put(1, "Shipping");
+        map.put(2, "Delivered");
+        map.put(3, "Canceled");
+
         if (existOrder.getStatus() != newStatus) {
+            String message = "The status of order " + existOrder.getId() + " has been changed from "
+                    + map.get(existOrder.getStatus()) + " to " + map.get(newStatus);
+            LocalDateTime now = LocalDateTime.now();
             existOrder.setStatus(newStatus);
+
+            notificationService.save(new Notification(existOrder.getUser(), message, false, now));
         }
 
         model.addAttribute("alert", "edit");

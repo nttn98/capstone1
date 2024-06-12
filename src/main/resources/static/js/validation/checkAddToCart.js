@@ -1,6 +1,5 @@
 function check ( event, curProductId, max )
 {
-    debugger
     curProductId = +curProductId;
     // let max = +$( "#productAvailable" ).text();
     max = +max;

@@ -3,7 +3,7 @@ function alert_action ( alert_action )
      if ( alert_action == 'success' )
      {
           $.toast( {
-               heading: 'Login successfull !!',
+               heading: 'Login successfully !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',
@@ -52,7 +52,7 @@ function alert_action ( alert_action )
      } else if ( alert_action == "logout" )
      {
           $.toast( {
-               heading: 'Logout successful !!',
+               heading: 'Logout successfully !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',
@@ -61,7 +61,7 @@ function alert_action ( alert_action )
      } else if ( alert_action == "edit" )
      {
           $.toast( {
-               heading: 'Edit successful !!',
+               heading: 'Edit successfully !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',
@@ -80,7 +80,7 @@ function alert_action ( alert_action )
      else if ( alert_action == "recoverPass" )
      {
           $.toast( {
-               heading: ' You recovered your password successfull !!',
+               heading: ' You recovered your password successfully !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',
@@ -89,7 +89,7 @@ function alert_action ( alert_action )
      } else if ( alert_action == "successRegister" )
      {
           $.toast( {
-               heading: ' Register successfull !!',
+               heading: ' Register successfully !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',
@@ -98,7 +98,7 @@ function alert_action ( alert_action )
      } else if ( alert_action == "changePass" )
      {
           $.toast( {
-               heading: ' Changed password success !!',
+               heading: ' Changed password successfully !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',
@@ -108,13 +108,24 @@ function alert_action ( alert_action )
      else if ( alert_action == "paymentSuccess" )
      {
           $.toast( {
-               heading: ' Order Success !!',
+               heading: ' Order successfully !!',
                position: 'top-right',
                loaderBg: '#ff6849',
                icon: 'success',
                hideAfter: 3500
           } );
      }
+     else if ( alert_action == "addToCartS" )
+     {
+          $.toast( {
+               heading: ' Add to cart successfully !!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'success',
+               hideAfter: 3500
+          } );
+     }
+
      localStorage.removeItem( 'alert-action' );
 }
 

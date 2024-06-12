@@ -30,7 +30,7 @@
                             </div>
 
                             <div>
-                                <input id="page" name="page" value="products" hidden>
+                                <input id="page" name="page" value="seaching" hidden>
                                 <input id="productId" name="productId" th:value="${item.getProduct().getId()}" hidden>
                                 <input id="productPrice" name="productPrice" th:value="${item.getProduct().getPrice()}"
                                     hidden>
@@ -139,13 +139,21 @@
                                     <div class="product-info">
                                         <div class="product-img">
                                             <img th:src="${item.getImages()}" style="height: 180px;">
-                                            <div class="loop-button-wrap">
+                                            <div class="loop-button-wrap add-to-cart">
                                                 <a id="add-to-cart-link" th:title="|Select '${item.getName()}'|"
                                                     th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inSearchingPage}"
-                                                    class="button" th:if="${item.getQuantity()>0}">Add to cart</a>
+                                                    class="button add-to-cart" th:if="${item.getQuantity()>0}">Add to
+                                                    cart</a>
                                                 <a class="button" th:if="${item.getQuantity()<=0}" disable
                                                     style="background-color: rgba(134, 4, 4, 0.97); border: red;">Out of
                                                     stock</a>
+                                            </div>
+                                            <div class="loop-button-wrap buy-now"
+                                                th:title="|Select '${item.getName()}'|">
+                                                <a th:href="${session.user != null} ? @{'/users/buy-now/' + ${item.id}}:'#'"
+                                                    th:onclick="${session.user==null}? 'showLogin(); return false;':''"
+                                                    class="button buy-now" th:if="${item.getQuantity()>0}">
+                                                    Buy now</a>
                                             </div>
                                         </div>
                                         <div class="product-details">

@@ -35,7 +35,7 @@ document.addEventListener( "DOMContentLoaded", function ()
                     subtotalValue = quantityValue * productPriceValue;
                     subtotal.textContent = formatMoney( subtotalValue );
                     mode = 'minus';
-                    updateQuantity( quantityValue, row, productQuantityValue, productIdValue, mode );
+                    updateQuantity( quantityValue, productIdValue, mode );
                 }
             } );
 
@@ -48,7 +48,7 @@ document.addEventListener( "DOMContentLoaded", function ()
                     subtotalValue = quantityValue * productPriceValue;
                     subtotal.textContent = formatMoney( subtotalValue );
                     mode = 'plus';
-                    updateQuantity( quantityValue, row, productQuantityValue, productIdValue, mode );
+                    updateQuantity( quantityValue, productIdValue, mode );
                 } else
                 {
                     var error = new Error( `Quantity cannot exceed available stock. Available: ${ productQuantityValue }` );
@@ -74,7 +74,7 @@ document.addEventListener( "DOMContentLoaded", function ()
 
     checkCartStockStatus();
 
-    async function updateQuantity ( quantityValue, row, productQuantityValue, productIdValue, mode )
+    async function updateQuantity ( quantityValue, productIdValue, mode, page )
     {
         try
         {

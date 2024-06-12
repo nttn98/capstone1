@@ -48,7 +48,21 @@
     </body>
 
     <script th:inline="javascript">
-        var editor1 = new RichTextEditor( "#div_editor1" );
+        $( '#div_editor1' ).summernote( {
+            placeholder: 'Description',
+            tabsize: 2,
+            height: 120,
+            toolbar: [
+                [ 'style', [ 'style' ] ],
+                [ 'font', [ 'bold', 'underline', 'clear' ] ],
+                [ 'color', [ 'color' ] ],
+                [ 'para', [ 'ul', 'ol', 'paragraph' ] ],
+                [ 'table', [ 'table' ] ],
+                [ 'insert', [ 'link', 'picture', 'video' ] ],
+                [ 'view', [ 'fullscreen', 'codeview', 'help' ] ]
+            ]
+        } );
+
         $( '.dropify-wrapper' ).height( $( 'form > div > div:nth-child(2)' ).height() - 60 + 'px' )
         $( "#input-file-now" ).change( function ( event )
         {

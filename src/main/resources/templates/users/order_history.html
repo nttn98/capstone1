@@ -126,7 +126,8 @@
                     <div class="cell">[(${order.getId()})]</div>
                     <div class="cell">[(${order.getOrderDate()})]</div>
                     <div class="cell">[(${order.getReceiverName()})]</div>
-                    <div style="white-space: nowrap;" class="cell">[(${order.getReceiverAddress()})]</div>
+                    <div style="white-space: nowrap; overflow: hidden;" class="cell">[(${order.getReceiverAddress()})]
+                    </div>
                     <div class="cell">[(${order.getReceiverNumberphone()})]</div>
                     <div class="cell">
                         <p class="formatPrice" style="padding-top: 10px">[(${order.getTotal()})]</p>
@@ -137,7 +138,7 @@
                             th:if="${order.getType().toString().equals('CREDIT')}">Paid</button>
                         <a th:href="@{'/orders/user-change-status/' + ${order.id} + '?status=3'}">
                             <button class="custom-btn btn-5"
-                                th:if="${order.getStatus() != 3 && order.getStatus() != 1 && order.getType().toString().equals('COD')}">Cancel</button>
+                                th:if="${order.getStatus() == 0 && order.getType().toString().equals('COD')}">Cancel</button>
                         </a>
                     </div>
                     <div class="cell details">

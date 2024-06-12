@@ -2,6 +2,7 @@ ul ul, ul ol, ol ol, ol ul {
     margin: 0
 }
 
+/* 
 select, input, textarea {
     background: #fff;
     border: 1px solid #eceff8;
@@ -23,7 +24,7 @@ input:focus, select:focus, textarea:focus {
 
 input:focus, select:focus, button:focus {
     outline: none
-}
+} */
 
 .mb-55 {
     margin-bottom: 55px
@@ -997,10 +998,10 @@ li.cart-empty-title h5 {
     border-radius: 3px
 }
 
-.btn:hover {
+/* .btn:hover {
     background-color: #138496;
     border-color: #117a8b;
-}
+} */
 
 .login-form-container {
     background: transparent;

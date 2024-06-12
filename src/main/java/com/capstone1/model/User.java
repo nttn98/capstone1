@@ -1,8 +1,20 @@
 package com.capstone1.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
@@ -22,7 +34,24 @@ public class User {
     private String ggID;
     private LoginType type;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    List<Notification> notifications;
+
     public User() {
+        this.notifications = new ArrayList<>();
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public List<Notification> getUnReadNotifications() {
+        return this.notifications.stream().filter(n -> !n.isRead()).collect(Collectors.toList());
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
     }
 
     public String getUsername() {

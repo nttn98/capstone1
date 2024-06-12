@@ -108,8 +108,34 @@ function closeRegister ()
 $( '.closeMask' ).click( ( e ) =>
 {
     if ( e.target.classList.contains( 'closeMask' ) )
+    {
         $( 'button.close.close-mask' ).click();
-    closeRecoverPassword();
+        closeRecoverPassword();
+        closeRegister();
+    }
+    //close noti
+    var dropdown = document.getElementById( 'notiDropdown' );
+    if ( dropdown !== null && dropdown.style.display === 'block' )
+    {
+
+        dropdown.style.opacity = '0';
+        setTimeout( function ()
+        {
+            dropdown.style.display = 'none';
+            resetNotifications();
+        }, 200 );
+        window.location.reload();
+    }
+
+    // close descript
+    var description = document.querySelector( '.description-extend' );
+    if ( description !== null && description.style.display === 'block' )
+    {
+        setTimeout( function ()
+        {
+            description.style.display = 'none';
+        }, 200 );
+    }
 } );
 
 $( document ).ready( function ()
@@ -171,4 +197,115 @@ function closecart ()
 {
     $( '.cart' ).removeClass( "w-43" )
     $( '.closeMask' ).fadeOut();
+}
+
+function showNoti ( userId )
+{
+    var dropdown = document.getElementById( 'notiDropdown' );
+    if ( dropdown.style.display === 'none' || dropdown.style.display === '' )
+    {
+        dropdown.style.display = 'block';
+        dropdown.style.opacity = '1';
+        $( '.closeMask' ).fadeIn();
+
+        fetch( `/readNotifications?userId=${ userId }`, {
+            credentials: 'include'
+        } )
+            .then( response =>
+            {
+                if ( !response.ok )
+                {
+                    throw new Error( 'Network response was not ok' );
+                }
+                return response.text();
+            } )
+            .then( data =>
+            {
+                console.log( 'Notifications marked as read' );
+            } )
+            .catch( error =>
+            {
+                console.error( 'There was a problem with the fetch operation:', error );
+            } );
+    } else
+    {
+        dropdown.style.opacity = '0';
+        setTimeout( function ()
+        {
+            dropdown.style.display = 'none';
+
+        }, 200 );
+    }
+}
+
+
+function showDescriptionExtend ()
+{
+    var description = document.querySelector( '.description-extend' );
+    description.style.display = 'block';
+    $( '.closeMask' ).fadeIn();
+}
+
+function closeDescription ()
+{
+    var description = document.querySelector( '.description-extend' );
+    setTimeout( function ()
+    {
+        description.style.display = 'none';
+    }, 200 );
+    $( '.closeMask' ).fadeOut();
+}
+
+var showMoreNotiBtn = document.getElementById( 'show-more-noti' );
+
+if ( showMoreNotiBtn )
+{
+    showMoreNotiBtn.addEventListener( 'click', () =>
+    {
+        const hiddenItems = document.querySelectorAll( '.hidden-noti' );
+        hiddenItems.forEach( item =>
+        {
+            item.classList.remove( 'hidden-noti' );
+        } );
+        showMoreNotiBtn.style.display = 'none';
+        showLessNotiBtn.style.display = 'block';
+    } );
+}
+
+var showLessNotiBtn = document.getElementById( 'show-less-noti' );
+if ( showLessNotiBtn )
+{
+    showLessNotiBtn.addEventListener( 'click', () =>
+    {
+        const allItems = document.querySelectorAll( '.noti-mess-head' );
+        allItems.forEach( ( item, index ) =>
+        {
+            if ( index > 2 )
+            {
+                item.classList.add( 'hidden-noti' );
+            }
+        } );
+        showMoreNotiBtn.style.display = 'block';
+        showLessNotiBtn.style.display = 'none';
+    } );
+}
+
+function resetNotifications ()
+{
+    var allItems = document.querySelectorAll( '.noti-mess-head' );
+    allItems.forEach( ( item, index ) =>
+    {
+        if ( index > 2 )
+        {
+            item.classList.add( 'hidden-noti' );
+        }
+    } );
+    if ( showMoreNotiBtn )
+    {
+        showMoreNotiBtn.style.display = 'block';
+    }
+    if ( showLessNotiBtn )
+    {
+        showLessNotiBtn.style.display = 'none';
+    }
 }

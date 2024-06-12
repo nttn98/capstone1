@@ -193,6 +193,7 @@ public class ProductController {
 
         try {
             product.setQuantity(quantity);
+            product.setStatus(1);
             product = productService.saveProduct(product);
 
             String fileName = product.getId() + ".png";

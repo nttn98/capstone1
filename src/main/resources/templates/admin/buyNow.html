@@ -5,32 +5,7 @@
     <link rel="stylesheet" href="/css/checkout/checkout.css">
     <link rel="stylesheet" href="/css/theme-custom.css" />
 
-    <style>
-        #show-more-btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 10px 0;
-            font-size: 16px;
-            color: black;
-            background-color: #a1ed88;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-            font-weight: 600;
-        }
 
-        #show-more-btn:hover {
-            background-color: #469027;
-            color: whitesmoke;
-        }
-
-        .hidden-item {
-            display: none;
-        }
-    </style>
     <title>Check-out Page</title>
 
     <body class="header_section">
@@ -138,7 +113,8 @@
                                 <div class="botiga-sc botiga-sc-layout5">
                                     <div class="woocommerce-notices-wrapper"></div>
                                     <form name="checkout" class="botiga-sc-form checkout woocommerce-checkout"
-                                        th:action="@{/users/add-order}" method="GET" id="orderForm">
+                                        th:action="@{/users/add-order-buy-now/{productId}(productId=${product.id})}"
+                                        method="GET" id="orderForm">
                                         <div class="botiga-sc-order-review">
                                             <div class="botiga-sc-contents">
                                                 <div class="botiga-sc-content-item active"
@@ -215,42 +191,35 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="botiga-sc-cart-summary" th:if="${session.cart == null}">
-                                            <script th:inline="javascript">
-                                                window.location.href = "/";
-                                            </script>
-                                        </div>
-                                        <div class="botiga-sc-cart-summary" th:if="${session.cart!=null}">
-                                            <input type="hidden" name="amount" th:value="${session.cart.getTotal()}">
+                                        <div class="botiga-sc-cart-summary" th:if="${product!=null}">
+                                            <input type="hidden" name="amount" th:value="${product.getPrice()}">
                                             <input type="hidden" name="orderInfo"
-                                                th:value="'Cart checkout ' + ${session.cart.getId()}">
+                                                th:value="'Successful payment of product ' + ${product.getId()}">
+                                            <input name="quantityInput" th:value="${quantityInput}" hidden>
 
                                             <div class="botiga-sc-cart-summary-item">
-                                                <div class="botiga-sc-cart-products"
-                                                    th:each="item, iterStat : ${session.cart.getListItem()}">
-                                                    <div class="botiga-sc-product"
-                                                        th:classappend="${iterStat.index > 2} ? 'hidden-item' : ''">
+                                                <div class="botiga-sc-cart-products">
+                                                    <div class="botiga-sc-product">
                                                         <div class="botiga-sc-product-thumbnail">
                                                             <figure>
                                                                 <img width="150" height="150"
-                                                                    th:src="${item.getProduct().getImages()}"
+                                                                    th:src="${product.getImages()}"
                                                                     class="attachment-thumbnail size-thumbnail" alt=""
                                                                     loading="lazy">
                                                             </figure>
-                                                            <span class="botiga-sc-product-quantity"
-                                                                th:text="${item.getQuantity()}"
-                                                                id="quantityIncart"></span>
+                                                            <span class="botiga-sc-product-quantity" id="quantityIncart"
+                                                                th:text="${quantityInput}"></span>
                                                         </div>
                                                         <div class="botiga-sc-product-info">
                                                             <div class="botiga-sc-product-name">
-                                                                <span th:text="${item.getProduct.getName()}">
+                                                                <span th:text="${product.getName()}">
                                                                 </span>
                                                                 <dl class="variation">
                                                                     <dt class="variation-Vendor">Vendor:</dt>
                                                                     <dd class="variation-Vendor"
                                                                         style="margin-bottom: -15px;">
                                                                         <p
-                                                                            th:text="${item.getProduct().getManufacturer().getName()}">
+                                                                            th:text="${product.getManufacturer().getName()}">
                                                                         </p>
                                                                     </dd>
                                                                 </dl>
@@ -258,23 +227,20 @@
                                                             <div class="botiga-sc-product-subtotal">
                                                                 <span class="woocommerce-Price-amount amount">
                                                                     <bdi class="formatPrice"
-                                                                        th:text="${item.getSubtotal()}"></bdi>
+                                                                        th:text="${product.getPrice()}"></bdi>
                                                                 </span>
                                                             </div>
                                                             <div class="botiga-sc-product-exist">
                                                                 <span style="color: green; font-weight: 600;">
                                                                     Available in stock:
                                                                 </span>
-                                                                <span th:text="${item.getProduct().getQuantity()}">
+                                                                <span th:text="${product.getQuantity()}">
                                                                 </span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <p id="show-more-btn" th:if="${session.cart.getListItem().size() > 3}">
-                                                Show More
-                                            </p>
                                             <br />
                                             <div class="botiga-sc-cart-summary-item">
                                                 <div class="botiga-sc-cart-total">
@@ -283,7 +249,7 @@
                                                             <tr>
                                                                 <td>Subtotal</td>
                                                                 <td><span class="woocommerce-Price-amount amount"><bdi
-                                                                            th:text="${session.cart.getTotal()}"
+                                                                            th:text="${product.getPrice()}"
                                                                             class="formatPrice"></bdi></span>
                                                                 </td>
                                                             </tr>
@@ -294,7 +260,7 @@
                                                                 <td>
                                                                     <strong>
                                                                         <span class="woocommerce-Price-amount amount">
-                                                                            <bdi th:text="${session.cart.getTotal()}"
+                                                                            <bdi th:text="${product.getPrice()}"
                                                                                 class="formatPrice"></bdi>
                                                                         </span>
                                                                     </strong>
@@ -374,6 +340,31 @@
         alert_action(/*[[${alert}]]*/ )
 
     </script>
+    <style>
+        #show-more-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            font-size: 16px;
+            color: black;
+            background-color: #a1ed88;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            font-weight: 600;
+        }
 
+        #show-more-btn:hover {
+            background-color: #469027;
+            color: whitesmoke;
+        }
+
+        .hidden-item {
+            display: none;
+        }
+    </style>
 
 </html>

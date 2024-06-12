@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.capstone1.model.Cart;
 import com.capstone1.model.CartItem;
+import com.capstone1.model.Notification;
 import com.capstone1.model.Order;
 import com.capstone1.model.Order.PaymentType;
 import com.capstone1.model.OrderDetail;
@@ -26,6 +27,7 @@ import com.capstone1.model.User;
 import com.capstone1.model.User.LoginType;
 import com.capstone1.services.CartItemService;
 import com.capstone1.services.CartService;
+import com.capstone1.services.NotificationService;
 import com.capstone1.services.OrderDetailService;
 import com.capstone1.services.OrderService;
 import com.capstone1.services.ProductService;
@@ -53,6 +55,8 @@ public class UserController {
     ProductService productService;
     @Resource
     StaffService staffService;
+    @Resource
+    NotificationService notificationService;
     @Autowired
     HomeController homeController;
     @Autowired
@@ -214,8 +218,14 @@ public class UserController {
         }
 
         if (user != null && user.getStatus() == 1) {
+
+            List<Notification> notifications = (List<Notification>) notificationService
+                    .findByUserIdOrderByIdDesc(user.getId());
+            user.setNotifications(notifications);
+
             session.setAttribute("userId", user.getId());
             session.setAttribute("user", user);
+
             model.addAttribute("alert", "success");
 
             Cart oldCart = (Cart) session.getAttribute("cart");
@@ -240,6 +250,7 @@ public class UserController {
             }
 
             session.setAttribute("cart", cart);
+
             return homeController.getHome(model, session, page, size);
         }
 
@@ -279,7 +290,7 @@ public class UserController {
             User user = userService.getUserById(userId);
             addToCartWithUser(session, cart, temp, user, quantityInput);
         }
-
+        model.addAttribute("alert", "addToCartS");
         if (mode.equals("inList")) {
             return homeController.paginated(model, session, page, size);
         } else if (mode.equals("inHome")) {
@@ -355,7 +366,6 @@ public class UserController {
 
             session.setAttribute("cart", cart);
         }
-
         return homeController.getHome(model, session, 0, 10);
     }
 
@@ -457,6 +467,59 @@ public class UserController {
         model.addAttribute("alert", "paymentSuccess");
         // return "redirect:/home-page";
         return homeController.getHome(model, session, 0, 10);
+    }
+
+    /* user create order buy now */
+    @GetMapping("/users/add-order-buy-now/{productId}")
+    public String addOrderBuyNow(Model model, HttpSession session, HttpServletRequest request,
+            @RequestParam String name, @PathVariable long productId,
+            @RequestParam String address, @RequestParam long numberphone, @RequestParam String payment_method,
+            @RequestParam(defaultValue = "1") int quantityInput) {
+        Long userId = (Long) session.getAttribute("userId");
+        User userLogin = userService.getUserById(userId);
+        LocalDateTime now = LocalDateTime.now();
+        Order order = null;
+        double total = 0;
+
+        order = orderService.saveOrder(new Order(0, userLogin, now));
+
+        Product product = productService.getProductById(productId);
+
+        if (product != null) {
+            Product productInDb = productService.getProductById(product.getId());
+
+            OrderDetail tempOrderDetail = orderDetailService
+                    .saveOrderDetail(new OrderDetail(order, product, quantityInput, product.getPrice()));
+
+            // change quantity after order
+            productInDb.setQuantity(productInDb.getQuantity() - quantityInput);
+
+            total += tempOrderDetail.getFinalPrice();
+
+            order.setReceiverName(name);
+            order.setReceiverAddress(address);
+            order.setReceiverNumberphone(numberphone);
+            order.setTotal(total);
+            order.setType(PaymentType.COD);
+
+        }
+
+        orderService.saveOrder(order);
+        model.addAttribute("alert", "paymentSuccess");
+        // return "redirect:/home-page";
+        return homeController.getHome(model, session, 0, 10);
+    }
+
+    // user buy now
+    @GetMapping("/users/buy-now/{productId}")
+    public String buyNow(Model model, @PathVariable long productId, HttpSession session,
+            @RequestParam(defaultValue = "1") int quantityInput) {
+
+        homeController.isUserLogin(model, session);
+        Product tempProduct = productService.getProductById(productId);
+        model.addAttribute("product", tempProduct);
+        model.addAttribute("quantityInput", quantityInput);
+        return "admin/buyNow.html";
     }
 
     // get order by user id

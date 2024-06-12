@@ -59,7 +59,6 @@ public class CategoryController {
         category.setStatus(1);
         System.out.println("Category added successfully");
         categoryService.saveCategory(category);
-        model.addAttribute("alert", "success");
 
         return listCategories(page, size, model, session);
     }
