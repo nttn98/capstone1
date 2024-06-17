@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,15 +17,17 @@ public class TokenAdmin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String token;
-    private Long staffId;
+    @ManyToOne
+    @JoinColumn(name = "staff_id")
+    private Staff staff;
     private LocalDateTime expirationTime;
 
     public TokenAdmin() {
     }
 
-    public TokenAdmin(String token, Long staffId, LocalDateTime expirationTime) {
+    public TokenAdmin(String token, Staff staff, LocalDateTime expirationTime) {
         this.token = token;
-        this.staffId = staffId;
+        this.staff = staff;
         this.expirationTime = expirationTime;
     }
 
@@ -43,12 +47,12 @@ public class TokenAdmin {
         this.token = token;
     }
 
-    public Long getStaffId() {
-        return staffId;
+    public Staff getStaff() {
+        return staff;
     }
 
-    public void setStaffId(Long userId) {
-        this.staffId = userId;
+    public void setStaff(Staff staff) {
+        this.staff = staff;
     }
 
     public LocalDateTime getExpirationTime() {

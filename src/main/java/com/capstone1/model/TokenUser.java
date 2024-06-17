@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -15,15 +17,17 @@ public class TokenUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String token;
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
     private LocalDateTime expirationTime;
 
     public TokenUser() {
     }
 
-    public TokenUser(String token, Long userId, LocalDateTime expirationTime) {
+    public TokenUser(String token, User user, LocalDateTime expirationTime) {
         this.token = token;
-        this.userId = userId;
+        this.user = user;
         this.expirationTime = expirationTime;
     }
 
@@ -43,12 +47,12 @@ public class TokenUser {
         this.token = token;
     }
 
-    public Long getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDateTime getExpirationTime() {

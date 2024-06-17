@@ -446,7 +446,7 @@ public class HomeController {
             model.addAttribute("message", "Your token link is invalid!");
             return getLoginPage(model, session);
         }
-        Staff staff = staffService.getStaffById(token.getStaffId());
+        Staff staff = staffService.getStaffById(token.getStaff().getId());
 
         model.addAttribute("flag", true);
         model.addAttribute("message", "You have successfully changed your password.");
@@ -476,7 +476,7 @@ public class HomeController {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(30);
 
-        tokenAdminService.save(new TokenAdmin(tokenString, staff.getId(), expirationTime));
+        tokenAdminService.save(new TokenAdmin(tokenString, staff, expirationTime));
 
         String siteURL = request.getRequestURL().toString();
         siteURL = siteURL.replace(request.getServletPath(), "");
@@ -515,7 +515,7 @@ public class HomeController {
             model.addAttribute("message", "Your token link is invalid!");
             return getHome(model, session, page, size);
         }
-        User user = userService.getUserById(token.getUserId());
+        User user = userService.getUserById(token.getUser().getId());
 
         model.addAttribute("flag", true);
         model.addAttribute("message", "You have successfully changed your password.");
@@ -547,7 +547,7 @@ public class HomeController {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expirationTime = now.plusMinutes(30);
 
-        tokenUserService.save(new TokenUser(tokenString, existuser.getId(), expirationTime));
+        tokenUserService.save(new TokenUser(tokenString, existuser, expirationTime));
 
         String siteURL = request.getRequestURL().toString();
         siteURL = siteURL.replace(request.getServletPath(), "");

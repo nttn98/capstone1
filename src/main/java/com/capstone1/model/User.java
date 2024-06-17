@@ -38,8 +38,13 @@ public class User {
     @JsonIgnore
     List<Notification> notifications;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    List<TokenUser> tokenUsers;
+
     public User() {
         this.notifications = new ArrayList<>();
+        this.tokenUsers = new ArrayList<>();
     }
 
     public List<Notification> getNotifications() {
