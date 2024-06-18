@@ -23,7 +23,6 @@ public class CartItem {
     @ManyToOne
     @JoinColumn(name = "product_id")
     public Product product;
-    private double price;
     public int quantity;
 
     public CartItem() {
@@ -33,7 +32,6 @@ public class CartItem {
         this.product = product;
         this.quantity = quantity;
         this.cart = cart;
-        this.price = product.getPrice();
     }
 
     public Product getProduct() {
@@ -49,11 +47,7 @@ public class CartItem {
     }
 
     public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+        return product.getPrice();
     }
 
     public void setProduct(Product product) {
