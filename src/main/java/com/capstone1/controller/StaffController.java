@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.capstone1.model.Staff;
+import com.capstone1.services.CommonService;
 import com.capstone1.services.StaffService;
 
 import jakarta.annotation.Resource;
@@ -22,16 +23,18 @@ public class StaffController {
 
     @Resource
     StaffService staffService;
+    @Resource
+    CommonService commonService;
 
     @Autowired
     Encoding encoding;
     @Autowired
-    HomeController homeController;
+    ProductController productController;
 
     @GetMapping("/staffs")
     public String listStaffs(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        String target = homeController.isLogin(model, session);
+        String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
         }
@@ -48,14 +51,22 @@ public class StaffController {
     }
 
     @GetMapping("/staffs/create-staff")
-    public String createStaff(Model model) {
+    public String createStaff(Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Staff staff = new Staff();
         model.addAttribute("staff", staff);
         return "staffs/create_staff";
     }
 
     @GetMapping("/staffs/edit/{id}")
-    public String editStaff(@PathVariable Long id, Model model) {
+    public String editStaff(@PathVariable Long id, Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Staff staff = staffService.getStaffById(id);
         model.addAttribute("staff", staff);
         return "staffs/edit_staff";
@@ -66,6 +77,10 @@ public class StaffController {
             HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size, @RequestParam String email,
             @RequestParam("mode") String mode) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
 
         if (session == null) {
             return "loginAdmin_Staff";
@@ -85,7 +100,7 @@ public class StaffController {
 
         if (mode.equals("staff")) {
             session.setAttribute("staff", existStaff);
-            return homeController.getDashBoardPage(model, session, page, size);
+            return productController.listProducts(model, session);
         }
         return listStaffs(model, session, page, size);
     }
@@ -94,6 +109,10 @@ public class StaffController {
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Staff staff, HttpSession session,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Staff existStaff = staffService.getStaffById(id);
 
         if (existStaff.getStatus() == 0) {
@@ -108,7 +127,11 @@ public class StaffController {
     }
 
     @GetMapping("/staffs/toChangePass/{id}")
-    public String changePass(@PathVariable Long id, Model model, @ModelAttribute Staff staff) {
+    public String changePass(@PathVariable Long id, Model model, @ModelAttribute Staff staff, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Staff existStaff = staffService.getStaffById(id);
         System.out.println("--------------------" + existStaff.getPassword());
         model.addAttribute("staff", existStaff);
@@ -120,7 +143,10 @@ public class StaffController {
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
             HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Staff existStaff = staffService.getStaffById(id);
         String oldStaffPass = existStaff.getPassword();
 
@@ -135,12 +161,16 @@ public class StaffController {
             System.out.println("---------------------Fail");
             model.addAttribute("alert", "error");
         }
-        homeController.isLogin(model, session);
-        return homeController.getDashBoardPage(model, session, page, size);
+        commonService.isLogin(model, session);
+        return productController.listProducts(model, session);
     }
 
     @GetMapping("/staffs/delete-staff/{id}")
-    public String deleteStaff(@PathVariable Long id) {
+    public String deleteStaff(@PathVariable Long id, Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         staffService.deleteStaffById(id);
         return "redirect:/staffs";
     }
@@ -149,6 +179,10 @@ public class StaffController {
     public String saveStaff(Model model, @ModelAttribute Staff staff, HttpSession session,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         staff.setPassword(encoding.toSHA1(staff.getPassword()));
         staff.setStatus(1);
         staffService.saveStaff(staff);

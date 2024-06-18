@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -24,6 +23,7 @@ import com.capstone1.model.Category;
 import com.capstone1.model.Manufacturer;
 import com.capstone1.model.Product;
 import com.capstone1.services.CategoryService;
+import com.capstone1.services.CommonService;
 import com.capstone1.services.ManufacturerService;
 import com.capstone1.services.ProductService;
 
@@ -34,22 +34,21 @@ import jakarta.servlet.http.HttpSession;
 public class ProductController {
 
     @Resource
+    CommonService commonService;
+    @Resource
     ProductService productService;
     @Resource
-
     CategoryService categoryService;
     @Resource
     ManufacturerService manufacturerService;
 
-    @Autowired
-    HomeController homeController;
-
     @GetMapping("/products")
     public String listProducts(Model model, HttpSession session) {
-        String target = homeController.isLogin(model, session);
+        String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
         }
+
         List<Product> listProducts = productService.getAll();
 
         if (listProducts.isEmpty()) {
@@ -57,7 +56,7 @@ public class ProductController {
 
             model.addAttribute("product", product);
 
-            return createProductForm(model);
+            return createProductForm(model, session);
         } else {
             model.addAttribute("products", listProducts);
         }
@@ -65,7 +64,11 @@ public class ProductController {
     }
 
     @GetMapping("/products/create-product")
-    public String createProductForm(Model model) {
+    public String createProductForm(Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Product product = new Product();
         List<Category> listCategories = categoryService.getAll();
         List<Manufacturer> listManufacturers = manufacturerService.getAll();
@@ -89,13 +92,17 @@ public class ProductController {
         model.addAttribute("product", product);
         model.addAttribute("categories", listCategories);
         model.addAttribute("manufacturers", listManufacturers);
-        homeController.isUserLogin(model, session);
+        commonService.isUserLogin(model, session);
 
         return "productDetail";
     }
 
     @GetMapping("/products/edit/{id}")
-    public String editProductForm(@PathVariable Long id, Model model) {
+    public String editProductForm(@PathVariable Long id, Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         model.addAttribute("manufacturers", manufacturerService.getAll());
         model.addAttribute("categories", categoryService.getAll());
         model.addAttribute("product", productService.getProductById(id));
@@ -107,6 +114,10 @@ public class ProductController {
             @ModelAttribute Product product, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         // get product exist
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Product existProduct = productService.getProductById(id);
 
         existProduct.setName(product.getName());
@@ -141,7 +152,10 @@ public class ProductController {
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
-
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         // get product exist
         Product existProduct = productService.getProductById(id);
 
@@ -162,7 +176,10 @@ public class ProductController {
     public String changeNewest(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
-
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         // get product exist
         Product existProduct = productService.getProductById(id);
 
@@ -179,7 +196,11 @@ public class ProductController {
     }
 
     @GetMapping("/products/delete-product/{id}")
-    public String deleteProduct(@PathVariable Long id) {
+    public String deleteProduct(@PathVariable Long id, Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         productService.deleteProductById(id);
         return "redirect:/products";
     }
@@ -190,7 +211,10 @@ public class ProductController {
             @ModelAttribute Product product, @RequestParam long quantity, HttpSession session,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
-
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         try {
             product.setQuantity(quantity);
             product.setStatus(1);
@@ -219,7 +243,6 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         // System.out.println(keywords);
-        homeController.isUserLogin(model, session);
 
         Page<Product> foundProducts = productService.findByNameContaining(keywords, PageRequest.of(page, size));
         List<Category> categories = categoryService.getAll();

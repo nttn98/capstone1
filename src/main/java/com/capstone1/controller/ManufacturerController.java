@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.capstone1.model.Manufacturer;
+import com.capstone1.services.CommonService;
 import com.capstone1.services.ManufacturerService;
 
 import jakarta.annotation.Resource;
@@ -28,15 +29,14 @@ import jakarta.servlet.http.HttpSession;
 public class ManufacturerController {
 
     @Resource
+    CommonService commonService;
+    @Resource
     ManufacturerService manufacturerService;
-
-    @Autowired
-    HomeController homeController;
 
     @GetMapping("/manufacturers")
     public String listManufacturers(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
-        String target = homeController.isLogin(model, session);
+        String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
         }
@@ -54,7 +54,11 @@ public class ManufacturerController {
     }
 
     @GetMapping("/manufacturers/create-manufacturer")
-    public String createManufacturer(Model model) {
+    public String createManufacturer(Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Manufacturer manufacturer = new Manufacturer();
         model.addAttribute("manufacturer", manufacturer);
         return "manufacturers/create_manufacturer";
@@ -66,6 +70,10 @@ public class ManufacturerController {
             @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         // get Manufacturer exist
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
 
         existManufacturer.setName(manufacturer.getName());
@@ -94,7 +102,10 @@ public class ManufacturerController {
     public String saveManufacturer(Model model, @RequestParam("manufacturerImg") MultipartFile file,
             @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         try {
             manufacturer = manufacturerService.saveManufacturer(manufacturer);
 
@@ -120,7 +131,10 @@ public class ManufacturerController {
     public String changeStatus(@PathVariable Long id, Model model,
             @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         // get product exist
         Manufacturer existManufacturer = manufacturerService.getManufacturerById(id);
 
@@ -137,14 +151,22 @@ public class ManufacturerController {
     }
 
     @GetMapping("/manufacturers/edit/{id}")
-    public String editManufacturer(@PathVariable Long id, Model model) {
+    public String editManufacturer(@PathVariable Long id, Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Manufacturer manufacturer = manufacturerService.getManufacturerById(id);
         model.addAttribute("manufacturer", manufacturer);
         return "manufacturers/edit_manufacturer";
     }
 
     @GetMapping("/manufacturers/delete-manufacturer/{id}")
-    public String deleteManufacturer(@PathVariable Long id) {
+    public String deleteManufacturer(@PathVariable Long id, HttpSession session, Model model) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         manufacturerService.deleteManufacturerById(id);
         return "redirect:/manufacturers";
     }

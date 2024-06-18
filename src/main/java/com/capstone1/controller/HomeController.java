@@ -38,6 +38,7 @@ import com.capstone1.services.BlogLoginService;
 import com.capstone1.services.CartItemService;
 import com.capstone1.services.CartService;
 import com.capstone1.services.CategoryService;
+import com.capstone1.services.CommonService;
 import com.capstone1.services.ContactServices;
 import com.capstone1.services.ManufacturerService;
 import com.capstone1.services.NotificationService;
@@ -88,11 +89,16 @@ public class HomeController {
     BlogLoginService blogLoginService;
     @Resource
     NotificationService notificationService;
+    @Resource
+    CommonService commonService;
 
     @Autowired
     Encoding encoding;
     @Autowired
     JavaMailSender mailSender;
+
+    @Autowired
+    ProductController productController;
 
     @GetMapping({ "/home-page", "/" })
     public String getHome(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
@@ -116,7 +122,7 @@ public class HomeController {
         model.addAttribute("productsByAMD", productsByAMD);
         model.addAttribute("productsByNVIDIA", productsByNVIDIA);
 
-        isUserLogin(model, session);
+        commonService.isUserLogin(model, session);
 
         return "homePage";
     }
@@ -125,7 +131,7 @@ public class HomeController {
     public String paginated(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "8") int size) {
         Page<Product> products = null;
-        isUserLogin(model, session);
+        commonService.isUserLogin(model, session);
 
         String condition = (String) session.getAttribute("condition");
 
@@ -166,7 +172,7 @@ public class HomeController {
         model.addAttribute("products", listProducts);
         model.addAttribute("categories", listCategories);
         model.addAttribute("manufacturers", listManufacturers);
-        isUserLogin(model, session);
+        commonService.isUserLogin(model, session);
         String condition = "all";
         session.setAttribute("condition", condition);
 
@@ -178,7 +184,7 @@ public class HomeController {
             HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
 
-        isUserLogin(model, session);
+        commonService.isUserLogin(model, session);
         if (categoryName != null) {
             Page<Product> products = productService.findByCategoryNameAndStatus(categoryName, 1,
                     PageRequest.of(page, size));
@@ -205,7 +211,7 @@ public class HomeController {
     public String getProductsByManufacturer(Model model, @RequestParam String manufacturerName,
             HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
-        isUserLogin(model, session);
+        commonService.isUserLogin(model, session);
         if (manufacturerName != null) {
             Page<Product> products = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus(
                     manufacturerName, 0,
@@ -229,7 +235,7 @@ public class HomeController {
     @GetMapping("/dashBoard")
     public String getDashBoardPage(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        String target = isLogin(model, session);
+        String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
         }
@@ -244,7 +250,6 @@ public class HomeController {
         session.removeAttribute("admin");
 
         return "loginAdmin_Staff";
-
     }
 
     private void saveBlogLogin(long id, boolean status) {
@@ -277,41 +282,12 @@ public class HomeController {
             session.setAttribute("staff", checkStaff);
             model.addAttribute("alert", "success");
             saveBlogLogin(checkStaff.getId(), true);
-            return getDashBoardPage(model, session, page, size);
+            return productController.listProducts(model, session);
         } else {
             model.addAttribute("alert", "error");
             return getLoginPage(model, session);
         }
 
-    }
-
-    public boolean checkLogin(Model model, HttpSession session) {
-        Staff staff = (Staff) session.getAttribute("staff");
-        Admin admin = (Admin) session.getAttribute("admin");
-        if (admin != null) {
-            model.addAttribute("admin", admin);
-            return true;
-        } else if (staff != null) {
-            model.addAttribute("staff", staff);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public String isLogin(Model model, HttpSession session) {
-        boolean flag = checkLogin(model, session);
-        if (!flag) {
-            return getLoginPage(model, session);
-        }
-        return null;
-    }
-
-    public void isUserLogin(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-            model.addAttribute("user", user);
-        }
     }
 
     @GetMapping("/logout")
@@ -330,7 +306,7 @@ public class HomeController {
     @GetMapping("/orders")
     public String listOrders(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
-        String target = isLogin(model, session);
+        String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
         }
@@ -340,7 +316,7 @@ public class HomeController {
         map.put(2, "Delivered");
         map.put(3, "Canceled");
 
-        isLogin(model, session);
+        commonService.isLogin(model, session);
 
         List<Order> orders = orderService.getAll();
         for (Order order : orders) {
@@ -360,6 +336,10 @@ public class HomeController {
     public String deleteOrder(@PathVariable Long orderId, Model model, HttpSession session,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         orderService.deleteOrderById(orderId);
         orderDetailService.deleteByOrderId(orderId);
         model.addAttribute("alert", "success");
@@ -372,6 +352,10 @@ public class HomeController {
     public String changeOrderStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
             HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Order existOrder = orderService.getOrderById(id);
 
         HashMap<Integer, String> map = new HashMap<>();
@@ -399,7 +383,7 @@ public class HomeController {
     @GetMapping("/contacts")
     public String listContacts(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
-        String target = isLogin(model, session);
+        String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
         }

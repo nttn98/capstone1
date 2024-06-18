@@ -27,6 +27,7 @@ import com.capstone1.model.User;
 import com.capstone1.model.User.LoginType;
 import com.capstone1.services.CartItemService;
 import com.capstone1.services.CartService;
+import com.capstone1.services.CommonService;
 import com.capstone1.services.NotificationService;
 import com.capstone1.services.OrderDetailService;
 import com.capstone1.services.OrderService;
@@ -41,6 +42,8 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class UserController {
 
+    @Resource
+    CommonService commonService;
     @Resource
     UserService userService;
     @Resource
@@ -68,7 +71,7 @@ public class UserController {
     public String listUsers(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        String target = homeController.isLogin(model, session);
+        String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
         }
@@ -416,7 +419,7 @@ public class UserController {
         session.setAttribute("user", userLogin);
         Cart cart = (Cart) session.getAttribute("cart");
 
-        homeController.isUserLogin(model, session);
+        commonService.isUserLogin(model, session);
         model.addAttribute("cart", cart);
         return "admin/checkout.html";
     }
@@ -504,7 +507,7 @@ public class UserController {
     public String buyNow(Model model, @PathVariable long productId, HttpSession session,
             @RequestParam(defaultValue = "1") int quantityInput) {
 
-        homeController.isUserLogin(model, session);
+        commonService.isUserLogin(model, session);
         Product tempProduct = productService.getProductById(productId);
         model.addAttribute("product", tempProduct);
         model.addAttribute("quantityInput", quantityInput);
@@ -522,7 +525,7 @@ public class UserController {
         map.put(2, "Delivered");
         map.put(3, "Canceled");
 
-        homeController.isUserLogin(model, session);
+        commonService.isUserLogin(model, session);
         Page<Order> orders = orderService.findByUserId(userId, PageRequest.of(page, size, Sort.by("id").descending()));
         for (Order order : orders) {
             order.setShowStatus(map.get(order.getStatus()));

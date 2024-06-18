@@ -125,6 +125,16 @@ function alert_action ( alert_action )
                hideAfter: 3500
           } );
      }
+     else if ( alert_action == "addSuccess" )
+     {
+          $.toast( {
+               heading: ' Create successfully !!',
+               position: 'top-right',
+               loaderBg: '#ff6849',
+               icon: 'success',
+               hideAfter: 3500
+          } );
+     }
 
      localStorage.removeItem( 'alert-action' );
 }

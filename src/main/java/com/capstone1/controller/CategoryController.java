@@ -2,7 +2,7 @@ package com.capstone1.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.capstone1.model.Category;
 import com.capstone1.services.CategoryService;
+import com.capstone1.services.CommonService;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpSession;
@@ -21,14 +22,14 @@ import jakarta.servlet.http.HttpSession;
 public class CategoryController {
 
     @Resource
+    CommonService commonService;
+    @Resource
     CategoryService categoryService;
-    @Autowired
-    HomeController homeController;
 
     @GetMapping("/categories")
     public String listCategories(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
-        String target = homeController.isLogin(model, session);
+        String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
         }
@@ -46,7 +47,11 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/create-category")
-    public String createCategory(Model model) {
+    public String createCategory(Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         Category category = new Category();
         model.addAttribute("category", category);
         return "categories/create_category";
@@ -56,8 +61,13 @@ public class CategoryController {
     public String saveCategory(Model model, @ModelAttribute Category category,
             HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         category.setStatus(1);
         System.out.println("Category added successfully");
+        model.addAttribute("alert", "success");
         categoryService.saveCategory(category);
 
         return listCategories(page, size, model, session);
@@ -67,7 +77,10 @@ public class CategoryController {
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Category category,
             HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         // get product exist
         Category existCategory = categoryService.getCategoryById(id);
 
@@ -85,7 +98,11 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/edit/{id}")
-    public String editCategory(@PathVariable Long id, Model model) {
+    public String editCategory(@PathVariable Long id, Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         model.addAttribute("category", categoryService.getCategoryById(id));
         return "categories/edit_category";
     }
@@ -95,6 +112,10 @@ public class CategoryController {
             @ModelAttribute Category category,
             HttpSession session, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         // get Category exist
         Category existCategory = categoryService.getCategoryById(id);
 
@@ -107,7 +128,11 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/delete-category/{id}")
-    public String deleteCategory(@PathVariable Long id) {
+    public String deleteCategory(@PathVariable Long id, Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         categoryService.deleteCategoryById(id);
         return "redirect:/categories";
     }

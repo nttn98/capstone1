@@ -615,7 +615,9 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <h1 class="banner_taital" th:text="${item.name}"></h1>
+                                        <a th:href="@{'/products/get-product-infor/' + ${item.id}}">
+                                            <h1 class="banner_taital" th:text="${item.name}"></h1>
+                                        </a>
                                         <!-- <p class="banner_text" th:text="${item.description}"></p> -->
                                         <div class="btn_main">
                                             <div class="read_bt"><a href="/list-products">See More</a></div>
@@ -632,8 +634,9 @@
                             <div class="container">
                                 <div class="row">
                                     <div class="col-lg-6">
-                                        <h1 class="banner_taital" th:text="${product.name}"></h1>
-                                        <!-- <p class="banner_text" th:text="${product.description}"></p> -->
+                                        <a th:href="@{'/products/get-product-infor/' + ${product.id}}">
+                                            <h1 class="banner_taital" th:text="${product.name}"></h1>
+                                        </a> <!-- <p class="banner_text" th:text="${product.description}"></p> -->
                                         <div class="btn_main">
                                             <div class="read_bt"><a href="/list-products">See more</a></div>
                                         </div>

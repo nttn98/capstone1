@@ -103,8 +103,7 @@
 												<form action="/staffs/update-staff" method="POST" th:object="${staff}">
 													<input type="hidden" name="id" th:field="*{id}">
 													<input type="hidden" name="mode" value="staff">
-													<input type="hidden" name="mode" value="staff"><input
-														id="usernameInput" th:field="*{username}" type="text"
+													<input id="usernameInput" th:field="*{username}" type="text"
 														class="form-control" hidden>
 													<span id="usernameError" style="color: red;"></span>
 													<div class="form-group">
@@ -202,6 +201,9 @@
 					</li>
 					<li class="nav-item has-sub open">
 						<ul class="menu-content">
+							<li>
+								<a class="menu-item" th:href="@{/dashBoard}" th:if="${session.staff==null}">Logfiles</a>
+							</li>
 							<li>
 								<a class="menu-item" th:href="@{/products}">Products</a>
 							</li>
