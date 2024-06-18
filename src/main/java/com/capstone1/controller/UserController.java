@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -89,14 +90,22 @@ public class UserController {
     }
 
     @GetMapping("/users/create-user")
-    public String createUser(Model model) {
+    public String createUser(Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         User user = new User();
         model.addAttribute("user", user);
         return "users/create_user";
     }
 
     @GetMapping("/users/edit/{id}")
-    public String editUser(@PathVariable Long id, Model model) {
+    public String editUser(@PathVariable Long id, Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
         return "users/edit_user";
@@ -107,8 +116,13 @@ public class UserController {
             @RequestParam String email,
             HttpSession session, @RequestParam("id") Long userId, @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        User existUser = userService.getUserById(userId);
 
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
+
+        User existUser = userService.getUserById(userId);
         model.addAttribute("alert", "edit");
         existUser.setFullname(user.getFullname());
         existUser.setNumberphone(user.getNumberphone());
@@ -130,6 +144,12 @@ public class UserController {
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute User user, HttpSession session,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
+
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
+
         User existUser = userService.getUserById(id);
 
         if (existUser.getStatus() == 0) {
@@ -143,7 +163,11 @@ public class UserController {
     }
 
     @GetMapping("/users/delete-user/{id}")
-    public String deleteUser(@PathVariable Long id) {
+    public String deleteUser(@PathVariable Long id, Model model, HttpSession session) {
+        String target = commonService.isLogin(model, session);
+        if (target != null) {
+            return target;
+        }
         userService.deleteUserById(id);
         return "redirect:/users";
     }
@@ -162,18 +186,23 @@ public class UserController {
         if (mode.equals("user")) {
             return homeController.getHome(model, session, page, size);
         } else {
+            String target = commonService.isLogin(model, session);
+            if (target != null) {
+                return target;
+            }
             return listUsers(model, session, page, size);
         }
     }
 
     /* Change password */
-    @GetMapping("/users/to-change-pass/{id}")
-    public String changePass(@PathVariable Long id, Model model, @ModelAttribute User user) {
-        User existUser = userService.getUserById(id);
-        System.out.println("--------------------" + existUser.getPassword());
-        model.addAttribute("user", existUser);
-        return "users/changePass_user";
-    }
+    // @GetMapping("/users/to-change-pass/{id}")
+    // public String changePass(@PathVariable Long id, Model model, @ModelAttribute
+    // User user) {
+    // User existUser = userService.getUserById(id);
+    // System.out.println("--------------------" + existUser.getPassword());
+    // model.addAttribute("user", existUser);
+    // return "users/changePass_user";
+    // }
 
     @PostMapping("users/do-change-pass")
     public String changePasswod(@RequestParam Long id, Model model, @ModelAttribute User user,
@@ -200,7 +229,11 @@ public class UserController {
             session.removeAttribute("user");
             return homeController.getHome(model, session, page, size);
         } else {
-            return "redirect:/users";
+            String target = commonService.isLogin(model, session);
+            if (target != null) {
+                return target;
+            }
+            return listUsers(model, session, page, size);
         }
 
     }
