@@ -25,7 +25,6 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private int status = 0;
-    private double total;
 
     private String receiverName;
     private String receiverAddress;
@@ -124,11 +123,11 @@ public class Order {
     }
 
     public double getTotal() {
+        double total = 0;
+        for (OrderDetail orderDetail : orderDetails) {
+            total += orderDetail.getFinalPrice();
+        }
         return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
     }
 
     public List<OrderDetail> getOrderDetails() {

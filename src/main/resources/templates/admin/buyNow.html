@@ -249,7 +249,7 @@
                                                             <tr>
                                                                 <td>Subtotal</td>
                                                                 <td><span class="woocommerce-Price-amount amount"><bdi
-                                                                            th:text="${product.getPrice()}"
+                                                                            th:text="${product.getPrice()*quantityInput}"
                                                                             class="formatPrice"></bdi></span>
                                                                 </td>
                                                             </tr>
@@ -260,7 +260,7 @@
                                                                 <td>
                                                                     <strong>
                                                                         <span class="woocommerce-Price-amount amount">
-                                                                            <bdi th:text="${product.getPrice()}"
+                                                                            <bdi th:text="${product.getPrice()*quantityInput}"
                                                                                 class="formatPrice"></bdi>
                                                                         </span>
                                                                     </strong>
@@ -327,11 +327,12 @@
 
                 if ( paymentMethod.value === 'vnpay' )
                 {
-                    form.action = /*[[ @{/submitOrder} ]]*/ '';
+                    form.action = /*[[ @{/submitOrder-buy-now/{productId}(productId=${product.getId()})}]]*/ '';
                     form.method = 'POST';
                 } else
                 {
-                    form.action = /*[[ @{/users/add-order} ]]*/ '';
+                    // form.action = /*[[ @{/users/add-order-buy-now} ]]*/ '';
+                    form.action = /*[[@{/users/add-order-buy-now/{productId}(productId=${product.getId()})}]]*/'';
                     form.method = 'GET';
                 }
             } );

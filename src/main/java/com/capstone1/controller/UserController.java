@@ -293,15 +293,13 @@ public class UserController {
         model.addAttribute("alert", "addToCartS");
         if (mode.equals("inList")) {
             return homeController.paginated(model, session, page, size);
-        } else if (mode.equals("inHome")) {
-            return "redirect:/home-page";
         } else if (mode.equals("inProductDetail")) {
             return productController.getProductInfor(productId, model, session);
         } else if (mode.equals("inSearchingPage")) {
             String keyword = (String) session.getAttribute("keywords");
             return productController.searchProduct(model, session, keyword, page, size);
         } else {
-            return "redirect:/home-page";
+            return homeController.getHome(model, session, page, size);
         }
     }
 
@@ -432,7 +430,6 @@ public class UserController {
         Cart cart = (Cart) session.getAttribute("cart");
         LocalDateTime now = LocalDateTime.now();
         Order order = null;
-        double total = 0;
 
         if (cart != null && userLogin != null) {
             order = orderService.saveOrder(new Order(0, userLogin, now));
@@ -440,24 +437,21 @@ public class UserController {
                 Product product = cart.getListItem().get(i).getProduct();
                 Product productInDb = productService.getProductById(product.getId());
 
-                double subtotal = product.getPrice();
                 CartItem tempProduct = cartItemService.findByCartIdAndProductId(cart.getId(), product.getId());
 
-                OrderDetail tempOrderDetail = orderDetailService
-                        .saveOrderDetail(new OrderDetail(order, product, tempProduct.getQuantity(), subtotal));
+                orderDetailService
+                        .saveOrderDetail(new OrderDetail(order, product, tempProduct.getQuantity()));
 
                 // change quantity after order
                 productInDb.setQuantity(productInDb.getQuantity() - tempProduct.getQuantity());
 
                 cartItemService.deleteByProductIdAndCartId(product.getId(), cart.getId());
-                total += tempOrderDetail.getFinalPrice();
 
             }
 
             order.setReceiverName(name);
             order.setReceiverAddress(address);
             order.setReceiverNumberphone(numberphone);
-            order.setTotal(total);
             order.setType(PaymentType.COD);
             cartService.deleteByUserId(userLogin.getId());
             cart.getListItem().clear();
@@ -479,7 +473,6 @@ public class UserController {
         User userLogin = userService.getUserById(userId);
         LocalDateTime now = LocalDateTime.now();
         Order order = null;
-        double total = 0;
 
         order = orderService.saveOrder(new Order(0, userLogin, now));
 
@@ -488,20 +481,16 @@ public class UserController {
         if (product != null) {
             Product productInDb = productService.getProductById(product.getId());
 
-            OrderDetail tempOrderDetail = orderDetailService
-                    .saveOrderDetail(new OrderDetail(order, product, quantityInput, product.getPrice()));
+            orderDetailService
+                    .saveOrderDetail(new OrderDetail(order, product, quantityInput));
 
             // change quantity after order
             productInDb.setQuantity(productInDb.getQuantity() - quantityInput);
 
-            total += tempOrderDetail.getFinalPrice();
-
             order.setReceiverName(name);
             order.setReceiverAddress(address);
             order.setReceiverNumberphone(numberphone);
-            order.setTotal(total);
             order.setType(PaymentType.COD);
-
         }
 
         orderService.saveOrder(order);

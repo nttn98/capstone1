@@ -75,20 +75,22 @@ function closeChangePassword ()
 {
     $( "#changePassword" ).addClass( "d-none" );
     $( "#profileForm" ).removeClass( "d-none" );
+    $( 'form input' ).val( '' );
 
 }
 
 function showRecoverPassword ()
 {
-    $( "#CustomerLoginForm" ).addClass( "d-none" )
+    $( "#CustomerLoginForm" ).addClass( "d-none" );
     $( "#RecoverPasswordForm" ).removeClass( "d-none" );
 }
 
 function closeRecoverPassword ()
 {
     $( "#RecoverPasswordForm" ).addClass( "d-none" );
-    $( "#CustomerLoginForm" ).removeClass( "d-none" )
+    $( "#CustomerLoginForm" ).removeClass( "d-none" );
     $( "#register" ).addClass( "d-none" );
+    $( 'form input' ).val( '' );
 
 }
 
@@ -101,6 +103,7 @@ function showRegister ()
 function closeRegister ()
 {
     $( "#register" ).addClass( "d-none" );
+    $( 'form input' ).val( '' );
     $( "#CustomerLoginForm" ).removeClass( "d-none" );
 
 }
@@ -181,21 +184,30 @@ function showLogin ()
 
 function closeLogin ()
 {
-    $( '.login' ).removeClass( "w-25" )
+    $( '.login' ).removeClass( "w-25" );
+
     $( '.closeLogin' ).fadeOut();
     $( '.closeMask' ).fadeOut();
+
+    $( 'form input' ).val( '' );
 }
 
 function showcart ()
 {
-    $( '.cart' ).addClass( "w-43" )
+    $( '.cart' ).addClass( "w-43" );
     $( '.closeLogin' ).fadeIn();
     $( '.closeMask' ).fadeIn();
 }
 
 function closecart ()
 {
-    $( '.cart' ).removeClass( "w-43" )
+    $( '.cart' ).removeClass( "w-43" );
+    var temPage = document.getElementById( 'page' );
+    var page = temPage ? temPage.value : null;
+    if ( page === 'checkout' )
+    {
+        location.reload();
+    }
     $( '.closeMask' ).fadeOut();
 }
 

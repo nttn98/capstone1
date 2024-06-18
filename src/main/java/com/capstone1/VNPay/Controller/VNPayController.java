@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -46,9 +47,30 @@ public class VNPayController {
     private ProductService productService;
 
     @PostMapping("/submitOrder")
-    public String submidOrder(@RequestParam("amount") int orderTotal, @RequestParam("orderInfo") String orderInfo,
-            HttpServletRequest request, Model model, HttpSession session, @RequestParam String name,
-            @RequestParam String address, @RequestParam long numberphone) {
+    public String submitOrder(@RequestParam("amount") long orderTotal, @RequestParam("orderInfo") String orderInfo,
+            HttpServletRequest request, Model model, HttpSession session,
+            @RequestParam String name, @RequestParam String address, @RequestParam long numberphone) {
+
+        return handleOrderSubmission(orderTotal, orderInfo, request, session, name, address, numberphone);
+    }
+
+    @PostMapping("/submitOrder-buy-now/{productId}")
+    public String submitOrderBuyNow(@RequestParam("amount") long orderTotal,
+            @RequestParam("orderInfo") String orderInfo,
+            HttpServletRequest request, Model model, HttpSession session,
+            @RequestParam String name, @RequestParam String address, @RequestParam long numberphone,
+            @PathVariable long productId, @RequestParam(defaultValue = "1") int quantityInput) {
+
+        Product product = productService.getProductById(productId);
+        session.setAttribute("product", product);
+        session.setAttribute("quantityInput", quantityInput);
+        orderTotal = product.getPrice() * quantityInput;
+
+        return handleOrderSubmission(orderTotal, orderInfo, request, session, name, address, numberphone);
+    }
+
+    private String handleOrderSubmission(long orderTotal, String orderInfo, HttpServletRequest request,
+            HttpSession session, String name, String address, long numberphone) {
 
         session.setAttribute("name", name);
         session.setAttribute("address", address);
@@ -79,6 +101,7 @@ public class VNPayController {
         model.addAttribute("totalPrice", totalPrice);
         model.addAttribute("paymentTime", paymentTime);
         model.addAttribute("transactionId", transactionId);
+        int quantity = 1;
 
         if (paymentStatus == 1) {
             Long userId = (Long) session.getAttribute("userId");
@@ -86,34 +109,43 @@ public class VNPayController {
             Cart cart = (Cart) session.getAttribute("cart");
             LocalDateTime now = LocalDateTime.now();
             Order order = null;
-            double total = 0;
 
-            if (cart != null && userLogin != null) {
+            if (userLogin != null) {
                 order = orderService.saveOrder(new Order(0, userLogin, now));
-                for (int i = 0; i < cart.getListItem().size(); i++) {
-                    Product product = cart.getListItem().get(i).getProduct();
-                    Product productInDb = productService.getProductById(product.getId());
+                if (cart != null && cart.getListItem().size() > 0) {
+                    for (int i = 0; i < cart.getListItem().size(); i++) {
+                        Product product = cart.getListItem().get(i).getProduct();
+                        Product productInDb = productService.getProductById(product.getId());
 
-                    double subtotal = product.getPrice();
-                    CartItem tempProduct = cartItemService.findByCartIdAndProductId(cart.getId(), product.getId());
+                        CartItem tempProduct = cartItemService.findByCartIdAndProductId(cart.getId(), product.getId());
+                        quantity = tempProduct.getQuantity();
 
-                    OrderDetail tempOrderDetail = orderDetailService
-                            .saveOrderDetail(new OrderDetail(order, product, tempProduct.getQuantity(), subtotal));
+                        orderDetailService
+                                .saveOrderDetail(new OrderDetail(order, product, quantity));
 
-                    // change quantity after order
-                    productInDb.setQuantity(productInDb.getQuantity() - tempProduct.getQuantity());
-
-                    cartItemService.deleteByProductIdAndCartId(product.getId(), cart.getId());
-                    total += tempOrderDetail.getFinalPrice();
+                        // change quantity after order
+                        productInDb.setQuantity(productInDb.getQuantity() - quantity);
+                        cartItemService.deleteByProductIdAndCartId(product.getId(), cart.getId());
+                    }
+                    cartService.deleteByUserId(userLogin.getId());
+                    cart.getListItem().clear();
+                } else {
+                    Product product = (Product) session.getAttribute("product");
+                    quantity = (int) session.getAttribute("quantityInput");
+                    if (product != null) {
+                        Product productInDb = productService.getProductById(product.getId());
+                        orderDetailService
+                                .saveOrderDetail(new OrderDetail(order, product, quantity));
+                        productInDb.setQuantity(productInDb.getQuantity() - quantity);
+                    }
+                    session.removeAttribute("product");
+                    session.removeAttribute("quantityInput");
                 }
 
                 order.setReceiverName(name);
                 order.setReceiverAddress(address);
                 order.setReceiverNumberphone(numberphone);
-                order.setTotal(total);
                 order.setType(PaymentType.CREDIT);
-                cartService.deleteByUserId(userLogin.getId());
-                cart.getListItem().clear();
             }
             session.removeAttribute("cart");
             orderService.saveOrder(order);

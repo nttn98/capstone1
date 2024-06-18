@@ -2,7 +2,13 @@ package com.capstone1.model;
 
 import java.text.DecimalFormat;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "order_details")
@@ -20,18 +26,14 @@ public class OrderDetail {
     private Product product;
 
     private int quantity;
-    private double price;
-    private double finalPrice;
 
     public OrderDetail() {
     }
 
-    public OrderDetail(Order order, Product product, int quantity, double price) {
+    public OrderDetail(Order order, Product product, int quantity) {
         this.order = order;
         this.product = product;
         this.quantity = quantity;
-        this.price = price;
-        setFinalPrice();
     }
 
     public long getId() {
@@ -67,20 +69,14 @@ public class OrderDetail {
     }
 
     public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+        return product.getPrice();
     }
 
     public double getFinalPrice() {
+        double price = getPrice();
+        double finalPrice = price * this.quantity;
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
         String formattedValueString = decimalFormat.format(finalPrice);
         return Double.parseDouble(formattedValueString);
-    }
-
-    public void setFinalPrice() {
-        this.finalPrice = this.price * this.quantity;
     }
 }
