@@ -75,14 +75,17 @@ function closeChangePassword ()
 {
     $( "#changePassword" ).addClass( "d-none" );
     $( "#profileForm" ).removeClass( "d-none" );
-    $( 'form input' ).val( '' );
-
+    $( "#password" ).val( '' );
+    $( "#newPassword" ).val( '' );
+    $( "#confirmPassword" ).val( '' );
 }
 
 function showRecoverPassword ()
 {
     $( "#CustomerLoginForm" ).addClass( "d-none" );
     $( "#RecoverPasswordForm" ).removeClass( "d-none" );
+    $( "#modeChangePw" ).val( 'user' );
+
 }
 
 function closeRecoverPassword ()
@@ -90,7 +93,7 @@ function closeRecoverPassword ()
     $( "#RecoverPasswordForm" ).addClass( "d-none" );
     $( "#CustomerLoginForm" ).removeClass( "d-none" );
     $( "#register" ).addClass( "d-none" );
-    $( 'form input' ).val( '' );
+    $( "#recoveryPwForm input" ).val( '' );
 
 }
 
@@ -98,13 +101,14 @@ function showRegister ()
 {
     $( "#register" ).removeClass( "d-none" );
     $( "#CustomerLoginForm" ).addClass( "d-none" );
+    $( "#modeRegister" ).val( 'user' );
 }
 
 function closeRegister ()
 {
     $( "#register" ).addClass( "d-none" );
-    $( 'form input' ).val( '' );
     $( "#CustomerLoginForm" ).removeClass( "d-none" );
+    $( "#registerForm input" ).val( '' );
 
 }
 
@@ -188,8 +192,6 @@ function closeLogin ()
 
     $( '.closeLogin' ).fadeOut();
     $( '.closeMask' ).fadeOut();
-
-    $( 'form input' ).val( '' );
 }
 
 function showcart ()

@@ -2,7 +2,6 @@ package com.capstone1.controller;
 
 import java.util.List;
 
-import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

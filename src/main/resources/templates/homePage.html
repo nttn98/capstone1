@@ -42,6 +42,7 @@
         <script src="/js/login.js" defer></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+        <link rel="icon" href="/img/icon-web.png" sizes="64x64" type="image/x-icon">
 
     </head>
     <title>Home Page</title>
@@ -53,7 +54,8 @@
             <div class="container" id="header" th:fragment="header_section">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div id="logo" th:fragment="logo" class="logo">
-                        <h1><a href="/">NAP</a></h1>
+                        <h1><a href="/"><img src="/img/icon-web.png" style="max-width: 40%; padding: 0;"></a>
+                        </h1>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -184,7 +186,7 @@
                                 th:if="${session.user!=null}">
                                 <form action="/users/do-change-pass" method="POST" th:object="${user}">
                                     <input type="hidden" name="id" th:field="*{id}">
-                                    <input type="hidden" name="mode" value="user">
+                                    <input type="hidden" name="mode" value="user" id="modeChangePw">
 
                                     <label for="password" class="col-lg-12">
                                         <h5>Enter your old password</h5>
@@ -240,7 +242,8 @@
                                 <div class="card" id="CustomerLoginForm" style="border: none;">
                                     <h2>Login</h2>
                                     <div class="card-body">
-                                        <form action="/login-user" method="POST" style="margin-top: -30px;">
+                                        <form action="/login-user" method="POST" style="margin-top: -30px;"
+                                            id="loginForm">
                                             <div class="svgContainer">
                                                 <div>
                                                     <svg class="mySVG" xmlns="http://www.w3.org/2000/svg"
@@ -458,7 +461,8 @@
                                 <div class="card d-none" id="RecoverPasswordForm" style="border: none;">
                                     <h2>Reset your password</h2>
                                     <div class="card-body ">
-                                        <form method="post" action="/users/forgot-password" accept-charset="UTF-8">
+                                        <form method="post" action="/users/forgot-password" accept-charset="UTF-8"
+                                            id="recoveryPwForm">
                                             <div class="form-group">
                                                 <label for="RecoverEmail">
                                                     <h6>Email</h6>
@@ -478,8 +482,8 @@
                                 </div>
                                 <div class="card d-none" id="register" style="border: none;">
                                     <h2>Register</h2>
-                                    <form action="/users/save-user" method="POST" th:object="${user}">
-                                        <input type="hidden" name="mode" value="user">
+                                    <form action="/users/save-user" method="POST" th:object="${user}" id="registerForm">
+                                        <input type="hidden" name="mode" value="user" id="modeRegister">
                                         <div class="form-group">
                                             <p>Username: </p>
                                             <input type="text" class="form-control" id="usernameInput" name="username"
