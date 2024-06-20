@@ -131,7 +131,7 @@ $( '.closeMask' ).click( ( e ) =>
             dropdown.style.display = 'none';
             resetNotifications();
         }, 200 );
-        window.location.reload();
+        location.reload();
     }
 
     // close descript

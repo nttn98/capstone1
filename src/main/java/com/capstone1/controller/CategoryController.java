@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.capstone1.model.Category;
 import com.capstone1.services.CategoryService;
@@ -26,8 +25,7 @@ public class CategoryController {
     CategoryService categoryService;
 
     @GetMapping("/categories")
-    public String listCategories(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
+    public String listCategories(Model model, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -58,8 +56,7 @@ public class CategoryController {
 
     @PostMapping("/categories/save-category")
     public String saveCategory(Model model, @ModelAttribute Category category,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -69,13 +66,12 @@ public class CategoryController {
         model.addAttribute("alert", "success");
         categoryService.saveCategory(category);
 
-        return listCategories(page, size, model, session);
+        return listCategories(model, session);
     }
 
     @GetMapping("/categories/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Category category,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -93,7 +89,7 @@ public class CategoryController {
         // save updated
         categoryService.updateCategory(existCategory);
 
-        return listCategories(page, size, model, session);
+        return listCategories(model, session);
     }
 
     @GetMapping("/categories/edit/{id}")
@@ -109,8 +105,7 @@ public class CategoryController {
     @PostMapping("/categories/update-category/{id}")
     public String updateCategory(@PathVariable Long id, Model model,
             @ModelAttribute Category category,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -123,7 +118,7 @@ public class CategoryController {
         model.addAttribute("alert", "edit");
         categoryService.saveCategory(existCategory);
 
-        return listCategories(page, size, model, session);
+        return listCategories(model, session);
     }
 
     @GetMapping("/categories/delete-category/{id}")

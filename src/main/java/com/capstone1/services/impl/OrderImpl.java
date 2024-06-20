@@ -3,8 +3,6 @@ package com.capstone1.services.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.capstone1.model.Order;
@@ -24,8 +22,8 @@ public class OrderImpl implements OrderService {
     }
 
     @Override
-    public Page<Order> getAllOrders(Pageable p) {
-        return orderRepository.findAll(p);
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
     }
 
     @Override
@@ -44,8 +42,8 @@ public class OrderImpl implements OrderService {
     }
 
     @Override
-    public Page<Order> findByUserId(long userId, Pageable p) {
-        return orderRepository.findByUserId(userId, p);
+    public List<Order> findByUserIdOrderByIdDesc(long userId) {
+        return orderRepository.findByUserIdOrderByIdDesc(userId);
     }
 
     @Override

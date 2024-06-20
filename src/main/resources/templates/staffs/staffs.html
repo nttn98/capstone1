@@ -12,7 +12,7 @@
                 <div class="navbar-header">
                     <ul class="nav navbar-nav flex-row" style="padding: 10px;">
                         <div id="logo">
-                            <h1><a href="/">NAP</a></h1>
+                            <h1><a href="/"><img src="/img/icon-web.png" style="max-width: 33%; padding: 0;"></a></h1>
                         </div>
                     </ul>
                 </div>
@@ -41,7 +41,7 @@
                                     <a th:href="@{/logout}" class="option">Logout</a>
                                 </div>
 
-                                <div th:fragment="profile" class="profile position-fixed">
+                                <!-- <div th:fragment="profile" class="profile position-fixed">
                                     <h2>Staff profile</h2>
                                     <button onclick="closeProfile()" type="button" class="close close-mask"
                                         aria-label="Close">
@@ -99,8 +99,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div th:fragment="changePass" class="changePass position-fixed"
+                                </div> -->
+                                <!-- <div th:fragment="changePass" class="changePass position-fixed"
                                     th:if="${session.staff!=null}">
                                     <h2>Change password</h2>
                                     <button onclick="closeChangePass()" type="button" class="close close-mask"
@@ -114,11 +114,13 @@
                                                     <input type="hidden" th:value="${session.staff.getId()}" name="id">
                                                     <div class="form-group">
                                                         <p> Enter old password: </p>
-                                                        <input type="password" name="oldPassword" class="form-control">
+                                                        <input type="password" id="oldPassword" name="oldPassword"
+                                                            class="form-control">
                                                     </div>
                                                     <div class="form-group">
                                                         <p> Enter new password: </p>
-                                                        <input type="password" name="newPassword" class="form-control">
+                                                        <input type="password" id="newPassword" name="newPassword"
+                                                            class="form-control">
                                                     </div>
                                                     <button type="submit" class="btn btn-info">
                                                         <i class="fa fa-check"></i>
@@ -133,7 +135,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </li>
                         </ul>
                     </div>
@@ -209,18 +211,6 @@
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
     <script th:inline="javascript">
-        function showChangePass ()
-        {
-            $( '.changePass' ).addClass( 'w-25' );
-            $( '.profile' ).removeClass( "w-25" );
-        }
-
-        function closeChangePass ()
-        {
-            $( '.changePass' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-
-        }
         new DataTable( '#dataTable', {
             "order": [ [ 0, "dec" ] ],
             "columnDefs": [

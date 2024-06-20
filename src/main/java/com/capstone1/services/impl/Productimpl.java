@@ -54,13 +54,8 @@ public class Productimpl implements ProductService {
 	}
 
 	@Override
-	public Page<Product> findByCategoryNameAndStatus(String name, int status, Pageable p) {
-		return productRepository.findByCategoryNameAndStatus(name, status, p);
-	}
-
-	@Override
-	public Page<Product> findByNameContaining(String keywords, Pageable p) {
-		return productRepository.findByNameContaining(keywords, p);
+	public List<Product> findByNameContaining(String keywords) {
+		return productRepository.findByNameContaining(keywords);
 	}
 
 	public Page<Product> findByIsNewestAndStatus(int newest, int status, Pageable p) {
@@ -79,13 +74,19 @@ public class Productimpl implements ProductService {
 				pageable);
 	}
 
-	@Override
-	public Page<Product> findByStatus(Pageable p, int status) {
-		return productRepository.findByStatus(p, status);
-	}
-
 	public List<Product> getNewestProducts() {
 		return productRepository.findByIsNewestAndStatus(1, 1);
+	}
+
+	@Override
+	public List<Product> findByCategoryNameAndStatus(String name, int status) {
+		return productRepository.findByCategoryNameAndStatus(name, status);
+	}
+
+	@Override
+	public List<Product> findByStatus(int status) {
+		return productRepository.findByStatus(status);
+
 	}
 
 }

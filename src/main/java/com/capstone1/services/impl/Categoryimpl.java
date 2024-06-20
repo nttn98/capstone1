@@ -57,4 +57,9 @@ public class Categoryimpl implements CategoryService {
     public List<Category> getAll() {
         return categoryRepository.findAll();
     }
+
+    @Override
+    public long findIdByName(String name) {
+        return categoryRepository.findIdByName(name);
+    }
 }

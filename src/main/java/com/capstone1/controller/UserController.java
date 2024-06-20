@@ -5,9 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,8 +65,7 @@ public class UserController {
     private Encoding encoding;
 
     @GetMapping("/users")
-    public String listUsers(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public String listUsers(Model model, HttpSession session) {
 
         String target = commonService.isLogin(model, session);
         if (target != null) {
@@ -112,13 +108,13 @@ public class UserController {
 
     @PostMapping("/users/update-user")
     public String updateUser(Model model, @ModelAttribute User user, @RequestParam String mode,
-            @RequestParam String email,
-            HttpSession session, @RequestParam("id") Long userId, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        String target = commonService.isLogin(model, session);
-        if (target != null) {
-            return target;
+            @RequestParam String email, HttpSession session, @RequestParam("id") Long userId) {
+                
+        if (!mode.equals("user")) {
+            String target = commonService.isLogin(model, session);
+            if (target != null) {
+                return target;
+            }
         }
 
         User existUser = userService.getUserById(userId);
@@ -130,19 +126,16 @@ public class UserController {
         existUser.setDob(user.getDob());
         userService.updateUser(existUser);
         System.out.println("User edited successfully");
-
         if (mode.equals("adminEdit")) {
-            return listUsers(model, session, page, size);
+            return listUsers(model, session);
         } else {
             session.setAttribute("user", existUser);
-            return homeController.getHome(model, session, page, size);
+            return homeController.getHome(model, session, 0, 10);
         }
     }
 
     @GetMapping("/users/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute User user, HttpSession session,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute User user, HttpSession session) {
 
         String target = commonService.isLogin(model, session);
         if (target != null) {
@@ -158,7 +151,7 @@ public class UserController {
         }
         model.addAttribute("alert", "edit");
         userService.updateUser(existUser);
-        return listUsers(model, session, page, size);
+        return listUsers(model, session);
     }
 
     @GetMapping("/users/delete-user/{id}")
@@ -173,8 +166,7 @@ public class UserController {
 
     @PostMapping("/users/save-user")
     public String saveUser(Model model, @ModelAttribute User user, @RequestParam String mode,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            HttpSession session) {
 
         user.setPassword(encoding.toSHA1(user.getPassword()));
         user.setType(LoginType.LOCAL);
@@ -183,31 +175,20 @@ public class UserController {
         System.out.println("User added successfully");
         model.addAttribute("alert", "successRegister");
         if (mode.equals("user")) {
-            return homeController.getHome(model, session, page, size);
+            return homeController.getHome(model, session, 0, 10);
         } else {
             String target = commonService.isLogin(model, session);
             if (target != null) {
                 return target;
             }
-            return listUsers(model, session, page, size);
+            return listUsers(model, session);
         }
     }
-
-    /* Change password */
-    // @GetMapping("/users/to-change-pass/{id}")
-    // public String changePass(@PathVariable Long id, Model model, @ModelAttribute
-    // User user) {
-    // User existUser = userService.getUserById(id);
-    // System.out.println("--------------------" + existUser.getPassword());
-    // model.addAttribute("user", existUser);
-    // return "users/changePass_user";
-    // }
 
     @PostMapping("users/do-change-pass")
     public String changePasswod(@RequestParam Long id, Model model, @ModelAttribute User user,
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
-            HttpSession session, @RequestParam String mode, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            HttpSession session, @RequestParam String mode) {
         User existUser = userService.getUserById(id);
         String oldUserPass = existUser.getPassword();
 
@@ -215,7 +196,7 @@ public class UserController {
 
         if (oldUserPass.equals(oldPassword)) {
             existUser.setPassword(newPass);
-            saveUser(model, existUser, mode, session, page, size);
+            saveUser(model, existUser, mode, session);
             System.out.println("---------------------Success " + existUser.getPassword());
             model.addAttribute("alert", "changePass");
 
@@ -226,13 +207,13 @@ public class UserController {
 
         if (mode.equals("user")) {
             session.removeAttribute("user");
-            return homeController.getHome(model, session, page, size);
+            return homeController.getHome(model, session, 0, 10);
         } else {
             String target = commonService.isLogin(model, session);
             if (target != null) {
                 return target;
             }
-            return listUsers(model, session, page, size);
+            return listUsers(model, session);
         }
 
     }
@@ -240,8 +221,7 @@ public class UserController {
     /* login user */
     @PostMapping("/login-user")
     public String getLoginUser(Model model, @RequestParam String username,
-            @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam String password, HttpSession session) {
         String typeLogin = (String) model.getAttribute("type");
 
         User user = null;
@@ -286,11 +266,11 @@ public class UserController {
 
             session.setAttribute("cart", cart);
 
-            return homeController.getHome(model, session, page, size);
+            return homeController.getHome(model, session, 0, 10);
         }
 
         model.addAttribute("alert", "error");
-        return homeController.getHome(model, session, page, size);
+        return homeController.getHome(model, session, 0, 10);
     }
 
     @GetMapping("/users/logout")
@@ -311,9 +291,7 @@ public class UserController {
     /* order user */
     @GetMapping("/users/add-to-cart/{productId}")
     public String addToCart(Model model, @PathVariable long productId, HttpSession session,
-            @RequestParam(defaultValue = "1") int quantityInput, @RequestParam("mode") String mode,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size) {
+            @RequestParam(defaultValue = "1") int quantityInput, @RequestParam("mode") String mode) {
 
         Long userId = (Long) session.getAttribute("userId");
         Cart cart = (Cart) session.getAttribute("cart");
@@ -327,14 +305,14 @@ public class UserController {
         }
         model.addAttribute("alert", "addToCartS");
         if (mode.equals("inList")) {
-            return homeController.paginated(model, session, page, size);
+            return homeController.getAllProductsForUser(model, session);
         } else if (mode.equals("inProductDetail")) {
             return productController.getProductInfor(productId, model, session);
         } else if (mode.equals("inSearchingPage")) {
             String keyword = (String) session.getAttribute("keywords");
-            return productController.searchProduct(model, session, keyword, page, size);
+            return productController.searchProduct(model, session, keyword);
         } else {
-            return homeController.getHome(model, session, page, size);
+            return homeController.getHome(model, session, 0, 10);
         }
     }
 
@@ -404,8 +382,7 @@ public class UserController {
 
     @GetMapping("/users/delete-product-in-cart")
     public String deleteToCart(Model model, @RequestParam("productId") long productId, HttpSession session,
-            @RequestParam("mode") String mode, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size, @RequestParam(defaultValue = "0") long currentProductId) {
+            @RequestParam("mode") String mode, @RequestParam(defaultValue = "0") long currentProductId) {
 
         Cart cart = (Cart) session.getAttribute("cart");
         Long userId = (Long) session.getAttribute("userId");
@@ -427,17 +404,17 @@ public class UserController {
         }
         // inOrderHistory, inSearchingPage
         if (mode.equals("inList")) {
-            return homeController.paginated(model, session, page, size);
+            return homeController.getAllProductsForUser(model, session);
         } else if (mode.equals("inCheckout")) {
             return checkOut(model, session);
         } else if (mode.equals("inProductDetail")) {
             return productController.getProductInfor(currentProductId, model, session);
         } else if (mode.equals("inOrderHistory")) {
             if (userId != null)
-                return historyOrders(userId, session, model, page, size);
+                return historyOrders(userId, session, model);
         } else if (mode.equals("inSearchingPage")) {
             String keyword = (String) session.getAttribute("keywords");
-            return productController.searchProduct(model, session, keyword, page, size);
+            return productController.searchProduct(model, session, keyword);
         }
 
         session.setAttribute("cart", cart);
@@ -548,9 +525,7 @@ public class UserController {
 
     // get order by user id
     @GetMapping("/users/order-history/{userId}")
-    public String historyOrders(@PathVariable long userId, HttpSession session, Model model,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+    public String historyOrders(@PathVariable long userId, HttpSession session, Model model) {
         HashMap<Integer, String> map = new HashMap<>();
         map.put(0, "Prepared");
         map.put(1, "Shipping");
@@ -558,7 +533,8 @@ public class UserController {
         map.put(3, "Canceled");
 
         commonService.isUserLogin(model, session);
-        Page<Order> orders = orderService.findByUserId(userId, PageRequest.of(page, size, Sort.by("id").descending()));
+        List<Order> orders = orderService.findByUserIdOrderByIdDesc(userId);
+
         for (Order order : orders) {
             order.setShowStatus(map.get(order.getStatus()));
         }
@@ -569,8 +545,7 @@ public class UserController {
     /* Change Status */
     @GetMapping("/orders/user-change-status/{id}")
     public String userChangeOrderStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
-            HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            HttpSession session, @RequestParam("status") int newStatus) {
 
         Order existOrder = orderService.getOrderById(id);
         if (existOrder.getStatus() != newStatus) {
@@ -579,7 +554,7 @@ public class UserController {
         User user = (User) session.getAttribute("user");
 
         orderService.changeStatusOrder(existOrder);
-        return historyOrders(user.getId(), session, model, page, size);
+        return historyOrders(user.getId(), session, model);
 
     }
 

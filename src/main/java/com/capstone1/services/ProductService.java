@@ -29,13 +29,13 @@ public interface ProductService {
 
 	Product findByName(String name);
 
-	Page<Product> findByStatus(Pageable p, int status);
+	List<Product> findByStatus(int status);
 
-	Page<Product> findByCategoryNameAndStatus(String name, int status, Pageable p);
+	List<Product> findByCategoryNameAndStatus(String name, int status);
 
 	Page<Product> findByManufacturerNameAndQuantityGreaterThanAndStatus(String name, long quantity, int status,
 			Pageable pageable);
 
-	Page<Product> findByNameContaining(String keywords, Pageable p);
+	List<Product> findByNameContaining(String keywords);
 
 }

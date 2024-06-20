@@ -33,8 +33,7 @@ public class ManufacturerController {
     ManufacturerService manufacturerService;
 
     @GetMapping("/manufacturers")
-    public String listManufacturers(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
+    public String listManufacturers(Model model, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -66,8 +65,7 @@ public class ManufacturerController {
     @PostMapping("/manufacturers/update-manufacturer/{id}")
     public String updateManufacturer(@PathVariable Long id, Model model,
             @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @ModelAttribute Manufacturer manufacturer, HttpSession session) {
         // get Manufacturer exist
         String target = commonService.isLogin(model, session);
         if (target != null) {
@@ -94,13 +92,12 @@ public class ManufacturerController {
         }
         // save updated
         manufacturerService.updateManufacturer(existManufacturer);
-        return listManufacturers(page, size, model, session);
+        return listManufacturers(model, session);
     }
 
     @PostMapping("/manufacturers/save-manufacturer")
     public String saveManufacturer(Model model, @RequestParam("manufacturerImg") MultipartFile file,
-            @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @ModelAttribute Manufacturer manufacturer, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -123,13 +120,12 @@ public class ManufacturerController {
         } catch (Exception e) {
             model.addAttribute("alert", "error");
         }
-        return listManufacturers(page, size, model, session);
+        return listManufacturers(model, session);
     }
 
     @GetMapping("/manufacturers/change-status/{id}")
     public String changeStatus(@PathVariable Long id, Model model,
-            @ModelAttribute Manufacturer manufacturer, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @ModelAttribute Manufacturer manufacturer, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -146,7 +142,7 @@ public class ManufacturerController {
         // save updated
         manufacturerService.updateManufacturer(existManufacturer);
 
-        return listManufacturers(page, size, model, session);
+        return listManufacturers(model, session);
     }
 
     @GetMapping("/manufacturers/edit/{id}")

@@ -54,7 +54,7 @@
             <div class="container" id="header" th:fragment="header_section">
                 <nav class="navbar navbar-expand-lg navbar-light bg-light">
                     <div id="logo" th:fragment="logo" class="logo">
-                        <h1><a href="/"><img src="/img/icon-web.png" style="max-width: 40%; padding: 0;"></a>
+                        <h1><a href="/"><img src="/img/icon-web.png" style="max-width: 25%; padding: 0;"></a>
                         </h1>
                     </div>
                     <button class="navbar-toggler" type="button" data-toggle="collapse"
@@ -99,8 +99,9 @@
                                     </span>
                                 </i>
                             </a>
-                            <div class="noti-dropdown" id="notiDropdown" th:if="${session.user != null}">
-                                <div class="header" th:each="noti, iterStat : ${session.user.notifications}">
+                            <div class="noti-dropdown" id="notiDropdown"
+                                th:if="${session.user != null && session.user.getNotifications().size() > 0}">
+                                <div class="header" th:each="noti, iterStat : ${session.user.getNotifications()}">
                                     <div class="noti-mess-head"
                                         th:classappend="${iterStat.index > 2} ? 'hidden-noti' : ''">
                                         <p class="noti-mess" th:text="${noti.message}"
@@ -108,7 +109,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <p id="show-more-noti" th:if="${session.user.notifications.size() > 3}">
+                                <p id="show-more-noti" th:if="${session.user.getNotifications().size() > 3}">
                                     <i class="fa fa-chevron-down"></i>
                                 </p>
                                 <p id="show-less-noti" style="display: none;">
@@ -549,7 +550,8 @@
                 <button onclick="closecart()" type="button" class="close close-mask" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h3 th:if="${session.cart==null}" style="margin-left: 20px;">There are no items</h3>
+                <h3 th:if="${session.cart == null}" style="margin-left: 20px;">
+                    There are no items</h3>
                 <!-- product -->
                 <div class="product" th:if="${session.cart!=null}">
                     <div class="container">

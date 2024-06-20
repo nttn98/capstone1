@@ -13,6 +13,15 @@ h1 a {
     color: white;
 }
 
+th {
+    background-color: #f2f2f2;
+}
+
+table {
+    margin-top: 20px;
+    /* text-align: right; */
+}
+
 .custom-btn {
     width: 130px;
     height: 40px;
@@ -284,12 +293,15 @@ div.staff a {
 div.staff p {
     padding-left: 20px;
     /* margin-bottom: 0; */
+    font-size: 18px;
 }
 
 div.staff input {
     margin-left: 17px;
     width: 382px;
+    height: 50px;
     margin-bottom: 10px;
+    font-size: 16px;
 }
 
 div.staff button {
@@ -359,13 +371,17 @@ div.changePass a {
 
 div.changePass p {
     padding-left: 20px;
+    padding-bottom: 5px;
     margin-bottom: 0;
+    font-size: 18px;
 }
 
 div.changePass input {
     margin-left: 17px;
     width: 382px;
+    height: 50px;
     margin-bottom: 10px;
+    font-size: 16px;
 }
 
 div.changePass button {

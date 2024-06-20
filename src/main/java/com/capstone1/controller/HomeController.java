@@ -9,7 +9,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,6 @@ import com.capstone1.model.BlogLogin;
 import com.capstone1.model.BlogLogin.LoginStatus;
 import com.capstone1.model.Category;
 import com.capstone1.model.Contact;
-import com.capstone1.model.Manufacturer;
 import com.capstone1.model.Notification;
 import com.capstone1.model.Order;
 import com.capstone1.model.Product;
@@ -127,114 +125,40 @@ public class HomeController {
         return "homePage";
     }
 
-    @GetMapping("/paging")
-    public String paginated(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size) {
-        Page<Product> products = null;
+    @GetMapping("/list-products")
+    public String getAllProductsForUser(Model model, HttpSession session) {
+        List<Product> listProducts = null;
+
+        listProducts = productService.findByStatus(1);
+
+        List<Category> listCategories = categoryService.getAll();
+        model.addAttribute("products", listProducts);
+        model.addAttribute("categories", listCategories);
         commonService.isUserLogin(model, session);
-
-        String condition = (String) session.getAttribute("condition");
-
-        if (condition.equals("all")) {
-            products = productService.findByStatus(PageRequest.of(page, size), 1);
-        } else if (condition.equals("category")) {
-
-            String categoryName = (String) session.getAttribute("categoryName");
-            products = productService.findByCategoryNameAndStatus(categoryName, 1, PageRequest.of(page, size));
-
-        } else if (condition.equals("manufacturer")) {
-            String manufacturerName = (String) session.getAttribute("manufacturerName");
-            products = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus(manufacturerName, 0,
-                    1,
-                    PageRequest.of(page, size));
-        }
-
-        model.addAttribute("products", products);
-
-        List<Category> categories = categoryService.getAll();
-        List<Manufacturer> manufacturers = manufacturerService.getAll();
-
-        // model.addAttribute("products", products);
-        model.addAttribute("categories", categories);
-        model.addAttribute("manufacturers", manufacturers);
 
         return "listProducts";
     }
 
-    /* get list products for user */
-    @GetMapping("/list-products")
-    public String getProductsForUser(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "8") int size) {
-        Page<Product> listProducts = productService.findByStatus(PageRequest.of(page, size), 1);
-        List<Category> listCategories = categoryService.getAll();
-        List<Manufacturer> listManufacturers = manufacturerService.getAll();
+    @GetMapping("/list-products/{categoryName}")
+    public String getProductsByCategoryForUser(Model model, HttpSession session, @PathVariable String categoryName) {
+        List<Product> listProducts = null;
 
+        listProducts = productService.findByCategoryNameAndStatus(categoryName, 1);
+
+        List<Category> listCategories = categoryService.getAll();
         model.addAttribute("products", listProducts);
         model.addAttribute("categories", listCategories);
-        model.addAttribute("manufacturers", listManufacturers);
-        commonService.isUserLogin(model, session);
-        String condition = "all";
-        session.setAttribute("condition", condition);
 
-        return paginated(model, session, page, size);
-    }
-
-    @GetMapping("/products-by-category")
-    public String getProductsByCategory(Model model, @RequestParam String categoryName,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+        long idCategory = categoryService.findIdByName(categoryName);
+        model.addAttribute("idCategory", idCategory);
 
         commonService.isUserLogin(model, session);
-        if (categoryName != null) {
-            Page<Product> products = productService.findByCategoryNameAndStatus(categoryName, 1,
-                    PageRequest.of(page, size));
-            Category category = categoryService.findByName(categoryName);
-            long idCategory = category.getId();
-            model.addAttribute("idCategory", idCategory);
-            model.addAttribute("products", products);
-        }
 
-        List<Category> categories = categoryService.getAll();
-        List<Manufacturer> manufacturers = manufacturerService.getAll();
-
-        model.addAttribute("categories", categories);
-        model.addAttribute("manufacturers", manufacturers);
-
-        String condition = "category";
-        session.setAttribute("categoryName", categoryName);
-        session.setAttribute("condition", condition);
-
-        return paginated(model, session, page, size);
-    }
-
-    @GetMapping("/products-by-manufacturer")
-    public String getProductsByManufacturer(Model model, @RequestParam String manufacturerName,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-        commonService.isUserLogin(model, session);
-        if (manufacturerName != null) {
-            Page<Product> products = productService.findByManufacturerNameAndQuantityGreaterThanAndStatus(
-                    manufacturerName, 0,
-                    1, PageRequest.of(page, size));
-            model.addAttribute("products", products);
-        }
-
-        List<Category> categories = categoryService.getAll();
-        List<Manufacturer> manufacturers = manufacturerService.getAll();
-
-        model.addAttribute("categories", categories);
-        model.addAttribute("manufacturers", manufacturers);
-
-        String condition = "manufacturer";
-        session.setAttribute("manufacturerName", manufacturerName);
-        session.setAttribute("condition", condition);
-
-        return paginated(model, session, page, size);
+        return "listProducts";
     }
 
     @GetMapping("/dashBoard")
-    public String getDashBoardPage(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public String getDashBoardPage(Model model, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -266,8 +190,7 @@ public class HomeController {
 
     @PostMapping("/login-admin")
     public String getLogin(Model model, HttpSession session, @RequestParam String username,
-            @RequestParam String password, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam String password) {
 
         String passEncoding = encoding.toSHA1(password);
         Staff checkStaff = staffService.findByUsernameAndPassword(username, passEncoding);
@@ -276,7 +199,7 @@ public class HomeController {
         if (checkAdmin != null) {
             session.setAttribute("admin", checkAdmin);
             model.addAttribute("alert", "success");
-            return getDashBoardPage(model, session, page, size);
+            return getDashBoardPage(model, session);
         } else if (checkStaff != null && checkStaff.getStatus() == 1) {
             // model.addAttribute("mode", mode);
             session.setAttribute("staff", checkStaff);
@@ -304,8 +227,7 @@ public class HomeController {
 
     // get all orders in admin mode
     @GetMapping("/orders")
-    public String listOrders(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+    public String listOrders(Model model, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -333,9 +255,7 @@ public class HomeController {
     }
 
     @GetMapping("/orders/delete/{orderId}")
-    public String deleteOrder(@PathVariable Long orderId, Model model, HttpSession session,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+    public String deleteOrder(@PathVariable Long orderId, Model model, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -344,14 +264,13 @@ public class HomeController {
         orderDetailService.deleteByOrderId(orderId);
         model.addAttribute("alert", "success");
 
-        return listOrders(model, session, page, size);
+        return listOrders(model, session);
     }
 
     /* Change order status */
     @GetMapping("/orders/change-status/{id}")
     public String changeOrderStatus(@PathVariable Long id, Model model, @ModelAttribute Order order,
-            HttpSession session, @RequestParam("status") int newStatus, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            HttpSession session, @RequestParam("status") int newStatus) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -375,20 +294,18 @@ public class HomeController {
 
         model.addAttribute("alert", "edit");
         orderService.changeStatusOrder(existOrder);
-        return listOrders(model, session, page, size);
+        return listOrders(model, session);
     }
 
     /* contact */
     /* get all contact */
     @GetMapping("/contacts")
-    public String listContacts(@RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, Model model, HttpSession session) {
+    public String listContacts(Model model, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
         }
-        Page<Contact> listContacts = contactServices
-                .getAllContacts(PageRequest.of(page, size, Sort.by("id").descending()));
+        List<Contact> listContacts = contactServices.getAll();
         model.addAttribute("contacts", listContacts);
         return "admin/contacts";
     }
@@ -397,14 +314,12 @@ public class HomeController {
     @PostMapping("/send-contact")
     public String sendContact(Model model, @RequestParam("name") String name, @RequestParam("email") String email,
             @RequestParam("numberphone") Long numberphone, @RequestParam("message") String message,
-            HttpSession session,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            HttpSession session) {
         Contact contact = new Contact(name, email, numberphone, message);
         contactServices.saveContact(contact);
         autoReply(email, name);
         model.addAttribute("alert", "sendContact");
-        return getHome(model, session, page, size);
+        return getHome(model, session, 0, 10);
     }
 
     /* Forgot password admin and staff */
@@ -487,8 +402,7 @@ public class HomeController {
 
     @PostMapping("/users/reset-password")
     public String resetPasswordForUser(Model model, @RequestParam("token") String tokenString,
-            @RequestParam String password, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam String password, HttpSession session) {
 
         System.out.println("---------user-------------" + password);
         System.out.println("---------user-------------" + encoding.toSHA1(password));
@@ -497,7 +411,7 @@ public class HomeController {
         if (token == null) {
             model.addAttribute("flag", false);
             model.addAttribute("message", "Your token link is invalid!");
-            return getHome(model, session, page, size);
+            return getHome(model, session, 0, 10);
         }
         User user = userService.getUserById(token.getUser().getId());
 
@@ -511,13 +425,12 @@ public class HomeController {
 
         session.removeAttribute("user");
 
-        return getHome(model, session, page, size);
+        return getHome(model, session, 0, 10);
     }
 
     @PostMapping("/users/forgot-password")
     public String forgotPasswordForUser(@RequestParam String email, HttpServletRequest request, Model model,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            HttpSession session) {
 
         String tokenString = RandomStringUtils.randomAlphanumeric(60);
 
@@ -525,7 +438,7 @@ public class HomeController {
 
         if (existuser == null) {
             model.addAttribute("alert", "sendMailfail");
-            return getHome(model, session, page, size);
+            return getHome(model, session, 0, 10);
         }
 
         LocalDateTime now = LocalDateTime.now();
@@ -541,7 +454,7 @@ public class HomeController {
         model.addAttribute("user", existuser);
         model.addAttribute("alert", "sendMailsuccess");
 
-        return getHome(model, session, page, size); // user
+        return getHome(model, session, 0, 10); // user
 
     }
 

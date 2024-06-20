@@ -1626,3 +1626,7 @@ a.btn-danger {
     display: block;
     opacity: 1;
 }
+
+.hidden-product {
+    display: none;
+}

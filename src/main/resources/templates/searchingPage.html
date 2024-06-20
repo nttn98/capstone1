@@ -113,8 +113,7 @@
                         <ul>
                             <p style="margin-bottom: 10px; font-size: 18px">Categories</p>
                             <li th:each="category: ${categories}" th:if="${category.getProducts().size() > 0}">
-                                <!-- th:href="@{/products-by-category(categoryName=${category.getName()})}" -->
-                                <a th:href="@{/products-by-category(categoryName=${category.getName()})}">
+                                <a th:href="@{/list-products/{categoryName}(categoryName=${category.getName()})}">
                                     <div class="checkbox-wrapper">
                                         <div class="cbx">
                                             <input th:id="'cbx-' + ${category.getId()}" type="checkbox" disabled />
@@ -180,43 +179,22 @@
                             </div>
                         </div>
                     </div>
-                    <div style="margin-left: 520px; padding-bottom: 15px;"
-                        th:if="${products.getNumberOfElements() != 0}">
-                        <div class="dataTables_paginate paging_simple_numbers"
-                            th:each=" item: ${products.getTotalPages()}">
-                            <ul class="pagination">
-                                <li
-                                    th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
-                                    <a class="page-link"
-                                        th:href="@{'/paging?page=' + ${products.number - 1}}">Previous</a>
-                                </li>
-                                <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
-                                <a th:href="@{'/paging?page=' + ${page}}"
-                               th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})"
-                               th:text="${page + 1}"></a>
-                                </li>
-                                <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
-                                    <a class="page-link" th:href="@{'/paging?page=' + ${products.number + 1}}">Next</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<footer th:replace=" ~{homePage.html :: footer_section}">
-</footer>
+        </div>
+        </div>
+        <footer th:replace=" ~{homePage.html :: footer_section}">
+        </footer>
 
-<button id="topButton"><i class="fa fa-arrow-up"></i></button>
+        <button id="topButton"><i class="fa fa-arrow-up"></i></button>
 
-</body>
+    </body>
 
 
-<script th:inline="javascript">
-    alert_action(/*[[${ alert }]]*/ )
-</script>
+    <script th:inline="javascript">
+        alert_action(/*[[${ alert }]]*/ )
+    </script>
 
 
 </html>

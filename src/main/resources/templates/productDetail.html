@@ -77,6 +77,23 @@
                 </div>
             </div>
             <!-- end shopping cart -->
+            <!-- notification -->
+            <div class="noti-dropdown" id="notiDropdown" th:if="${session.user != null}">
+                <div class="header" th:each="noti, iterStat : ${session.user.notifications}">
+                    <div class="noti-mess-head" th:classappend="${iterStat.index > 2} ? 'hidden-noti' : ''">
+                        <p class="noti-mess" th:text="${noti.message}"
+                            th:style="${noti.read ? 'color: black; font-size: 15px;' : 'color: black; font-size: 15px; font-weight: 600;'}">
+                        </p>
+                    </div>
+                </div>
+                <p id="show-more-noti" th:if="${session.user.notifications.size() > 3}">
+                    <i class="fa fa-chevron-down"></i>
+                </p>
+                <p id="show-less-noti" style="display: none;">
+                    <i class="fa fa-chevron-up"></i>
+                </p>
+            </div>
+            <!-- end notification -->
             <div class="closeMask"></div>
 
             <div>
@@ -117,8 +134,7 @@
                         <ul>
                             <p style="margin-bottom: 10px; font-size: 18px">Categories</p>
                             <li th:each="category: ${categories}" th:if="${category.getProducts().size() > 0}">
-                                <!-- th:href="@{/products-by-category(categoryName=${category.getName()})}" -->
-                                <a th:href="@{/products-by-category(categoryName=${category.getName()})}">
+                                <a th:href="@{/list-products/{categoryName}(categoryName=${category.getName()})}">
                                     <div class="checkbox-wrapper">
                                         <div class="cbx">
                                             <input th:id="'cbx-' + ${category.getId()}" type="checkbox" disabled />
@@ -145,7 +161,6 @@
                             <div class="col-lg-4">
                                 <div class="product-detail-infor">
                                     <p class="product-detail-infor-name">Name:</p>
-                                    <!-- <span th:text="${product.getName()}"></span> -->
                                     <a class="product-name" th:text="${product.getName()}"
                                         th:href="@{'/products/get-product-infor/' + ${product.id}}"></a>
 

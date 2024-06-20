@@ -21,12 +21,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByCategoryNameAndStatus(String name, int status, Pageable p);
 
+    List<Product> findByCategoryNameAndStatus(String name, int status);
+
     Page<Product> findByManufacturerNameAndQuantityGreaterThanAndStatus(String name, long quantity, int status,
             Pageable pageable);
 
-    Page<Product> findByStatus(Pageable p, int status);
+    // Page<Product> findByStatus(Pageable p, int status);
+    List<Product> findByStatus(int status);
 
-    Page<Product> findByNameContaining(String keywords, Pageable p);
+    List<Product> findByNameContaining(String keywords);
 
     @Modifying
     @Transactional

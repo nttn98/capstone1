@@ -115,8 +115,7 @@
                         <ul>
                             <p style="margin-bottom: 10px; font-size: 18px">Categories</p>
                             <li th:each="category: ${categories}" th:if="${category.getProducts().size() > 0}">
-                                <!-- th:href="@{/products-by-category(categoryName=${category.getName()})}" -->
-                                <a th:href="@{/products-by-category(categoryName=${category.getName()})}">
+                                <a th:href="@{/list-products/{categoryName}(categoryName=${category.getName()})}">
                                     <div class="checkbox-wrapper">
                                         <div class="cbx">
                                             <input th:id="'cbx-' + ${category.getId()}" type="checkbox" disabled />
@@ -133,11 +132,12 @@
                             </li>
                         </ul>
                     </div>
+
                     <div class="col-lg-10">
-                        <hr style="width: 600px;">
                         <div class="container m-2">
                             <div class="row">
-                                <div class="col-3" th:each=" item: ${products}">
+                                <div class="col-3" th:each="item, iterStat : ${products}"
+                                    th:classappend="${iterStat.index >= 8} ? 'hidden-product' : ''">
                                     <div class="product-info">
                                         <div class="product-img">
                                             <img th:src="${item.getImages()}" style="height: 180px;">
@@ -147,18 +147,20 @@
                                                     th:href="@{'/users/add-to-cart/' + ${item.id} + '?mode=' + inList}"
                                                     class="button add-to-cart" th:if="${item.getQuantity()>0}"
                                                     th:onclick="'check(event,' + ${item.id} + ',' + ${item.getQuantity()} + ')'">
-                                                    Add
-                                                    to cart</a>
+                                                    Add to cart
+                                                </a>
                                                 <a class="button" th:if="${item.getQuantity()<=0}" disable
                                                     style="background-color: rgba(134, 4, 4, 0.97); border: red;">Out of
-                                                    stock</a>
+                                                    stock
+                                                </a>
                                             </div>
                                             <div class="loop-button-wrap buy-now"
                                                 th:title="|Select '${item.getName()}'|">
                                                 <a th:href="${session.user != null} ? @{'/users/buy-now/' + ${item.id}}:'#'"
                                                     th:onclick="${session.user==null}? 'showLogin(); return false;':''"
                                                     class="button buy-now" th:if="${item.getQuantity()>0}">
-                                                    Buy now</a>
+                                                    Buy now
+                                                </a>
                                             </div>
                                         </div>
                                         <div class="product-details">
@@ -183,27 +185,9 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div style="margin-left: 520px; padding-bottom: 15px;"
-                        th:if="${products.getNumberOfElements() != 0}">
-                        <div class="dataTables_paginate paging_simple_numbers"
-                            th:each=" item: ${products.getTotalPages()}">
-                            <ul class="pagination">
-                                <li
-                                    th:class="'paginate_button page-item previous ' + (${products.number == 0 ? 'disabled' : ''})">
-                                    <a class="page-link"
-                                        th:href="@{'/paging?page=' + ${products.number - 1}}">Previous</a>
-                                </li>
-                                <li class="paginate_button page-item active" th:each="page : ${#numbers.sequence(0, products.totalPages - 1)}">
-                                <a th:href="@{'/paging?page=' + ${page}}"
-                               th:class="'page-link ' + (${products.number == page ? 'current-page' : ''})"
-                               th:text="${page + 1}"></a>
-                                </li>
-                                <li th:class="'paginate_button page-item next ' + (${products.number == products.totalPages - 1 ? 'disabled' : ''})">
-                                    <a class="page-link" th:href="@{'/paging?page=' + ${products.number + 1}}">Next</a>
-                                </li>
-                            </ul>
+                            <div id="load-more-container" class="text-center" th:if="${products.size() > 8}">
+                                <button id="show-more-btn" class="btn btn-primary">Show More</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -216,6 +200,20 @@
     <button id="topButton"><i class="fa fa-arrow-up"></i></button>
 
     <script th:inline="javascript">
+        const showMoreBtn = document.getElementById( 'show-more-btn' );
+        if ( showMoreBtn )
+        {
+            showMoreBtn.addEventListener( 'click', () =>
+            {
+                const hiddenItems = document.querySelectorAll( '.hidden-product' );
+                hiddenItems.forEach( item =>
+                {
+                    item.classList.remove( 'hidden-product' );
+                } );
+                showMoreBtn.style.display = 'none';
+            } );
+        }
+
         var idCategory = /*[[${idCategory}]]*/ null; // Retrieve idCategory from Thymeleaf
         if ( idCategory )
         {
@@ -230,6 +228,5 @@
         }
         alert_action(/*[[${ alert }]]*/ )
     </script>
-
 
 </html>

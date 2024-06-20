@@ -32,8 +32,7 @@ public class StaffController {
     ProductController productController;
 
     @GetMapping("/staffs")
-    public String listStaffs(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public String listStaffs(Model model, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -74,8 +73,7 @@ public class StaffController {
 
     @PostMapping("/staffs/update-staff")
     public String updateStaff(@RequestParam long id, Model model, @ModelAttribute Staff staff,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, @RequestParam String email,
+            HttpSession session, @RequestParam String email,
             @RequestParam("mode") String mode) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
@@ -102,13 +100,11 @@ public class StaffController {
             session.setAttribute("staff", existStaff);
             return productController.listProducts(model, session);
         }
-        return listStaffs(model, session, page, size);
+        return listStaffs(model, session);
     }
 
     @GetMapping("/staffs/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Staff staff, HttpSession session,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Staff staff, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -123,7 +119,7 @@ public class StaffController {
         model.addAttribute("alert", "edit");
 
         staffService.updateStaff(existStaff);
-        return listStaffs(model, session, page, size);
+        return listStaffs(model, session);
     }
 
     @GetMapping("/staffs/toChangePass/{id}")
@@ -141,8 +137,7 @@ public class StaffController {
     @PostMapping("/staffs/do-change-pass")
     public String changePassword(@RequestParam Long id, Model model, @ModelAttribute Staff staff,
             @RequestParam("oldPassword") String oldPass, @RequestParam("newPassword") String newPass,
-            HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -154,7 +149,7 @@ public class StaffController {
 
         if (oldStaffPass.equals(oldPassword)) {
             existStaff.setPassword(newPass);
-            saveStaff(model, existStaff, session, page, size);
+            saveStaff(model, existStaff, session);
             System.out.println("---------------------Success " + existStaff.getPassword());
             model.addAttribute("alert", "success");
         } else {
@@ -176,9 +171,7 @@ public class StaffController {
     }
 
     @PostMapping("/staffs/save-staff")
-    public String saveStaff(Model model, @ModelAttribute Staff staff, HttpSession session,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+    public String saveStaff(Model model, @ModelAttribute Staff staff, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -189,7 +182,7 @@ public class StaffController {
         System.out.println("Staff added successfully");
         model.addAttribute("alert", "successRegister");
         model.getAttribute("admin");
-        return listStaffs(model, session, page, size);
+        return listStaffs(model, session);
     }
 
 }

@@ -12,7 +12,7 @@
                 <div class="navbar-header">
                     <ul class="nav navbar-nav flex-row" style="padding: 10px;">
                         <div id="logo">
-                            <h1><a href="/">NAP</a></h1>
+                            <h1><a href="/"><img src="/img/icon-web.png" style="max-width: 33%; padding: 0;"></a></h1>
                         </div>
                     </ul>
                 </div>
@@ -212,37 +212,6 @@
         <footer th:replace="~{products/products :: footer}"></footer>
     </body>
     <script th:inline="javascript">
-        function showChangePass ()
-        {
-            $( '.changePass' ).addClass( 'w-25' );
-            $( '.profile' ).removeClass( "w-25" );
-        }
-
-        function closeChangePass ()
-        {
-            $( '.changePass' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-
-        }
-
-        function showProfile ()
-        {
-            $( '.profile' ).addClass( "w-25" );
-            $( '.changePass' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeIn();
-        }
-
-        function closeProfile ()
-        {
-            $( '.profile' ).removeClass( "w-25" );
-            $( '.closeMask' ).fadeOut();
-        }
-
-        $( '.closeMask' ).click( ( e ) =>
-        {
-            if ( e.target.classList.contains( 'closeMask' ) )
-                $( 'button.close.close-mask' ).click();
-        } );
         new DataTable( '#dataTable', {
             "order": [ [ 0, "dec" ] ],
             "columnDefs": [

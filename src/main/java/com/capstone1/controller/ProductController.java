@@ -8,8 +8,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -111,8 +109,7 @@ public class ProductController {
 
     @PostMapping("/products/update-product/{id}")
     public String updateProduct(@PathVariable Long id, Model model, @RequestParam("productImg") MultipartFile file,
-            @ModelAttribute Product product, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            @ModelAttribute Product product, HttpSession session) {
         // get product exist
         String target = commonService.isLogin(model, session);
         if (target != null) {
@@ -149,9 +146,8 @@ public class ProductController {
     }
 
     @GetMapping("/products/change-status/{id}")
-    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+    public String changeStatus(@PathVariable Long id, Model model, @ModelAttribute Product product,
+            HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -173,9 +169,8 @@ public class ProductController {
     }
 
     @GetMapping("/products/change-newest/{id}")
-    public String changeNewest(@PathVariable Long id, Model model, @ModelAttribute Product product, HttpSession session,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+    public String changeNewest(@PathVariable Long id, Model model, @ModelAttribute Product product,
+            HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -208,9 +203,7 @@ public class ProductController {
     /* Create Product */
     @PostMapping("/products/save-product")
     public String saveProduct(Model model, @RequestParam("productImg") MultipartFile file,
-            @ModelAttribute Product product, @RequestParam long quantity, HttpSession session,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            @ModelAttribute Product product, @RequestParam long quantity, HttpSession session) {
         String target = commonService.isLogin(model, session);
         if (target != null) {
             return target;
@@ -239,43 +232,17 @@ public class ProductController {
 
     /* Search product */
     @PostMapping("/products/search")
-    public String searchProduct(Model model, HttpSession session, @RequestParam("keywords") String keywords,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-        // System.out.println(keywords);
+    public String searchProduct(Model model, HttpSession session, @RequestParam("keywords") String keywords) {
 
-        Page<Product> foundProducts = productService.findByNameContaining(keywords, PageRequest.of(page, size));
+        List<Product> foundProducts = productService.findByNameContaining(keywords);
         List<Category> categories = categoryService.getAll();
         List<Manufacturer> manufacturers = manufacturerService.getAll();
-
         model.addAttribute("categories", categories);
         model.addAttribute("manufacturers", manufacturers);
         model.addAttribute("products", foundProducts);
 
         session.setAttribute("keywords", keywords);
-
-        // System.out.println(foundProducts.toList().size());
-
-        return "searchingPage";
-    }
-
-    @GetMapping("/searchPaging")
-    public String paginated(Model model, HttpSession session, @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-        Page<Product> products = null;
-
-        String keywords = (String) session.getAttribute("keywords");
-
-        products = productService.findByNameContaining(keywords, PageRequest.of(page, size));
-
-        model.addAttribute("products", products);
-
-        List<Category> categories = categoryService.getAll();
-        List<Manufacturer> manufacturers = manufacturerService.getAll();
-
-        // model.addAttribute("products", products);
-        model.addAttribute("categories", categories);
-        model.addAttribute("manufacturers", manufacturers);
+        commonService.isUserLogin(model, session);
 
         return "searchingPage";
     }

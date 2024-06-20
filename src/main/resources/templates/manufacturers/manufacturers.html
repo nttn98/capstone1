@@ -12,7 +12,7 @@
                 <div class="navbar-header">
                     <ul class="nav navbar-nav flex-row" style="padding: 10px;">
                         <div id="logo">
-                            <h1><a href="/">NAP</a></h1>
+                            <h1><a href="/"><img src="/img/icon-web.png" style="max-width: 33%; padding: 0;"></a></h1>
                         </div>
                     </ul>
                 </div>
@@ -53,8 +53,7 @@
                                                 <form action="/staffs/update-staff" method="POST" th:object="${staff}">
                                                     <input type="hidden" name="id" th:field="*{id}">
                                                     <input type="hidden" name="mode" value="staff">
-                                                    <input type="hidden" name="mode" value="staff"><input
-                                                        id="usernameInput" th:field="*{username}" type="text"
+                                                    <input id="usernameInput" th:field="*{username}" type="text"
                                                         class="form-control" hidden>
                                                     <span id="usernameError" style="color: red;"></span>
                                                     <div class="form-group">
@@ -114,11 +113,13 @@
                                                     <input type="hidden" th:value="${session.staff.getId()}" name="id">
                                                     <div class="form-group">
                                                         <p> Enter old password: </p>
-                                                        <input type="password" name="oldPassword" class="form-control">
+                                                        <input type="password" id="oldPassword" name="oldPassword"
+                                                            class="form-control">
                                                     </div>
                                                     <div class="form-group">
                                                         <p> Enter new password: </p>
-                                                        <input type="password" name="newPassword" class="form-control">
+                                                        <input type="password" id="newPassword" name="newPassword"
+                                                            class="form-control">
                                                     </div>
                                                     <button type="submit" class="btn btn-info">
                                                         <i class="fa fa-check"></i>

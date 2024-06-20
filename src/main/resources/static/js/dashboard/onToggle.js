@@ -19,6 +19,8 @@ function showChangePass ()
 function closeChangePass ()
 {
     $( '.changePass' ).removeClass( "w-25" );
+    $( '#oldPassword' ).val( '' );
+    $( '#newPassword' ).val( '' );
     $( '.closeMask' ).fadeOut();
 
 }

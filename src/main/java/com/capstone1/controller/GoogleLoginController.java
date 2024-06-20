@@ -47,13 +47,11 @@ public class GoogleLoginController {
 
     @GetMapping("/login-google")
     public String loginGoogle(@RequestParam(name = "code", required = false) String code, Model model,
-            HttpSession session,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size, HttpServletRequest request,
+            HttpSession session, HttpServletRequest request,
             @RequestParam(name = "error", required = false) String error) throws IOException {
 
         if ("access_denied".equals(error) || code == null || code.isEmpty()) {
-            return userController.getLoginUser(model, " ", " ", session, page, size);
+            return userController.getLoginUser(model, " ", " ", session);
         }
 
         String accessToken = getToken(code);
@@ -72,7 +70,7 @@ public class GoogleLoginController {
         }
         model.addAttribute("type", "EMAIL");
         model.addAttribute("ggId", googlePojo.getId());
-        return userController.getLoginUser(model, fullname[0], " ", session, page, size);
+        return userController.getLoginUser(model, fullname[0], " ", session);
     }
 
     private String getToken(String code) throws ClientProtocolException, IOException {

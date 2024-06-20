@@ -13,6 +13,8 @@ public interface CategoryService {
 
     Page<Category> getAllCategories(Pageable p);
 
+    long findIdByName(String name);
+
     Category saveCategory(Category category);
 
     Category getCategoryById(Long id);

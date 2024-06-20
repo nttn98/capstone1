@@ -104,11 +104,11 @@
             </div>
         </div>
         <!-- BREADCRUMBS SETCTION END -->
-        <div class="m-auto text-center" th:if="${orders.getTotalPages()==0}">
+        <div class="m-auto text-center" th:if="${orders.size()==0}">
             <h2 style="margin-bottom: 151px">There are no orders now</h2>
         </div>
 
-        <div class="orders" th:if="${orders.getTotalPages()!=0}">
+        <div class="orders" th:if="${orders.size()!=0}">
             <div class="table-header">
                 <div>#</div>
                 <div>Date</div>
