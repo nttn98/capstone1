@@ -93,7 +93,7 @@
                                             <a href="/" title="Back to the home page">Home</a>
                                         </li>
                                         <li>
-                                            <span>orders history</span>
+                                            <span>Orders history</span>
                                         </li>
                                     </ul>
                                 </nav>
@@ -132,7 +132,8 @@
                     <div class="cell">
                         <p class="formatPrice" style="padding-top: 10px">[(${order.getTotal()})]</p>
                     </div>
-                    <div class="cell" th:text="${order.getShowStatus()}"></div>
+                    <div class="cell" th:classappend="${order.getShowStatus()}" th:text="${order.getShowStatus()}">
+                    </div>
                     <div class="cell">
                         <button class="custom-btn btn-6"
                             th:if="${order.getType().toString().equals('CREDIT')}">Paid</button>
@@ -142,39 +143,71 @@
                         </a>
                     </div>
                     <div class="cell details">
-                        <i id="orderDetail" class="fa fa-arrow-down" aria-hidden="true"
-                            th:onclick="'loadOrderDetail(\'' + ${order.id} + '\',this)'" style="display: block;"></i>
+                        <i id="orderDetail" aria-hidden="true"
+                            th:onclick="'loadOrderDetail(\'' + ${order.id} + '\',this)'"
+                            style="display: block; cursor: pointer;">View
+                            order</i>
                     </div>
                 </div>
-
-                <div>
-                    <div class="orderDetail" th:classappend="${order.id}" style="display: none;">
-                        <div class="table-header" style="justify-content: space-evenly;">
-                            <div>Images</div>
-                            <div>Product name</div>
-                            <div>Quantity</div>
-                            <div>Price</div>
+            </div>
+        </div>
+        <!-- Order details -->
+        <div class="ordersDetail" th:each=" order: ${orders}">
+            <div class="orderDetail" th:classappend="${order.getId()}" style="display:none;">
+                <div class=" container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="container-fluid" style="text-align: center; border: 2px solid whitesmoke;"
+                                th:each="item : ${order.orderDetails}">
+                                <div class="row mb-3" style="display: flex; align-items: center;">
+                                    <div class="col-lg-3">
+                                        <img th:src="${item.product.getImages()}" style="width: 120px;">
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <h7>
+                                            <a class="product-name" th:text="${item.product.getName()}"
+                                                th:href="@{'/products/get-product-infor/' + ${item.product.getId()}}"></a>
+                                        </h7>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <p th:text="${item.quantity}"></p>
+                                    </div>
+                                    <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="container-fluid" style="text-align: center;">
-                            <div class="row mb-3" th:each=" item: ${order.orderDetails}"
-                                style="border-bottom: 1px solid #ddd;">
-                                <div class="col-lg-3">
-                                    <img th:src="${item.product.getImages()}" style="width: 120px;">
-                                </div>
-                                <div class="col-lg-4">
-                                    <h7>
-                                        <a class="product-name" th:text="${item.product.getName()}"
-                                            th:href="@{'/products/get-product-infor/' + ${item.product.getId()}}"></a>
-                                    </h7>
-                                </div>
-                                <div class="col-lg-1">
-                                    <p th:text="${item.quantity}">1</p>
-                                </div>
-                                <div class="col-lg-4 formatPrice"><b>[(${item.finalPrice})]</b></div>
+                        <div class="col-lg-4">
+                            <div>
+                                <h2 style="font-weight: 700;">Order summary</h2>
+                                <h4 style="font-weight: 600;" th:text="${'# '+order.getId()}"></h4>
+                                <h6 th:text="${order.getOrderDate()}"></h6>
+                                <br />
+                                <h6 style="padding-bottom: 5px;">Name</h6>
+                                <p style="font-size: 15px;" th:text="${order.getReceiverName()}"></p>
+
+                                <h6 style="padding-bottom: 5px;">Numberphone</h6>
+                                <p style="font-size: 15px;" th:text="${order.getReceiverNumberphone()}"></p>
+
+                                <h6 style="padding-bottom: 5px;">Shipping address</h6>
+                                <p style="font-size: 15px;" th:text="${order.getReceiverAddress()}"></p>
+
+                                <h6 style="padding-bottom: 5px; padding-top: 15px;">Payment method</h6>
+                                <p style="font-size: 15px;" th:text="${order.getType()}"></p>
+                                <hr style="padding-bottom: 15px; padding-top: 10px;" />
+                                <h6 style="display: flex;justify-content: space-between;">
+                                    Total
+                                    <span>
+                                        <h6 class="formatPrice" th:text="${order.getTotal()}" style="padding-top: 2px;">
+                                        </h6>
+                                    </span>
+                                </h6>
+                                <button class="orderDetailCls" onclick="closeOrderDetail(this)">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
             </div>
         </div>
 
@@ -185,28 +218,51 @@
     </body>
 
     <script th:inline="javascript">
+        const headerSection = document.querySelector( '.header_section' );
 
-
-        function loadOrderDetail ( id )
+        function loadOrderDetail ( id, s )
         {
             $( '.orderDetail' ).each( ( i, e ) =>
             {
 
                 if ( $( e ).is( ':visible' ) && !$( e ).hasClass( id ) )
                 {
-                    $( e ).slideUp( 500 );
+                    $( e ).fadeOut();
                 }
             } );
 
-            var orderDetail = $( '.orderDetail.' + id );
-            orderDetail.slideToggle( 500 );
+            $( '.orderDetail.' + id ).fadeToggle();
+            if ( headerSection )
+            {
+                headerSection.style.overflow = 'hidden';
+            }
 
+            $( '.closeMask' ).fadeIn();
         }
 
         function closeOrderDetail ( e )
         {
-            $( e ).parent().slideDown( 500 );
+            if ( headerSection )
+            {
+                headerSection.style.overflow = 'auto';
+            }
+
+            $( '.orderDetail' ).fadeOut();
+            $( '.closeMask' ).fadeOut();
         }
+
+        $( '.closeMask' ).click( ( e ) =>
+        {
+            if ( e.target.classList.contains( 'closeMask' ) )
+            {
+                if ( headerSection )
+                {
+                    headerSection.style.overflow = 'auto';
+                }
+                $( 'button.close.close-mask' ).click();
+                $( '.orderDetail' ).fadeOut(); // Hide all order details
+            }
+        } );
         alert_action(/*[[${alert}]]*/ )
     </script>
 
