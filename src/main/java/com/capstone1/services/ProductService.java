@@ -9,13 +9,11 @@ import com.capstone1.model.Product;
 
 public interface ProductService {
 
-	Page<Product> getAllProducts(Pageable p);
-
 	List<Product> getAll();
 
 	List<Product> getNewestProducts();
 
-	Page<Product> findByIsNewestAndStatus(int newest, int status, Pageable p);
+	Page<Product> findByIsNewestAndStatusOrderByIsNewestDescIdDesc(int newest, int status, Pageable p);
 
 	Product saveProduct(Product product);
 
@@ -29,9 +27,9 @@ public interface ProductService {
 
 	Product findByName(String name);
 
-	List<Product> findByStatus(int status);
+	List<Product> findByStatusOrderByIdDesc(int status);
 
-	List<Product> findByCategoryNameAndStatus(String name, int status);
+	List<Product> findByCategoryNameAndStatusOrderByIdDesc(String name, int status);
 
 	Page<Product> findByManufacturerNameAndQuantityGreaterThanAndStatus(String name, long quantity, int status,
 			Pageable pageable);

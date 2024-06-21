@@ -255,14 +255,28 @@ function showNoti ( userId )
 
 function showDescriptionExtend ()
 {
+    const bodyProductDetail = document.querySelector( '.bodyProductDetail' );
+
     var description = document.querySelector( '.description-extend' );
     description.style.display = 'block';
+    if ( bodyProductDetail )
+    {
+        bodyProductDetail.style.overflow = 'hidden';
+    }
+
     $( '.closeMask' ).fadeIn();
 }
 
 function closeDescription ()
 {
+    const bodyProductDetail = document.querySelector( '.bodyProductDetail' );
+
     var description = document.querySelector( '.description-extend' );
+    if ( bodyProductDetail )
+    {
+        bodyProductDetail.style.overflow = 'auto';
+    }
+
     setTimeout( function ()
     {
         description.style.display = 'none';

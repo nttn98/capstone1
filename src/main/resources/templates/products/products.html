@@ -265,7 +265,7 @@
 								<td class="text-dashboard" th:text="${product.id}"></td>
 								<td><img th:src="${product.images}" alt="Product Image" style="width: 120px;"></td>
 								<td class="text-dashboard" th:text="${product.name}"></td>
-								<td class="text-dashboard formatPrice" th:text="${product.price}"></td>
+								<td class="text-dashboard formatPrice" th:text="${product.getPrice()}"></td>
 								<td class="text-dashboard" th:text="${product.quantity}">
 								</td>
 								<td class="text-dashboard" th:text="${product.category.name}"></td>

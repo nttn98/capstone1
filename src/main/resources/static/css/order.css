@@ -56,3 +56,52 @@ th {
 .total span {
     font-weight: bold;
 }
+
+
+.Prepared, .Canceled, .Shipping, .Delivered {
+    border-radius: 100px;
+    font-weight: 600;
+    padding: 16px;
+}
+
+.Prepared {
+    background-color: #FFD700;
+    /* Gold */
+}
+
+.Canceled {
+    background-color: #FF6347;
+    /* Tomato */
+}
+
+.Shipping {
+    background-color: #1E90FF;
+    /* DodgerBlue */
+}
+
+.Delivered {
+    background-color: #32CD32;
+    /* LimeGreen */
+}
+
+.COD, .CREDIT {
+    border-radius: 100px;
+    font-weight: 600;
+    padding: 16px;
+    width: 95px;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0;
+    color: whitesmoke;
+}
+
+.COD {
+    background-color: #556B2F;
+    /* Dark Olive Green */
+}
+
+/* Background color for CREDIT */
+.CREDIT {
+    background-color: #4169E1;
+    /* Royal Blue */
+}

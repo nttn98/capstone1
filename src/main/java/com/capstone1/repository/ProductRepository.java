@@ -15,21 +15,19 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Product findByName(String name);
 
-    List<Product> findByIsNewestAndStatus(int isNewest, int status);
+    List<Product> findByIsNewestAndStatusOrderByIsNewestDescIdDesc(int isNewest, int status);
 
-    Page<Product> findByIsNewestAndStatus(int isNewest, int status, Pageable p);
+    Page<Product> findByIsNewestAndStatusOrderByIsNewestDescIdDesc(int isNewest, int status, Pageable p);
 
-    Page<Product> findByCategoryNameAndStatus(String name, int status, Pageable p);
-
-    List<Product> findByCategoryNameAndStatus(String name, int status);
+    List<Product> findByCategoryNameAndStatusOrderByIdDesc(String name, int status);
 
     Page<Product> findByManufacturerNameAndQuantityGreaterThanAndStatus(String name, long quantity, int status,
             Pageable pageable);
 
     // Page<Product> findByStatus(Pageable p, int status);
-    List<Product> findByStatus(int status);
+    List<Product> findByStatusOrderByIsNewestDescIdDesc(int status);
 
-    List<Product> findByNameContaining(String keywords);
+    List<Product> findByNameContainingOrderByIsNewestDescIdDesc(String keywords);
 
     @Modifying
     @Transactional

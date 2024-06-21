@@ -45,7 +45,7 @@ $( document ).ready( () =>
 {
     $( '.formatPrice' ).each( ( i, e ) =>
     {
-        let val = +( $( e ).text() );
+        let val = parseFloat( $( e ).text().replace( /,/g, '' ) );
         $( e ).text( formatMoney( val ) );
     } );
 

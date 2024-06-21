@@ -170,12 +170,16 @@
                         </thead>
                         <tbody>
                             <tr th:each="order : ${orders}">
-                                <td class="text-dashboard" th:text="${order.id}"></td>
-                                <td class="text-dashboard" th:text="${order.user.id}"></td>
-                                <td class="text-dashboard formatPrice" th:text="${order.total}"></td>
+                                <td class="text-dashboard" th:text="${order.getId()}"></td>
+                                <td class="text-dashboard" th:text="${order.getUser().getId()}"></td>
+                                <td class="text-dashboard formatPrice">[(${order.getTotal()})]</td>
                                 <td class="text-dashboard" th:text="${order.getOrderDate()}"></td>
-                                <td class="text-dashboard">[(${order.getShowStatus()})]</td>
-                                <td class="text-dashboard" th:text="${order.getType()}"></td>
+                                <td class="text-dashboard"><span
+                                        th:classappend="${order.getShowStatus()}">[(${order.getShowStatus()})]</span>
+                                </td>
+                                <td class="text-dashboard">
+                                    <p th:classappend="${order.getType()}">[(${order.getType()})]</p>
+                                </td>
                                 <td class="text-dashboard">
                                     <button id="viewOrderDetail" class="custom-btn btn-14" style="width: 100px;"
                                         th:onclick="'loadOrderDetail(\'' + ${order.id} + '\', ' + ${order.status} + ');'">
@@ -183,7 +187,7 @@
                                     </button>
                                 </td>
                                 <td>
-                                    <a th:href="@{/orders/delete/{id}(id=${order.id})}">
+                                    <a th:href="@{/orders/delete/{id}(id=${order.getId()})}">
                                         <button class="custom-btn btn-5"
                                             th:if="${order.status == 3 && session.staff==null}">Delete
                                         </button>
@@ -193,7 +197,7 @@
                         </tbody>
                     </table>
                     <div th:each=" order: ${orders}">
-                        <div class="orderDetail" th:classappend="${order.id}"
+                        <div class="orderDetail" th:classappend="${order.getId()}"
                             style="overflow: auto;padding: 70px; width: 1400px; height: 650px; top: 50%; left: 50%; transform: translate(-50%, -50%); position: fixed; display: none; z-index: 9999; background-color: white; border: 2px solid black; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
                             <h5 style="margin-top: -50px"> #[(${order.id})] </h5>
                             <div class="shipping">
@@ -316,6 +320,12 @@
 
         function loadOrderDetail ( id, s )
         {
+            var bodyClass = document.querySelector( '.vertical-layout' );
+            if ( bodyClass )
+            {
+                bodyClass.style.overflow = "hidden";
+            }
+
             $( '.orderDetail' ).each( ( i, e ) =>
             {
 
@@ -335,6 +345,7 @@
 
         function closeOrderDetail ( e )
         {
+
             $( e ).parent().fadeOut();
             $( '.closeMask' ).fadeOut();
         }
@@ -343,18 +354,28 @@
 
         $( '.closeMask' ).click( ( e ) =>
         {
+            var bodyClass = document.querySelector( '.vertical-layout' );
+            if ( bodyClass )
+            {
+                bodyClass.style.overflow = "auto";
+            }
+
             if ( e.target.classList.contains( 'closeMask' ) )
             {
                 $( 'button.close.close-mask' ).click();
                 $( '.orderDetail' ).fadeOut(); // Hide all order details
             }
         } );
+
+
         new DataTable( '#dataTable', {
             "order": [ [ 0, "dec" ] ],
             "columnDefs": [
                 { "orderable": false, "targets": [ 6, 7 ] } // Non-sortable columns 7 and 8 (indices 6 and 7)
             ]
         } );
+
+
         alert_action(/*[[${alert}]]*/ )
 
     </script>

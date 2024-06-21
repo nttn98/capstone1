@@ -103,7 +103,8 @@ public class HomeController {
             @RequestParam(defaultValue = "10") int size) {
 
         int limit = 3;
-        Page<Product> newests = productService.findByIsNewestAndStatus(1, 1, PageRequest.of(page, 1));
+        Page<Product> newests = productService.findByIsNewestAndStatusOrderByIsNewestDescIdDesc(1, 1,
+                PageRequest.of(page, 1));
         List<Product> products = productService.getNewestProducts();
         products = products.subList(1, Math.min(size, products.size()));
 
@@ -129,7 +130,7 @@ public class HomeController {
     public String getAllProductsForUser(Model model, HttpSession session) {
         List<Product> listProducts = null;
 
-        listProducts = productService.findByStatus(1);
+        listProducts = productService.findByStatusOrderByIdDesc(1);
 
         List<Category> listCategories = categoryService.getAll();
         model.addAttribute("products", listProducts);
@@ -143,7 +144,7 @@ public class HomeController {
     public String getProductsByCategoryForUser(Model model, HttpSession session, @PathVariable String categoryName) {
         List<Product> listProducts = null;
 
-        listProducts = productService.findByCategoryNameAndStatus(categoryName, 1);
+        listProducts = productService.findByCategoryNameAndStatusOrderByIdDesc(categoryName, 1);
 
         List<Category> listCategories = categoryService.getAll();
         model.addAttribute("products", listProducts);

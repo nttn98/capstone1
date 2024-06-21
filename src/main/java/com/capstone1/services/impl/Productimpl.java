@@ -17,11 +17,6 @@ public class Productimpl implements ProductService {
 	ProductRepository productRepository;
 
 	@Override
-	public Page<Product> getAllProducts(Pageable p) {
-		return productRepository.findAll(p);
-	}
-
-	@Override
 	public Product saveProduct(Product product) {
 		productRepository.alterAutoIncrementValue();
 		return productRepository.save(product);
@@ -55,11 +50,11 @@ public class Productimpl implements ProductService {
 
 	@Override
 	public List<Product> findByNameContaining(String keywords) {
-		return productRepository.findByNameContaining(keywords);
+		return productRepository.findByNameContainingOrderByIsNewestDescIdDesc(keywords);
 	}
 
-	public Page<Product> findByIsNewestAndStatus(int newest, int status, Pageable p) {
-		return productRepository.findByIsNewestAndStatus(newest, status, p);
+	public Page<Product> findByIsNewestAndStatusOrderByIsNewestDescIdDesc(int newest, int status, Pageable p) {
+		return productRepository.findByIsNewestAndStatusOrderByIsNewestDescIdDesc(newest, status, p);
 	}
 
 	@Override
@@ -75,17 +70,17 @@ public class Productimpl implements ProductService {
 	}
 
 	public List<Product> getNewestProducts() {
-		return productRepository.findByIsNewestAndStatus(1, 1);
+		return productRepository.findByIsNewestAndStatusOrderByIsNewestDescIdDesc(1, 1);
 	}
 
 	@Override
-	public List<Product> findByCategoryNameAndStatus(String name, int status) {
-		return productRepository.findByCategoryNameAndStatus(name, status);
+	public List<Product> findByCategoryNameAndStatusOrderByIdDesc(String name, int status) {
+		return productRepository.findByCategoryNameAndStatusOrderByIdDesc(name, status);
 	}
 
 	@Override
-	public List<Product> findByStatus(int status) {
-		return productRepository.findByStatus(status);
+	public List<Product> findByStatusOrderByIdDesc(int status) {
+		return productRepository.findByStatusOrderByIsNewestDescIdDesc(status);
 
 	}
 
