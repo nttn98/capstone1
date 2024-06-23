@@ -89,6 +89,8 @@
 								<div id="buttonContainer">
 									<a href="#" onclick="showProfile()" th:if="${session.admin==null}" class="option"
 										style="margin-right: 10px;">Edit Profile</a>
+									<a href="#" onclick="showChangePassAdmin()" th:if="${session.admin!=null}"
+										class="option" style="margin-right: 10px;">Change password admin</a>
 									<a th:href="@{/logout}" class="option">Logout</a>
 								</div>
 
@@ -159,7 +161,7 @@
 									</button>
 									<div class="container">
 										<div class="row ">
-											<div class="col-lg-12">
+											<div class="col-lg-12" style="padding-left: 0px;">
 												<form action="/staffs/do-change-pass" method="POST">
 													<input type="hidden" th:value="${session.staff.getId()}" name="id">
 													<div class="form-group">
@@ -178,6 +180,42 @@
 													</button>
 													<br />
 													<a href="#" class="btn btn-danger" onclick="closeChangePass()">
+														<i class="fa fa-check"></i>
+														Cancel
+													</a>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div th:fragment="changePassAdmin" class="changePassAdmin position-fixed"
+									th:if="${session.admin!=null}">
+									<h2>Change password</h2>
+									<button onclick="closeChangePassAdmin()" type="button" class="close close-mask"
+										aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<div class="container">
+										<div class="row ">
+											<div class="col-lg-12" style="padding-left: 0px;">
+												<form action="/admins/do-change-pass" method="POST">
+													<input type="hidden" th:value="${session.admin.getId()}" name="id">
+													<div class="form-group">
+														<p> Enter old password: </p>
+														<input type="password" id="oldPassword" name="oldPassword"
+															class="form-control">
+													</div>
+													<div class="form-group">
+														<p> Enter new password: </p>
+														<input type="password" id="newPassword" name="newPassword"
+															class="form-control">
+													</div>
+													<button type="submit" class="btn btn-info">
+														<i class="fa fa-check"></i>
+														Save
+													</button>
+													<br />
+													<a href="#" class="btn btn-danger" onclick="closeChangePassAdmin()">
 														<i class="fa fa-check"></i>
 														Cancel
 													</a>
@@ -265,7 +303,7 @@
 								<td class="text-dashboard" th:text="${product.id}"></td>
 								<td><img th:src="${product.images}" alt="Product Image" style="width: 120px;"></td>
 								<td class="text-dashboard" th:text="${product.name}"></td>
-								<td class="text-dashboard formatPrice" th:text="${product.getPrice()}"></td>
+								<td class="text-dashboard" th:text="${product.formatPrice()}"></td>
 								<td class="text-dashboard" th:text="${product.quantity}">
 								</td>
 								<td class="text-dashboard" th:text="${product.category.name}"></td>

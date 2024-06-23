@@ -77,6 +77,7 @@ public class OrderDetail {
         double finalPrice = price * this.quantity;
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
         String formattedValueString = decimalFormat.format(finalPrice);
+
         return Double.parseDouble(formattedValueString);
     }
 }

@@ -215,7 +215,6 @@ public class UserController {
             }
             return listUsers(model, session);
         }
-
     }
 
     /* login user */

@@ -195,7 +195,7 @@ public class HomeController {
 
         String passEncoding = encoding.toSHA1(password);
         Staff checkStaff = staffService.findByUsernameAndPassword(username, passEncoding);
-        Admin checkAdmin = adminService.findByUsernameAndPassword(username, password);
+        Admin checkAdmin = adminService.findByUsernameAndPassword(username, passEncoding);
 
         if (checkAdmin != null) {
             session.setAttribute("admin", checkAdmin);

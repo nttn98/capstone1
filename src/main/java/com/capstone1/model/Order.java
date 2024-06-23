@@ -1,8 +1,10 @@
 package com.capstone1.model;
 
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -128,6 +130,12 @@ public class Order {
             total += orderDetail.getFinalPrice();
         }
         return total;
+    }
+
+    public String formatPrice() {
+        double total = getTotal();
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+        return currencyFormat.format(total);
     }
 
     public List<OrderDetail> getOrderDetails() {

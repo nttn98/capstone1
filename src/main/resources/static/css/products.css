@@ -318,7 +318,7 @@ div.staff button {
     width: 1096px;
 }
 
-.changePass {
+.changePass, .changePassAdmin {
     /* border: 1px solid black; */
     right: 0;
     height: 100%;
@@ -331,7 +331,7 @@ div.staff button {
     top: 0;
 }
 
-.changePass .close {
+.changePass .close, .changePassAdmin .close {
     width: 5%;
     background-color: red;
     color: white;
@@ -343,11 +343,11 @@ div.staff button {
     margin: 15px;
 }
 
-.changePass h2 {
+.changePass h2, .changePassAdmin h2 {
     padding: 25px 0px 40px 25px;
 }
 
-.changePass button.btn-login {
+.changePass button.btn-login, .changePassAdmin button.btn-login {
     padding: 10px 30px 10px 30px;
     border-radius: 10px;
     background-color: white;
@@ -356,11 +356,11 @@ div.staff button {
     margin-right: auto;
 }
 
-.changePass li {
+.changePass li, .changePassAdmin li {
     margin: 20px 0;
 }
 
-div.changePass a {
+div.changePass a, .changePassAdmin a {
     display: block;
     margin-right: auto;
     margin-left: auto;
@@ -369,14 +369,14 @@ div.changePass a {
     text-decoration: none;
 }
 
-div.changePass p {
+div.changePass p, div.changePassAdmin p {
     padding-left: 20px;
     padding-bottom: 5px;
     margin-bottom: 0;
     font-size: 18px;
 }
 
-div.changePass input {
+div.changePass input, div.changePassAdmin input {
     margin-left: 17px;
     width: 382px;
     height: 50px;
@@ -384,7 +384,7 @@ div.changePass input {
     font-size: 16px;
 }
 
-div.changePass button {
+div.changePass button, div.changePassAdmin button {
     display: block;
     margin-right: auto;
     margin-left: auto;

@@ -13,12 +13,28 @@ function toggleButtons ()
 
 function showChangePass ()
 {
-    $( '.changePass' ).addClass( 'w-25' );
-    $( '.profile' ).removeClass( "w-25" );
+    $( '.changePass' ).addClass( 'w-22' );
+    $( '.profile' ).removeClass( "w-22" );
 }
+
 function closeChangePass ()
 {
-    $( '.changePass' ).removeClass( "w-25" );
+    $( '.changePass' ).removeClass( "w-22" );
+    $( '#oldPassword' ).val( '' );
+    $( '#newPassword' ).val( '' );
+    $( '.closeMask' ).fadeOut();
+
+}
+function showChangePassAdmin ()
+{
+    $( '.changePassAdmin' ).addClass( 'w-22' );
+    $( '.closeMask' ).fadeIn();
+
+}
+
+function closeChangePassAdmin ()
+{
+    $( '.changePassAdmin' ).removeClass( "w-22" );
     $( '#oldPassword' ).val( '' );
     $( '#newPassword' ).val( '' );
     $( '.closeMask' ).fadeOut();
@@ -26,15 +42,16 @@ function closeChangePass ()
 }
 function showProfile ()
 {
-    $( '.profile' ).addClass( "w-25" );
-    $( '.changePass' ).removeClass( "w-25" );
+    $( '.profile' ).addClass( "w-22" );
+    $( '.changePass' ).removeClass( "w-22" );
     $( '.closeMask' ).fadeIn();
 }
 function closeProfile ()
 {
-    $( '.profile' ).removeClass( "w-25" );
+    $( '.profile' ).removeClass( "w-22" );
     $( '.closeMask' ).fadeOut();
 }
+
 $( '.closeMask' ).click( ( e ) =>
 {
     if ( e.target.classList.contains( 'closeMask' ) )

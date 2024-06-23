@@ -152,6 +152,7 @@ public class StaffController {
             saveStaff(model, existStaff, session);
             System.out.println("---------------------Success " + existStaff.getPassword());
             model.addAttribute("alert", "success");
+            session.removeAttribute("staff");
         } else {
             System.out.println("---------------------Fail");
             model.addAttribute("alert", "error");

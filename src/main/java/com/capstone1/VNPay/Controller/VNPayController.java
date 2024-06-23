@@ -3,6 +3,7 @@ package com.capstone1.VNPay.Controller;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.metrics.MetricsProperties.System;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -50,7 +51,7 @@ public class VNPayController {
     public String submitOrder(@RequestParam("amount") long orderTotal, @RequestParam("orderInfo") String orderInfo,
             HttpServletRequest request, Model model, HttpSession session,
             @RequestParam String name, @RequestParam String address, @RequestParam long numberphone) {
-
+        session.setAttribute("condition", "normal");
         return handleOrderSubmission(orderTotal, orderInfo, request, session, name, address, numberphone);
     }
 
@@ -65,6 +66,7 @@ public class VNPayController {
         session.setAttribute("product", product);
         session.setAttribute("quantityInput", quantityInput);
         orderTotal = product.getPrice() * quantityInput;
+        session.setAttribute("condition", "buyNow");
 
         return handleOrderSubmission(orderTotal, orderInfo, request, session, name, address, numberphone);
     }
@@ -85,6 +87,7 @@ public class VNPayController {
     public String GetMapping(Model model, HttpSession session, HttpServletRequest request) {
         int paymentStatus = vnPayService.orderReturn(request);
 
+        String condition = (String) session.getAttribute("condition");
         String orderInfo = request.getParameter("vnp_OrderInfo");
         String paymentTime = request.getParameter("vnp_PayDate");
         String transactionId = request.getParameter("vnp_TransactionNo");
@@ -112,7 +115,7 @@ public class VNPayController {
 
             if (userLogin != null) {
                 order = orderService.saveOrder(new Order(0, userLogin, now));
-                if (cart != null && cart.getListItem().size() > 0) {
+                if (cart != null && cart.getListItem().size() > 0 && condition.equals("normal")) {
                     for (int i = 0; i < cart.getListItem().size(); i++) {
                         Product product = cart.getListItem().get(i).getProduct();
                         Product productInDb = productService.getProductById(product.getId());
@@ -129,6 +132,8 @@ public class VNPayController {
                     }
                     cartService.deleteByUserId(userLogin.getId());
                     cart.getListItem().clear();
+
+                    session.removeAttribute("cart");
                 } else {
                     Product product = (Product) session.getAttribute("product");
                     quantity = (int) session.getAttribute("quantityInput");
@@ -147,7 +152,6 @@ public class VNPayController {
                 order.setReceiverNumberphone(numberphone);
                 order.setType(PaymentType.CREDIT);
             }
-            session.removeAttribute("cart");
             orderService.saveOrder(order);
         }
         return paymentStatus == 1 ? "ordersuccess" : "orderfail";

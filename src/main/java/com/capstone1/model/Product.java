@@ -1,5 +1,8 @@
 package com.capstone1.model;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -120,6 +123,11 @@ public class Product {
 
 	public void setIsNewest(int isNewest) {
 		this.isNewest = isNewest;
+	}
+
+	public String formatPrice() {
+		NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+		return currencyFormat.format(this.price);
 	}
 
 }

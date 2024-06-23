@@ -24,7 +24,7 @@
                                     <h7>+ category</h7>
                                 </button>
                             </a>
-                            <h4 style="margin: auto;margin-left: 600px">List Categories</h4>
+                            <h4 style="margin: auto;margin-left: 600px;padding-top: 10px;">List Categories</h4>
                         </ul>
                         <ul th:fragment="login-space" class="nav navbar-nav float-right"
                             style="width: 85px; overflow: hidden;">
@@ -38,103 +38,14 @@
                                 <div id="buttonContainer">
                                     <a href="#" onclick="showProfile()" th:if="${session.admin==null}" class="option"
                                         style="margin-right: 10px;">Edit Profile</a>
+                                    <a href="#" onclick="showChangePassAdmin()" th:if="${session.admin!=null}"
+                                        class="option" style="margin-right: 10px;">Change password admin</a>
                                     <a th:href="@{/logout}" class="option">Logout</a>
                                 </div>
 
-                                <div th:fragment="profile" class="profile position-fixed">
-                                    <h2>Staff profile</h2>
-                                    <button onclick="closeProfile()" type="button" class="close close-mask"
-                                        aria-label="Close">
-                                        <span aria-hidden="true" style="font-size: 25px;">&times;</span>
-                                    </button>
-                                    <div class="staff" th:if="${session.staff!=null}">
-                                        <div class="container">
-                                            <div class="row" style="margin-bottom: 10px;" id="profileForm">
-                                                <form action="/staffs/update-staff" method="POST" th:object="${staff}">
-                                                    <input type="hidden" name="id" th:field="*{id}">
-                                                    <input type="hidden" name="mode" value="staff">
-                                                    <input id="usernameInput" th:field="*{username}" type="text"
-                                                        class="form-control" hidden>
-                                                    <span id="usernameError" style="color: red;"></span>
-                                                    <div class="form-group">
-                                                        <p>Full-name: </p>
-                                                        <input type="text" class="form-control" th:field="*{fullname}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <p>Numberphone: </p>
-                                                        <input type="text" class="form-control"
-                                                            th:field="*{numberphone}" required>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <p>Email: </p>
-                                                        <input id="originalEmail" name="originalEmail"
-                                                            th:value="${staff.getEmail()}" hidden>
-                                                        <input id="emailInput" th:field="*{email}" type="email"
-                                                            class="form-control" onfocusout="checkExistEmail()">
-                                                        <span id="emailError"
-                                                            style="color: red;padding-left: 18px;"></span>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <p>Dob: </p>
-                                                        <input type="date" class="form-control" th:field="*{dob}">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <p>Id card: </p>
-                                                        <input type="text" class="form-control" th:field="*{idcard}"
-                                                            readonly>
-                                                    </div>
-
-                                                    <button type="submit" id="submitRegister" class="btn btn-info">
-                                                        <i class="fa fa-check"></i>
-                                                        Save
-                                                    </button>
-                                                </form>
-                                                <a href="#">
-                                                    <button class="btn btn-info" onclick="showChangePass()">
-                                                        <i class="fa fa-check"></i>
-                                                        Change password
-                                                    </button>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div th:fragment="changePass" class="changePass position-fixed"
-                                    th:if="${session.staff!=null}">
-                                    <h2>Change password</h2>
-                                    <button onclick="closeChangePass()" type="button" class="close close-mask"
-                                        aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <div class="container">
-                                        <div class="row ">
-                                            <div class="col-lg-12">
-                                                <form action="/staffs/do-change-pass" method="POST">
-                                                    <input type="hidden" th:value="${session.staff.getId()}" name="id">
-                                                    <div class="form-group">
-                                                        <p> Enter old password: </p>
-                                                        <input type="password" id="oldPassword" name="oldPassword"
-                                                            class="form-control">
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <p> Enter new password: </p>
-                                                        <input type="password" id="newPassword" name="newPassword"
-                                                            class="form-control">
-                                                    </div>
-                                                    <button type="submit" class="btn btn-info">
-                                                        <i class="fa fa-check"></i>
-                                                        Save
-                                                    </button>
-                                                    <br />
-                                                    <a href="#" class="btn btn-danger" onclick="closeChangePass()">
-                                                        <i class="fa fa-check"></i>
-                                                        Cancel
-                                                    </a>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <div th:replace="~{products/products.html :: profile}"></div>
+                                <div th:replace="~{products/products.html :: changePass}"></div>
+                                <div th:replace="~{products/products.html :: changePassAdmin}"></div>
                             </li>
                         </ul>
                     </div>

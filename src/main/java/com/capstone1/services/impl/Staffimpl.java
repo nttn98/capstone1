@@ -2,6 +2,7 @@ package com.capstone1.services.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,12 +14,8 @@ import com.capstone1.services.StaffService;
 @Service
 public class Staffimpl implements StaffService {
 
-    private StaffRepository staffRepository;
-
-    public Staffimpl(StaffRepository staffRepository) {
-        super();
-        this.staffRepository = staffRepository;
-    }
+    @Autowired
+    StaffRepository staffRepository;
 
     @Override
     public Page<Staff> getAllStaffs(Pageable p) {

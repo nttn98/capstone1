@@ -36,10 +36,12 @@
                                     class="option"><span th:text="${session.staff.getUsername()}"></span></button>
 
                                 <div id="buttonContainer">
-                                    <a href="#" onclick="showProfile()" th:if="${session.admin==null}" class="option"
-                                        style="margin-right: 10px;">Edit Profile</a>
+                                    <a href="#" onclick="showChangePassAdmin()" th:if="${session.admin!=null}"
+                                        class="option" style="margin-right: 10px;">Change password admin</a>
                                     <a th:href="@{/logout}" class="option">Logout</a>
                                 </div>
+
+                                <div th:replace="~{products/products.html :: changePassAdmin}"></div>
 
                                 <!-- <div th:fragment="profile" class="profile position-fixed">
                                     <h2>Staff profile</h2>

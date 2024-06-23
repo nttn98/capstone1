@@ -18,4 +18,20 @@ public class Adminimpl implements AdminService {
         return adminRepository.findByUsernameAndPassword(usename, passsword);
     }
 
+    @Override
+    public Admin saveAdmin(Admin admin) {
+        adminRepository.alterAutoIncrementValue();
+        return adminRepository.save(admin);
+    }
+
+    @Override
+    public Admin updateAdmin(Admin admin) {
+        return adminRepository.save(admin);
+    }
+
+    @Override
+    public Admin getAdminById(Long id) {
+        return adminRepository.findById(id).get();
+    }
+
 }
