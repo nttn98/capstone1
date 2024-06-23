@@ -1,6 +1,7 @@
 package com.capstone1.controller;
 
 import java.io.UnsupportedEncodingException;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -366,23 +367,31 @@ public class HomeController {
     public String forgotPassword(@RequestParam String email, HttpServletRequest request, Model model,
             HttpSession session) {
 
-        String tokenString = RandomStringUtils.randomAlphanumeric(60);
+        Admin admin = adminService.findByEmail(email);
+        if (admin == null) {
+            String tokenString = RandomStringUtils.randomAlphanumeric(60);
 
-        Staff staff = staffService.findByEmail(email);
-        if (staff == null) {
-            model.addAttribute("alert", "sendMailfail");
-            return getLoginPage(model, session);
+            Staff staff = staffService.findByEmail(email);
+            if (staff == null) {
+                model.addAttribute("alert", "sendMailfail");
+                return getLoginPage(model, session);
+            }
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime expirationTime = now.plusMinutes(30);
+
+            tokenAdminService.save(new TokenAdmin(tokenString, staff, expirationTime));
+
+            String siteURL = request.getRequestURL().toString();
+            siteURL = siteURL.replace(request.getServletPath(), "");
+
+            String resetPasswordLink = siteURL + "/reset-password?token=" + tokenString;
+            sendEmail(email, resetPasswordLink);
+        } else {
+            String text = generatePassForAdmin();
+            admin.setPassword(encoding.toSHA1(text));
+            adminService.saveAdmin(admin);
+            sendEmailAdmin(email, text);
         }
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expirationTime = now.plusMinutes(30);
-
-        tokenAdminService.save(new TokenAdmin(tokenString, staff, expirationTime));
-
-        String siteURL = request.getRequestURL().toString();
-        siteURL = siteURL.replace(request.getServletPath(), "");
-
-        String resetPasswordLink = siteURL + "/reset-password?token=" + tokenString;
-        sendEmail(email, resetPasswordLink);
         model.addAttribute("alert", "sendMailsuccess");
 
         return getLoginPage(model, session);
@@ -483,6 +492,38 @@ public class HomeController {
         } catch (MessagingException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendEmailAdmin(String recipientEmail, String pass) {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        try {
+            helper.setTo(recipientEmail);
+            helper.setFrom("contact@shopme.com", "NAP Support");
+
+            String subject = "Your password has been reset";
+            String content = "<p>Your password is:<b> " + pass + " </b></p>";
+
+            helper.setSubject(subject);
+            helper.setText(content, true);
+            mailSender.send(message);
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String generatePassForAdmin() {
+        String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(8);
+
+        for (int i = 0; i < 8; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            password.append(CHARACTERS.charAt(index));
+        }
+
+        return password.toString();
     }
 
     /* auto reply email */

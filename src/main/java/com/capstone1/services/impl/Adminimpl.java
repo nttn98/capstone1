@@ -34,4 +34,9 @@ public class Adminimpl implements AdminService {
         return adminRepository.findById(id).get();
     }
 
+    @Override
+    public Admin findByEmail(String email) {
+        return adminRepository.findByEmail(email);
+    }
+
 }

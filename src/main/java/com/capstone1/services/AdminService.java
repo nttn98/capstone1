@@ -12,4 +12,5 @@ public interface AdminService {
 
     Admin getAdminById(Long id);
 
+    Admin findByEmail(String email);
 }

@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.capstone1.model.Admin;
-import com.capstone1.model.Staff;
-import com.capstone1.model.User;
 import com.capstone1.services.AdminService;
 import com.capstone1.services.CommonService;
 

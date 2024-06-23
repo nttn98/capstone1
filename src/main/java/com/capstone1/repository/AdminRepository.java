@@ -9,6 +9,8 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 
     Admin findByUsernameAndPassword(String username, String password);
 
+    Admin findByEmail(String email);
+
     @Modifying
     @Transactional
     @Query(value = "ALTER TABLE admins AUTO_INCREMENT = 1001 ", nativeQuery = true)
