@@ -243,7 +243,10 @@
                                                         </div>
                                                         <div class="botiga-sc-product-info">
                                                             <div class="botiga-sc-product-name">
-                                                                <span th:text="${item.getProduct.getName()}">
+                                                                <span>
+                                                                    <a class="productName"
+                                                                        th:text="${item.getProduct().getName()}"
+                                                                        th:href="@{'/products/get-product-infor/' + ${item.getProduct().getId()}}"></a>
                                                                 </span>
                                                                 <dl class="variation">
                                                                     <dt class="variation-Vendor">Vendor:</dt>
