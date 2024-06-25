@@ -24,7 +24,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findByManufacturerNameAndQuantityGreaterThanAndStatus(String name, long quantity, int status,
             Pageable pageable);
 
-    // Page<Product> findByStatus(Pageable p, int status);
     List<Product> findByStatusOrderByIsNewestDescIdDesc(int status);
 
     List<Product> findByNameContainingOrderByIsNewestDescIdDesc(String keywords);
